@@ -1,4 +1,4 @@
-# Being The Worst - Related Files (\btw Directory)#
+# "Being The Worst" Related Files (\btw directory)#
 
 The \btw directory contains files that are specific to the Being The Worst show itself and are NOT directly related to the Domain of the software that is being discussed and implemented.  There are episode-specific sub-directories to hold files that are refrerenced and related to a specific podcast episode but are not directly related to the code.
 
