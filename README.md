@@ -4,7 +4,7 @@ This repository contains the sample code that is associated with the [Being The 
 
 ## Directory Structure of this Repository ##
 
-
+- **"\"** any files/sub-directories in the repo's root directory (**btw-gtd**) (other than the  git, license, and readme files and the \btw directory) should be DIRECLTY related to the files one would use to implement the solution in a production environment. 
 - **\btw** and all of its sub-directories are Being The Worst housekeeping and general episode files
 
 TODO: Add link Expedition Itinerary?
