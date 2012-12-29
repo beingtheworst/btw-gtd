@@ -16,7 +16,7 @@ TODO: Discuss with Rinat the BC?/Project?/Sub-Domain? directory structure to be 
 
 Being The Worst is a community for those that enjoy continuous learning and embracing software craftsmanship.  Our podcast is one format that we use to share information and interact with the community.
 
-You can **freely subscribe to the Being The Worst podcast** via our [RSS feed](http://feeds.feedburner.com/beingtheworst) or [iTunes](http://itunes.apple.com/us/podcast/being-the-worst/id554597082).
+You can **freely subscribe to the Being The Worst podcast** via our [RSS feed](http://beingtheworst.com/feed) or [iTunes](http://itunes.apple.com/us/podcast/being-the-worst/id554597082).
 
 # What can I learn and where do I start? #
 
