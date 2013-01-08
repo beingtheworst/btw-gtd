@@ -30,7 +30,7 @@ namespace Gtd
         }
     }
     [DataContract(Namespace = "BTW2/GTD")]
-    public partial class CaptureAction : Command
+    public partial class CaptureAction : Command, ITenantCommand
     {
         [DataMember(Order = 1)] public TenantId Id { get; private set; }
         [DataMember(Order = 2)] public string Name { get; private set; }
@@ -43,7 +43,7 @@ namespace Gtd
         }
     }
     [DataContract(Namespace = "BTW2/GTD")]
-    public partial class ActionCaptured : Event
+    public partial class ActionCaptured : Event, ITenantEvent
     {
         [DataMember(Order = 1)] public TenantId Id { get; private set; }
         [DataMember(Order = 2)] public ActionId Action { get; private set; }
@@ -60,7 +60,7 @@ namespace Gtd
         }
     }
     [DataContract(Namespace = "BTW2/GTD")]
-    public partial class CreateProject : Command
+    public partial class CreateProject : Command, ITenantCommand
     {
         [DataMember(Order = 1)] public TenantId Id { get; private set; }
         [DataMember(Order = 2)] public string Name { get; private set; }
@@ -73,7 +73,7 @@ namespace Gtd
         }
     }
     [DataContract(Namespace = "BTW2/GTD")]
-    public partial class ProjectCreated : Event
+    public partial class ProjectCreated : Event, ITenantEvent
     {
         [DataMember(Order = 1)] public TenantId Id { get; private set; }
         [DataMember(Order = 2)] public string Name { get; private set; }
@@ -90,7 +90,7 @@ namespace Gtd
         }
     }
     [DataContract(Namespace = "BTW2/GTD")]
-    public partial class ActionAssignedToProject : Event
+    public partial class ActionAssignedToProject : Event, ITenantEvent
     {
         [DataMember(Order = 1)] public TenantId Id { get; private set; }
         [DataMember(Order = 2)] public ActionId Action { get; private set; }
@@ -107,7 +107,7 @@ namespace Gtd
         }
     }
     [DataContract(Namespace = "BTW2/GTD")]
-    public partial class ActionRemovedFromProject : Event
+    public partial class ActionRemovedFromProject : Event, ITenantEvent
     {
         [DataMember(Order = 1)] public TenantId Id { get; private set; }
         [DataMember(Order = 2)] public ActionId Action { get; private set; }
@@ -124,7 +124,7 @@ namespace Gtd
         }
     }
     [DataContract(Namespace = "BTW2/GTD")]
-    public partial class ActionMovedToProject : Event
+    public partial class ActionMovedToProject : Event, ITenantEvent
     {
         [DataMember(Order = 1)] public TenantId Id { get; private set; }
         [DataMember(Order = 2)] public ActionId Action { get; private set; }
@@ -143,7 +143,7 @@ namespace Gtd
         }
     }
     [DataContract(Namespace = "BTW2/GTD")]
-    public partial class ActionRemoved : Event
+    public partial class ActionRemoved : Event, ITenantEvent
     {
         [DataMember(Order = 1)] public TenantId Id { get; private set; }
         [DataMember(Order = 2)] public ActionId Action { get; private set; }
@@ -158,7 +158,7 @@ namespace Gtd
         }
     }
     [DataContract(Namespace = "BTW2/GTD")]
-    public partial class ActionRenamed : Event
+    public partial class ActionRenamed : Event, ITenantEvent
     {
         [DataMember(Order = 1)] public TenantId Id { get; private set; }
         [DataMember(Order = 2)] public ActionId Action { get; private set; }
@@ -175,7 +175,7 @@ namespace Gtd
         }
     }
     [DataContract(Namespace = "BTW2/GTD")]
-    public partial class ActionCompleted : Event
+    public partial class ActionCompleted : Event, ITenantEvent
     {
         [DataMember(Order = 1)] public TenantId Id { get; private set; }
         [DataMember(Order = 2)] public ActionId Action { get; private set; }

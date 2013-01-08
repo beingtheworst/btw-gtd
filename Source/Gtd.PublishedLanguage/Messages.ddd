@@ -15,8 +15,8 @@ const action = ActionId Action
 
 interface Tenant(TenantId Id)
 {
-    if ? = Command
-    if ! = Event
+    if ? = Command, ITenantCommand
+    if ! = Event, ITenantEvent
 
     CaptureAction?(string name)
     ActionCaptured!(action, string name, time)

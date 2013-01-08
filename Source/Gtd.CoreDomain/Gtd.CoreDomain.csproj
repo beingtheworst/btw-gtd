@@ -39,8 +39,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppServices\Tenant\TenantState.cs" />
     <Compile Include="DomainError.cs" />
+    <Compile Include="Interfaces.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="AppServices\Tenant\TenantAppService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Gtd.PublishedLanguage\Gtd.PublishedLanguage.csproj">
+      <Project>{0D96C7E4-0A2C-4808-B822-BCA137DCFBB6}</Project>
+      <Name>Gtd.PublishedLanguage</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

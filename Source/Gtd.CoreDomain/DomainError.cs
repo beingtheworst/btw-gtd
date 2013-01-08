@@ -41,5 +41,4 @@ namespace Gtd.CoreDomain
             StreamingContext context)
             : base(info, context) { }
     }
-
 }
