@@ -2,6 +2,40 @@
 const time = DateTime TimeUtc;
 
 
+extern "BTW2/GTD"
+namespace Gtd
+
+ProjectId(Guid id)
+ActionId(Guid id)
+    
+const project = ProjectId Project
+const action = ActionId Action
+
+// TODO: Consider delegation?
+
+interface Tenant(TenantId Id)
+{
+    if ? = Command
+    if ! = Event
+
+    CaptureAction?(string name)
+    ActionCaptured!(action, string name, time)
 
 
-RecordInboxEntry()
+
+    CreateProject?(string name)
+    ProjectCreated!(string name, project, time)
+
+    ActionAssignedToProject!(action, ProjectId newProject, time)
+    ActionRemovedFromProject!(action, ProjectId oldProject, time)
+    ActionMovedToProject!(action, ProjectId oldProject, ProjectId newProject, time)
+
+    ActionRemoved!(action, time)
+    ActionRenamed!(action, string name, time)
+
+    ActionCompleted!(action, time)
+
+    // [abdullin]: We will add contexts later
+
+}
+

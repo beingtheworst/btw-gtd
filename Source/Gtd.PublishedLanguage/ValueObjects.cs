@@ -27,5 +27,5 @@ namespace Gtd
         public TenantId() { }
     }
 
-
+    
 }
