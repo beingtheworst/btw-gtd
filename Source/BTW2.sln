@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gtd.PublishedLanguage", "Gt
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gtd.CoreDomain", "Gtd.CoreDomain\Gtd.CoreDomain.csproj", "{BAB02576-30C8-4DE2-AC43-23766F9FD6A1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gtd.CoreDomain.Tests", "Gtd.CoreDomain.Tests\Gtd.CoreDomain.Tests.csproj", "{1B1D22E9-C631-49AD-9633-091DE70DC526}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{BAB02576-30C8-4DE2-AC43-23766F9FD6A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BAB02576-30C8-4DE2-AC43-23766F9FD6A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BAB02576-30C8-4DE2-AC43-23766F9FD6A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B1D22E9-C631-49AD-9633-091DE70DC526}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B1D22E9-C631-49AD-9633-091DE70DC526}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B1D22E9-C631-49AD-9633-091DE70DC526}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B1D22E9-C631-49AD-9633-091DE70DC526}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
