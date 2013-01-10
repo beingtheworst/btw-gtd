@@ -25,6 +25,16 @@ namespace Gtd.CoreDomain
             Update(c.Id, a => a.CreateProject(c.Name));
         }
 
+        public void When(RemoveAction c)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void When(CompleteAction c)
+        {
+            throw new NotImplementedException();
+        }
+
         void Update(TenantId id, Action<TenantAggregate> executeCommandUsingThis)
         {
             var streamId = id.Id.ToString();
