@@ -10,7 +10,7 @@ ActionId(Guid id)
     
 const project = ProjectId Project
 const action = ActionId Action
-
+const request = Guid RequestId
 // TODO: Consider delegation?
 
 interface Tenant(TenantId Id)
@@ -18,21 +18,22 @@ interface Tenant(TenantId Id)
     if ? = Command, ITenantCommand
     if ! = Event, ITenantEvent
 
-    CaptureAction?(string name)
+    CaptureAction?(request, string name)
     ActionCaptured!(action, string name, time)
 
-
-
-    CreateProject?(string name)
-    ProjectCreated!(string name, project, time)
+    CreateProject?(request, string name)
+    ProjectCreated!(project, string name, time)
 
     ActionAssignedToProject!(action, ProjectId newProject, time)
     ActionRemovedFromProject!(action, ProjectId oldProject, time)
     ActionMovedToProject!(action, ProjectId oldProject, ProjectId newProject, time)
 
+    RemoveAction?(action)
+
     ActionRemoved!(action, time)
     ActionRenamed!(action, string name, time)
 
+    CompleteAction?(action)
     ActionCompleted!(action, time)
 
     // [abdullin]: We will add contexts later
