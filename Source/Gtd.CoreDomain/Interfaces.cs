@@ -20,5 +20,4 @@ namespace Gtd.CoreDomain
         EventStream LoadEventStream(string streamId);
         void AppendEventsToStream(string streamId, long expectedStreamVersion, ICollection<Event> events);
     }
-
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Gtd.CoreDomain.AppServices.Tenant;
 
 namespace Gtd.CoreDomain
@@ -7,6 +6,7 @@ namespace Gtd.CoreDomain
     public sealed class TenantAppService : ITenantApplicationService, IAppService
     {
         readonly IEventStore _eventStore;
+        readonly ITimeProvider _time;
 
 
         public TenantAppService(IEventStore eventStore)
@@ -17,12 +17,13 @@ namespace Gtd.CoreDomain
 
         public void When(CaptureAction c)
         {
-            
+
+            Update(c.Id, a => a.CaptureAction(c.RequestId, c.Name, _time));
         }
 
         public void When(CreateProject c)
         {
-            Update(c.Id, a => a.CreateProject(c.Name));
+            Update(c.Id, a => a.CreateProject(c.RequestId, c.Name,_time));
         }
 
         public void When(RemoveAction c)
@@ -51,20 +52,8 @@ namespace Gtd.CoreDomain
         }
     }
 
-    public sealed class TenantAggregate
+    public interface ITimeProvider
     {
-        readonly TenantState _state;
-
-        public List<Event> EventsThatHappened = new List<Event>();
-
-        public TenantAggregate(TenantState state)
-        {
-            _state = state;
-        }
-
-        public void CreateProject(string name)
-        {
-            throw new NotImplementedException();
-        }
+        DateTime GetUtcNow();
     }
 }
