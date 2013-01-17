@@ -2,19 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Gtd;
-using Gtd.CoreDomain;
-using Gtd.CoreDomain.Tests;
 using NUnit.Framework;
+
 // ReSharper disable InconsistentNaming
-namespace E017.Domain.ApplicationServices
+namespace Gtd.CoreDomain.Tests.AppService
 {
-    
     /// <summary>
     /// Base class for testing application services that host aggregates with
     /// event sourcing
     /// </summary>
-    /// <typeparam name="T"></typeparam>
     public abstract class application_service_spec : IListSpecifications 
     {
         readonly List<Event> _given = new List<Event>();
