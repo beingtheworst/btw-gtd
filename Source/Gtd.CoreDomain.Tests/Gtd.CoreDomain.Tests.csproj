@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppService\application_service_spec.cs" />
+    <Compile Include="AppService\factory_application_service_spec.cs" />
     <Compile Include="CompareObjects.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

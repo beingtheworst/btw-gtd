@@ -46,7 +46,7 @@ namespace Gtd.CoreDomain
             _eventStore.AppendEventsToStream(streamId, eventStream.StreamVersion, aggregate.EventsThatHappened);
         }
 
-        void IAppService.Execute(Command command)
+        public void Execute(Command command)
         {
             ((dynamic) this).When((dynamic) command);
         }
