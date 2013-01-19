@@ -2,9 +2,8 @@
 
 ## Published Language
 
-**In short by BTW**: language to communicate with a subdomain. It is frozen and
-published outside of that domain, for example, as a set of message contracts for 
-commands and events along with vocabulary definitions.
+**In short by BTW**: lingustic elements (e.g. command and event contracts) that are frozen and made
+visible outside of the subdomain (so that the others can talk to it)
 
 ### By Eric Evans
 
@@ -17,7 +16,8 @@ as a common medium of communication, translating as necessary into and out of th
 
 ## Shared Kernel #
 
-**In short by BTW**: part of some subdomain that is extracted for reuze and frozen.
+**In short by BTW**: part of the subdomain implementation that is frozen 
+and extracted (so that the others can reuse and integrate with it better).
 
 ### By Eric Evans
 
