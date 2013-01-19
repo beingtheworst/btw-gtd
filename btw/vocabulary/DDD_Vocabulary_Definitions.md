@@ -29,6 +29,9 @@ subset of code or of the database design associated with that part of the model.
 > This explicitly shared stuff has special status, and shouldn't be changed without 
 consultation with the other (dependent) teams.  The Shared Kernel cannot be changed 
 as freely as other parts of the design.
+
 > The Shared Kernel is often the Core Domain, some set of Generic Domains, or both, 
 but it can be any part of the model that is needed by multiple teams.
-> The goal is to reduce duplication and make integration between the two subsystems relatively easy.
+
+> The goal is to reduce duplication and make integration between the two subsystems
+relatively easy.
