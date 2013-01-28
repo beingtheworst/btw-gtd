@@ -1,20 +1,33 @@
 
+// adding precise-enough time on Events eases the creation of "acivity list/facebook wall" types of views 
 const time = DateTime TimeUtc;
 
 
 extern "BTW2/GTD"
 namespace Gtd
 
+// RequestId allows client software to generate a GUID to pass as a correlation Id in the Commands it sends to server.
+// The client can then check the server's views to see if the Id exists, and if so, can report that the request was received by server.
+const request = Guid RequestId
+
+// If a RequestId is provided by the client, that same Id will be assigned to the ProjectId/ActionId
+// to ease correlation between a client's request and the associated Command and Event messages resulting from it.
+// TODO: Consider adding unique integral (integer) number to these in the future to improve human lookup/UX/readability.
 const project = ProjectId Project
 const action = ActionId Action
-const request = Guid RequestId
+
+
 // TODO: Consider delegation?
 
+// TODO: [kstreet] RE: E22, Reconsider "Tenant" naming and/or the BC it is in.
+// Tentant contains an individual Person's universe of "Getting Things Done" stuff
 interface Tenant(TenantId Id)
 {
     if ? = Command, ITenantCommand
     if ! = Event, ITenantEvent
 
+    // a creation/initialization/preparation Event like this is what all Aggregates tend to have
+    // TODO: This method is not implemented yet because in E22 we are not writing executable code yet
     TenantCreated!()
      
     CaptureAction?(request, string name)
