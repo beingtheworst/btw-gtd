@@ -23,7 +23,7 @@ namespace Gtd.CoreDomain.AppServices.Tenant
             Apply(new ProjectCreated(_state.Id, id, name, time));
         }
 
-        public void CaptureAction(Guid requestId, string name, ITimeProvider provider)
+        public void CaptureInboxEntry(Guid requestId, string name, ITimeProvider provider)
         {
             // filter request IDs
             var time = provider.GetUtcNow();

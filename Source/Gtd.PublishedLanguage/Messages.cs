@@ -19,14 +19,14 @@ namespace Gtd
         }
     }
     [DataContract(Namespace = "BTW2/GTD")]
-    public partial class CaptureAction : Command, ITenantCommand
+    public partial class CaptureInboxEntry : Command, ITenantCommand
     {
         [DataMember(Order = 1)] public TenantId Id { get; private set; }
         [DataMember(Order = 2)] public Guid RequestId { get; private set; }
         [DataMember(Order = 3)] public string Name { get; private set; }
         
-        CaptureAction () {}
-        public CaptureAction (TenantId id, Guid requestId, string name)
+        CaptureInboxEntry () {}
+        public CaptureInboxEntry (TenantId id, Guid requestId, string name)
         {
             Id = id;
             RequestId = requestId;
@@ -211,7 +211,7 @@ namespace Gtd
     
     public interface ITenantApplicationService
     {
-        void When(CaptureAction c);
+        void When(CaptureInboxEntry c);
         void When(CreateProject c);
         void When(RemoveAction c);
         void When(CompleteAction c);

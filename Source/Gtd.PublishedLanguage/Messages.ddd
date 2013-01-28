@@ -30,8 +30,11 @@ interface Tenant(TenantId Id)
     // TODO: This method is not implemented yet because in E22 we are not writing executable code yet
     TenantCreated!()
      
-    CaptureAction?(request, string name)
-    ActionCaptured!(action, string name, time)
+    // Captures an entry inside the inbox
+    CaptureInboxEntry?(request, string name)
+    //AddActionToProject?(request, string name, project)
+
+        ActionCaptured!(action, string name, time)
 
     CreateProject?(request, string name)
     ProjectCreated!(project, string name, time)

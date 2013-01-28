@@ -15,11 +15,11 @@ namespace Gtd.CoreDomain
         }
 
 
-        public void When(CaptureAction c)
+        public void When(CaptureInboxEntry c)
         {
-
-            Update(c.Id, a => a.CaptureAction(c.RequestId, c.Name, _time));
+            Update(c.Id, a => a.CaptureInboxEntry(c.RequestId, c.Name, _time));
         }
+        
 
         public void When(CreateProject c)
         {
