@@ -60,6 +60,7 @@ namespace Gtd.Shell
         public ITenantApplicationService Tenant { get; private set; }
         public IDictionary<string, IConsoleAction> Actions { get; private set; }
         public readonly ILogger Log = LogManager.GetLoggerFor<ConsoleEnvironment>();
+        public TenantId Id { get; private set; }
         public static ConsoleEnvironment Build()
         {
             var handler = new SynchronousEventHandler();
@@ -72,6 +73,7 @@ namespace Gtd.Shell
                     Store = store,
                     Tenant = tenant,
                     Actions = ConsoleActions.Actions,
+                    Id = new TenantId(1)
                     
                 };
             

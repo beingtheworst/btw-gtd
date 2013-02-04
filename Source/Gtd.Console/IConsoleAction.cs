@@ -18,6 +18,9 @@ namespace Gtd.Shell
         {
             Register(new ExitAction());
             Register(new HelpAction());
+
+
+            Register(new AddAction());
             //Register(new OpenFactoryAction());
             //Register(new RegisterBlueprintAction());
             //Register(new HireEmployeeAction());
