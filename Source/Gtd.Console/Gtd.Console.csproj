@@ -41,8 +41,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="InMemoryStore.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SynchronousEventHandler.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Gtd.CoreDomain\Gtd.CoreDomain.csproj">
+      <Project>{BAB02576-30C8-4DE2-AC43-23766F9FD6A1}</Project>
+      <Name>Gtd.CoreDomain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Gtd.PublishedLanguage\Gtd.PublishedLanguage.csproj">
+      <Project>{0D96C7E4-0A2C-4808-B822-BCA137DCFBB6}</Project>
+      <Name>Gtd.PublishedLanguage</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
