@@ -34,31 +34,14 @@ namespace Gtd
         }
     }
     [DataContract(Namespace = "BTW2/GTD")]
-    public partial class ActionCaptured : Event, ITenantEvent
-    {
-        [DataMember(Order = 1)] public TenantId Id { get; private set; }
-        [DataMember(Order = 2)] public ActionId Action { get; private set; }
-        [DataMember(Order = 3)] public string Name { get; private set; }
-        [DataMember(Order = 4)] public DateTime TimeUtc { get; private set; }
-        
-        ActionCaptured () {}
-        public ActionCaptured (TenantId id, ActionId action, string name, DateTime timeUtc)
-        {
-            Id = id;
-            Action = action;
-            Name = name;
-            TimeUtc = timeUtc;
-        }
-    }
-    [DataContract(Namespace = "BTW2/GTD")]
-    public partial class CreateProject : Command, ITenantCommand
+    public partial class InboxEntryCaptured : Event, ITenantEvent
     {
         [DataMember(Order = 1)] public TenantId Id { get; private set; }
         [DataMember(Order = 2)] public Guid RequestId { get; private set; }
         [DataMember(Order = 3)] public string Name { get; private set; }
         
-        CreateProject () {}
-        public CreateProject (TenantId id, Guid requestId, string name)
+        InboxEntryCaptured () {}
+        public InboxEntryCaptured (TenantId id, Guid requestId, string name)
         {
             Id = id;
             RequestId = requestId;
@@ -66,19 +49,66 @@ namespace Gtd
         }
     }
     [DataContract(Namespace = "BTW2/GTD")]
-    public partial class ProjectCreated : Event, ITenantEvent
+    public partial class DefineAction : Command, ITenantCommand
+    {
+        [DataMember(Order = 1)] public TenantId Id { get; private set; }
+        [DataMember(Order = 2)] public Guid RequestId { get; private set; }
+        [DataMember(Order = 3)] public string ActionName { get; private set; }
+        
+        DefineAction () {}
+        public DefineAction (TenantId id, Guid requestId, string actionName)
+        {
+            Id = id;
+            RequestId = requestId;
+            ActionName = actionName;
+        }
+    }
+    [DataContract(Namespace = "BTW2/GTD")]
+    public partial class ActionDefined : Event, ITenantEvent
+    {
+        [DataMember(Order = 1)] public TenantId Id { get; private set; }
+        [DataMember(Order = 2)] public ActionId Action { get; private set; }
+        [DataMember(Order = 3)] public string ActionName { get; private set; }
+        [DataMember(Order = 4)] public DateTime TimeUtc { get; private set; }
+        
+        ActionDefined () {}
+        public ActionDefined (TenantId id, ActionId action, string actionName, DateTime timeUtc)
+        {
+            Id = id;
+            Action = action;
+            ActionName = actionName;
+            TimeUtc = timeUtc;
+        }
+    }
+    [DataContract(Namespace = "BTW2/GTD")]
+    public partial class DefineProject : Command, ITenantCommand
+    {
+        [DataMember(Order = 1)] public TenantId Id { get; private set; }
+        [DataMember(Order = 2)] public Guid RequestId { get; private set; }
+        [DataMember(Order = 3)] public string ProjectOutcome { get; private set; }
+        
+        DefineProject () {}
+        public DefineProject (TenantId id, Guid requestId, string projectOutcome)
+        {
+            Id = id;
+            RequestId = requestId;
+            ProjectOutcome = projectOutcome;
+        }
+    }
+    [DataContract(Namespace = "BTW2/GTD")]
+    public partial class ProjectDefined : Event, ITenantEvent
     {
         [DataMember(Order = 1)] public TenantId Id { get; private set; }
         [DataMember(Order = 2)] public ProjectId Project { get; private set; }
-        [DataMember(Order = 3)] public string Name { get; private set; }
+        [DataMember(Order = 3)] public string ProjectOutcome { get; private set; }
         [DataMember(Order = 4)] public DateTime TimeUtc { get; private set; }
         
-        ProjectCreated () {}
-        public ProjectCreated (TenantId id, ProjectId project, string name, DateTime timeUtc)
+        ProjectDefined () {}
+        public ProjectDefined (TenantId id, ProjectId project, string projectOutcome, DateTime timeUtc)
         {
             Id = id;
             Project = project;
-            Name = name;
+            ProjectOutcome = projectOutcome;
             TimeUtc = timeUtc;
         }
     }
@@ -212,7 +242,8 @@ namespace Gtd
     public interface ITenantApplicationService
     {
         void When(CaptureInboxEntry c);
-        void When(CreateProject c);
+        void When(DefineAction c);
+        void When(DefineProject c);
         void When(RemoveAction c);
         void When(CompleteAction c);
     }
@@ -220,8 +251,9 @@ namespace Gtd
     public interface ITenantState
     {
         void When(TenantCreated e);
-        void When(ActionCaptured e);
-        void When(ProjectCreated e);
+        void When(InboxEntryCaptured e);
+        void When(ActionDefined e);
+        void When(ProjectDefined e);
         void When(ActionAssignedToProject e);
         void When(ActionRemovedFromProject e);
         void When(ActionMovedToProject e);

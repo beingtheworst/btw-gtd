@@ -32,12 +32,13 @@ interface Tenant(TenantId Id)
      
     // Captures an entry inside the inbox
     CaptureInboxEntry?(request, string name)
-    //AddActionToProject?(request, string name, project)
+        InboxEntryCaptured!(request, string name)
+    
+    DefineAction?(request, string actionName)
+        ActionDefined!(action, string actionName, time)
 
-        ActionCaptured!(action, string name, time)
-
-    CreateProject?(request, string name)
-    ProjectCreated!(project, string name, time)
+    DefineProject?(request, string projectOutcome)
+    ProjectDefined!(project, string projectOutcome, time)
 
     ActionAssignedToProject!(action, ProjectId newProject, time)
     ActionRemovedFromProject!(action, ProjectId oldProject, time)

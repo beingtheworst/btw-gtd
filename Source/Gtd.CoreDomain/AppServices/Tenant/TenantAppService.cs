@@ -19,11 +19,16 @@ namespace Gtd.CoreDomain
         {
             Update(c.Id, a => a.CaptureInboxEntry(c.RequestId, c.Name, _time));
         }
-        
 
-        public void When(CreateProject c)
+        public void When(DefineAction c)
         {
-            Update(c.Id, a => a.CreateProject(c.RequestId, c.Name,_time));
+            Update(c.Id, a => a.DefineAction(c.RequestId, c.ActionName, _time));
+        }
+
+
+        public void When(DefineProject c)
+        {
+            Update(c.Id, a => a.DefineProject(c.RequestId, c.ProjectOutcome,_time));
         }
 
         public void When(RemoveAction c)

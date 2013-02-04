@@ -41,14 +41,19 @@ namespace Gtd.CoreDomain.AppServices.Tenant
             Id = e.Id;
         }
 
-        public void When(ActionCaptured e)
+        public void When(InboxEntryCaptured e)
         {
-            Actions.Add(e.Action, new ActionInfo(e.Action, e.Name));
+            
         }
 
-        public void When(ProjectCreated e)
+        public void When(ActionDefined e)
         {
-            Projects.Add(e.Project, new ProjectInfo(e.Project, e.Name));
+            Actions.Add(e.Action, new ActionInfo(e.Action, e.ActionName));
+        }
+
+        public void When(ProjectDefined e)
+        {
+            Projects.Add(e.Project, new ProjectInfo(e.Project, e.ProjectOutcome));
         }
 
         public void When(ActionAssignedToProject e)
