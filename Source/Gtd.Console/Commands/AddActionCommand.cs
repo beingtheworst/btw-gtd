@@ -1,8 +1,8 @@
 using System;
 
-namespace Gtd.Shell.Actions
+namespace Gtd.Shell.Commands
 {
-    class AddAction : IConsoleAction
+    class AddActionCommand : IConsoleCommand
     {
         public string Usage
         {
@@ -10,6 +10,11 @@ namespace Gtd.Shell.Actions
         }
         public void Execute(ConsoleEnvironment env, string[] args)
         {
+            if (args.Length == 0)
+            {
+                env.Log.Error("You must specify action name");
+                return;
+            }
             env.Tenant.When(new DefineAction(env.Id, Guid.Empty, string.Join(" ", args)));
         }
     }

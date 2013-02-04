@@ -25,8 +25,8 @@ namespace Gtd.Shell
                     continue;
                 }
                 var split = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                IConsoleAction value;
-                if (!env.Actions.TryGetValue(split[0], out value))
+                IConsoleCommand value;
+                if (!env.Commands.TryGetValue(split[0], out value))
                 {
                     env.Log.Error("Unknown command '{0}'. Type 'help' for help", line);
                     continue;
@@ -58,21 +58,21 @@ namespace Gtd.Shell
     {
         public InMemoryStore Store { get; private set; }
         public ITenantApplicationService Tenant { get; private set; }
-        public IDictionary<string, IConsoleAction> Actions { get; private set; }
+        public IDictionary<string, IConsoleCommand> Commands { get; private set; }
         public readonly ILogger Log = LogManager.GetLoggerFor<ConsoleEnvironment>();
         public TenantId Id { get; private set; }
         public static ConsoleEnvironment Build()
         {
             var handler = new SynchronousEventHandler();
             var store = new InMemoryStore(handler);
-            var tenant = new TenantAppService(store);
+            var tenant = new TenantAppService(store, new RealTimeProvider());
 
             
             return new ConsoleEnvironment()
                 {
                     Store = store,
                     Tenant = tenant,
-                    Actions = ConsoleActions.Actions,
+                    Commands = ConsoleCommands.Actions,
                     Id = new TenantId(1)
                     
                 };

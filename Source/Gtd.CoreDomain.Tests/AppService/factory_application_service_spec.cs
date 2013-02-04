@@ -25,7 +25,7 @@ namespace Gtd.CoreDomain.Tests.AppService
             {
                 store.Preload(e.Id.ToString(), (Event) e);
             }
-            new TenantAppService(store).Execute(cmd);
+            new TenantAppService(store, null).Execute(cmd);
             return store.Appended ?? new Event[0];
         }
 

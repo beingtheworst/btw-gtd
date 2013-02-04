@@ -1,16 +1,16 @@
 ﻿using System.Linq;
 
-namespace Gtd.Shell.Actions
+namespace Gtd.Shell.Commands
 {
-    class HelpAction : IConsoleAction
+    class HelpCommand : IConsoleCommand
     {
         public string Usage { get { return "help [<command>]"; } }
         public void Execute(ConsoleEnvironment env, string[] args)
         {
             if (args.Length > 0)
             {
-                IConsoleAction value;
-                if (!env.Actions.TryGetValue(args[0], out value))
+                IConsoleCommand value;
+                if (!env.Commands.TryGetValue(args[0], out value))
                 {
                     env.Log.Error("Can't find help for '{0}'", args[0]);
                     return;
@@ -19,7 +19,7 @@ namespace Gtd.Shell.Actions
                 return;
             }
             env.Log.Info("Available commands");
-            foreach (var actionHandler in env.Actions.OrderBy(h => h.Key))
+            foreach (var actionHandler in env.Commands.OrderBy(h => h.Key))
             {
                 env.Log.Info("  {0}", actionHandler.Key.ToUpperInvariant());
                 if (!string.IsNullOrWhiteSpace(actionHandler.Value.Usage))

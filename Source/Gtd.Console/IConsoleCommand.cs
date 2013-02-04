@@ -1,26 +1,26 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Gtd.Shell.Actions;
+using Gtd.Shell.Commands;
 
 namespace Gtd.Shell
 {
-    public interface IConsoleAction
+    public interface IConsoleCommand
     {
         string Usage { get; }
         void Execute(ConsoleEnvironment env, string[] args);
     }
 
-    public static class ConsoleActions
+    public static class ConsoleCommands
     {
-        public static IDictionary<string, IConsoleAction> Actions = new Dictionary<string, IConsoleAction>();
+        public static IDictionary<string, IConsoleCommand> Actions = new Dictionary<string, IConsoleCommand>();
 
-        static ConsoleActions()
+        static ConsoleCommands()
         {
-            Register(new ExitAction());
-            Register(new HelpAction());
+            Register(new ExitCommand());
+            Register(new HelpCommand());
 
 
-            Register(new AddAction());
+            Register(new AddActionCommand());
             //Register(new OpenFactoryAction());
             //Register(new RegisterBlueprintAction());
             //Register(new HireEmployeeAction());
@@ -30,7 +30,7 @@ namespace Gtd.Shell
             
             //Register(new StoryAction());
         }
-        static void Register(IConsoleAction cmd)
+        static void Register(IConsoleCommand cmd)
         {
             Actions.Add(cmd.Usage.Split(new[] { ' ' }, 2).First(), cmd);
         }

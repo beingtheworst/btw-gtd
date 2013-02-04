@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Gtd.Shell.Actions
+namespace Gtd.Shell.Commands
 {
-    class ExitAction : IConsoleAction
+    class ExitCommand : IConsoleCommand
     {
         public string Usage { get { return "exit"; } }
         public void Execute(ConsoleEnvironment env, string[] args)

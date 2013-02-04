@@ -9,9 +9,10 @@ namespace Gtd.CoreDomain
         readonly ITimeProvider _time;
 
 
-        public TenantAppService(IEventStore eventStore)
+        public TenantAppService(IEventStore eventStore, ITimeProvider time)
         {
             _eventStore = eventStore;
+            _time = time;
         }
 
 
@@ -60,5 +61,13 @@ namespace Gtd.CoreDomain
     public interface ITimeProvider
     {
         DateTime GetUtcNow();
+    }
+
+    public sealed class RealTimeProvider : ITimeProvider
+    {
+        public DateTime GetUtcNow()
+        {
+            return DateTime.UtcNow;
+        }
     }
 }
