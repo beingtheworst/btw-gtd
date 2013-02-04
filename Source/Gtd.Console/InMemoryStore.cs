@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Gtd.CoreDomain;
 
-namespace Gtd.Console
+namespace Gtd.Shell
 {
     public sealed class InMemoryStore : IEventStore
     {

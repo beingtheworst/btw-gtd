@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.CSharp.RuntimeBinder;
 
-namespace Gtd.Console
+namespace Gtd.Shell
 {
     public sealed class SynchronousEventHandler
     {
