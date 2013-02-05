@@ -45,9 +45,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\AddActionCommand.cs" />
+    <Compile Include="Commands\CaptureToInboxCommand.cs" />
     <Compile Include="Commands\ExitCommand.cs" />
     <Compile Include="Commands\HelpCommand.cs" />
+    <Compile Include="Commands\ViewInboxCommand.cs" />
     <Compile Include="IAppendOnlyStore.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="InMemoryStore.cs" />

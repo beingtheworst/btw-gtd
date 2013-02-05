@@ -68,6 +68,10 @@ namespace Gtd.Shell
         public IDictionary<string, IConsoleCommand> Commands { get; private set; }
         public readonly ILogger Log = LogManager.GetLoggerFor<ConsoleEnvironment>();
         public TenantId Id { get; private set; }
+
+
+        public InboxProjection Inbox { get; private set; }
+
         public static ConsoleEnvironment Build()
         {
             var handler = new SynchronousEventHandler();
@@ -99,19 +103,18 @@ namespace Gtd.Shell
                 log.Debug("Replay complete");
             }
             
-            
             var events = new EventStore(messageStore);
 
-
-
             var tenant = new TenantAppService(events, new RealTimeProvider());
-            return new ConsoleEnvironment
+            var build = new ConsoleEnvironment
                 {
-                    Store = events,
-                    Tenant = tenant,
-                    Commands = ConsoleCommands.Actions,
-                    Id = new TenantId(1)
+                    Store = events, 
+                    Tenant = tenant, 
+                    Commands = ConsoleCommands.Actions, 
+                    Id = new TenantId(1),
+                    Inbox = inbox
                 };
+            return build;
         }
 
     }

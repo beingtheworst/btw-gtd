@@ -2,11 +2,11 @@ using System;
 
 namespace Gtd.Shell.Commands
 {
-    class AddActionCommand : IConsoleCommand
+    class CaptureToInboxCommand : IConsoleCommand
     {
         public string Usage
         {
-            get { return "add [action name]"; }
+            get { return "capture [action name]"; }
         }
         public void Execute(ConsoleEnvironment env, string[] args)
         {
@@ -15,7 +15,7 @@ namespace Gtd.Shell.Commands
                 env.Log.Error("You must specify action name");
                 return;
             }
-            env.Tenant.When(new DefineAction(env.Id, Guid.Empty, string.Join(" ", args)));
+            env.Tenant.When(new CaptureInboxEntry(env.Id, Guid.Empty, string.Join(" ", args)));
         }
     }
 }

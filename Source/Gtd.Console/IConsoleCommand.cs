@@ -20,7 +20,9 @@ namespace Gtd.Shell
             Register(new HelpCommand());
 
 
-            Register(new AddActionCommand());
+            Register(new CaptureToInboxCommand());
+
+            Register(new ViewInboxCommand());
             //Register(new OpenFactoryAction());
             //Register(new RegisterBlueprintAction());
             //Register(new HireEmployeeAction());
