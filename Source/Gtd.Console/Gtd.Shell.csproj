@@ -44,6 +44,7 @@
     <Compile Include="Commands\AddActionCommand.cs" />
     <Compile Include="Commands\ExitCommand.cs" />
     <Compile Include="Commands\HelpCommand.cs" />
+    <Compile Include="IAppendOnlyStore.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="InMemoryStore.cs" />
     <Compile Include="IConsoleCommand.cs" />
