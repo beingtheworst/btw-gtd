@@ -492,6 +492,7 @@ namespace Gtd.Shell
 
         public void LoadDataContractsFromAssemblyOf(Type type)
         {
+            
             var types = type.Assembly.GetExportedTypes();
 
             var contracts = types.Where(t => !t.IsAbstract)
@@ -504,7 +505,7 @@ namespace Gtd.Shell
                 _typeToContract.Add(contract, name);
                 RuntimeTypeModel.Default.Add(contract, true);
             }
-            RuntimeTypeModel.Default.Compile();
+            RuntimeTypeModel.Default.CompileInPlace();
         }
 
         public void Dispose()

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using Gtd.CoreDomain;
@@ -56,7 +57,7 @@ namespace Gtd.Shell
 
     public sealed class ConsoleEnvironment
     {
-        public InMemoryStore Store { get; private set; }
+        public IEventStore Store { get; private set; }
         public ITenantApplicationService Tenant { get; private set; }
         public IDictionary<string, IConsoleCommand> Commands { get; private set; }
         public readonly ILogger Log = LogManager.GetLoggerFor<ConsoleEnvironment>();
@@ -64,13 +65,19 @@ namespace Gtd.Shell
         public static ConsoleEnvironment Build()
         {
             var handler = new SynchronousEventHandler();
-            var store = new InMemoryStore(handler);
-            var tenant = new TenantAppService(store, new RealTimeProvider());
-
+            //var store = new InMemoryStore(handler);
             
+
+            var store = new FileAppendOnlyStore(new DirectoryInfo(Directory.GetCurrentDirectory()));
+            store.Initialize();
+            var messageStore = new MessageStore(store);
+            messageStore.LoadDataContractsFromAssemblyOf(typeof(ActionDefined));
+            var events = new EventStore(messageStore);
+
+            var tenant = new TenantAppService(events, new RealTimeProvider());
             return new ConsoleEnvironment()
                 {
-                    Store = store,
+                    Store = events,
                     Tenant = tenant,
                     Commands = ConsoleCommands.Actions,
                     Id = new TenantId(1)
