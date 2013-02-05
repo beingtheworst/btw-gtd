@@ -4,17 +4,23 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using Gtd.CoreDomain;
+using Gtd.Shell.Projections;
 
 namespace Gtd.Shell
 {
     class Program
     {
+        static ILogger Log = LogManager.GetLoggerFor<Program>();
         static void Main(string[] args)
         {
             // setup and wire our console environment
+            Log.Info("Starting Being The Worst interactive shell :)");
+            
             var env = ConsoleEnvironment.Build();
-            env.Log.Info("Starting Being The Worst interactive shell :)");
-            env.Log.Info("Type 'help' to get more info");
+            Log.Info("Type 'help' to get more info");
+
+
+            
 
             while (true)
             {
@@ -29,7 +35,7 @@ namespace Gtd.Shell
                 IConsoleCommand value;
                 if (!env.Commands.TryGetValue(split[0], out value))
                 {
-                    env.Log.Error("Unknown command '{0}'. Type 'help' for help", line);
+                    Log.Error("Unknown command '{0}'. Type 'help' for help", line);
                     continue;
                 }
                 try
@@ -38,16 +44,16 @@ namespace Gtd.Shell
                 }
                 catch (DomainError ex)
                 {
-                    env.Log.Error("{0}: {1}", ex.Name, ex.Message);
+                    Log.Error("{0}: {1}", ex.Name, ex.Message);
                 }
                 catch (ArgumentException ex)
                 {
-                    env.Log.Error("Invalid usage of '{0}': {1}", split[0], ex.Message);
-                    env.Log.Debug(value.Usage);
+                    Log.Error("Invalid usage of '{0}': {1}", split[0], ex.Message);
+                    Log.Debug(value.Usage);
                 }
                 catch (Exception ex)
                 {
-                    env.Log.ErrorException(ex, "Failure while processing command '{0}'", split[0]);
+                    Log.ErrorException(ex, "Failure while processing command '{0}'", split[0]);
                 }
             }
 
@@ -65,6 +71,10 @@ namespace Gtd.Shell
         public static ConsoleEnvironment Build()
         {
             var handler = new SynchronousEventHandler();
+
+            var inbox = new InboxProjection();
+            handler.RegisterHandler(inbox);
+
             //var store = new InMemoryStore(handler);
             
 
@@ -72,18 +82,36 @@ namespace Gtd.Shell
             store.Initialize();
             var messageStore = new MessageStore(store);
             messageStore.LoadDataContractsFromAssemblyOf(typeof(ActionDefined));
+            var currentVersion = store.GetCurrentVersion();
+            var log = LogManager.GetLoggerFor<ConsoleEnvironment>();
+            log.Debug("Event Store ver {0}", currentVersion);
+
+            if (currentVersion > 0)
+            {
+                log.Debug("Running in-memory replay");
+                foreach (var record in messageStore.EnumerateAllItems(0, int.MaxValue))
+                {
+                    foreach (var item in record.Items.OfType<Event>())
+                    {
+                        handler.Handle(item);
+                    }
+                }
+                log.Debug("Replay complete");
+            }
+            
+            
             var events = new EventStore(messageStore);
 
+
+
             var tenant = new TenantAppService(events, new RealTimeProvider());
-            return new ConsoleEnvironment()
+            return new ConsoleEnvironment
                 {
                     Store = events,
                     Tenant = tenant,
                     Commands = ConsoleCommands.Actions,
                     Id = new TenantId(1)
-                    
                 };
-            
         }
 
     }

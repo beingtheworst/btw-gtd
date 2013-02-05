@@ -53,6 +53,7 @@
     <Compile Include="InMemoryStore.cs" />
     <Compile Include="IConsoleCommand.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Projections\InboxProjection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SynchronousEventHandler.cs" />
   </ItemGroup>
