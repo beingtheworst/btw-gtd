@@ -8,6 +8,9 @@ using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
+using Gtd.CoreDomain;
+using ProtoBuf;
+using ProtoBuf.Meta;
 
 namespace Gtd.Shell
 {
@@ -471,6 +474,273 @@ namespace Gtd.Shell
         }
     }
 
+
+
+    /// <summary>
+    /// Helper class that knows how to store arbitrary messages in append-only store
+    /// (including envelopes, audit batches etc)
+    /// </summary>
+    public class MessageStore
+    {
+        readonly IAppendOnlyStore _appendOnlyStore;
+
+        
+        readonly IDictionary<string,Type> _contractToType = new Dictionary<string, Type>();
+        readonly IDictionary<Type,string> _typeToContract = new Dictionary<Type, string>();
+ 
+
+
+        public void LoadDataContractsFromAssemblyOf(Type type)
+        {
+            var types = type.Assembly.GetExportedTypes();
+
+            var contracts = types.Where(t => !t.IsAbstract)
+                                 .Where(t => t.IsDefined(typeof(DataContractAttribute), false));
+            RuntimeTypeModel.Default.AutoAddMissingTypes = true;
+            foreach (var contract in contracts)
+            {
+                var name = ContractEvil.GetContractReference(contract);
+                _contractToType.Add(name, contract);
+                _typeToContract.Add(contract, name);
+                RuntimeTypeModel.Default.Add(contract, true);
+            }
+            RuntimeTypeModel.Default.Compile();
+        }
+
+        public void Dispose()
+        {
+            _appendOnlyStore.Close();
+            _appendOnlyStore.Dispose();
+        }
+
+        public MessageStore(IAppendOnlyStore appendOnlyStore)
+        {
+            _appendOnlyStore = appendOnlyStore;
+            
+        }
+
+        public IEnumerable<StoreRecord> EnumerateMessages(string key, long version, int count)
+        {
+            var records = _appendOnlyStore.ReadRecords(key, 0, int.MaxValue);
+            foreach (var record in records)
+            {
+                using (var mem = new MemoryStream(record.Data))
+                using (var bin = new BinaryReader(mem))
+                {
+                    var msgCount = bin.ReadInt32();
+                    var objects = new object[msgCount];
+                    for (int i = 0; i < msgCount; i++)
+                    {
+                        var name = bin.ReadString();
+                        var type = _contractToType[name];
+                        var len = bin.ReadInt32();
+                        objects[i] = RuntimeTypeModel.Default.Deserialize(bin.BaseStream, null, type, len);
+                    }
+                    yield return new StoreRecord(key, objects, record.StoreVersion, record.StreamVersion);
+                }
+            }
+        }
+
+        public long GetVersion()
+        {
+            return _appendOnlyStore.GetCurrentVersion();
+        }
+
+
+        public IEnumerable<StoreRecord> EnumerateAllItems(long startingFrom, int take)
+        {
+            // we don't use any index = just skip all audit things
+            foreach (var record in _appendOnlyStore.ReadRecords(startingFrom, take))
+            {
+                using (var mem = new MemoryStream(record.Data))
+                using (var bin = new BinaryReader(mem))
+                {
+                    var msgCount = bin.ReadInt32();
+                    var objects = new object[msgCount];
+                    for (int i = 0; i < msgCount; i++)
+                    {
+                        var name = bin.ReadString();
+                        var type = _contractToType[name];
+                        var len = bin.ReadInt32();
+                        objects[i] = RuntimeTypeModel.Default.Deserialize(bin.BaseStream, null, type, len);
+                    }
+                    yield return new StoreRecord(record.Key, objects, record.StoreVersion, record.StreamVersion);
+                }
+            }
+        }
+
+        public void AppendToStore(string name, long streamVersion, ICollection<object> messages)
+        {
+            using (var mem = new MemoryStream())
+            using (var bin = new BinaryWriter(mem))
+            {
+                bin.Write(messages.Count);
+                foreach (var message in messages)
+                {
+                    var contract=_typeToContract[message.GetType()];
+                    bin.Write(contract);
+                    using (var inner = new MemoryStream())
+                    {
+                        RuntimeTypeModel.Default.Serialize(inner, message);
+                        bin.Write((int)inner.Position);
+                        bin.Write(inner.ToArray());
+                    }
+                }
+                _appendOnlyStore.Append(name, mem.ToArray(), streamVersion);
+            }
+        }
+
+    }
+
+    public struct StoreRecord
+    {
+        public readonly object[] Items;
+        public readonly long StoreVersion;
+        public readonly long StreamVersion;
+        public readonly string Key;
+
+
+        public StoreRecord(string key, object[] items, long storeVersion, long streamVersion)
+        {
+            Items = items;
+            StoreVersion = storeVersion;
+            StreamVersion = streamVersion;
+            Key = key;
+        }
+    }
+
+
+
+    public static class ContractEvil
+    {
+        public sealed class Helper
+        {
+            readonly Tuple<string, object>[] _attributes;
+
+            public Helper(IEnumerable<object> attributes)
+            {
+                _attributes = attributes.Select(a => Tuple.Create(a.GetType().Name, a)).ToArray();
+            }
+
+            public string GetString(string name, string property)
+            {
+                if (_attributes.Length == 0)
+                    return null;
+
+                var match = _attributes.FirstOrDefault(t => t.Item1 == name);
+                if (null == match)
+                    return null;
+
+                var type = match.Item2.GetType();
+                var propertyInfo = type.GetProperty(property);
+                if (null == propertyInfo)
+                    throw new InvalidOperationException(string.Format("{0}.{1} not found", name, property));
+                var result = propertyInfo.GetValue(match.Item2, null) as string;
+                if (String.IsNullOrEmpty(result))
+                    return null;
+
+                return result;
+            }
+        }
+
+        public static string Combine(params Func<string>[] retriever)
+        {
+            foreach (var func in retriever)
+            {
+                string result = func();
+                if (null != result)
+                    return result;
+            }
+            return null;
+        }
+
+
+        
+        public static string GetContractReference(Type type)
+        {
+            var attribs = type.GetCustomAttributes(false);
+            var helper = new Helper(attribs);
+
+
+            
+            var name = Combine(
+                () => helper.GetString("ProtoContractAttribute", "Name"),
+                () => helper.GetString("DataContractAttribute", "Name"),
+                () => helper.GetString("XmlTypeAttribute", "TypeName"),
+                () => type.Name);
+
+            var ns = Combine(
+                () => helper.GetString("DataContractAttribute", "Namespace"),
+                () => helper.GetString("XmlTypeAttribute", "Namespace"));
+
+            if (null != ns)
+            {
+                ns = ns.Trim() + '/';
+            }
+
+            ns = AppendNesting(ns, type);
+
+            return ns + name;
+        }
+
+        static string AppendNesting(string ns, Type type)
+        {
+            var list = new List<string>();
+            while (type.IsNested)
+            {
+                list.Insert(0, type.DeclaringType.Name);
+                type = type.DeclaringType;
+            }
+            if (list.Count == 0)
+            {
+                return ns;
+            }
+            var suffix = string.Join("/", Enumerable.ToArray(list)) + "/";
+            return ns + suffix;
+        }
+    }
+
+
+    public sealed class EventStore : IEventStore
+    {
+        readonly MessageStore _store;
+
+        public EventStore(MessageStore store)
+        {
+            _store = store;
+        }
+
+        public void AppendEventsToStream(string name, long streamVersion, ICollection<Event> events)
+        {
+            if (events.Count == 0) return;
+            // functional events don't have an identity
+            
+            try
+            {
+                _store.AppendToStore(name, streamVersion, events.Cast<object>().ToArray());
+            }
+            catch (AppendOnlyStoreConcurrencyException e)
+            {
+                // load server events
+                var server = LoadEventStream(name);
+                // throw a real problem
+                throw OptimisticConcurrencyException.Create(server.StreamVersion, e.ExpectedStreamVersion, name, server.Events);
+            }
+        }
+        public EventStream LoadEventStream(string name)
+        {
+            
+
+            // TODO: make this lazy somehow?
+            var stream = new EventStream();
+            foreach (var record in _store.EnumerateMessages(name, 0, int.MaxValue))
+            {
+                stream.Events.AddRange(record.Items.Cast<Event>());
+                stream.StreamVersion = record.StreamVersion;
+            }
+            return stream;
+        }
+    }
 
 
 }
