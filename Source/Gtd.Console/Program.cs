@@ -103,7 +103,7 @@ namespace Gtd.Shell
                 log.Debug("Replay complete");
             }
             
-            var events = new EventStore(messageStore);
+            var events = new EventStore(messageStore,handler);
 
             var tenant = new TenantAppService(events, new RealTimeProvider());
             var build = new ConsoleEnvironment

@@ -705,10 +705,12 @@ namespace Gtd.Shell
     public sealed class EventStore : IEventStore
     {
         readonly MessageStore _store;
+        readonly SynchronousEventHandler _handler;
 
-        public EventStore(MessageStore store)
+        public EventStore(MessageStore store, SynchronousEventHandler handler)
         {
             _store = store;
+            _handler = handler;
         }
 
         public void AppendEventsToStream(string name, long streamVersion, ICollection<Event> events)
@@ -726,6 +728,11 @@ namespace Gtd.Shell
                 var server = LoadEventStream(name);
                 // throw a real problem
                 throw OptimisticConcurrencyException.Create(server.StreamVersion, e.ExpectedStreamVersion, name, server.Events);
+            }
+            // sync handling. Normally we would push this to async
+            foreach (var @event in events)
+            {
+                _handler.Handle(@event);
             }
         }
         public EventStream LoadEventStream(string name)
