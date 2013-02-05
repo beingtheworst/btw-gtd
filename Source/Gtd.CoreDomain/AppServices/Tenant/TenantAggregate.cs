@@ -14,6 +14,11 @@ namespace Gtd.CoreDomain.AppServices.Tenant
             _state = state;
         }
 
+        public void Create(TenantId id)
+        {
+            Apply(new TenantCreated(id));
+        }
+
         public void DefineProject(Guid requestId, string name, ITimeProvider provider)
         {
             // filter request IDs
@@ -28,6 +33,8 @@ namespace Gtd.CoreDomain.AppServices.Tenant
             // filter request IDs
             var time = provider.GetUtcNow();
             var id = new ActionId(NewGuidIfEmpty(requestId));
+
+            Apply(new InboxEntryCaptured(_state.Id, requestId, name));
 
             //Apply(new ActionCaptured(_state.Id, id, name, time));
         }

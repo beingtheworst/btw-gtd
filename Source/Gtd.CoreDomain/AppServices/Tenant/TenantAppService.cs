@@ -46,8 +46,21 @@ namespace Gtd.CoreDomain
         {
             var streamId = id.Id.ToString();
             var eventStream = _eventStore.LoadEventStream(streamId);
+
+
+
+
             var state = TenantState.BuildStateFromHistory(eventStream.Events);
+
+            
             var aggregate = new TenantAggregate(state);
+
+            // HACK
+            if (eventStream.Events.Count == 0)
+            {
+                aggregate.Create(id);
+            }
+
             executeCommandUsingThis(aggregate);
             _eventStore.AppendEventsToStream(streamId, eventStream.StreamVersion, aggregate.EventsThatHappened);
         }
