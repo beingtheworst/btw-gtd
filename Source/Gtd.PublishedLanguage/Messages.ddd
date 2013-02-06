@@ -32,7 +32,7 @@ interface Tenant(TenantId Id)
      
     // Captures an entry inside the inbox
     CaptureInboxEntry?(request, string name)
-        InboxEntryCaptured!(request, string name)
+        InboxEntryCaptured!(request, string name, time)
     
     DefineAction?(request, string actionName)
         ActionDefined!(action, string actionName, time)

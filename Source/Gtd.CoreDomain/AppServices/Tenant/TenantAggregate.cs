@@ -31,10 +31,10 @@ namespace Gtd.CoreDomain.AppServices.Tenant
         public void CaptureInboxEntry(Guid requestId, string name, ITimeProvider provider)
         {
             // filter request IDs
-            var time = provider.GetUtcNow();
-            var id = new ActionId(NewGuidIfEmpty(requestId));
+            //var time = provider.GetUtcNow();
+            //var id = new ActionId(NewGuidIfEmpty(requestId));
 
-            Apply(new InboxEntryCaptured(_state.Id, requestId, name));
+            Apply(new InboxEntryCaptured(_state.Id, NewGuidIfEmpty(requestId), name, provider.GetUtcNow()));
 
             //Apply(new ActionCaptured(_state.Id, id, name, time));
         }

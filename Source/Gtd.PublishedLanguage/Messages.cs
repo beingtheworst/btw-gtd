@@ -39,13 +39,15 @@ namespace Gtd
         [DataMember(Order = 1)] public TenantId Id { get; private set; }
         [DataMember(Order = 2)] public Guid RequestId { get; private set; }
         [DataMember(Order = 3)] public string Name { get; private set; }
+        [DataMember(Order = 4)] public DateTime TimeUtc { get; private set; }
         
         InboxEntryCaptured () {}
-        public InboxEntryCaptured (TenantId id, Guid requestId, string name)
+        public InboxEntryCaptured (TenantId id, Guid requestId, string name, DateTime timeUtc)
         {
             Id = id;
             RequestId = requestId;
             Name = name;
+            TimeUtc = timeUtc;
         }
     }
     [DataContract(Namespace = "BTW2/GTD")]
