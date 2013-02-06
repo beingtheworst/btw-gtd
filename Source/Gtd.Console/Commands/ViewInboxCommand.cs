@@ -1,3 +1,5 @@
+using Gtd.Shell.LesserEvils;
+
 namespace Gtd.Shell.Commands
 {
     class ViewInboxCommand : IConsoleCommand
@@ -14,7 +16,8 @@ namespace Gtd.Shell.Commands
 
             foreach (var entry in env.InboxView.TenantInboxes[env.Id])
             {
-                env.Log.Info(entry.Thought);
+                var shortId = entry.ItemId.ToString().ToLowerInvariant().Replace("-", "").Substring(0, 3);
+                env.Log.Info(string.Format("  {0}  {1, -40}  {2}", shortId, entry.Thought, FormatEvil.TwitterOffestUtc(entry.Added)));
             }
         }
     }
