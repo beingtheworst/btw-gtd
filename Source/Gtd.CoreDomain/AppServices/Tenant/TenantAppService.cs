@@ -70,9 +70,9 @@ namespace Gtd.CoreDomain
             _eventStore.AppendEventsToStream(streamId, eventStream.StreamVersion, aggregate.EventsThatHappened);
         }
 
-        public void Execute(Command command)
+        public void Execute(Command cmd)
         {
-            ((dynamic) this).When((dynamic) command);
+            ((dynamic) this).When((dynamic) cmd);
         }
     }
 
