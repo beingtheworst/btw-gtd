@@ -20,7 +20,7 @@ namespace Gtd.Shell
             Register(new HelpCommand());
 
 
-            Register(new CaptureToInboxCommand());
+            Register(new CaptureThoughtCommand());
             Register(new ArchiveThoughtCommand());
             Register(new ViewInboxCommand());
             //Register(new OpenFactoryAction());

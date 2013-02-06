@@ -2,7 +2,7 @@ using System;
 
 namespace Gtd.Shell.Commands
 {
-    class CaptureToInboxCommand : IConsoleCommand
+    class CaptureThoughtCommand : IConsoleCommand
     {
         public string Usage
         {
