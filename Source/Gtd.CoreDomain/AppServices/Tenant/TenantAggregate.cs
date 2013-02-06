@@ -28,13 +28,13 @@ namespace Gtd.CoreDomain.AppServices.Tenant
             Apply(new ProjectDefined(_state.Id, id, name, time));
         }
 
-        public void CaptureInboxEntry(Guid requestId, string name, ITimeProvider provider)
+        public void CaptureThought(Guid requestId, string name, ITimeProvider provider)
         {
             // filter request IDs
             //var time = provider.GetUtcNow();
             //var id = new ActionId(NewGuidIfEmpty(requestId));
 
-            Apply(new InboxEntryCaptured(_state.Id, NewGuidIfEmpty(requestId), name, provider.GetUtcNow()));
+            Apply(new ThoughtCaptured(_state.Id, NewGuidIfEmpty(requestId), name, provider.GetUtcNow()));
         }
 
         static Guid NewGuidIfEmpty(Guid request)
@@ -55,6 +55,11 @@ namespace Gtd.CoreDomain.AppServices.Tenant
             var id = new ActionId(NewGuidIfEmpty(requestId));
 
             Apply(new ActionDefined(_state.Id, id, actionName, time));
+        }
+
+        public void ArchiveThought(Guid thoughtId, ITimeProvider provider)
+        {
+            throw new NotImplementedException();
         }
     }
 }

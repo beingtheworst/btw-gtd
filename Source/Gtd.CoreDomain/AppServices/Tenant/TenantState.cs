@@ -14,7 +14,11 @@ namespace Gtd.CoreDomain.AppServices.Tenant
             }
             return state;
         }
-        
+
+        public TenantState()
+        {
+            Inbox = new HashSet<Guid>();
+        }
 
         public void MakeStateRealizeThat(ITenantEvent thisEventTypeHappened)
         {
@@ -35,15 +39,20 @@ namespace Gtd.CoreDomain.AppServices.Tenant
 
         public TenantId Id { get; private set; }
 
-
+        public HashSet<Guid> Inbox { get; private set; } 
         public void When(TenantCreated e)
         {
             Id = e.Id;
         }
 
-        public void When(InboxEntryCaptured e)
+        public void When(ThoughtCaptured e)
         {
-            
+            Inbox.Add(e.ThoughtId);
+        }
+
+        public void When(ThoughtArchived e)
+        {
+            Inbox.Remove(e.ThoughtId);
         }
 
         public void When(ActionDefined e)

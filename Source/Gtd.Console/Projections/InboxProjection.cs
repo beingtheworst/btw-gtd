@@ -5,12 +5,12 @@ namespace Gtd.Shell.Projections
 {
     public sealed class InboxView
     {
-        public IDictionary<TenantId, List<InboxEntry>> TenantInboxes = new Dictionary<TenantId, List<InboxEntry>>();
+        public IDictionary<TenantId, List<Thought>> TenantInboxes = new Dictionary<TenantId, List<Thought>>();
 
-        public sealed class InboxEntry
+        public sealed class Thought
         {
             public Guid ItemId;
-            public string Thought;
+            public string Subject;
             public DateTime Added;
         }
     }
@@ -20,15 +20,15 @@ namespace Gtd.Shell.Projections
         
         public void When(TenantCreated e)
         {
-            ViewInstance.TenantInboxes.Add(e.Id, new List<InboxView.InboxEntry>());
+            ViewInstance.TenantInboxes.Add(e.Id, new List<InboxView.Thought>());
         }
 
-        public void When(InboxEntryCaptured c)
+        public void When(ThoughtCaptured c)
         {
-            ViewInstance.TenantInboxes[c.Id].Add(new InboxView.InboxEntry()
+            ViewInstance.TenantInboxes[c.Id].Add(new InboxView.Thought()
                 {
-                    ItemId = c.RequestId,
-                    Thought = c.Name,
+                    ItemId = c.ThoughtId,
+                    Subject = c.Thought,
                     Added = c.TimeUtc
                 });
         }

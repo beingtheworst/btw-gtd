@@ -16,9 +16,14 @@ namespace Gtd.CoreDomain
         }
 
 
-        public void When(CaptureInboxEntry c)
+        public void When(CaptureThought c)
         {
-            Update(c.Id, a => a.CaptureInboxEntry(c.RequestId, c.Name, _time));
+            Update(c.Id, a => a.CaptureThought(c.RequestId, c.Thought, _time));
+        }
+
+        public void When(ArchiveThought c)
+        {
+            Update(c.Id, a => a.ArchiveThought(c.ThoughtId, _time));
         }
 
         public void When(DefineAction c)

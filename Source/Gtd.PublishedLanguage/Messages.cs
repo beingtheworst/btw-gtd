@@ -19,34 +19,62 @@ namespace Gtd
         }
     }
     [DataContract(Namespace = "BTW2/GTD")]
-    public partial class CaptureInboxEntry : Command, ITenantCommand
+    public partial class CaptureThought : Command, ITenantCommand
     {
         [DataMember(Order = 1)] public TenantId Id { get; private set; }
         [DataMember(Order = 2)] public Guid RequestId { get; private set; }
-        [DataMember(Order = 3)] public string Name { get; private set; }
+        [DataMember(Order = 3)] public string Thought { get; private set; }
         
-        CaptureInboxEntry () {}
-        public CaptureInboxEntry (TenantId id, Guid requestId, string name)
+        CaptureThought () {}
+        public CaptureThought (TenantId id, Guid requestId, string thought)
         {
             Id = id;
             RequestId = requestId;
-            Name = name;
+            Thought = thought;
         }
     }
     [DataContract(Namespace = "BTW2/GTD")]
-    public partial class InboxEntryCaptured : Event, ITenantEvent
+    public partial class ThoughtCaptured : Event, ITenantEvent
     {
         [DataMember(Order = 1)] public TenantId Id { get; private set; }
-        [DataMember(Order = 2)] public Guid RequestId { get; private set; }
-        [DataMember(Order = 3)] public string Name { get; private set; }
+        [DataMember(Order = 2)] public Guid ThoughtId { get; private set; }
+        [DataMember(Order = 3)] public string Thought { get; private set; }
         [DataMember(Order = 4)] public DateTime TimeUtc { get; private set; }
         
-        InboxEntryCaptured () {}
-        public InboxEntryCaptured (TenantId id, Guid requestId, string name, DateTime timeUtc)
+        ThoughtCaptured () {}
+        public ThoughtCaptured (TenantId id, Guid thoughtId, string thought, DateTime timeUtc)
         {
             Id = id;
-            RequestId = requestId;
-            Name = name;
+            ThoughtId = thoughtId;
+            Thought = thought;
+            TimeUtc = timeUtc;
+        }
+    }
+    [DataContract(Namespace = "BTW2/GTD")]
+    public partial class ArchiveThought : Command, ITenantCommand
+    {
+        [DataMember(Order = 1)] public TenantId Id { get; private set; }
+        [DataMember(Order = 2)] public Guid ThoughtId { get; private set; }
+        
+        ArchiveThought () {}
+        public ArchiveThought (TenantId id, Guid thoughtId)
+        {
+            Id = id;
+            ThoughtId = thoughtId;
+        }
+    }
+    [DataContract(Namespace = "BTW2/GTD")]
+    public partial class ThoughtArchived : Event, ITenantEvent
+    {
+        [DataMember(Order = 1)] public TenantId Id { get; private set; }
+        [DataMember(Order = 2)] public Guid ThoughtId { get; private set; }
+        [DataMember(Order = 3)] public DateTime TimeUtc { get; private set; }
+        
+        ThoughtArchived () {}
+        public ThoughtArchived (TenantId id, Guid thoughtId, DateTime timeUtc)
+        {
+            Id = id;
+            ThoughtId = thoughtId;
             TimeUtc = timeUtc;
         }
     }
@@ -243,7 +271,8 @@ namespace Gtd
     
     public interface ITenantApplicationService
     {
-        void When(CaptureInboxEntry c);
+        void When(CaptureThought c);
+        void When(ArchiveThought c);
         void When(DefineAction c);
         void When(DefineProject c);
         void When(RemoveAction c);
@@ -253,7 +282,8 @@ namespace Gtd
     public interface ITenantState
     {
         void When(TenantCreated e);
-        void When(InboxEntryCaptured e);
+        void When(ThoughtCaptured e);
+        void When(ThoughtArchived e);
         void When(ActionDefined e);
         void When(ProjectDefined e);
         void When(ActionAssignedToProject e);

@@ -15,7 +15,7 @@ namespace Gtd.Shell.Commands
                 env.Log.Error("You must specify action name");
                 return;
             }
-            env.Tenant.When(new CaptureInboxEntry(env.Id, Guid.Empty, string.Join(" ", args)));
+            env.Tenant.When(new CaptureThought(env.Id, Guid.Empty, string.Join(" ", args)));
         }
     }
 }
