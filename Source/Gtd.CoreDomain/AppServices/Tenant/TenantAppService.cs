@@ -18,23 +18,23 @@ namespace Gtd.CoreDomain
 
         public void When(CaptureThought cmd)
         {
-            Update(cmd.Id, agg => agg.CaptureThought(cmd.RequestId, cmd.Thought, _time));
+            ChangeAggregate(cmd.Id, agg => agg.CaptureThought(cmd.RequestId, cmd.Thought, _time));
         }
 
         public void When(ArchiveThought cmd)
         {
-            Update(cmd.Id, agg => agg.ArchiveThought(cmd.ThoughtId, _time));
+            ChangeAggregate(cmd.Id, agg => agg.ArchiveThought(cmd.ThoughtId, _time));
         }
 
         public void When(DefineAction cmd)
         {
-            Update(cmd.Id, agg => agg.DefineAction(cmd.RequestId, cmd.ActionName, _time));
+            ChangeAggregate(cmd.Id, agg => agg.DefineAction(cmd.RequestId, cmd.ActionName, _time));
         }
 
 
         public void When(DefineProject cmd)
         {
-            Update(cmd.Id, agg => agg.DefineProject(cmd.RequestId, cmd.ProjectOutcome, _time));
+            ChangeAggregate(cmd.Id, agg => agg.DefineProject(cmd.RequestId, cmd.ProjectOutcome, _time));
         }
 
         public void When(RemoveAction cmd)
@@ -47,7 +47,8 @@ namespace Gtd.CoreDomain
             throw new NotImplementedException();
         }
 
-        void Update(TenantId id, Action<TenantAggregate> executeCommandUsingThis)
+        // lifetime change management & atomic consistency boundary of an Aggregate & its contents
+        void ChangeAggregate(TenantId id, Action<TenantAggregate> executeCommandUsingThis)
         {
             var streamId = id.Id.ToString();
             var eventStream = _eventStore.LoadEventStream(streamId);
