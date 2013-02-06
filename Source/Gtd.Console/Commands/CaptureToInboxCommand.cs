@@ -16,6 +16,7 @@ namespace Gtd.Shell.Commands
                 return;
             }
             env.Tenant.When(new CaptureThought(env.Id, Guid.Empty, string.Join(" ", args)));
+            env.Log.Info("Thought captured safely!");
         }
     }
 }

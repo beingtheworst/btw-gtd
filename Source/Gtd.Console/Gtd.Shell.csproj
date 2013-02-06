@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\ArchiveThoughtCommand.cs" />
     <Compile Include="Commands\CaptureToInboxCommand.cs" />
     <Compile Include="Commands\ExitCommand.cs" />
     <Compile Include="Commands\HelpCommand.cs" />

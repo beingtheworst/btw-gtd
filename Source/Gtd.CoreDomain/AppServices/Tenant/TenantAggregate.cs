@@ -59,7 +59,10 @@ namespace Gtd.CoreDomain.AppServices.Tenant
 
         public void ArchiveThought(Guid thoughtId, ITimeProvider provider)
         {
-            throw new NotImplementedException();
+            if (!_state.Inbox.Contains(thoughtId))
+                throw DomainError.Named("no thought", "Thought {0} not found", thoughtId);
+
+            Apply(new ThoughtArchived(_state.Id, thoughtId, provider.GetUtcNow()));
         }
     }
 }

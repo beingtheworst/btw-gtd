@@ -32,5 +32,9 @@ namespace Gtd.Shell.Projections
                     Added = c.TimeUtc
                 });
         }
+        public void When(ThoughtArchived e)
+        {
+            ViewInstance.TenantInboxes[e.Id].RemoveAll(t => t.ItemId == e.ThoughtId);
+        }
     }
 }

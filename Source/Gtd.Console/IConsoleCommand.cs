@@ -21,7 +21,7 @@ namespace Gtd.Shell
 
 
             Register(new CaptureToInboxCommand());
-
+            Register(new ArchiveThoughtCommand());
             Register(new ViewInboxCommand());
             //Register(new OpenFactoryAction());
             //Register(new RegisterBlueprintAction());
