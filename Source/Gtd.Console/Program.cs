@@ -61,6 +61,8 @@ namespace Gtd.Shell
         }
     }
 
+    
+
     public sealed class ConsoleEnvironment
     {
         public IEventStore Store { get; private set; }
@@ -70,7 +72,7 @@ namespace Gtd.Shell
         public TenantId Id { get; private set; }
 
 
-        public InboxProjection Inbox { get; private set; }
+        public InboxView InboxView { get; private set; }
 
         public static ConsoleEnvironment Build()
         {
@@ -112,7 +114,7 @@ namespace Gtd.Shell
                     Tenant = tenant, 
                     Commands = ConsoleCommands.Actions, 
                     Id = new TenantId(1),
-                    Inbox = inbox
+                    InboxView = inbox.ViewInstance
                 };
             return build;
         }

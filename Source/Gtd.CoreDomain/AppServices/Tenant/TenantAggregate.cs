@@ -35,8 +35,6 @@ namespace Gtd.CoreDomain.AppServices.Tenant
             //var id = new ActionId(NewGuidIfEmpty(requestId));
 
             Apply(new InboxEntryCaptured(_state.Id, NewGuidIfEmpty(requestId), name, provider.GetUtcNow()));
-
-            //Apply(new ActionCaptured(_state.Id, id, name, time));
         }
 
         static Guid NewGuidIfEmpty(Guid request)

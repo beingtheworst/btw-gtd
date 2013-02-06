@@ -97,6 +97,4 @@ namespace Gtd
             return Id.GetHashCode();
         }
     }
-
-    
 }

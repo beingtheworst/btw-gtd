@@ -1,33 +1,36 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Gtd.Shell.Projections
 {
-    public sealed class InboxProjection
+    public sealed class InboxView
     {
-        public sealed class InboxList
-        {
-            public IList<string> Items = new List<string>(); 
-        }
+        public IDictionary<TenantId, List<InboxEntry>> TenantInboxes = new Dictionary<TenantId, List<InboxEntry>>();
 
-        public IDictionary<TenantId, InboxList> Inbox = new Dictionary<TenantId, InboxList>(); 
-        
-        public void When(InboxEntryCaptured c)
+        public sealed class InboxEntry
         {
-            Inbox.GetOrAdd(c.Id).Items.Add(c.Name);
+            public Guid ItemId;
+            public string Thought;
+            public DateTime Added;
         }
     }
-
-    public static class ExtendDictionary
+    public sealed class InboxProjection
     {
-        public static V GetOrAdd<K, V>(this IDictionary<K, V> dict, K key) where V : new ()
+        public InboxView ViewInstance = new InboxView();
+        
+        public void When(TenantCreated e)
         {
-            V value;
-            if (!dict.TryGetValue(key, out value))
-            {
-                value = new V();
-                dict.Add(key,value);
-            }
-            return value;
+            ViewInstance.TenantInboxes.Add(e.Id, new List<InboxView.InboxEntry>());
+        }
+
+        public void When(InboxEntryCaptured c)
+        {
+            ViewInstance.TenantInboxes[c.Id].Add(new InboxView.InboxEntry()
+                {
+                    ItemId = c.RequestId,
+                    Thought = c.Name,
+                    Added = c.TimeUtc
+                });
         }
     }
 }
