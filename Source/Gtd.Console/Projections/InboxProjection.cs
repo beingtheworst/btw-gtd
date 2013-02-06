@@ -23,13 +23,13 @@ namespace Gtd.Shell.Projections
             ViewInstance.TenantInboxes.Add(e.Id, new List<InboxView.Thought>());
         }
 
-        public void When(ThoughtCaptured c)
+        public void When(ThoughtCaptured evnt)
         {
-            ViewInstance.TenantInboxes[c.Id].Add(new InboxView.Thought()
+            ViewInstance.TenantInboxes[evnt.Id].Add(new InboxView.Thought()
                 {
-                    ItemId = c.ThoughtId,
-                    Subject = c.Thought,
-                    Added = c.TimeUtc
+                    ItemId = evnt.ThoughtId,
+                    Subject = evnt.Thought,
+                    Added = evnt.TimeUtc
                 });
         }
         public void When(ThoughtArchived e)
