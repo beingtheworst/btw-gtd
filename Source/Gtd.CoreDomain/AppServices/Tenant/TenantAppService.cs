@@ -18,23 +18,23 @@ namespace Gtd.CoreDomain
 
         public void When(CaptureThought cmd)
         {
-            Update(cmd.Id, a => a.CaptureThought(cmd.RequestId, cmd.Thought, _time));
+            Update(cmd.Id, agg => agg.CaptureThought(cmd.RequestId, cmd.Thought, _time));
         }
 
         public void When(ArchiveThought cmd)
         {
-            Update(cmd.Id, a => a.ArchiveThought(cmd.ThoughtId, _time));
+            Update(cmd.Id, agg => agg.ArchiveThought(cmd.ThoughtId, _time));
         }
 
         public void When(DefineAction cmd)
         {
-            Update(cmd.Id, a => a.DefineAction(cmd.RequestId, cmd.ActionName, _time));
+            Update(cmd.Id, agg => agg.DefineAction(cmd.RequestId, cmd.ActionName, _time));
         }
 
 
         public void When(DefineProject cmd)
         {
-            Update(cmd.Id, a => a.DefineProject(cmd.RequestId, cmd.ProjectOutcome,_time));
+            Update(cmd.Id, agg => agg.DefineProject(cmd.RequestId, cmd.ProjectOutcome, _time));
         }
 
         public void When(RemoveAction cmd)
