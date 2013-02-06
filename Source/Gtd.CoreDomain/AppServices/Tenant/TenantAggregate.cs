@@ -7,7 +7,7 @@ namespace Gtd.CoreDomain.AppServices.Tenant
     {
         readonly TenantState _state;
 
-        public List<Event> EventsThatHappened = new List<Event>();
+        public List<Event> EventsThatCausedChange = new List<Event>();
 
         public TenantAggregate(TenantState state)
         {
@@ -45,7 +45,7 @@ namespace Gtd.CoreDomain.AppServices.Tenant
         void Apply(ITenantEvent e)
         {
             _state.MakeStateRealizeThat(e);
-            EventsThatHappened.Add((Event) e);
+            EventsThatCausedChange.Add((Event) e);
         }
 
         public void DefineAction(Guid requestId, string actionName, ITimeProvider provider)

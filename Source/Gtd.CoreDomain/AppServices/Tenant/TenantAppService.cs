@@ -48,27 +48,25 @@ namespace Gtd.CoreDomain
         }
 
         // lifetime change management & atomic consistency boundary of an Aggregate & its contents
-        void ChangeAggregate(TenantId id, Action<TenantAggregate> executeCommandUsingThis)
+        void ChangeAggregate(TenantId aggregateIdOf, Action<TenantAggregate> usingThisMethod)
         {
-            var streamId = id.Id.ToString();
-            var eventStream = _eventStore.LoadEventStream(streamId);
+            var eventStreamId = aggregateIdOf.Id.ToString();
+            var eventStream = _eventStore.LoadEventStream(eventStreamId);
+
+            var aggStateBeforeChanges = TenantState.BuildStateFromEventHistory(eventStream.Events);
 
 
-
-
-            var state = TenantState.BuildStateFromHistory(eventStream.Events);
-
-            
-            var aggregate = new TenantAggregate(state);
+            var aggregateToChange = new TenantAggregate(aggStateBeforeChanges);
 
             // HACK
             if (eventStream.Events.Count == 0)
             {
-                aggregate.Create(id);
+                aggregateToChange.Create(aggregateIdOf);
             }
 
-            executeCommandUsingThis(aggregate);
-            _eventStore.AppendEventsToStream(streamId, eventStream.StreamVersion, aggregate.EventsThatHappened);
+            usingThisMethod(aggregateToChange);
+
+            _eventStore.AppendEventsToStream(eventStreamId, eventStream.StreamVersion, aggregateToChange.EventsThatCausedChange);
         }
 
         public void Execute(Command cmd)

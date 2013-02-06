@@ -5,7 +5,7 @@ namespace Gtd.CoreDomain.AppServices.Tenant
 {
     public sealed class TenantState : ITenantState
     {
-        public static TenantState BuildStateFromHistory(IEnumerable<Event> events)
+        public static TenantState BuildStateFromEventHistory(IEnumerable<Event> events)
         {
             var state = new TenantState();
             foreach (var e in events)
