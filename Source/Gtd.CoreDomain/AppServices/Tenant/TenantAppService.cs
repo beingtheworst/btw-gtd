@@ -16,33 +16,33 @@ namespace Gtd.CoreDomain
         }
 
 
-        public void When(CaptureThought c)
+        public void When(CaptureThought cmd)
         {
-            Update(c.Id, a => a.CaptureThought(c.RequestId, c.Thought, _time));
+            Update(cmd.Id, a => a.CaptureThought(cmd.RequestId, cmd.Thought, _time));
         }
 
-        public void When(ArchiveThought c)
+        public void When(ArchiveThought cmd)
         {
-            Update(c.Id, a => a.ArchiveThought(c.ThoughtId, _time));
+            Update(cmd.Id, a => a.ArchiveThought(cmd.ThoughtId, _time));
         }
 
-        public void When(DefineAction c)
+        public void When(DefineAction cmd)
         {
-            Update(c.Id, a => a.DefineAction(c.RequestId, c.ActionName, _time));
+            Update(cmd.Id, a => a.DefineAction(cmd.RequestId, cmd.ActionName, _time));
         }
 
 
-        public void When(DefineProject c)
+        public void When(DefineProject cmd)
         {
-            Update(c.Id, a => a.DefineProject(c.RequestId, c.ProjectOutcome,_time));
+            Update(cmd.Id, a => a.DefineProject(cmd.RequestId, cmd.ProjectOutcome,_time));
         }
 
-        public void When(RemoveAction c)
+        public void When(RemoveAction cmd)
         {
             throw new NotImplementedException();
         }
 
-        public void When(CompleteAction c)
+        public void When(CompleteAction cmd)
         {
             throw new NotImplementedException();
         }
