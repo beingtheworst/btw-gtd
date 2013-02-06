@@ -12,12 +12,14 @@ namespace Gtd.Shell.Commands
                 env.Log.Error("Tenant not defined");
                 return;
             }
-            env.Log.Info("Inbox {0}", env.Id.Id);
+            var entries = env.InboxView.TenantInboxes[env.Id];
+            env.Log.Info("Inbox ({0} records)", env.Id.Id, entries.Count);
 
-            foreach (var entry in env.InboxView.TenantInboxes[env.Id])
+            
+            foreach (var entry in entries)
             {
                 var shortId = entry.ItemId.ToString().ToLowerInvariant().Replace("-", "").Substring(0, 3);
-                env.Log.Info(string.Format("  {0}  {1, -40}  {2}", shortId, entry.Subject, FormatEvil.TwitterOffestUtc(entry.Added)));
+                env.Log.Info(string.Format("  {0}  {1, -60}  {2,10}", shortId, entry.Subject, FormatEvil.TwitterOffestUtc(entry.Added)));
             }
         }
     }
