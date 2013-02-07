@@ -66,7 +66,7 @@ namespace Gtd.CoreDomain.AppServices.Tenant
 
         void Apply(ITenantEvent newEventThatHappened)
         {
-            _aggState.MakeStateRealizeThat(newEventThatHappened);
+            _aggState.MakeStateRealize(newEventThatHappened);
             EventsThatCausedChange.Add((Event)newEventThatHappened);
         }
 
