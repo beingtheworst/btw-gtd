@@ -43,8 +43,14 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
         {
             // filter request IDs
             var time = provider.GetUtcNow();
-            var actionId = new ActionId(NewGuidIfEmpty(requestId));
 
+            ProjectInfo info;
+            if (!_aggState.Projects.TryGetValue(projectId, out info))
+            {
+                throw DomainError.Named("unknown-project", "Unknown project {0}", projectId);
+            }
+
+            var actionId = new ActionId(NewGuidIfEmpty(requestId));
             Apply(new ActionDefined(_aggState.Id, actionId, projectId, outcome , time));
         }
 
