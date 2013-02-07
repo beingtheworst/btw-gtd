@@ -5,14 +5,16 @@ namespace Gtd.CoreDomain.AppServices.Tenant
 {
     public sealed class TenantAggregate
     {
-        readonly TenantState _state;
+        readonly TenantState _aggState;
 
         public List<Event> EventsThatCausedChange = new List<Event>();
 
-        public TenantAggregate(TenantState state)
+        public TenantAggregate(TenantState aggregateStateBeforeChanges)
         {
-            _state = state;
+            _aggState = aggregateStateBeforeChanges;
         }
+
+        // Aggregate Behaviors (Methods)
 
         public void Create(TenantId id)
         {
@@ -25,7 +27,7 @@ namespace Gtd.CoreDomain.AppServices.Tenant
             var time = provider.GetUtcNow();
             var id = new ProjectId(NewGuidIfEmpty(requestId));
 
-            Apply(new ProjectDefined(_state.Id, id, name, time));
+            Apply(new ProjectDefined(_aggState.Id, id, name, time));
         }
 
         public void CaptureThought(Guid requestId, string name, ITimeProvider provider)
@@ -34,18 +36,7 @@ namespace Gtd.CoreDomain.AppServices.Tenant
             //var time = provider.GetUtcNow();
             //var id = new ActionId(NewGuidIfEmpty(requestId));
 
-            Apply(new ThoughtCaptured(_state.Id, NewGuidIfEmpty(requestId), name, provider.GetUtcNow()));
-        }
-
-        static Guid NewGuidIfEmpty(Guid request)
-        {
-            return request == Guid.Empty ? Guid.NewGuid() : request;
-        }
-
-        void Apply(ITenantEvent e)
-        {
-            _state.MakeStateRealizeThat(e);
-            EventsThatCausedChange.Add((Event) e);
+            Apply(new ThoughtCaptured(_aggState.Id, NewGuidIfEmpty(requestId), name, provider.GetUtcNow()));
         }
 
         public void DefineAction(Guid requestId, string actionName, ITimeProvider provider)
@@ -54,15 +45,30 @@ namespace Gtd.CoreDomain.AppServices.Tenant
             var time = provider.GetUtcNow();
             var id = new ActionId(NewGuidIfEmpty(requestId));
 
-            Apply(new ActionDefined(_state.Id, id, actionName, time));
+            Apply(new ActionDefined(_aggState.Id, id, actionName, time));
         }
 
         public void ArchiveThought(Guid thoughtId, ITimeProvider provider)
         {
-            if (!_state.Inbox.Contains(thoughtId))
+            if (!_aggState.Inbox.Contains(thoughtId))
                 throw DomainError.Named("no thought", "Thought {0} not found", thoughtId);
 
-            Apply(new ThoughtArchived(_state.Id, thoughtId, provider.GetUtcNow()));
+            Apply(new ThoughtArchived(_aggState.Id, thoughtId, provider.GetUtcNow()));
         }
+
+
+        // Helper Methods
+
+        static Guid NewGuidIfEmpty(Guid request)
+        {
+            return request == Guid.Empty ? Guid.NewGuid() : request;
+        }
+
+        void Apply(ITenantEvent newEventThatHappened)
+        {
+            _aggState.MakeStateRealizeThat(newEventThatHappened);
+            EventsThatCausedChange.Add((Event)newEventThatHappened);
+        }
+
     }
 }
