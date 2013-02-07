@@ -40,7 +40,10 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
 
         public TrustedSystemId Id { get; private set; }
 
-        public HashSet<Guid> Inbox { get; private set; } 
+        public HashSet<Guid> Inbox { get; private set; }
+
+        // When Methods
+
         public void When(TrustedSystemCreated evnt)
         {
             Id = evnt.Id;
