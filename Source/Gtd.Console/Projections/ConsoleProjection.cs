@@ -43,7 +43,7 @@ namespace Gtd.Shell.Projections
        
         public void DefineProject(ProjectId projectId, string projectOutcome)
         {
-            Projects.Add(new Project()
+            Projects.Add(new Project
                 {
                     ProjectId = projectId,
                     Outcome = projectOutcome

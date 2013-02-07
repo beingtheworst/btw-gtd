@@ -15,7 +15,7 @@ namespace Gtd.Shell.Commands
             }
             var entries = env.ConsoleView.Systems[env.Id];
             var thoughts = entries.Thoughts;
-            env.Log.Info("Inbox ({0} records)", env.Id.Id, thoughts.Count);
+            env.Log.Info("Inbox ({0} records)", thoughts.Count);
 
             
             foreach (var entry in thoughts)
