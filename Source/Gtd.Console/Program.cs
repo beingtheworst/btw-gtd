@@ -72,13 +72,13 @@ namespace Gtd.Shell
         public TrustedSystemId Id { get; private set; }
 
 
-        public InboxView InboxView { get; private set; }
+        public ConsoleView ConsoleView { get; private set; }
 
         public static ConsoleEnvironment Build()
         {
             var handler = new SynchronousEventHandler();
 
-            var inbox = new InboxProjection();
+            var inbox = new ConsoleProjection();
             handler.RegisterHandler(inbox);
 
             //var store = new InMemoryStore(handler);
@@ -114,7 +114,7 @@ namespace Gtd.Shell
                     TrustedSystem = trustedSystem, 
                     Commands = ConsoleCommands.Actions, 
                     Id = new TrustedSystemId(1),
-                    InboxView = inbox.ViewInstance
+                    ConsoleView = inbox.ViewInstance
                 };
             return build;
         }

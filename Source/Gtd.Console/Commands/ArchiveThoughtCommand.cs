@@ -18,7 +18,7 @@ namespace Gtd.Shell.Commands
                 return;
             }
 
-            var inbox = env.InboxView.TrustedSystemInboxes[env.Id];
+            var inbox = env.ConsoleView.Systems[env.Id].Thoughts;
 
             var matches = inbox.Where(t => Matches(t.ItemId, args[0])).ToArray();
             if (matches.Length == 0)
