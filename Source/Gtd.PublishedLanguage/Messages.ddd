@@ -40,7 +40,7 @@ interface TrustedSystem(TrustedSystemId Id)
         ActionDefined!(actionId, string actionName, time)
 
     DefineProject?(requestId, string projectOutcome)
-    ProjectDefined!(projectId, string projectOutcome, time)
+        ProjectDefined!(projectId, string projectOutcome, time)
 
     ActionAssignedToProject!(actionId, ProjectId newProject, time)
     ActionRemovedFromProject!(actionId, ProjectId oldProject, time)

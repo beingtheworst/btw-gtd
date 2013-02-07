@@ -590,7 +590,6 @@ namespace Gtd.Shell
                 _appendOnlyStore.Append(name, mem.ToArray(), streamVersion);
             }
         }
-
     }
 
     public struct StoreRecord
