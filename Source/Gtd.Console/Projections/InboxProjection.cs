@@ -17,10 +17,10 @@ namespace Gtd.Shell.Projections
     public sealed class InboxProjection
     {
         public InboxView ViewInstance = new InboxView();
-        
-        public void When(TenantCreated e)
+
+        public void When(TenantCreated evnt)
         {
-            ViewInstance.TenantInboxes.Add(e.Id, new List<InboxView.Thought>());
+            ViewInstance.TenantInboxes.Add(evnt.Id, new List<InboxView.Thought>());
         }
 
         public void When(ThoughtCaptured evnt)
@@ -32,9 +32,9 @@ namespace Gtd.Shell.Projections
                     Added = evnt.TimeUtc
                 });
         }
-        public void When(ThoughtArchived e)
+        public void When(ThoughtArchived evnt)
         {
-            ViewInstance.TenantInboxes[e.Id].RemoveAll(t => t.ItemId == e.ThoughtId);
+            ViewInstance.TenantInboxes[evnt.Id].RemoveAll(t => t.ItemId == evnt.ThoughtId);
         }
     }
 }
