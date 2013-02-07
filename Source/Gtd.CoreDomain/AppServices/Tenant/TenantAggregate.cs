@@ -66,6 +66,10 @@ namespace Gtd.CoreDomain.AppServices.Tenant
 
         void Apply(ITenantEvent newEventThatHappened)
         {
+            // TODO: [kstreet] In the Factory sample these two lines of code were called
+            // the other way around (MakeStateRealize was called AFTER the newEventThatHappened was added to List)
+            // Does it matter?  Is one approach a little safer/more accurate than the other?
+
             _aggState.MakeStateRealize(newEventThatHappened);
             EventsThatCausedChange.Add((Event)newEventThatHappened);
         }
