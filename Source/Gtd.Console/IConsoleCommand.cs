@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using Gtd.Shell.Commands;
+using System.Reflection;
 
 namespace Gtd.Shell
 {
@@ -16,25 +17,20 @@ namespace Gtd.Shell
 
         static ConsoleCommands()
         {
-            Register(new ExitCommand());
-            Register(new HelpCommand());
+            var consoleCommandTypes = Assembly
+                .GetExecutingAssembly()
+                .GetTypes()
+                .Where(t => typeof(IConsoleCommand).IsAssignableFrom(t))
+                .Where(t => !t.IsAbstract)
+                .ToArray();
 
 
-            Register(new CaptureThoughtCommand());
-            Register(new ArchiveThoughtCommand());
-            Register(new ViewInboxCommand());
-            //Register(new OpenFactoryAction());
-            //Register(new RegisterBlueprintAction());
-            //Register(new HireEmployeeAction());
-            //Register(new RecieveShipmentAction());
-            //Register(new UnpackShipmentsAction());
-            
-            
-            //Register(new StoryAction());
-        }
-        static void Register(IConsoleCommand cmd)
-        {
-            Actions.Add(cmd.Usage.Split(new[] { ' ' }, 2).First(), cmd);
+            foreach (var type in consoleCommandTypes)
+            {
+                var instance = (IConsoleCommand) Activator.CreateInstance(type);
+                var key = instance.Usage.Split(new[] {' '}, 2).First();
+                Actions.Add(key, instance);
+            }
         }
     }
 }
