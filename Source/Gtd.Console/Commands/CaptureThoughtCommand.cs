@@ -6,13 +6,13 @@ namespace Gtd.Shell.Commands
     {
         public string Usage
         {
-            get { return "capture [action name]"; }
+            get { return "capture [thought description]"; }
         }
         public void Execute(ConsoleEnvironment env, string[] args)
         {
             if (args.Length == 0)
             {
-                env.Log.Error("You must specify action name");
+                env.Log.Error("You must describe the thought to capture.");
                 return;
             }
             env.Tenant.When(new CaptureThought(env.Id, Guid.Empty, string.Join(" ", args)));
