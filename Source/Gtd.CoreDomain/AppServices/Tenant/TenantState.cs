@@ -58,17 +58,17 @@ namespace Gtd.CoreDomain.AppServices.Tenant
 
         public void When(ActionDefined e)
         {
-            Actions.Add(e.Action, new ActionInfo(e.Action, e.ActionName));
+            Actions.Add(e.ActionId, new ActionInfo(e.ActionId, e.ActionName));
         }
 
         public void When(ProjectDefined e)
         {
-            Projects.Add(e.Project, new ProjectInfo(e.Project, e.ProjectOutcome));
+            Projects.Add(e.ProjectId, new ProjectInfo(e.ProjectId, e.ProjectOutcome));
         }
 
         public void When(ActionAssignedToProject e)
         {
-            var action = Actions[e.Action];
+            var action = Actions[e.ActionId];
             var project = Projects[e.NewProject];
 
             action.LinkToProject(project.Id);
@@ -77,13 +77,13 @@ namespace Gtd.CoreDomain.AppServices.Tenant
 
         public void When(ActionRemovedFromProject e)
         {
-            Actions[e.Action].RemoveFromProject(e.OldProject);
-            Projects[e.OldProject].RemoveAction(e.Action);
+            Actions[e.ActionId].RemoveFromProject(e.OldProject);
+            Projects[e.OldProject].RemoveAction(e.ActionId);
         }
 
         public void When(ActionMovedToProject e)
         {
-            var action = Actions[e.Action];
+            var action = Actions[e.ActionId];
             var oldProject = Projects[e.OldProject];
             var newProject = Projects[e.NewProject];
 
@@ -95,18 +95,18 @@ namespace Gtd.CoreDomain.AppServices.Tenant
 
         public void When(ActionRemoved e)
         {
-            Actions[e.Action].EnsureCleanRemoval();
-            Actions.Remove(e.Action);
+            Actions[e.ActionId].EnsureCleanRemoval();
+            Actions.Remove(e.ActionId);
         }
 
         public void When(ActionRenamed e)
         {
-            Actions[e.Action].Rename(e.Name);
+            Actions[e.ActionId].Rename(e.Name);
         }
 
         public void When(ActionCompleted e)
         {
-            Actions[e.Action].MarkAsCompleted();
+            Actions[e.ActionId].MarkAsCompleted();
         }
 
 

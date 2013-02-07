@@ -8,13 +8,13 @@ namespace Gtd
 
 // RequestId allows client software to generate a GUID to pass as a correlation Id in the Commands it sends to server.
 // The client can then check the server's views to see if the Id exists, and if so, can report that the request was received by server.
-const request = Guid RequestId
+const requestId = Guid RequestId
 
 // If a RequestId is provided by the client, that same Id will be assigned to the ProjectId/ActionId
 // to ease correlation between a client's request and the associated Command and Event messages resulting from it.
 // TODO: Consider adding unique integral (integer) number to these in the future to improve human lookup/UX/readability.
-const project = ProjectId Project
-const action = ActionId Action
+const projectId = ProjectId ProjectId
+const actionId = ActionId ActionId
 
 
 // TODO: Consider delegation?
@@ -31,29 +31,29 @@ interface Tenant(TenantId Id)
     TenantCreated!()
      
     // Captures an entry inside the inbox
-    CaptureThought?(request, string thought)
+    CaptureThought?(requestId, string thought)
         ThoughtCaptured!(Guid thoughtId, string thought, time)
 
     ArchiveThought?(Guid thoughtId)
         ThoughtArchived!(Guid thoughtId, time)
     
-    DefineAction?(request, string actionName)
-        ActionDefined!(action, string actionName, time)
+    DefineAction?(requestId, string actionName)
+        ActionDefined!(actionId, string actionName, time)
 
-    DefineProject?(request, string projectOutcome)
-    ProjectDefined!(project, string projectOutcome, time)
+    DefineProject?(requestId, string projectOutcome)
+    ProjectDefined!(projectId, string projectOutcome, time)
 
-    ActionAssignedToProject!(action, ProjectId newProject, time)
-    ActionRemovedFromProject!(action, ProjectId oldProject, time)
-    ActionMovedToProject!(action, ProjectId oldProject, ProjectId newProject, time)
+    ActionAssignedToProject!(actionId, ProjectId newProject, time)
+    ActionRemovedFromProject!(actionId, ProjectId oldProject, time)
+    ActionMovedToProject!(actionId, ProjectId oldProject, ProjectId newProject, time)
 
-    RemoveAction?(action)
+    RemoveAction?(actionId)
 
-    ActionRemoved!(action, time)
-    ActionRenamed!(action, string name, time)
+    ActionRemoved!(actionId, time)
+    ActionRenamed!(actionId, string name, time)
 
-    CompleteAction?(action)
-    ActionCompleted!(action, time)
+    CompleteAction?(actionId)
+    ActionCompleted!(actionId, time)
 
     // [abdullin]: We will add contexts later
 

@@ -97,15 +97,15 @@ namespace Gtd
     public partial class ActionDefined : Event, ITenantEvent
     {
         [DataMember(Order = 1)] public TenantId Id { get; private set; }
-        [DataMember(Order = 2)] public ActionId Action { get; private set; }
+        [DataMember(Order = 2)] public ActionId ActionId { get; private set; }
         [DataMember(Order = 3)] public string ActionName { get; private set; }
         [DataMember(Order = 4)] public DateTime TimeUtc { get; private set; }
         
         ActionDefined () {}
-        public ActionDefined (TenantId id, ActionId action, string actionName, DateTime timeUtc)
+        public ActionDefined (TenantId id, ActionId actionId, string actionName, DateTime timeUtc)
         {
             Id = id;
-            Action = action;
+            ActionId = actionId;
             ActionName = actionName;
             TimeUtc = timeUtc;
         }
@@ -129,15 +129,15 @@ namespace Gtd
     public partial class ProjectDefined : Event, ITenantEvent
     {
         [DataMember(Order = 1)] public TenantId Id { get; private set; }
-        [DataMember(Order = 2)] public ProjectId Project { get; private set; }
+        [DataMember(Order = 2)] public ProjectId ProjectId { get; private set; }
         [DataMember(Order = 3)] public string ProjectOutcome { get; private set; }
         [DataMember(Order = 4)] public DateTime TimeUtc { get; private set; }
         
         ProjectDefined () {}
-        public ProjectDefined (TenantId id, ProjectId project, string projectOutcome, DateTime timeUtc)
+        public ProjectDefined (TenantId id, ProjectId projectId, string projectOutcome, DateTime timeUtc)
         {
             Id = id;
-            Project = project;
+            ProjectId = projectId;
             ProjectOutcome = projectOutcome;
             TimeUtc = timeUtc;
         }
@@ -146,15 +146,15 @@ namespace Gtd
     public partial class ActionAssignedToProject : Event, ITenantEvent
     {
         [DataMember(Order = 1)] public TenantId Id { get; private set; }
-        [DataMember(Order = 2)] public ActionId Action { get; private set; }
+        [DataMember(Order = 2)] public ActionId ActionId { get; private set; }
         [DataMember(Order = 3)] public ProjectId NewProject { get; private set; }
         [DataMember(Order = 4)] public DateTime TimeUtc { get; private set; }
         
         ActionAssignedToProject () {}
-        public ActionAssignedToProject (TenantId id, ActionId action, ProjectId newProject, DateTime timeUtc)
+        public ActionAssignedToProject (TenantId id, ActionId actionId, ProjectId newProject, DateTime timeUtc)
         {
             Id = id;
-            Action = action;
+            ActionId = actionId;
             NewProject = newProject;
             TimeUtc = timeUtc;
         }
@@ -163,15 +163,15 @@ namespace Gtd
     public partial class ActionRemovedFromProject : Event, ITenantEvent
     {
         [DataMember(Order = 1)] public TenantId Id { get; private set; }
-        [DataMember(Order = 2)] public ActionId Action { get; private set; }
+        [DataMember(Order = 2)] public ActionId ActionId { get; private set; }
         [DataMember(Order = 3)] public ProjectId OldProject { get; private set; }
         [DataMember(Order = 4)] public DateTime TimeUtc { get; private set; }
         
         ActionRemovedFromProject () {}
-        public ActionRemovedFromProject (TenantId id, ActionId action, ProjectId oldProject, DateTime timeUtc)
+        public ActionRemovedFromProject (TenantId id, ActionId actionId, ProjectId oldProject, DateTime timeUtc)
         {
             Id = id;
-            Action = action;
+            ActionId = actionId;
             OldProject = oldProject;
             TimeUtc = timeUtc;
         }
@@ -180,16 +180,16 @@ namespace Gtd
     public partial class ActionMovedToProject : Event, ITenantEvent
     {
         [DataMember(Order = 1)] public TenantId Id { get; private set; }
-        [DataMember(Order = 2)] public ActionId Action { get; private set; }
+        [DataMember(Order = 2)] public ActionId ActionId { get; private set; }
         [DataMember(Order = 3)] public ProjectId OldProject { get; private set; }
         [DataMember(Order = 4)] public ProjectId NewProject { get; private set; }
         [DataMember(Order = 5)] public DateTime TimeUtc { get; private set; }
         
         ActionMovedToProject () {}
-        public ActionMovedToProject (TenantId id, ActionId action, ProjectId oldProject, ProjectId newProject, DateTime timeUtc)
+        public ActionMovedToProject (TenantId id, ActionId actionId, ProjectId oldProject, ProjectId newProject, DateTime timeUtc)
         {
             Id = id;
-            Action = action;
+            ActionId = actionId;
             OldProject = oldProject;
             NewProject = newProject;
             TimeUtc = timeUtc;
@@ -199,27 +199,27 @@ namespace Gtd
     public partial class RemoveAction : Command, ITenantCommand
     {
         [DataMember(Order = 1)] public TenantId Id { get; private set; }
-        [DataMember(Order = 2)] public ActionId Action { get; private set; }
+        [DataMember(Order = 2)] public ActionId ActionId { get; private set; }
         
         RemoveAction () {}
-        public RemoveAction (TenantId id, ActionId action)
+        public RemoveAction (TenantId id, ActionId actionId)
         {
             Id = id;
-            Action = action;
+            ActionId = actionId;
         }
     }
     [DataContract(Namespace = "BTW2/GTD")]
     public partial class ActionRemoved : Event, ITenantEvent
     {
         [DataMember(Order = 1)] public TenantId Id { get; private set; }
-        [DataMember(Order = 2)] public ActionId Action { get; private set; }
+        [DataMember(Order = 2)] public ActionId ActionId { get; private set; }
         [DataMember(Order = 3)] public DateTime TimeUtc { get; private set; }
         
         ActionRemoved () {}
-        public ActionRemoved (TenantId id, ActionId action, DateTime timeUtc)
+        public ActionRemoved (TenantId id, ActionId actionId, DateTime timeUtc)
         {
             Id = id;
-            Action = action;
+            ActionId = actionId;
             TimeUtc = timeUtc;
         }
     }
@@ -227,15 +227,15 @@ namespace Gtd
     public partial class ActionRenamed : Event, ITenantEvent
     {
         [DataMember(Order = 1)] public TenantId Id { get; private set; }
-        [DataMember(Order = 2)] public ActionId Action { get; private set; }
+        [DataMember(Order = 2)] public ActionId ActionId { get; private set; }
         [DataMember(Order = 3)] public string Name { get; private set; }
         [DataMember(Order = 4)] public DateTime TimeUtc { get; private set; }
         
         ActionRenamed () {}
-        public ActionRenamed (TenantId id, ActionId action, string name, DateTime timeUtc)
+        public ActionRenamed (TenantId id, ActionId actionId, string name, DateTime timeUtc)
         {
             Id = id;
-            Action = action;
+            ActionId = actionId;
             Name = name;
             TimeUtc = timeUtc;
         }
@@ -244,27 +244,27 @@ namespace Gtd
     public partial class CompleteAction : Command, ITenantCommand
     {
         [DataMember(Order = 1)] public TenantId Id { get; private set; }
-        [DataMember(Order = 2)] public ActionId Action { get; private set; }
+        [DataMember(Order = 2)] public ActionId ActionId { get; private set; }
         
         CompleteAction () {}
-        public CompleteAction (TenantId id, ActionId action)
+        public CompleteAction (TenantId id, ActionId actionId)
         {
             Id = id;
-            Action = action;
+            ActionId = actionId;
         }
     }
     [DataContract(Namespace = "BTW2/GTD")]
     public partial class ActionCompleted : Event, ITenantEvent
     {
         [DataMember(Order = 1)] public TenantId Id { get; private set; }
-        [DataMember(Order = 2)] public ActionId Action { get; private set; }
+        [DataMember(Order = 2)] public ActionId ActionId { get; private set; }
         [DataMember(Order = 3)] public DateTime TimeUtc { get; private set; }
         
         ActionCompleted () {}
-        public ActionCompleted (TenantId id, ActionId action, DateTime timeUtc)
+        public ActionCompleted (TenantId id, ActionId actionId, DateTime timeUtc)
         {
             Id = id;
-            Action = action;
+            ActionId = actionId;
             TimeUtc = timeUtc;
         }
     }

@@ -25,9 +25,9 @@ namespace Gtd.CoreDomain.AppServices.Tenant
         {
             // filter request IDs
             var time = provider.GetUtcNow();
-            var id = new ProjectId(NewGuidIfEmpty(requestId));
+            var projectId = new ProjectId(NewGuidIfEmpty(requestId));
 
-            Apply(new ProjectDefined(_aggState.Id, id, name, time));
+            Apply(new ProjectDefined(_aggState.Id, projectId, name, time));
         }
 
         public void CaptureThought(Guid requestId, string name, ITimeProvider provider)
@@ -43,9 +43,9 @@ namespace Gtd.CoreDomain.AppServices.Tenant
         {
             // filter request IDs
             var time = provider.GetUtcNow();
-            var id = new ActionId(NewGuidIfEmpty(requestId));
+            var actionId = new ActionId(NewGuidIfEmpty(requestId));
 
-            Apply(new ActionDefined(_aggState.Id, id, actionName, time));
+            Apply(new ActionDefined(_aggState.Id, actionId, actionName, time));
         }
 
         public void ArchiveThought(Guid thoughtId, ITimeProvider provider)
@@ -59,9 +59,9 @@ namespace Gtd.CoreDomain.AppServices.Tenant
 
         // Helper Methods
 
-        static Guid NewGuidIfEmpty(Guid request)
+        static Guid NewGuidIfEmpty(Guid requestId)
         {
-            return request == Guid.Empty ? Guid.NewGuid() : request;
+            return requestId == Guid.Empty ? Guid.NewGuid() : requestId;
         }
 
         void Apply(ITenantEvent newEventThatHappened)
