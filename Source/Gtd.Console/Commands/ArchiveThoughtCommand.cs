@@ -5,8 +5,11 @@ namespace Gtd.Shell.Commands
 {
     class ArchiveThoughtCommand : IConsoleCommand
     {
+        public string Key { get { return "archive"; } }
         public string Usage { get { return @"archive <thought-id>
     Archives thought from the inbox (hiding it from there). You need to provide first digits of thought id."; } }
+
+
         public void Execute(ConsoleEnvironment env, string[] args)
         {
             if (args.Length == 0)

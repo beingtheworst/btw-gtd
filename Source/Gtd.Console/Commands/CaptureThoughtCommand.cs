@@ -4,9 +4,11 @@ namespace Gtd.Shell.Commands
 {
     class CaptureThoughtCommand : IConsoleCommand
     {
+        public string Key { get { return "capture"; } }
+
         public string Usage
         {
-            get { return "capture [thought description]"; }
+            get { return "capture <thought description>"; }
         }
         public void Execute(ConsoleEnvironment env, string[] args)
         {

@@ -4,6 +4,7 @@ namespace Gtd.Shell.Commands
 {
     class HelpCommand : IConsoleCommand
     {
+        public string Key { get { return "help"; } }
         public string Usage { get { return "help [<command>]"; } }
         public void Execute(ConsoleEnvironment env, string[] args)
         {
