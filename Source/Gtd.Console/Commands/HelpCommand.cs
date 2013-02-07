@@ -4,7 +4,7 @@ namespace Gtd.Shell.Commands
 {
     class HelpCommand : IConsoleCommand
     {
-        public string Key { get { return "help"; } }
+        public string[] Key { get { return new[] {"help","?"}; } }
         public string Usage { get { return "help [<command>]"; } }
         public void Execute(ConsoleEnvironment env, string[] args)
         {
@@ -20,12 +20,14 @@ namespace Gtd.Shell.Commands
                 return;
             }
             env.Log.Info("Available commands");
-            foreach (var actionHandler in env.Commands.OrderBy(h => h.Key))
+            foreach (var group in env.Commands.GroupBy(p => p.Value).OrderBy(c => c.GetType().Name))
             {
-                env.Log.Info("  {0}", actionHandler.Key.ToUpperInvariant());
-                if (!string.IsNullOrWhiteSpace(actionHandler.Value.Usage))
+                var keys = string.Join(", ", group.Select(p => p.Key.ToUpperInvariant()));
+                env.Log.Info("  {0}", keys);
+                var usage = @group.Key.Usage;
+                if (!string.IsNullOrWhiteSpace(usage))
                 {
-                    env.Log.Info("    {0}", actionHandler.Value.Usage);
+                    env.Log.Debug("    {0}", usage);
                 }
             }
 

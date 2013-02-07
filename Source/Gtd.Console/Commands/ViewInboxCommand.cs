@@ -5,7 +5,7 @@ namespace Gtd.Shell.Commands
     class ViewInboxCommand : IConsoleCommand
     {
         public string Usage { get { return "inbox"; } }
-        public string Key { get { return "ibox"; } }
+        public string[] Key { get { return new[] {"ibox", "in"}; } }
         public void Execute(ConsoleEnvironment env, string[] args)
         {
             if (!env.ConsoleView.Systems.ContainsKey(env.Id))

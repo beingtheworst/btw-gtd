@@ -12,14 +12,14 @@ namespace Gtd.Shell
     /// </summary>
     public interface IConsoleCommand
     {
-        string Key { get; }
+        string[] Key { get; }
         string Usage { get; }
         void Execute(ConsoleEnvironment env, string[] args);
     }
 
     public static class ConsoleCommands
     {
-        public static IDictionary<string, IConsoleCommand> Actions = new Dictionary<string, IConsoleCommand>();
+        public static IDictionary<string, IConsoleCommand> Actions = new Dictionary<string, IConsoleCommand>(StringComparer.InvariantCultureIgnoreCase);
 
         static ConsoleCommands()
         {
@@ -34,7 +34,11 @@ namespace Gtd.Shell
             foreach (var type in consoleCommandTypes)
             {
                 var instance = (IConsoleCommand) Activator.CreateInstance(type);
-                Actions.Add(instance.Key, instance);
+
+                foreach (var s in instance.Key)
+                {
+                    Actions.Add(s, instance);
+                }
             }
         }
     }

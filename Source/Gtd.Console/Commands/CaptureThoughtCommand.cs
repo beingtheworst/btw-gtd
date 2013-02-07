@@ -4,7 +4,7 @@ namespace Gtd.Shell.Commands
 {
     class CaptureThoughtCommand : IConsoleCommand
     {
-        public string Key { get { return "capture"; } }
+        public string[] Key { get { return new[] {"capture", "c"}; } }
 
         public string Usage
         {

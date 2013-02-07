@@ -13,11 +13,11 @@ namespace Gtd.Shell.Commands
     {
         public string Usage
         {
-            get { return @"proj [project outcome]
+            get { return @"project [project outcome]
     Define new project with a given outcome"; }
         }
 
-        public string Key { get { return "proj"; } }
+        public string[] Key { get { return new[] {"project", "dp"}; } }
 
         public void Execute(ConsoleEnvironment env, string[] args)
         {
