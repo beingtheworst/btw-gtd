@@ -41,72 +41,72 @@ namespace Gtd.CoreDomain.AppServices.Tenant
         public TenantId Id { get; private set; }
 
         public HashSet<Guid> Inbox { get; private set; } 
-        public void When(TenantCreated e)
+        public void When(TenantCreated evnt)
         {
-            Id = e.Id;
+            Id = evnt.Id;
         }
 
-        public void When(ThoughtCaptured e)
+        public void When(ThoughtCaptured evnt)
         {
-            Inbox.Add(e.ThoughtId);
+            Inbox.Add(evnt.ThoughtId);
         }
 
-        public void When(ThoughtArchived e)
+        public void When(ThoughtArchived evnt)
         {
-            Inbox.Remove(e.ThoughtId);
+            Inbox.Remove(evnt.ThoughtId);
         }
 
-        public void When(ActionDefined e)
+        public void When(ActionDefined evnt)
         {
-            Actions.Add(e.ActionId, new ActionInfo(e.ActionId, e.ActionName));
+            Actions.Add(evnt.ActionId, new ActionInfo(evnt.ActionId, evnt.ActionName));
         }
 
-        public void When(ProjectDefined e)
+        public void When(ProjectDefined evnt)
         {
-            Projects.Add(e.ProjectId, new ProjectInfo(e.ProjectId, e.ProjectOutcome));
+            Projects.Add(evnt.ProjectId, new ProjectInfo(evnt.ProjectId, evnt.ProjectOutcome));
         }
 
-        public void When(ActionAssignedToProject e)
+        public void When(ActionAssignedToProject evnt)
         {
-            var action = Actions[e.ActionId];
-            var project = Projects[e.NewProject];
+            var action = Actions[evnt.ActionId];
+            var project = Projects[evnt.NewProject];
 
             action.LinkToProject(project.Id);
             project.AddAction(action.Id);
         }
 
-        public void When(ActionRemovedFromProject e)
+        public void When(ActionRemovedFromProject evnt)
         {
-            Actions[e.ActionId].RemoveFromProject(e.OldProject);
-            Projects[e.OldProject].RemoveAction(e.ActionId);
+            Actions[evnt.ActionId].RemoveFromProject(evnt.OldProject);
+            Projects[evnt.OldProject].RemoveAction(evnt.ActionId);
         }
 
-        public void When(ActionMovedToProject e)
+        public void When(ActionMovedToProject evnt)
         {
-            var action = Actions[e.ActionId];
-            var oldProject = Projects[e.OldProject];
-            var newProject = Projects[e.NewProject];
+            var action = Actions[evnt.ActionId];
+            var oldProject = Projects[evnt.OldProject];
+            var newProject = Projects[evnt.NewProject];
 
-            action.MoveToProject(e.OldProject, e.NewProject);
+            action.MoveToProject(evnt.OldProject, evnt.NewProject);
             
             newProject.AddAction(action.Id);
             oldProject.RemoveAction(action.Id);
         }
 
-        public void When(ActionRemoved e)
+        public void When(ActionRemoved evnt)
         {
-            Actions[e.ActionId].EnsureCleanRemoval();
-            Actions.Remove(e.ActionId);
+            Actions[evnt.ActionId].EnsureCleanRemoval();
+            Actions.Remove(evnt.ActionId);
         }
 
-        public void When(ActionRenamed e)
+        public void When(ActionRenamed evnt)
         {
-            Actions[e.ActionId].Rename(e.Name);
+            Actions[evnt.ActionId].Rename(evnt.Name);
         }
 
-        public void When(ActionCompleted e)
+        public void When(ActionCompleted evnt)
         {
-            Actions[e.ActionId].MarkAsCompleted();
+            Actions[evnt.ActionId].MarkAsCompleted();
         }
 
 
@@ -205,7 +205,4 @@ namespace Gtd.CoreDomain.AppServices.Tenant
             _actions.Remove(action);
         }
     }
-
-
-    
 }
