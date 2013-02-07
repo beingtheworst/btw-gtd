@@ -5,13 +5,13 @@ using System.Runtime.Serialization;
 namespace Gtd
 {
     [Serializable]
-    public sealed class TenantId : AbstractIdentity<long>
+    public sealed class TrustedSystemId : AbstractIdentity<long>
     {
-        public const string TagValue = "tenant";
+        public const string TagValue = "trustedSystem";
 
 
 
-        public TenantId(long id)
+        public TrustedSystemId(long id)
         {
             Contract.Requires(id > 0);
             Id = id;
@@ -26,7 +26,7 @@ namespace Gtd
         [DataMember(Order = 1)]
         public override long Id { get; protected set; }
 
-        public TenantId() { }
+        public TrustedSystemId() { }
     }
 
     [DataContract(Namespace = "BTW2/GTD")]

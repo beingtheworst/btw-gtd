@@ -1,24 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Gtd.CoreDomain.AppServices.Tenant
+namespace Gtd.CoreDomain.AppServices.TrustedSystem
 {
-    public sealed class TenantAggregate
+    public sealed class TrustedSystemAggregate
     {
-        readonly TenantState _aggState;
+        readonly TrustedSystemState _aggState;
 
         public List<Event> EventsThatCausedChange = new List<Event>();
 
-        public TenantAggregate(TenantState aggregateStateBeforeChanges)
+        public TrustedSystemAggregate(TrustedSystemState aggregateStateBeforeChanges)
         {
             _aggState = aggregateStateBeforeChanges;
         }
 
         // Aggregate Behaviors (Methods)
 
-        public void Create(TenantId id)
+        public void Create(TrustedSystemId id)
         {
-            Apply(new TenantCreated(id));
+            Apply(new TrustedSystemCreated(id));
         }
 
         public void DefineProject(Guid requestId, string name, ITimeProvider provider)
@@ -64,13 +64,14 @@ namespace Gtd.CoreDomain.AppServices.Tenant
             return requestId == Guid.Empty ? Guid.NewGuid() : requestId;
         }
 
-        void Apply(ITenantEvent newEventThatHappened)
+        void Apply(ITrustedSystemEvent newEventThatHappened)
         {
             // TODO: [kstreet] In the Factory sample these two lines of code were called
             // the other way around (MakeStateRealize was called AFTER the newEventThatHappened was added to List)
             // Does it matter?  Is one approach a little safer/more accurate than the other?
 
             _aggState.MakeStateRealize(newEventThatHappened);
+
             EventsThatCausedChange.Add((Event)newEventThatHappened);
         }
 

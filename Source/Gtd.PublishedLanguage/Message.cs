@@ -9,12 +9,12 @@ namespace Gtd
     public abstract class Event : Message {}
 
 
-    public interface ITenantCommand
+    public interface ITrustedSystemCommand
     {
-        TenantId Id { get; }
+        TrustedSystemId Id { get; }
     }
-    public interface ITenantEvent
+    public interface ITrustedSystemEvent
     {
-        TenantId Id { get; }
+        TrustedSystemId Id { get; }
     }
 }

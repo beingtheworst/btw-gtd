@@ -5,7 +5,7 @@ namespace Gtd.Shell.Projections
 {
     public sealed class InboxView
     {
-        public IDictionary<TenantId, List<Thought>> TenantInboxes = new Dictionary<TenantId, List<Thought>>();
+        public IDictionary<TrustedSystemId, List<Thought>> TrustedSystemInboxes = new Dictionary<TrustedSystemId, List<Thought>>();
 
         public sealed class Thought
         {
@@ -18,14 +18,14 @@ namespace Gtd.Shell.Projections
     {
         public InboxView ViewInstance = new InboxView();
 
-        public void When(TenantCreated evnt)
+        public void When(TrustedSystemCreated evnt)
         {
-            ViewInstance.TenantInboxes.Add(evnt.Id, new List<InboxView.Thought>());
+            ViewInstance.TrustedSystemInboxes.Add(evnt.Id, new List<InboxView.Thought>());
         }
 
         public void When(ThoughtCaptured evnt)
         {
-            ViewInstance.TenantInboxes[evnt.Id].Add(new InboxView.Thought()
+            ViewInstance.TrustedSystemInboxes[evnt.Id].Add(new InboxView.Thought()
                 {
                     ItemId = evnt.ThoughtId,
                     Subject = evnt.Thought,
@@ -34,7 +34,7 @@ namespace Gtd.Shell.Projections
         }
         public void When(ThoughtArchived evnt)
         {
-            ViewInstance.TenantInboxes[evnt.Id].RemoveAll(t => t.ItemId == evnt.ThoughtId);
+            ViewInstance.TrustedSystemInboxes[evnt.Id].RemoveAll(t => t.ItemId == evnt.ThoughtId);
         }
     }
 }

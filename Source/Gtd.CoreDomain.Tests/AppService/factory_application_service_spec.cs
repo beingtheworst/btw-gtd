@@ -9,7 +9,7 @@ namespace Gtd.CoreDomain.Tests.AppService
     /// service. It will be responsible for wiring in test version of services to
     /// factory and executing commands
     /// </summary>
-    public abstract class tenant_application_service_spec : application_service_spec
+    public abstract class trusted_system_application_service_spec : application_service_spec
     {
         //public TestBlueprintLibrary Library;
 
@@ -21,20 +21,20 @@ namespace Gtd.CoreDomain.Tests.AppService
         protected override Event[] ExecuteCommand(Event[] given, Command cmd)
         {
             var store = new SingleCommitMemoryStore();
-            foreach (var e in given.OfType<ITenantEvent>())
+            foreach (var e in given.OfType<ITrustedSystemEvent>())
             {
                 store.Preload(e.Id.ToString(), (Event) e);
             }
-            new TenantAppService(store, null).Execute(cmd);
+            new TrustedSystemAppService(store, null).Execute(cmd);
             return store.Appended ?? new Event[0];
         }
 
 
-        protected void When(ITenantCommand when)
+        protected void When(ITrustedSystemCommand when)
         {
             WhenMessage((Command) when);
         }
-        protected void Given(params ITenantEvent[] given)
+        protected void Given(params ITrustedSystemEvent[] given)
         {
             GivenMessages(given.Cast<Event>());
         }
@@ -42,7 +42,7 @@ namespace Gtd.CoreDomain.Tests.AppService
         {
             GivenMessages(setup);
         }
-        protected void Expect(params ITenantEvent[] given)
+        protected void Expect(params ITrustedSystemEvent[] given)
         {
             ExpectMessages(given.Cast<Event>());
         }// additional helper builders

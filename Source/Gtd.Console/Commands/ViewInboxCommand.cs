@@ -7,12 +7,12 @@ namespace Gtd.Shell.Commands
         public string Usage { get { return "inbox"; } }
         public void Execute(ConsoleEnvironment env, string[] args)
         {
-            if (!env.InboxView.TenantInboxes.ContainsKey(env.Id))
+            if (!env.InboxView.TrustedSystemInboxes.ContainsKey(env.Id))
             {
-                env.Log.Error("Tenant not defined");
+                env.Log.Error("Trusted System not defined");
                 return;
             }
-            var entries = env.InboxView.TenantInboxes[env.Id];
+            var entries = env.InboxView.TrustedSystemInboxes[env.Id];
             env.Log.Info("Inbox ({0} records)", env.Id.Id, entries.Count);
 
             

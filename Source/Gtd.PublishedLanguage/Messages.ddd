@@ -19,16 +19,15 @@ const actionId = ActionId ActionId
 
 // TODO: Consider delegation?
 
-// TODO: [kstreet] RE: E22, Reconsider "Tenant" naming and/or the BC it is in.
-// Tentant contains an individual Person's universe of "Getting Things Done" stuff
-interface Tenant(TenantId Id)
+// TrustedSystem contains a Person's instance of their single, trusted, "Getting Things Done" system
+interface TrustedSystem(TrustedSystemId Id)
 {
-    if ? = Command, ITenantCommand
-    if ! = Event, ITenantEvent
+    if ? = Command, ITrustedSystemCommand
+    if ! = Event, ITrustedSystemEvent
 
     // a creation/initialization/preparation Event like this is what all Aggregates tend to have
-    // TODO: This method is not implemented yet because in E22 we are not writing executable code yet
-    TenantCreated!()
+    // TODO: This method is not implemented yet because in E22 we are not writing executable code yet.
+    TrustedSystemCreated!()
      
     // Captures an entry inside the inbox
     CaptureThought?(requestId, string thought)

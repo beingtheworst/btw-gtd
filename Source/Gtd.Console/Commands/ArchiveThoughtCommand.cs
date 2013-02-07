@@ -15,7 +15,7 @@ namespace Gtd.Shell.Commands
                 return;
             }
 
-            var inbox = env.InboxView.TenantInboxes[env.Id];
+            var inbox = env.InboxView.TrustedSystemInboxes[env.Id];
 
             var matches = inbox.Where(t => Matches(t.ItemId, args[0])).ToArray();
             if (matches.Length == 0)
@@ -25,7 +25,7 @@ namespace Gtd.Shell.Commands
             }
             if (matches.Length == 1)
             {
-                env.Tenant.When(new ArchiveThought(env.Id, matches[0].ItemId));
+                env.TrustedSystem.When(new ArchiveThought(env.Id, matches[0].ItemId));
                 env.Log.Info("Archived");
                 return;
             }

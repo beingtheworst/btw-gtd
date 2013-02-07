@@ -1,27 +1,27 @@
 using System;
 using System.Collections.Generic;
 
-namespace Gtd.CoreDomain.AppServices.Tenant
+namespace Gtd.CoreDomain.AppServices.TrustedSystem
 {
-    public sealed class TenantState : ITenantState
+    public sealed class TrustedSystemState : ITrustedSystemState
     {
-        public static TenantState BuildStateFromEventHistory(IEnumerable<Event> events)
+        public static TrustedSystemState BuildStateFromEventHistory(IEnumerable<Event> events)
         {
-            var aggState = new TenantState();
+            var aggState = new TrustedSystemState();
 
             foreach (var eventThatHappened in events)
             {
-                aggState.MakeStateRealize((ITenantEvent) eventThatHappened);
+                aggState.MakeStateRealize((ITrustedSystemEvent) eventThatHappened);
             }
             return aggState;
         }
 
-        public TenantState()
+        public TrustedSystemState()
         {
             Inbox = new HashSet<Guid>();
         }
 
-        public void MakeStateRealize(ITenantEvent thisEventTypeHappened)
+        public void MakeStateRealize(ITrustedSystemEvent thisEventTypeHappened)
         {
             #region What Is This Code/Syntax Doing?
             // Announce that a specific Type of Event Message occured
@@ -38,10 +38,10 @@ namespace Gtd.CoreDomain.AppServices.Tenant
             ((dynamic)this).When((dynamic)thisEventTypeHappened);
         }
 
-        public TenantId Id { get; private set; }
+        public TrustedSystemId Id { get; private set; }
 
         public HashSet<Guid> Inbox { get; private set; } 
-        public void When(TenantCreated evnt)
+        public void When(TrustedSystemCreated evnt)
         {
             Id = evnt.Id;
         }

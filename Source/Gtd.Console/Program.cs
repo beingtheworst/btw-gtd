@@ -66,10 +66,10 @@ namespace Gtd.Shell
     public sealed class ConsoleEnvironment
     {
         public IEventStore Store { get; private set; }
-        public ITenantApplicationService Tenant { get; private set; }
+        public ITrustedSystemApplicationService TrustedSystem { get; private set; }
         public IDictionary<string, IConsoleCommand> Commands { get; private set; }
         public readonly ILogger Log = LogManager.GetLoggerFor<ConsoleEnvironment>();
-        public TenantId Id { get; private set; }
+        public TrustedSystemId Id { get; private set; }
 
 
         public InboxView InboxView { get; private set; }
@@ -107,13 +107,13 @@ namespace Gtd.Shell
             
             var events = new EventStore(messageStore,handler);
 
-            var tenant = new TenantAppService(events, new RealTimeProvider());
+            var trustedSystem = new TrustedSystemAppService(events, new RealTimeProvider());
             var build = new ConsoleEnvironment
                 {
                     Store = events, 
-                    Tenant = tenant, 
+                    TrustedSystem = trustedSystem, 
                     Commands = ConsoleCommands.Actions, 
-                    Id = new TenantId(1),
+                    Id = new TrustedSystemId(1),
                     InboxView = inbox.ViewInstance
                 };
             return build;

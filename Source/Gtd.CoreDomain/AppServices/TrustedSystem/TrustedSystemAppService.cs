@@ -1,15 +1,15 @@
 ﻿using System;
-using Gtd.CoreDomain.AppServices.Tenant;
+using Gtd.CoreDomain.AppServices.TrustedSystem;
 
 namespace Gtd.CoreDomain
 {
-    public sealed class TenantAppService : ITenantApplicationService, IAppService
+    public sealed class TrustedSystemAppService : ITrustedSystemApplicationService, IAppService
     {
         readonly IEventStore _eventStore;
         readonly ITimeProvider _time;
 
 
-        public TenantAppService(IEventStore eventStore, ITimeProvider time)
+        public TrustedSystemAppService(IEventStore eventStore, ITimeProvider time)
         {
             _eventStore = eventStore;
             _time = time;
@@ -31,7 +31,6 @@ namespace Gtd.CoreDomain
             ChangeAggregate(cmd.Id, agg => agg.DefineAction(cmd.RequestId, cmd.ActionName, _time));
         }
 
-
         public void When(DefineProject cmd)
         {
             ChangeAggregate(cmd.Id, agg => agg.DefineProject(cmd.RequestId, cmd.ProjectOutcome, _time));
@@ -48,15 +47,15 @@ namespace Gtd.CoreDomain
         }
 
         // lifetime change management & atomic consistency boundary of an Aggregate & its contents
-        void ChangeAggregate(TenantId aggregateIdOf, Action<TenantAggregate> usingThisMethod)
+        void ChangeAggregate(TrustedSystemId aggregateIdOf, Action<TrustedSystemAggregate> usingThisMethod)
         {
             var eventStreamId = aggregateIdOf.Id.ToString();
             var eventStream = _eventStore.LoadEventStream(eventStreamId);
 
-            var aggStateBeforeChanges = TenantState.BuildStateFromEventHistory(eventStream.Events);
+            var aggStateBeforeChanges = TrustedSystemState.BuildStateFromEventHistory(eventStream.Events);
 
 
-            var aggregateToChange = new TenantAggregate(aggStateBeforeChanges);
+            var aggregateToChange = new TrustedSystemAggregate(aggStateBeforeChanges);
 
             // HACK
             if (eventStream.Events.Count == 0)

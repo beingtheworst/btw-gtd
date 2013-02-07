@@ -15,7 +15,7 @@ namespace Gtd.Shell.Commands
                 env.Log.Error("You must describe the thought to capture.");
                 return;
             }
-            env.Tenant.When(new CaptureThought(env.Id, Guid.Empty, string.Join(" ", args)));
+            env.TrustedSystem.When(new CaptureThought(env.Id, Guid.Empty, string.Join(" ", args)));
             env.Log.Info("Thought captured safely!");
         }
     }
