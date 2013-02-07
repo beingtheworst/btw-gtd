@@ -39,13 +39,13 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             Apply(new ThoughtCaptured(_aggState.Id, NewGuidIfEmpty(requestId), name, provider.GetUtcNow()));
         }
 
-        public void DefineAction(Guid requestId, string actionName, ITimeProvider provider)
+        public void DefineAction(Guid requestId, ProjectId projectId, string outcome, ITimeProvider provider)
         {
             // filter request IDs
             var time = provider.GetUtcNow();
             var actionId = new ActionId(NewGuidIfEmpty(requestId));
 
-            Apply(new ActionDefined(_aggState.Id, actionId, actionName, time));
+            Apply(new ActionDefined(_aggState.Id, actionId, projectId, outcome , time));
         }
 
         public void ArchiveThought(Guid thoughtId, ITimeProvider provider)

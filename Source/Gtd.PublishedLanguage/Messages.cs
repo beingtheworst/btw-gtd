@@ -83,14 +83,16 @@ namespace Gtd
     {
         [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
         [DataMember(Order = 2)] public Guid RequestId { get; private set; }
-        [DataMember(Order = 3)] public string ActionName { get; private set; }
+        [DataMember(Order = 3)] public ProjectId ProjectId { get; private set; }
+        [DataMember(Order = 4)] public string Outcome { get; private set; }
         
         DefineAction () {}
-        public DefineAction (TrustedSystemId id, Guid requestId, string actionName)
+        public DefineAction (TrustedSystemId id, Guid requestId, ProjectId projectId, string outcome)
         {
             Id = id;
             RequestId = requestId;
-            ActionName = actionName;
+            ProjectId = projectId;
+            Outcome = outcome;
         }
     }
     [DataContract(Namespace = "BTW2/GTD")]
@@ -98,15 +100,17 @@ namespace Gtd
     {
         [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
         [DataMember(Order = 2)] public ActionId ActionId { get; private set; }
-        [DataMember(Order = 3)] public string ActionName { get; private set; }
-        [DataMember(Order = 4)] public DateTime TimeUtc { get; private set; }
+        [DataMember(Order = 3)] public ProjectId ProjectId { get; private set; }
+        [DataMember(Order = 4)] public string Outcome { get; private set; }
+        [DataMember(Order = 5)] public DateTime TimeUtc { get; private set; }
         
         ActionDefined () {}
-        public ActionDefined (TrustedSystemId id, ActionId actionId, string actionName, DateTime timeUtc)
+        public ActionDefined (TrustedSystemId id, ActionId actionId, ProjectId projectId, string outcome, DateTime timeUtc)
         {
             Id = id;
             ActionId = actionId;
-            ActionName = actionName;
+            ProjectId = projectId;
+            Outcome = outcome;
             TimeUtc = timeUtc;
         }
     }

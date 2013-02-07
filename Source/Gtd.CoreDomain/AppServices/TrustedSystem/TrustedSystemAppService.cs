@@ -28,7 +28,7 @@ namespace Gtd.CoreDomain
 
         public void When(DefineAction cmd)
         {
-            ChangeAggregate(cmd.Id, agg => agg.DefineAction(cmd.RequestId, cmd.ActionName, _time));
+            ChangeAggregate(cmd.Id, agg => agg.DefineAction(cmd.RequestId, cmd.ProjectId, cmd.Outcome, _time));
         }
 
         public void When(DefineProject cmd)

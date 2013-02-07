@@ -36,8 +36,8 @@ interface TrustedSystem(TrustedSystemId Id)
     ArchiveThought?(Guid thoughtId)
         ThoughtArchived!(Guid thoughtId, time)
     
-    DefineAction?(requestId, string actionName)
-        ActionDefined!(actionId, string actionName, time)
+    DefineAction?(requestId, projectId, string outcome)
+        ActionDefined!(actionId, projectId, string outcome, time)
 
     DefineProject?(requestId, string projectOutcome)
         ProjectDefined!(projectId, string projectOutcome, time)

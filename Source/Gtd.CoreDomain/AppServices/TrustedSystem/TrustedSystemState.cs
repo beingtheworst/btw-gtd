@@ -61,7 +61,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
 
         public void When(ActionDefined evnt)
         {
-            Actions.Add(evnt.ActionId, new ActionInfo(evnt.ActionId, evnt.ActionName));
+            Actions.Add(evnt.ActionId, new ActionInfo(evnt.ActionId, evnt.Outcome));
         }
 
         public void When(ProjectDefined evnt)
