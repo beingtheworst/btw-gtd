@@ -47,12 +47,12 @@ interface TrustedSystem(TrustedSystemId Id)
     ActionMovedToProject!(actionId, ProjectId oldProject, ProjectId newProject, time)
 
     RemoveAction?(actionId)
-
+    
     ActionRemoved!(actionId, time)
     ActionRenamed!(actionId, string name, time)
 
     CompleteAction?(actionId)
-    ActionCompleted!(actionId, time)
+        ActionCompleted!(actionId, projectId, string actionOutcome, time)
 
     // [abdullin]: We will add contexts later
 

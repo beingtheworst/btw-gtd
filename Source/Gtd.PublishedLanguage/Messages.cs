@@ -262,13 +262,17 @@ namespace Gtd
     {
         [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
         [DataMember(Order = 2)] public ActionId ActionId { get; private set; }
-        [DataMember(Order = 3)] public DateTime TimeUtc { get; private set; }
+        [DataMember(Order = 3)] public ProjectId ProjectId { get; private set; }
+        [DataMember(Order = 4)] public string ActionOutcome { get; private set; }
+        [DataMember(Order = 5)] public DateTime TimeUtc { get; private set; }
         
         ActionCompleted () {}
-        public ActionCompleted (TrustedSystemId id, ActionId actionId, DateTime timeUtc)
+        public ActionCompleted (TrustedSystemId id, ActionId actionId, ProjectId projectId, string actionOutcome, DateTime timeUtc)
         {
             Id = id;
             ActionId = actionId;
+            ProjectId = projectId;
+            ActionOutcome = actionOutcome;
             TimeUtc = timeUtc;
         }
     }
