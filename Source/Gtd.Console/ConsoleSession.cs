@@ -2,7 +2,6 @@
 using System.Linq;
 using Gtd.Shell.Commands;
 using Gtd.Shell.Projections;
-using Action = Gtd.Shell.Projections.Action;
 
 namespace Gtd.Shell
 {
@@ -24,7 +23,7 @@ namespace Gtd.Shell
             return View.Systems[SystemId];
         }
 
-        public Action MatchAction(string match)
+        public ActionView MatchAction(string match)
         {
             var system = GetCurrentSystem();
             var matches = system
@@ -45,7 +44,7 @@ namespace Gtd.Shell
         }
 
 
-        public Project MatchProject(string match)
+        public ProjectView MatchProject(string match)
         {
             var system = GetCurrentSystem();
             var matches = system
@@ -64,7 +63,7 @@ namespace Gtd.Shell
             }
             return matches[0];
         }
-        public Thought MatchThought(string match)
+        public ThoughtView MatchThought(string match)
         {
             var system = GetCurrentSystem();
             var matches = system.Thoughts
@@ -81,6 +80,24 @@ namespace Gtd.Shell
                 throw new KnownConsoleInputError(message);
             }
             return matches[0];
+        }
+
+        public object MatchItem(string match)
+        {
+            var system = GetCurrentSystem();
+            var matches = system.GlobalDict.Where(p => Matches(p.Key, match)).ToArray();
+            if (matches.Length == 0)
+            {
+                var message = string.Format("No items match criteria '{0}'", match);
+                throw new KnownConsoleInputError(message);
+            }
+            if (matches.Length > 1)
+            {
+                var message = string.Format("Multiple items match criteria '{0}'", match);
+                throw new KnownConsoleInputError(message);
+            }
+            return matches[0].Value;
+
         }
 
         static bool Matches(Guid id, string match)

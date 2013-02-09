@@ -101,5 +101,45 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
 
             EventsThatCausedChange.Add((Event)newEventThatHappened);
         }
+
+        public void ChangeActionOutcome(ActionId actionId, string outcome, ITimeProvider time)
+        {
+            ActionInfo info;
+            if (!_aggState.Actions.TryGetValue(actionId, out info))
+            {
+                throw DomainError.Named("unknown action", "Unknown action {0}", actionId);
+            }
+            if (info.Outcome != outcome)
+            {
+                Apply(new ActionOutcomeChanged(_aggState.Id, actionId, info.Project, outcome, time.GetUtcNow()));
+            }
+                
+        }
+
+        public void ChangeProjectOutcome(ProjectId projectId, string outcome, ITimeProvider time)
+        {
+            ProjectInfo info;
+            if (!_aggState.Projects.TryGetValue(projectId, out info))
+            {
+                throw DomainError.Named("unknown project", "Unknown project {0}", projectId);
+            }
+            if (info.Outcome != outcome)
+            {
+                Apply(new ProjectOutcomeChanged(_aggState.Id, projectId, outcome, time.GetUtcNow()));
+            }
+        }
+
+        public void ChangeThoughtSubject(Guid thoughtId, string subject, ITimeProvider time)
+        {
+            ThoughtInfo info;
+            if (!_aggState.Thoughts.TryGetValue(thoughtId, out info))
+            {
+                throw DomainError.Named("unknown thought", "Unknown thought {0}", thoughtId);
+            }
+            if (info.Subject != subject)
+            {
+                Apply(new ThoughtSubjectChanged(_aggState.Id, thoughtId, subject, time.GetUtcNow()));
+            }
+        }
     }
 }

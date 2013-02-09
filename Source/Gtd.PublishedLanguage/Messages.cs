@@ -228,23 +228,6 @@ namespace Gtd
         }
     }
     [DataContract(Namespace = "BTW2/GTD")]
-    public partial class ActionRenamed : Event, ITrustedSystemEvent
-    {
-        [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
-        [DataMember(Order = 2)] public ActionId ActionId { get; private set; }
-        [DataMember(Order = 3)] public string Name { get; private set; }
-        [DataMember(Order = 4)] public DateTime TimeUtc { get; private set; }
-        
-        ActionRenamed () {}
-        public ActionRenamed (TrustedSystemId id, ActionId actionId, string name, DateTime timeUtc)
-        {
-            Id = id;
-            ActionId = actionId;
-            Name = name;
-            TimeUtc = timeUtc;
-        }
-    }
-    [DataContract(Namespace = "BTW2/GTD")]
     public partial class CompleteAction : Command, ITrustedSystemCommand
     {
         [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
@@ -276,6 +259,104 @@ namespace Gtd
             TimeUtc = timeUtc;
         }
     }
+    [DataContract(Namespace = "BTW2/GTD")]
+    public partial class ChangeActionOutcome : Command, ITrustedSystemCommand
+    {
+        [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
+        [DataMember(Order = 2)] public ActionId ActionId { get; private set; }
+        [DataMember(Order = 3)] public string Outcome { get; private set; }
+        
+        ChangeActionOutcome () {}
+        public ChangeActionOutcome (TrustedSystemId id, ActionId actionId, string outcome)
+        {
+            Id = id;
+            ActionId = actionId;
+            Outcome = outcome;
+        }
+    }
+    [DataContract(Namespace = "BTW2/GTD")]
+    public partial class ActionOutcomeChanged : Event, ITrustedSystemEvent
+    {
+        [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
+        [DataMember(Order = 2)] public ActionId ActionId { get; private set; }
+        [DataMember(Order = 3)] public ProjectId ProjectId { get; private set; }
+        [DataMember(Order = 4)] public string ActionOutcome { get; private set; }
+        [DataMember(Order = 5)] public DateTime TimeUtc { get; private set; }
+        
+        ActionOutcomeChanged () {}
+        public ActionOutcomeChanged (TrustedSystemId id, ActionId actionId, ProjectId projectId, string actionOutcome, DateTime timeUtc)
+        {
+            Id = id;
+            ActionId = actionId;
+            ProjectId = projectId;
+            ActionOutcome = actionOutcome;
+            TimeUtc = timeUtc;
+        }
+    }
+    [DataContract(Namespace = "BTW2/GTD")]
+    public partial class ChangeProjectOutcome : Command, ITrustedSystemCommand
+    {
+        [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
+        [DataMember(Order = 2)] public ProjectId ProjectId { get; private set; }
+        [DataMember(Order = 3)] public string Outcome { get; private set; }
+        
+        ChangeProjectOutcome () {}
+        public ChangeProjectOutcome (TrustedSystemId id, ProjectId projectId, string outcome)
+        {
+            Id = id;
+            ProjectId = projectId;
+            Outcome = outcome;
+        }
+    }
+    [DataContract(Namespace = "BTW2/GTD")]
+    public partial class ProjectOutcomeChanged : Event, ITrustedSystemEvent
+    {
+        [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
+        [DataMember(Order = 2)] public ProjectId ProjectId { get; private set; }
+        [DataMember(Order = 3)] public string ProjectOutcome { get; private set; }
+        [DataMember(Order = 4)] public DateTime TimeUtc { get; private set; }
+        
+        ProjectOutcomeChanged () {}
+        public ProjectOutcomeChanged (TrustedSystemId id, ProjectId projectId, string projectOutcome, DateTime timeUtc)
+        {
+            Id = id;
+            ProjectId = projectId;
+            ProjectOutcome = projectOutcome;
+            TimeUtc = timeUtc;
+        }
+    }
+    [DataContract(Namespace = "BTW2/GTD")]
+    public partial class ChangeThoughtSubject : Command, ITrustedSystemCommand
+    {
+        [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
+        [DataMember(Order = 2)] public Guid ThoughtId { get; private set; }
+        [DataMember(Order = 3)] public string Subject { get; private set; }
+        
+        ChangeThoughtSubject () {}
+        public ChangeThoughtSubject (TrustedSystemId id, Guid thoughtId, string subject)
+        {
+            Id = id;
+            ThoughtId = thoughtId;
+            Subject = subject;
+        }
+    }
+    [DataContract(Namespace = "BTW2/GTD")]
+    public partial class ThoughtSubjectChanged : Event, ITrustedSystemEvent
+    {
+        [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
+        [DataMember(Order = 2)] public Guid ThoughtId { get; private set; }
+        [DataMember(Order = 3)] public string Subject { get; private set; }
+        [DataMember(Order = 4)] public DateTime TimeUtc { get; private set; }
+        
+        ThoughtSubjectChanged () {}
+        public ThoughtSubjectChanged (TrustedSystemId id, Guid thoughtId, string subject, DateTime timeUtc)
+        {
+            Id = id;
+            ThoughtId = thoughtId;
+            Subject = subject;
+            TimeUtc = timeUtc;
+        }
+    }
     
     public interface ITrustedSystemApplicationService
     {
@@ -285,6 +366,9 @@ namespace Gtd
         void When(DefineProject c);
         void When(RemoveAction c);
         void When(CompleteAction c);
+        void When(ChangeActionOutcome c);
+        void When(ChangeProjectOutcome c);
+        void When(ChangeThoughtSubject c);
     }
     
     public interface ITrustedSystemState
@@ -298,8 +382,10 @@ namespace Gtd
         void When(ActionRemovedFromProject e);
         void When(ActionMovedToProject e);
         void When(ActionRemoved e);
-        void When(ActionRenamed e);
         void When(ActionCompleted e);
+        void When(ActionOutcomeChanged e);
+        void When(ProjectOutcomeChanged e);
+        void When(ThoughtSubjectChanged e);
     }
     #endregion
 }

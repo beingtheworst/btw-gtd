@@ -48,11 +48,19 @@ interface TrustedSystem(TrustedSystemId Id)
 
     RemoveAction?(actionId)
     
-    ActionRemoved!(actionId, time)
-    ActionRenamed!(actionId, string name, time)
+    ActionRemoved!(actionId, time)    
 
     CompleteAction?(actionId)
         ActionCompleted!(actionId, projectId, string actionOutcome, time)
+
+    ChangeActionOutcome?(actionId, string outcome)
+        ActionOutcomeChanged!(actionId, projectId, string actionOutcome, time)
+
+    ChangeProjectOutcome?(projectId, string outcome)
+        ProjectOutcomeChanged!(projectId, string projectOutcome, time)
+
+    ChangeThoughtSubject?(Guid thoughtId, string subject)
+        ThoughtSubjectChanged!(Guid thoughtId, string subject, time)
 
     // [abdullin]: We will add contexts later
 

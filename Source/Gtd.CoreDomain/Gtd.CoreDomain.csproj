@@ -45,6 +45,7 @@
     <Compile Include="AppServices\TrustedSystem\TrustedSystemAggregate.cs" />
     <Compile Include="AppServices\TrustedSystem\TrustedSystemState.cs" />
     <Compile Include="DomainError.cs" />
+    <Compile Include="Enforce.cs" />
     <Compile Include="Interfaces.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AppServices\TrustedSystem\TrustedSystemAppService.cs" />

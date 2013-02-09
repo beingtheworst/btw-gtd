@@ -18,7 +18,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
 
         public TrustedSystemState()
         {
-            Inbox = new HashSet<Guid>();
+         
         }
 
         public void MakeStateRealize(ITrustedSystemEvent thisEventTypeHappened)
@@ -40,8 +40,6 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
 
         public TrustedSystemId Id { get; private set; }
 
-        public HashSet<Guid> Inbox { get; private set; }
-
         // When Methods
 
         public void When(TrustedSystemCreated evnt)
@@ -51,6 +49,8 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
 
         public void When(ThoughtCaptured evnt)
         {
+            var info = new ThoughtInfo(evnt.ThoughtId, evnt.Thought);
+            Thoughts.Add(evnt.ThoughtId, info);
             Inbox.Add(evnt.ThoughtId);
         }
 
@@ -102,9 +102,19 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             Actions.Remove(evnt.ActionId);
         }
 
-        public void When(ActionRenamed evnt)
+        public void When(ActionOutcomeChanged evnt)
         {
-            Actions[evnt.ActionId].Rename(evnt.Name);
+            Actions[evnt.ActionId].ChangeOutcome(evnt.ActionOutcome);
+        }
+
+        public void When(ProjectOutcomeChanged evnt)
+        {
+            Projects[evnt.ProjectId].ChangeOutcome(evnt.ProjectOutcome);
+        }
+
+        public void When(ThoughtSubjectChanged e)
+        {
+            Thoughts[e.ThoughtId].ChangeSubject(e.Subject);
         }
 
         public void When(ActionCompleted evnt)
@@ -115,6 +125,8 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
 
         public readonly IDictionary<ActionId, ActionInfo> Actions = new Dictionary<ActionId, ActionInfo>(); 
         public readonly IDictionary<ProjectId, ProjectInfo> Projects = new Dictionary<ProjectId, ProjectInfo>(); 
+        public readonly IDictionary<Guid, ThoughtInfo> Thoughts = new Dictionary<Guid, ThoughtInfo>(); 
+        public readonly HashSet<Guid> Inbox = new HashSet<Guid>(); 
     }
 
     /// <summary>
@@ -168,7 +180,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             Project = ProjectId.Empty;
         }
 
-        public void Rename(string newName)
+        public void ChangeOutcome(string newName)
         {
             Outcome = newName;
         }
@@ -183,7 +195,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
     public sealed class ProjectInfo
     {
         public ProjectId Id { get; private set; }
-        public string Name { get; private set; }
+        public string Outcome { get; private set; }
 
         readonly List<ActionId> _actions = new List<ActionId>();
          
@@ -191,12 +203,12 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
         public ProjectInfo(ProjectId id, string name)
         {
             Id = id;
-            Name = name;
+            Outcome = name;
         }
 
-        public void Rename(string newName)
+        public void ChangeOutcome(string newName)
         {
-            Name = newName;
+            Outcome = newName;
         }
 
         public void AddAction(ActionId action)
@@ -206,6 +218,28 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
         public void RemoveAction(ActionId action)
         {
             _actions.Remove(action);
+        }
+    }
+
+    public sealed class ThoughtInfo
+    {
+        public Guid Id { get; private set; }
+        public string Subject { get; private set; }
+
+        public ThoughtInfo(Guid id, string subject)
+        {
+            Enforce.NotEmpty(id, "id");
+            Enforce.NotEmpty(subject, "subject");
+
+            Id = id;
+            Subject = subject;
+        }
+
+        public void ChangeSubject(string subject)
+        {
+            Enforce.NotEmpty(subject, "subject");
+
+            Subject = subject;
         }
     }
 }
