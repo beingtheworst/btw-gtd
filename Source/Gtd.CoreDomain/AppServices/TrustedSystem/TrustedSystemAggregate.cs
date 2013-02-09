@@ -70,6 +70,9 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             return requestId == Guid.Empty ? Guid.NewGuid() : requestId;
         }
 
+        /// <summary> Make aggregate realize that the event happened by applying it to the state
+        /// and adding to the list of uncommitted events</summary>
+        /// <param name="newEventThatHappened"></param>
         void Apply(ITrustedSystemEvent newEventThatHappened)
         {
             // TODO: [kstreet] In the Factory sample these two lines of code were called
