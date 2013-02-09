@@ -18,7 +18,7 @@ namespace Gtd.Shell.Commands
                 return;
             }
             var thought = string.Join(" ", args);
-            env.TrustedSystem.When(new CaptureThought(env.Id, Guid.Empty, thought));
+            env.TrustedSystem.When(new CaptureThought(env.Session.SystemId, Guid.Empty, thought));
             env.Log.Info("Thought captured safely!");
         }
     }

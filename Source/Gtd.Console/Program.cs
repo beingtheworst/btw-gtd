@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using Gtd.CoreDomain;
+using Gtd.Shell.Commands;
 using Gtd.Shell.Projections;
 
 namespace Gtd.Shell
@@ -51,6 +52,10 @@ namespace Gtd.Shell
                     Log.Error("Invalid usage of '{0}': {1}", split[0], ex.Message);
                     Log.Debug(value.Usage);
                 }
+                catch (KnownConsoleInputError ex)
+                {
+                    Log.Error(ex.Message);
+                }
                 catch (Exception ex)
                 {
                     Log.ErrorException(ex, "Failure while processing command '{0}'", split[0]);
@@ -61,18 +66,20 @@ namespace Gtd.Shell
         }
     }
 
-    
-
     public sealed class ConsoleEnvironment
     {
         public IEventStore Store { get; private set; }
         public ITrustedSystemApplicationService TrustedSystem { get; private set; }
         public IDictionary<string, IConsoleCommand> Commands { get; private set; }
         public readonly ILogger Log = LogManager.GetLoggerFor<ConsoleEnvironment>();
-        public TrustedSystemId Id { get; private set; }
+        
 
 
         public ConsoleView ConsoleView { get; private set; }
+        public ConsoleSession Session { get; private set; }
+
+
+
 
         public static ConsoleEnvironment Build()
         {
@@ -113,7 +120,7 @@ namespace Gtd.Shell
                     Store = events, 
                     TrustedSystem = trustedSystem, 
                     Commands = ConsoleCommands.Actions, 
-                    Id = new TrustedSystemId(1),
+                    Session = new ConsoleSession(inbox.ViewInstance),
                     ConsoleView = inbox.ViewInstance
                 };
             return build;

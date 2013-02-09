@@ -10,34 +10,33 @@ namespace Gtd.Shell.Commands
 
         public void Execute(ConsoleEnvironment env, string[] args)
         {
-            if (!env.ConsoleView.Systems.ContainsKey(env.Id))
-            {
-                env.Log.Error("Trusted System not defined");
-                return;
-            }
-
-            var system = env.ConsoleView.Systems[env.Id];
-
             if (args.Length == 0)
             {
-                ListProjects(env, system);
+                ListProjects(env);
             }
             else if (args.Length == 1)
             {
-                var project = system.GetProjectById(args[0]);
-                env.Log.Info("Project: {0} ({1} actions)", project.Outcome, project.Actions.Count);
-
-                foreach (var action in project.Actions)
-                {
-                    var guid = action.Id.Id;
-                    var shortId = guid.ToString().ToLowerInvariant().Replace("-", "").Substring(0, 3);
-                    env.Log.Info(string.Format("  {0}  {1,-60}", shortId, action.Outcome));
-                }
+                var projectMatch = args[0];
+                ListActionsInProject(env, projectMatch);
             }
         }
 
-        static void ListProjects(ConsoleEnvironment env, TrustedSystem system)
+        static void ListActionsInProject(ConsoleEnvironment env, string projectMatch)
         {
+            var project = env.Session.MatchProject(projectMatch);
+            env.Log.Info("Project: {0} ({1} actions)", project.Outcome, project.Actions.Count);
+
+            foreach (var action in project.Actions)
+            {
+                var guid = action.Id.Id;
+                var shortId = guid.ToString().ToLowerInvariant().Replace("-", "").Substring(0, 3);
+                env.Log.Info(string.Format("  {0}  {1,-60}", shortId, action.Outcome));
+            }
+        }
+
+        static void ListProjects(ConsoleEnvironment env)
+        {
+            var system = env.Session.GetCurrentSystem();
             var projects = system.ProjectList;
             env.Log.Info("Projects ({0} records)", projects.Count);
 

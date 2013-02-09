@@ -28,27 +28,11 @@ namespace Gtd.Shell.Commands
                 env.Log.Error("You must specify ID of the thought to archive");
                 return;
             }
-
-            var inbox = env.ConsoleView.Systems[env.Id].Thoughts;
-
-            var matches = inbox.Where(t => Matches(t.ItemId, args[0])).ToArray();
-            if (matches.Length == 0)
-            {
-                env.Log.Error("Nothing to archive");
-                return;
-            }
-            if (matches.Length == 1)
-            {
-                env.TrustedSystem.When(new ArchiveThought(env.Id, matches[0].ItemId));
-                env.Log.Info("Archived");
-                return;
-            }
-            env.Log.Error("{0} thoughts match '{1}' criteria.", matches.Length, args[0]);
+            var thought = env.Session.MatchThought(args[0]);
+            env.TrustedSystem.When(new ArchiveThought(env.Session.SystemId, thought.Id));
+            env.Log.Info("Archived");
         }
 
-        static bool Matches(Guid id, string match)
-        {
-            return id.ToString().ToLowerInvariant().Replace("-", "").StartsWith(match);
-        }
+        
     }
 }

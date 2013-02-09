@@ -52,7 +52,9 @@
     <Compile Include="Commands\ExitCommand.cs" />
     <Compile Include="Commands\HelpCommand.cs" />
     <Compile Include="Commands\ListProjectsCommand.cs" />
+    <Compile Include="Commands\KnownConsoleInputError.cs" />
     <Compile Include="Commands\ViewInboxCommand.cs" />
+    <Compile Include="ConsoleSession.cs" />
     <Compile Include="LesserEvils\FormatEvil.cs" />
     <Compile Include="IAppendOnlyStore.cs" />
     <Compile Include="ILogger.cs" />

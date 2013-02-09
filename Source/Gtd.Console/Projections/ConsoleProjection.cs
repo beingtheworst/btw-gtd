@@ -11,7 +11,7 @@ namespace Gtd.Shell.Projections
 
     public sealed class Thought
     {
-        public Guid ItemId;
+        public Guid Id;
         public string Subject;
         public DateTime Added;
     }
@@ -47,37 +47,19 @@ namespace Gtd.Shell.Projections
         public List<Project> ProjectList = new List<Project>(); 
         public Dictionary<ProjectId, Project> ProjectDict = new Dictionary<ProjectId, Project>(); 
 
-        public Project GetProjectById(string match)
-        {
-            var matches =
-                ProjectList
-                .Where(p => p.ProjectId.Id.ToString().ToLowerInvariant().Replace("-", "").StartsWith(match, StringComparison.InvariantCultureIgnoreCase))
-                        .ToArray();
-            if (matches.Length == 0)
-            {
-                var message = string.Format("No projects match criteria '{0}'", match);
-                throw new InvalidOperationException(message);
-            }
-            if (matches.Length > 1)
-            {
-                var message = string.Format("Multiple projects match criteria '{0}'", match);
-                throw new InvalidOperationException(message);
-            }
-            return matches[0];
-        } 
-
+       
         public void CaptureThought(Guid thoughtId, string thought, DateTime date)
         {
             Thoughts.Add(new Thought()
                 {
                     Added = date,
-                    ItemId = thoughtId,
+                    Id = thoughtId,
                     Subject = thought
                 });
         }
         public void ArchiveThought(Guid thoughtId)
         {
-            Thoughts.RemoveAll(t => t.ItemId == thoughtId);
+            Thoughts.RemoveAll(t => t.Id == thoughtId);
         }
 
        
