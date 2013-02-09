@@ -9,24 +9,38 @@ namespace Gtd.Shell.Projections
         public IDictionary<TrustedSystemId, TrustedSystem> Systems = new Dictionary<TrustedSystemId, TrustedSystem>();
     }
 
-    public sealed class ThoughtView
+    public interface IItemView
+    {
+        string GetTitle();
+    }
+
+    public sealed class ThoughtView : IItemView
     {
         public Guid Id;
         public string Subject;
         public DateTime Added;
+
+        public string GetTitle()
+        {
+            return string.Format("Thought '{0}'", Subject);
+        }
     }
 
-    public sealed class ProjectView
+    public sealed class ProjectView : IItemView
     {
         public ProjectId ProjectId;
         public string Outcome;
 
-        public List<ActionView> Actions = new List<ActionView>(); 
-
+        public List<ActionView> Actions = new List<ActionView>();
         
+
+        public string GetTitle()
+        {
+            return string.Format("Project '{0}'", Outcome);
+        }
     }
 
-    public sealed class ActionView
+    public sealed class ActionView : IItemView
     {
         public ActionId Id { get; private set; }
         public string Outcome { get; private set; }
@@ -46,6 +60,11 @@ namespace Gtd.Shell.Projections
         {
             Outcome = outcome;
         }
+
+        public string GetTitle()
+        {
+            return string.Format("Action: '{0}'", Outcome);
+        }
     }
 
     public sealed class TrustedSystem
@@ -55,7 +74,7 @@ namespace Gtd.Shell.Projections
         public Dictionary<ProjectId, ProjectView> ProjectDict = new Dictionary<ProjectId, ProjectView>(); 
         public Dictionary<ActionId, ActionView> ActionDict = new Dictionary<ActionId, ActionView>(); 
 
-        public Dictionary<Guid, object> GlobalDict = new Dictionary<Guid, object>();
+        public Dictionary<Guid, IItemView> GlobalDict = new Dictionary<Guid, IItemView>();
        
         public void CaptureThought(Guid thoughtId, string thought, DateTime date)
         {
@@ -64,7 +83,7 @@ namespace Gtd.Shell.Projections
                     Added = date, Id = thoughtId, Subject = thought
                 };
             Thoughts.Add(item);
-            GlobalDict.Add(thoughtId, thought);
+            GlobalDict.Add(thoughtId, item);
         }
 
         public void ArchiveThought(Guid thoughtId)
@@ -147,11 +166,12 @@ namespace Gtd.Shell.Projections
         }
         public void When(ActionOutcomeChanged evnt)
         {
-            
+            Update(evnt.Id, s => s.ChangeActionOutcome(evnt.ActionId, evnt.ActionOutcome));
         }
 
         public void When(ProjectOutcomeChanged evnt)
         {
+            Update(evnt.Id, s => s.ChangeProjectOutcome(evnt.ProjectId, evnt.ProjectOutcome));
             
         }
 

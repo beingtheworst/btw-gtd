@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 using Gtd.Shell.Commands;
 using Gtd.Shell.Projections;
 
@@ -9,6 +10,8 @@ namespace Gtd.Shell
     {
         public readonly ConsoleView View;
         public TrustedSystemId SystemId;
+
+        public int NumberOfCHarsForGuid = 4;
 
         public ConsoleSession(ConsoleView view)
         {
@@ -82,7 +85,12 @@ namespace Gtd.Shell
             return matches[0];
         }
 
-        public object MatchItem(string match)
+        string MakePartialKey(Guid id)
+        {
+            return id.ToString().ToLowerInvariant().Replace("-", "").Substring(0, NumberOfCHarsForGuid);
+        }
+
+        public IItemView MatchItem(string match)
         {
             var system = GetCurrentSystem();
             var matches = system.GlobalDict.Where(p => Matches(p.Key, match)).ToArray();
@@ -93,8 +101,22 @@ namespace Gtd.Shell
             }
             if (matches.Length > 1)
             {
-                var message = string.Format("Multiple items match criteria '{0}'", match);
-                throw new KnownConsoleInputError(message);
+                var message = new StringBuilder();
+                message.AppendFormat("Multiple items match criteria '{0}':", match);
+
+                foreach (var pair in matches.Take(10))
+                {
+                    message.AppendLine();
+                    message.AppendFormat("  {0} {1}", MakePartialKey(pair.Key), pair.Value.GetTitle());
+                }
+                if (matches.Length > 10)
+                {
+                    message.AppendFormat("{0} more matches not shown", matches.Length - 10);
+                }
+                
+
+
+                throw new KnownConsoleInputError(message.ToString());
             }
             return matches[0].Value;
 
