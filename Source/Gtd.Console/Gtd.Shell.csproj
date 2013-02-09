@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Commands\ArchiveThoughtCommand.cs" />
     <Compile Include="Commands\CaptureThoughtCommand.cs" />
+    <Compile Include="Commands\DefineActionCommand.cs" />
     <Compile Include="Commands\DefineProjectCommand.cs" />
     <Compile Include="Commands\ExitCommand.cs" />
     <Compile Include="Commands\HelpCommand.cs" />

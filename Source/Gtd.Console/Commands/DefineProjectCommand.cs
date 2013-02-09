@@ -6,7 +6,6 @@
 #endregion
 
 using System;
-using System.Linq;
 
 namespace Gtd.Shell.Commands
 {
@@ -31,26 +30,6 @@ namespace Gtd.Shell.Commands
             var outcome = string.Join(" ", args);
             env.TrustedSystem.When(new DefineProject(env.Id, Guid.Empty, outcome));
             env.Log.Info("Project defined!");
-        }
-    }
-
-    class DefineActionCommand : IConsoleCommand
-    {
-        public string[] Key { get {return new string[]{"action","da"};}}
-        public string Usage { get { return "action <projectId> <action outcome>"; } }
-
-        public void Execute(ConsoleEnvironment env, string[] args)
-        {
-            if (args.Length < 2)
-            {
-                env.Log.Error("You must provide project ID and action outcome");
-                return;
-            }
-            var project = env.ConsoleView.Systems[env.Id].GetProjectById(args[0]);
-
-            var outcome = string.Join(" ", args.Skip(0));
-            env.TrustedSystem.When(new DefineAction(env.Id, Guid.Empty, project.ProjectId, outcome));
-            env.Log.Trace("Action defined for project '{0}'", project.Outcome);
         }
     }
 }

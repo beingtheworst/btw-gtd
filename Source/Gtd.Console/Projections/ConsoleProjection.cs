@@ -31,10 +31,12 @@ namespace Gtd.Shell.Projections
 
     public sealed class Action
     {
+        public ActionId Id { get; private set; }
         public string Outcome { get; private set; }
 
         public Action(ActionId action, string outcome)
         {
+            Id = action;
             Outcome = outcome;
         }
     }
