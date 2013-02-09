@@ -42,6 +42,10 @@ namespace Gtd.Shell.Projections
         {
             Completed = true;
         }
+        public void ChangeOutcome(string outcome)
+        {
+            Outcome = outcome;
+        }
     }
 
     public sealed class TrustedSystem
@@ -91,7 +95,19 @@ namespace Gtd.Shell.Projections
         {
             ActionDict[actionId].MarkAsCompleted();
         }
-        
+
+        public void ChangeThoughtSubject(Guid thoughtId, string subject)
+        {
+            ((ThoughtView) GlobalDict[thoughtId]).Subject = subject;
+        }
+        public void ChangeProjectOutcome(ProjectId projectId, string outcome)
+        {
+            ProjectDict[projectId].Outcome = outcome;
+        }
+        public void ChangeActionOutcome(ActionId actionId, string outcome)
+        {
+            ActionDict[actionId].ChangeOutcome(outcome);
+        }
     }
 
     public sealed class ConsoleProjection
@@ -128,6 +144,20 @@ namespace Gtd.Shell.Projections
         public void When(ActionCompleted evnt)
         {
             Update(evnt.Id, s => s.CompleteAction(evnt.ActionId));
+        }
+        public void When(ActionOutcomeChanged evnt)
+        {
+            
+        }
+
+        public void When(ProjectOutcomeChanged evnt)
+        {
+            
+        }
+
+        public void When(ThoughtSubjectChanged evnt)
+        {
+            Update(evnt.Id, s => s.ChangeThoughtSubject(evnt.ThoughtId, evnt.Subject));
         }
     }
 }
