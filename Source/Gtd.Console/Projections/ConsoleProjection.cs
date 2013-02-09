@@ -23,10 +23,7 @@ namespace Gtd.Shell.Projections
 
         public List<Action> Actions = new List<Action>(); 
 
-        public void AddAction(ActionId actionId, string outcome)
-        {
-            Actions.Add(new Action(actionId, outcome));
-        }
+        
     }
 
     public sealed class Action
@@ -82,7 +79,9 @@ namespace Gtd.Shell.Projections
 
         public void DefineAction(ProjectId projectId, ActionId actionId, string outcome)
         {
-            ProjectDict[projectId].AddAction(actionId, outcome);
+            var action = new Action(actionId, outcome);
+            ProjectDict[projectId].Actions.Add(action);
+            ActionDict.Add(actionId, action);
         }
         public void CompleteAction(ActionId actionId)
         {

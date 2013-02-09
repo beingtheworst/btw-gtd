@@ -2,6 +2,7 @@
 using System.Linq;
 using Gtd.Shell.Commands;
 using Gtd.Shell.Projections;
+using Action = Gtd.Shell.Projections.Action;
 
 namespace Gtd.Shell
 {
@@ -21,6 +22,26 @@ namespace Gtd.Shell
             if (!View.Systems.ContainsKey(SystemId))
                 throw new KnownConsoleInputError("Trusted system not found. Please create it first by capturing a thought");
             return View.Systems[SystemId];
+        }
+
+        public Action MatchAction(string match)
+        {
+            var system = GetCurrentSystem();
+            var matches = system
+                .ActionDict
+                      .Where(p => Matches(p.Key.Id, match))
+                      .ToArray();
+            if (matches.Length == 0)
+            {
+                var message = string.Format("No actions match criteria '{0}'", match);
+                throw new KnownConsoleInputError(message);
+            }
+            if (matches.Length > 1)
+            {
+                var message = string.Format("Multiple actions match criteria '{0}'", match);
+                throw new KnownConsoleInputError(message);
+            }
+            return matches[0].Value;
         }
 
 
