@@ -15,15 +15,14 @@ namespace Gtd.Shell.Commands
             }
 
             var system = env.ConsoleView.Systems[env.Id];
-            var projects = system.Projects;
+            var projects = system.ProjectList;
             env.Log.Info("Projects ({0} records)", projects.Count);
 
             foreach (var entry in projects)
             {
                 var shortId = entry.ProjectId.Id.ToString().ToLowerInvariant().Replace("-", "").Substring(0, 3);
-                env.Log.Info(string.Format("  {0}  {1, -60}", shortId, entry.Outcome));
+                env.Log.Info(string.Format("  {0} ({2}) {1, -60}", shortId, entry.Outcome, entry.Actions.Count));
             }
-
         }
     }
 }

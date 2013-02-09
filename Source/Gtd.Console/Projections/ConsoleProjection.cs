@@ -20,17 +20,35 @@ namespace Gtd.Shell.Projections
     {
         public ProjectId ProjectId;
         public string Outcome;
+
+        public List<Action> Actions = new List<Action>(); 
+
+        public void AddAction(ActionId actionId, string outcome)
+        {
+            Actions.Add(new Action(actionId, outcome));
+        }
+    }
+
+    public sealed class Action
+    {
+        public string Outcome { get; private set; }
+
+        public Action(ActionId action, string outcome)
+        {
+            Outcome = outcome;
+        }
     }
 
     public sealed class TrustedSystem
     {
         public List<Thought> Thoughts = new List<Thought>(); 
-        public List<Project> Projects = new List<Project>(); 
+        public List<Project> ProjectList = new List<Project>(); 
+        public Dictionary<ProjectId, Project> ProjectDict = new Dictionary<ProjectId, Project>(); 
 
         public Project GetProjectById(string match)
         {
             var matches =
-                Projects
+                ProjectList
                 .Where(p => p.ProjectId.Id.ToString().ToLowerInvariant().Replace("-", "").StartsWith(match, StringComparison.InvariantCultureIgnoreCase))
                         .ToArray();
             if (matches.Length == 0)
@@ -63,11 +81,17 @@ namespace Gtd.Shell.Projections
        
         public void DefineProject(ProjectId projectId, string projectOutcome)
         {
-            Projects.Add(new Project
+            var project = new Project
                 {
-                    ProjectId = projectId,
-                    Outcome = projectOutcome
-                });
+                    ProjectId = projectId, Outcome = projectOutcome
+                };
+            ProjectList.Add(project);
+            ProjectDict.Add(projectId, project);
+        }
+
+        public void DefineAction(ProjectId projectId, ActionId actionId, string outcome)
+        {
+            ProjectDict[projectId].AddAction(actionId, outcome);
         }
     }
 
@@ -97,6 +121,10 @@ namespace Gtd.Shell.Projections
         public void When(ProjectDefined evnt)
         {
             Update(evnt.Id, s => s.DefineProject(evnt.ProjectId, evnt.ProjectOutcome));
+        }
+        public void When(ActionDefined evnt)
+        {
+            Update(evnt.Id, s => s.DefineAction(evnt.ProjectId, evnt.ActionId, evnt.Outcome));
         }
     }
 }
