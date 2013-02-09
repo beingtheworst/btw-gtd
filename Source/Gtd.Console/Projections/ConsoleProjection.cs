@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Gtd.Shell.Projections
 {
@@ -25,6 +26,25 @@ namespace Gtd.Shell.Projections
     {
         public List<Thought> Thoughts = new List<Thought>(); 
         public List<Project> Projects = new List<Project>(); 
+
+        public Project GetProjectById(string match)
+        {
+            var matches =
+                Projects
+                .Where(p => p.ProjectId.Id.ToString().ToLowerInvariant().Replace("-", "").StartsWith(match, StringComparison.InvariantCultureIgnoreCase))
+                        .ToArray();
+            if (matches.Length == 0)
+            {
+                var message = string.Format("No projects match criteria '{0}'", match);
+                throw new InvalidOperationException(message);
+            }
+            if (matches.Length > 1)
+            {
+                var message = string.Format("Multiple projects match criteria '{0}'", match);
+                throw new InvalidOperationException(message);
+            }
+            return matches[0];
+        } 
 
         public void CaptureThought(Guid thoughtId, string thought, DateTime date)
         {
