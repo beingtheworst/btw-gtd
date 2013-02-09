@@ -124,7 +124,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
     public sealed class ActionInfo // VO
     {
         public ActionId Id { get; private set; }
-        public string Name { get; private set; }
+        public string Outcome { get; private set; }
 
         public ProjectId Project { get; private set; }
 
@@ -135,7 +135,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
         public ActionInfo(ActionId id, string name)
         {
             Id = id;
-            Name = name;
+            Outcome = name;
         }
 
         public void LinkToProject(ProjectId id)
@@ -170,7 +170,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
 
         public void Rename(string newName)
         {
-            Name = newName;
+            Outcome = newName;
         }
         public void EnsureCleanRemoval()
         {

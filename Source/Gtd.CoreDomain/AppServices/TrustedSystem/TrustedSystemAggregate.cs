@@ -65,6 +65,24 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
 
         // Helper Methods
 
+        public void CompleteAction(ActionId actionId, ITimeProvider provider)
+        {
+            ActionInfo info;
+            if (!_aggState.Actions.TryGetValue(actionId, out info))
+            {
+                throw DomainError.Named("unknown action", "Unknown action {0}", actionId);
+            }
+            if (info.Completed)
+                return;// idempotency
+
+            Apply(new ActionCompleted(_aggState.Id, 
+                actionId, 
+                info.Project, 
+                info.Outcome, 
+                provider.GetUtcNow()));
+
+        }
+
         static Guid NewGuidIfEmpty(Guid requestId)
         {
             return requestId == Guid.Empty ? Guid.NewGuid() : requestId;
@@ -83,6 +101,5 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
 
             EventsThatCausedChange.Add((Event)newEventThatHappened);
         }
-
     }
 }

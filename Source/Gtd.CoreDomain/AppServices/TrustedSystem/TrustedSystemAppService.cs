@@ -43,7 +43,7 @@ namespace Gtd.CoreDomain
 
         public void When(CompleteAction cmd)
         {
-            throw new NotImplementedException();
+            ChangeAggregate(cmd.Id, agg => agg.CompleteAction(cmd.ActionId, _time));
         }
 
         // lifetime change management & atomic consistency boundary of an Aggregate & its contents
