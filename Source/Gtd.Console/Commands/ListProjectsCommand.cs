@@ -30,7 +30,7 @@ namespace Gtd.Shell.Commands
             {
                 var guid = action.Id.Id;
                 var shortId = guid.ToString().ToLowerInvariant().Replace("-", "").Substring(0, 3);
-                env.Log.Info(string.Format("  {0}  {1,-60}", shortId, action.Outcome));
+                env.Log.Info(string.Format("  [{0}]  {1,-60} {2}", action.Completed ? "X":" ", action.Outcome, shortId));
             }
         }
 

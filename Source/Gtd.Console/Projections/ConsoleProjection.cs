@@ -33,11 +33,17 @@ namespace Gtd.Shell.Projections
     {
         public ActionId Id { get; private set; }
         public string Outcome { get; private set; }
-
+        public bool Completed { get; private set; }
         public Action(ActionId action, string outcome)
         {
             Id = action;
             Outcome = outcome;
+            Completed = false;
+        }
+
+        public void MarkAsCompleted()
+        {
+            Completed = true;
         }
     }
 
@@ -46,6 +52,7 @@ namespace Gtd.Shell.Projections
         public List<Thought> Thoughts = new List<Thought>(); 
         public List<Project> ProjectList = new List<Project>(); 
         public Dictionary<ProjectId, Project> ProjectDict = new Dictionary<ProjectId, Project>(); 
+        public Dictionary<ActionId, Action> ActionDict = new Dictionary<ActionId, Action>(); 
 
        
         public void CaptureThought(Guid thoughtId, string thought, DateTime date)
@@ -77,6 +84,11 @@ namespace Gtd.Shell.Projections
         {
             ProjectDict[projectId].AddAction(actionId, outcome);
         }
+        public void CompleteAction(ActionId actionId)
+        {
+            ActionDict[actionId].MarkAsCompleted();
+        }
+        
     }
 
     public sealed class ConsoleProjection
@@ -109,6 +121,10 @@ namespace Gtd.Shell.Projections
         public void When(ActionDefined evnt)
         {
             Update(evnt.Id, s => s.DefineAction(evnt.ProjectId, evnt.ActionId, evnt.Outcome));
+        }
+        public void When(ActionCompleted evnt)
+        {
+            Update(evnt.Id, s => s.CompleteAction(evnt.ActionId));
         }
     }
 }
