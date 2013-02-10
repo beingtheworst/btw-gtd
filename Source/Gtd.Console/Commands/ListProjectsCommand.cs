@@ -45,7 +45,7 @@ namespace Gtd.Shell.Commands
         {
             var project = env.Session.MatchProject(projectMatch);
 
-            var filtered = project.Actions.Where(a => env.Session.CurrentFilter.IncludeAction(a)).ToArray();
+            var filtered = project.Actions.Where(a => env.Session.CurrentFilter.IncludeAction(project,a)).ToArray();
 
             env.Log.Info("Project: {0}", project.Outcome);
 
@@ -116,7 +116,7 @@ namespace Gtd.Shell.Commands
 
 
             env.TrustedSystem.When(new Gtd.ChangeProjectType(env.Session.SystemId, project.ProjectId, changeTo));
-
+            env.Log.Trace("Projec type changed");
         }
     }
 }

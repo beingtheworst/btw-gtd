@@ -77,6 +77,7 @@ namespace Gtd.Shell
 
         public ConsoleView ConsoleView { get; private set; }
         public ConsoleSession Session { get; private set; }
+        public IList<IFilterCriteria> Filters { get; private set; } 
 
 
 
@@ -121,7 +122,8 @@ namespace Gtd.Shell
                     TrustedSystem = trustedSystem, 
                     Commands = ConsoleCommands.Actions, 
                     Session = new ConsoleSession(inbox.ViewInstance),
-                    ConsoleView = inbox.ViewInstance
+                    ConsoleView = inbox.ViewInstance,
+                    Filters = FilterCriteria.LoadALlFilters().ToList()
                 };
             return build;
         }

@@ -22,6 +22,11 @@ namespace Gtd.Shell
             CurrentFilter = new AllRemaining();
         }
 
+        public void UpdateFilter(IFilterCriteria filter)
+        {
+            CurrentFilter = filter;
+        }
+
         public TrustedSystem GetCurrentSystem()
         {
             if (!View.Systems.ContainsKey(SystemId))
@@ -131,21 +136,8 @@ namespace Gtd.Shell
         }
     }
 
-    public interface IFilterCriteria
-    {
-        bool IncludeAction(ActionView view);
-        string Title { get; }
-    }
+   
 
-    public sealed class AllRemaining : IFilterCriteria
-    {
-        public bool IncludeAction(ActionView view)
-        {
-            return !view.Archived;
-        }
-
-        public string Title { get { return "All remaining actions"; } }
-    }
 
 
 }
