@@ -560,10 +560,23 @@ namespace Gtd.Shell
                     var objects = new object[msgCount];
                     for (int i = 0; i < msgCount; i++)
                     {
-                        var name = bin.ReadString();
-                        var type = _contractToType[name];
-                        var len = bin.ReadInt32();
-                        objects[i] = RuntimeTypeModel.Default.Deserialize(bin.BaseStream, null, type, len);
+                        try
+                        {
+                            var name = bin.ReadString();
+                            var type = _contractToType[name];
+                            var len = bin.ReadInt32();
+                            objects[i] = RuntimeTypeModel.Default.Deserialize(bin.BaseStream, null, type, len);
+                        }
+                        catch (ProtoException ex)
+                        {
+                            throw new InvalidOperationException(
+                                "Failed to deserialize class, probably event store format changed. Please delete all *.dat files.",
+                                ex);
+                        }
+                        catch (KeyNotFoundException ex)
+                        {
+                            throw new InvalidOperationException("Failed to deserialize class, probably event store format changed. Please delete all *.dat files.", ex);
+                        }
                     }
                     yield return new StoreRecord(record.Key, objects, record.StoreVersion, record.StreamVersion);
                 }
