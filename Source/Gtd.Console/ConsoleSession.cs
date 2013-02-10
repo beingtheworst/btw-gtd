@@ -11,12 +11,15 @@ namespace Gtd.Shell
         public readonly ConsoleView View;
         public TrustedSystemId SystemId;
 
+        public IFilterCriteria CurrentFilter { get; private set; }
+
         public int NumberOfCHarsForGuid = 4;
 
         public ConsoleSession(ConsoleView view)
         {
             View = view;
             SystemId = new TrustedSystemId(1);
+            CurrentFilter = new AllRemaining();
         }
 
         public TrustedSystem GetCurrentSystem()
@@ -129,6 +132,23 @@ namespace Gtd.Shell
                 .Replace("-", "")
                 .StartsWith(match, StringComparison.InvariantCultureIgnoreCase);
         }
-        
     }
+
+    public interface IFilterCriteria
+    {
+        bool IncludeAction(ActionView view);
+        string Title { get; }
+    }
+
+    public sealed class AllRemaining : IFilterCriteria
+    {
+        public bool IncludeAction(ActionView view)
+        {
+            return !view.Archived;
+        }
+
+        public string Title { get { return "All remaining actions"; } }
+    }
+
+
 }

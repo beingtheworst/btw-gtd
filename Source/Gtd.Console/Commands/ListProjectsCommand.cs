@@ -1,4 +1,5 @@
 using Gtd.Shell.Projections;
+using System.Linq;
 
 namespace Gtd.Shell.Commands
 {
@@ -43,13 +44,21 @@ namespace Gtd.Shell.Commands
         static void ListActionsInProject(ConsoleEnvironment env, string projectMatch)
         {
             var project = env.Session.MatchProject(projectMatch);
-            env.Log.Info("Project: {0} ({1} actions)", project.Outcome, project.ActiveActions.Count);
 
-            foreach (var action in project.ActiveActions)
+            var filtered = project.Actions.Where(a => env.Session.CurrentFilter.IncludeAction(a)).ToArray();
+
+            env.Log.Info("Project: {0} ({1} of {2})", 
+                project.Outcome, 
+                filtered.Length, 
+                project.Actions.Count);
+
+            foreach (var action in filtered)
             {
                 var guid = action.Id.Id;
                 var shortId = guid.ToString().ToLowerInvariant().Replace("-", "").Substring(0, 3);
-                env.Log.Info(string.Format("  [{0}]  {1,-60} {2}", action.Completed ? "X":" ", action.Outcome, shortId));
+                env.Log.Info(string.Format("  [{0}]  {1,-60} {2}", action.Completed ? "X" : " ", action.Outcome,
+                    shortId));
+
             }
         }
 
@@ -64,7 +73,7 @@ namespace Gtd.Shell.Commands
                 var guid = entry.ProjectId.Id;
 
                 var shortId = guid.ToString().ToLowerInvariant().Replace("-", "").Substring(0, 3);
-                env.Log.Info(string.Format("  {0} ({2}) {1, -60}", shortId, entry.Outcome, entry.ActiveActions.Count));
+                env.Log.Info(string.Format("  {0} ({2}) {1, -60}", shortId, entry.Outcome, entry.Actions.Count));
             }
         }
     }

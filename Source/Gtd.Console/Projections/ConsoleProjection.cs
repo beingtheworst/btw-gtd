@@ -32,7 +32,7 @@ namespace Gtd.Shell.Projections
         public ProjectId ProjectId;
         public string Outcome;
 
-        public List<ActionView> ActiveActions = new List<ActionView>();
+        public List<ActionView> Actions = new List<ActionView>();
 
         public string GetTitle()
         {
@@ -118,7 +118,7 @@ namespace Gtd.Shell.Projections
         {
             var action = new ActionView(actionId, outcome, projectId);
 
-            ProjectDict[projectId].ActiveActions.Add(action);
+            ProjectDict[projectId].Actions.Add(action);
             ActionDict.Add(actionId, action);
             GlobalDict.Add(actionId.Id, action);
         }
@@ -144,7 +144,7 @@ namespace Gtd.Shell.Projections
         {
             var view = ActionDict[id];
             view.MarkAsArchived();
-            ProjectDict[view.Project].ActiveActions.Remove(view);
+            //ProjectDict[view.Project].ActiveActions.Remove(view);
         }
     }
 
