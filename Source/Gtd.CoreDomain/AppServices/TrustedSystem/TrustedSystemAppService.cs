@@ -36,6 +36,11 @@ namespace Gtd.CoreDomain
             ChangeAggregate(cmd.Id, agg => agg.DefineProject(cmd.RequestId, cmd.ProjectOutcome, _time));
         }
 
+        public void When(ChangeProjectType cmd)
+        {
+            ChangeAggregate(cmd.Id, agg => agg.ChangeProjectType(cmd.ProjectId, cmd.Type, _time));
+        }
+
         public void When(RemoveAction cmd)
         {
             throw new NotImplementedException();

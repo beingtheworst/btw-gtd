@@ -97,4 +97,11 @@ namespace Gtd
             return Id.GetHashCode();
         }
     }
+
+    public enum ProjectType
+    {
+        SingleActions,
+        Sequential,
+        Parallel
+    }
 }

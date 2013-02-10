@@ -135,14 +135,48 @@ namespace Gtd
         [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
         [DataMember(Order = 2)] public ProjectId ProjectId { get; private set; }
         [DataMember(Order = 3)] public string ProjectOutcome { get; private set; }
-        [DataMember(Order = 4)] public DateTime TimeUtc { get; private set; }
+        [DataMember(Order = 4)] public ProjectType Type { get; private set; }
+        [DataMember(Order = 5)] public DateTime TimeUtc { get; private set; }
         
         ProjectDefined () {}
-        public ProjectDefined (TrustedSystemId id, ProjectId projectId, string projectOutcome, DateTime timeUtc)
+        public ProjectDefined (TrustedSystemId id, ProjectId projectId, string projectOutcome, ProjectType type, DateTime timeUtc)
         {
             Id = id;
             ProjectId = projectId;
             ProjectOutcome = projectOutcome;
+            Type = type;
+            TimeUtc = timeUtc;
+        }
+    }
+    [DataContract(Namespace = "BTW2/GTD")]
+    public partial class ChangeProjectType : Command, ITrustedSystemCommand
+    {
+        [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
+        [DataMember(Order = 2)] public ProjectId ProjectId { get; private set; }
+        [DataMember(Order = 3)] public ProjectType Type { get; private set; }
+        
+        ChangeProjectType () {}
+        public ChangeProjectType (TrustedSystemId id, ProjectId projectId, ProjectType type)
+        {
+            Id = id;
+            ProjectId = projectId;
+            Type = type;
+        }
+    }
+    [DataContract(Namespace = "BTW2/GTD")]
+    public partial class ProjectTypeChanged : Event, ITrustedSystemEvent
+    {
+        [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
+        [DataMember(Order = 2)] public ProjectId ProjectId { get; private set; }
+        [DataMember(Order = 3)] public ProjectType Type { get; private set; }
+        [DataMember(Order = 4)] public DateTime TimeUtc { get; private set; }
+        
+        ProjectTypeChanged () {}
+        public ProjectTypeChanged (TrustedSystemId id, ProjectId projectId, ProjectType type, DateTime timeUtc)
+        {
+            Id = id;
+            ProjectId = projectId;
+            Type = type;
             TimeUtc = timeUtc;
         }
     }
@@ -364,6 +398,7 @@ namespace Gtd
         void When(ArchiveThought c);
         void When(DefineAction c);
         void When(DefineProject c);
+        void When(ChangeProjectType c);
         void When(RemoveAction c);
         void When(CompleteAction c);
         void When(ChangeActionOutcome c);
@@ -378,6 +413,7 @@ namespace Gtd
         void When(ThoughtArchived e);
         void When(ActionDefined e);
         void When(ProjectDefined e);
+        void When(ProjectTypeChanged e);
         void When(ActionAssignedToProject e);
         void When(ActionRemovedFromProject e);
         void When(ActionMovedToProject e);

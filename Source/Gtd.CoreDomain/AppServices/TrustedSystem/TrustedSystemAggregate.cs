@@ -27,7 +27,8 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             var time = provider.GetUtcNow();
             var projectId = new ProjectId(NewGuidIfEmpty(requestId));
 
-            Apply(new ProjectDefined(_aggState.Id, projectId, name, time));
+            var defaultProjectType = ProjectType.SingleActions;
+            Apply(new ProjectDefined(_aggState.Id, projectId, name, defaultProjectType, time));
         }
 
         public void CaptureThought(Guid requestId, string name, ITimeProvider provider)
@@ -139,6 +140,19 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             if (info.Subject != subject)
             {
                 Apply(new ThoughtSubjectChanged(_aggState.Id, thoughtId, subject, time.GetUtcNow()));
+            }
+        }
+
+        public void ChangeProjectType(ProjectId projectId, ProjectType type, ITimeProvider time)
+        {
+            ProjectInfo info;
+            if (!_aggState.Projects.TryGetValue(projectId, out info))
+            {
+                throw DomainError.Named("unknown project", "Unknown project {0}", projectId);
+            }
+            if (info.Type != type)
+            {
+                Apply(new ProjectTypeChanged(_aggState.Id, projectId, type, time.GetUtcNow()));
             }
         }
     }

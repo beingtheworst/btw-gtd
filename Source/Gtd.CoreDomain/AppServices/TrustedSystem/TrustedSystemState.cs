@@ -66,7 +66,12 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
 
         public void When(ProjectDefined evnt)
         {
-            Projects.Add(evnt.ProjectId, new ProjectInfo(evnt.ProjectId, evnt.ProjectOutcome));
+            Projects.Add(evnt.ProjectId, new ProjectInfo(evnt.ProjectId, evnt.ProjectOutcome, evnt.Type));
+        }
+
+        public void When(ProjectTypeChanged e)
+        {
+            Projects[e.ProjectId].ChangeType(e.Type);
         }
 
         public void When(ActionAssignedToProject evnt)
@@ -196,14 +201,24 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
     {
         public ProjectId Id { get; private set; }
         public string Outcome { get; private set; }
+        public ProjectType Type { get; private set; }
+
 
         readonly List<ActionId> _actions = new List<ActionId>();
          
 
-        public ProjectInfo(ProjectId id, string name)
+        public ProjectInfo(ProjectId id, string name, ProjectType type)
         {
+            Enforce.NotEmpty(name,"name");
+
             Id = id;
             Outcome = name;
+            Type = type;
+        }
+
+        public void ChangeType(ProjectType type)
+        {
+            Type = type;
         }
 
         public void ChangeOutcome(string newName)
