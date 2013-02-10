@@ -49,9 +49,8 @@ interface TrustedSystem(TrustedSystemId Id)
     ActionRemovedFromProject!(actionId, ProjectId oldProject, time)
     ActionMovedToProject!(actionId, ProjectId oldProject, ProjectId newProject, time)
 
-    RemoveAction?(actionId)
-    
-    ActionRemoved!(actionId, time)    
+    ArchiveAction?(actionId)    
+        ActionArchived!(actionId, projectId, time)    
 
     CompleteAction?(actionId)
         ActionCompleted!(actionId, projectId, string actionOutcome, time)

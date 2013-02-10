@@ -101,10 +101,10 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             oldProject.RemoveAction(action.Id);
         }
 
-        public void When(ActionRemoved evnt)
+
+        public void When(ActionArchived evnt)
         {
-            Actions[evnt.ActionId].EnsureCleanRemoval();
-            Actions.Remove(evnt.ActionId);
+            Actions[evnt.ActionId].MakeArchived();
         }
 
         public void When(ActionOutcomeChanged evnt)
@@ -142,17 +142,22 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
     {
         public ActionId Id { get; private set; }
         public string Outcome { get; private set; }
-
         public ProjectId Project { get; private set; }
 
         public bool HasProject { get { return !Project.IsEmpty; } }
 
         public bool Completed { get; private set; }
+        public bool Archived { get; private set; }
 
         public ActionInfo(ActionId id, string name)
         {
             Id = id;
             Outcome = name;
+        }
+
+        public void MakeArchived()
+        {
+            Archived = true;
         }
 
         public void LinkToProject(ProjectId id)

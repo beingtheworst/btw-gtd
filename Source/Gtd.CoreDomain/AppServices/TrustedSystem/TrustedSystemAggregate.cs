@@ -155,5 +155,25 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
                 Apply(new ProjectTypeChanged(_aggState.Id, projectId, type, time.GetUtcNow()));
             }
         }
+
+        ActionInfo GetActionOrThrow(ActionId id)
+        {
+            ActionInfo info;
+            if (!_aggState.Actions.TryGetValue(id, out info))
+            {
+                throw DomainError.Named("unknown action", "Unknown action {0}", id);
+            }
+            return info;
+
+        }
+
+        public void ArchiveAction(ActionId actionId, ITimeProvider time)
+        {
+            var action = GetActionOrThrow(actionId);
+            if (!action.Archived)
+            {
+                Apply(new ActionArchived(_aggState.Id, actionId, action.Project, time.GetUtcNow()));
+            }
+        }
     }
 }

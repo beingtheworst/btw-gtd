@@ -43,9 +43,9 @@ namespace Gtd.Shell.Commands
         static void ListActionsInProject(ConsoleEnvironment env, string projectMatch)
         {
             var project = env.Session.MatchProject(projectMatch);
-            env.Log.Info("Project: {0} ({1} actions)", project.Outcome, project.Actions.Count);
+            env.Log.Info("Project: {0} ({1} actions)", project.Outcome, project.ActiveActions.Count);
 
-            foreach (var action in project.Actions)
+            foreach (var action in project.ActiveActions)
             {
                 var guid = action.Id.Id;
                 var shortId = guid.ToString().ToLowerInvariant().Replace("-", "").Substring(0, 3);
@@ -64,7 +64,7 @@ namespace Gtd.Shell.Commands
                 var guid = entry.ProjectId.Id;
 
                 var shortId = guid.ToString().ToLowerInvariant().Replace("-", "").Substring(0, 3);
-                env.Log.Info(string.Format("  {0} ({2}) {1, -60}", shortId, entry.Outcome, entry.Actions.Count));
+                env.Log.Info(string.Format("  {0} ({2}) {1, -60}", shortId, entry.Outcome, entry.ActiveActions.Count));
             }
         }
     }

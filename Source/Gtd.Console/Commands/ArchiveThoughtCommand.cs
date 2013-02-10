@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Gtd.Shell.Projections;
 
 namespace Gtd.Shell.Commands
 {
@@ -12,7 +13,7 @@ namespace Gtd.Shell.Commands
                 return new[]
                     {
                         "archive",
-                        "at"
+                        "rm"
                     };
             }
         }
@@ -28,9 +29,27 @@ namespace Gtd.Shell.Commands
                 env.Log.Error("You must specify ID of the thought to archive");
                 return;
             }
-            var thought = env.Session.MatchThought(args[0]);
-            env.TrustedSystem.When(new ArchiveThought(env.Session.SystemId, thought.Id));
-            env.Log.Info("Archived");
+            var record = env.Session.MatchItem(args[0]);
+
+            var thought = record as ThoughtView;
+
+            if (thought != null)
+            {
+                env.TrustedSystem.When(new ArchiveThought(env.Session.SystemId, thought.Id));
+                env.Log.Info("Archiving thought");
+                return;
+            }
+            var action = record as ActionView;
+            if (action != null)
+            {
+                env.TrustedSystem.When(new ArchiveAction(env.Session.SystemId, action.Id));
+                env.Log.Info("Archiving action");
+                return;
+            }
+
+
+
+            throw new KnownConsoleInputError("Can't archive record:" + record.GetTitle());
         }
 
         

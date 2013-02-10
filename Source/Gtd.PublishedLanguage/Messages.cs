@@ -234,30 +234,32 @@ namespace Gtd
         }
     }
     [DataContract(Namespace = "BTW2/GTD")]
-    public partial class RemoveAction : Command, ITrustedSystemCommand
+    public partial class ArchiveAction : Command, ITrustedSystemCommand
     {
         [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
         [DataMember(Order = 2)] public ActionId ActionId { get; private set; }
         
-        RemoveAction () {}
-        public RemoveAction (TrustedSystemId id, ActionId actionId)
+        ArchiveAction () {}
+        public ArchiveAction (TrustedSystemId id, ActionId actionId)
         {
             Id = id;
             ActionId = actionId;
         }
     }
     [DataContract(Namespace = "BTW2/GTD")]
-    public partial class ActionRemoved : Event, ITrustedSystemEvent
+    public partial class ActionArchived : Event, ITrustedSystemEvent
     {
         [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
         [DataMember(Order = 2)] public ActionId ActionId { get; private set; }
-        [DataMember(Order = 3)] public DateTime TimeUtc { get; private set; }
+        [DataMember(Order = 3)] public ProjectId ProjectId { get; private set; }
+        [DataMember(Order = 4)] public DateTime TimeUtc { get; private set; }
         
-        ActionRemoved () {}
-        public ActionRemoved (TrustedSystemId id, ActionId actionId, DateTime timeUtc)
+        ActionArchived () {}
+        public ActionArchived (TrustedSystemId id, ActionId actionId, ProjectId projectId, DateTime timeUtc)
         {
             Id = id;
             ActionId = actionId;
+            ProjectId = projectId;
             TimeUtc = timeUtc;
         }
     }
@@ -399,7 +401,7 @@ namespace Gtd
         void When(DefineAction c);
         void When(DefineProject c);
         void When(ChangeProjectType c);
-        void When(RemoveAction c);
+        void When(ArchiveAction c);
         void When(CompleteAction c);
         void When(ChangeActionOutcome c);
         void When(ChangeProjectOutcome c);
@@ -417,7 +419,7 @@ namespace Gtd
         void When(ActionAssignedToProject e);
         void When(ActionRemovedFromProject e);
         void When(ActionMovedToProject e);
-        void When(ActionRemoved e);
+        void When(ActionArchived e);
         void When(ActionCompleted e);
         void When(ActionOutcomeChanged e);
         void When(ProjectOutcomeChanged e);

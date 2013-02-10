@@ -24,6 +24,7 @@ namespace Gtd.Shell.Projections
         {
             return string.Format("Thought '{0}'", Subject);
         }
+
     }
 
     public sealed class ProjectView : IItemView
@@ -31,8 +32,7 @@ namespace Gtd.Shell.Projections
         public ProjectId ProjectId;
         public string Outcome;
 
-        public List<ActionView> Actions = new List<ActionView>();
-        
+        public List<ActionView> ActiveActions = new List<ActionView>();
 
         public string GetTitle()
         {
@@ -45,11 +45,16 @@ namespace Gtd.Shell.Projections
         public ActionId Id { get; private set; }
         public string Outcome { get; private set; }
         public bool Completed { get; private set; }
-        public ActionView(ActionId action, string outcome)
+        public bool Archived { get; private set; }
+        public ProjectId Project { get; private set; }
+
+        public ActionView(ActionId action, string outcome, ProjectId project)
         {
             Id = action;
             Outcome = outcome;
             Completed = false;
+            Archived = false;
+            Project = project;
         }
 
         public void MarkAsCompleted()
@@ -64,6 +69,12 @@ namespace Gtd.Shell.Projections
         public string GetTitle()
         {
             return string.Format("Action: '{0}'", Outcome);
+        }
+
+        public void MarkAsArchived()
+        {
+            Archived = true;
+
         }
     }
 
@@ -105,8 +116,9 @@ namespace Gtd.Shell.Projections
 
         public void DefineAction(ProjectId projectId, ActionId actionId, string outcome)
         {
-            var action = new ActionView(actionId, outcome);
-            ProjectDict[projectId].Actions.Add(action);
+            var action = new ActionView(actionId, outcome, projectId);
+
+            ProjectDict[projectId].ActiveActions.Add(action);
             ActionDict.Add(actionId, action);
             GlobalDict.Add(actionId.Id, action);
         }
@@ -126,6 +138,13 @@ namespace Gtd.Shell.Projections
         public void ChangeActionOutcome(ActionId actionId, string outcome)
         {
             ActionDict[actionId].ChangeOutcome(outcome);
+        }
+
+        public void ArchiveAction(ActionId id)
+        {
+            var view = ActionDict[id];
+            view.MarkAsArchived();
+            ProjectDict[view.Project].ActiveActions.Remove(view);
         }
     }
 
@@ -172,12 +191,15 @@ namespace Gtd.Shell.Projections
         public void When(ProjectOutcomeChanged evnt)
         {
             Update(evnt.Id, s => s.ChangeProjectOutcome(evnt.ProjectId, evnt.ProjectOutcome));
-            
         }
 
         public void When(ThoughtSubjectChanged evnt)
         {
             Update(evnt.Id, s => s.ChangeThoughtSubject(evnt.ThoughtId, evnt.Subject));
+        }
+        public void When(ActionArchived evnt)
+        {
+            Update(evnt.Id, s => s.ArchiveAction(evnt.ActionId));
         }
     }
 }
