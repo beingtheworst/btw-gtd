@@ -29,10 +29,29 @@ namespace Gtd.Shell.Projections
 
     public sealed class ProjectView : IItemView
     {
-        public ProjectId ProjectId;
-        public string Outcome;
+        public ProjectId ProjectId { get; private set; }
+        public string Outcome { get; private set; }
+        public ProjectType Type { get; private set; }
+
+        public ProjectView(ProjectId projectId, string outcome, ProjectType type)
+        {
+            ProjectId = projectId;
+            Outcome = outcome;
+            Type = type;
+        }
+
 
         public List<ActionView> Actions = new List<ActionView>();
+
+        public void OutcomeChanged(string outcome)
+        {
+            Outcome = outcome;
+        }
+
+        public void TypeChanged(ProjectType type)
+        {
+            Type = type;
+        }
 
         public string GetTitle()
         {
@@ -61,7 +80,7 @@ namespace Gtd.Shell.Projections
         {
             Completed = true;
         }
-        public void ChangeOutcome(string outcome)
+        public void OutcomeChanged(string outcome)
         {
             Outcome = outcome;
         }
@@ -87,7 +106,7 @@ namespace Gtd.Shell.Projections
 
         public Dictionary<Guid, IItemView> GlobalDict = new Dictionary<Guid, IItemView>();
        
-        public void CaptureThought(Guid thoughtId, string thought, DateTime date)
+        public void ThoughtCaptured(Guid thoughtId, string thought, DateTime date)
         {
             var item = new ThoughtView()
                 {
@@ -97,24 +116,21 @@ namespace Gtd.Shell.Projections
             GlobalDict.Add(thoughtId, item);
         }
 
-        public void ArchiveThought(Guid thoughtId)
+        public void ThoughtArchived(Guid thoughtId)
         {
             Thoughts.RemoveAll(t => t.Id == thoughtId);
         }
 
        
-        public void DefineProject(ProjectId projectId, string projectOutcome)
+        public void ProjectDefined(ProjectId projectId, string projectOutcome, ProjectType type)
         {
-            var project = new ProjectView
-                {
-                    ProjectId = projectId, Outcome = projectOutcome
-                };
+            var project = new ProjectView(projectId, projectOutcome, type);
             ProjectList.Add(project);
             ProjectDict.Add(projectId, project);
             GlobalDict.Add(projectId.Id, project);
         }
 
-        public void DefineAction(ProjectId projectId, ActionId actionId, string outcome)
+        public void ActionDefined(ProjectId projectId, ActionId actionId, string outcome)
         {
             var action = new ActionView(actionId, outcome, projectId);
 
@@ -122,29 +138,32 @@ namespace Gtd.Shell.Projections
             ActionDict.Add(actionId, action);
             GlobalDict.Add(actionId.Id, action);
         }
-        public void CompleteAction(ActionId actionId)
+        public void ActionCompleted(ActionId actionId)
         {
             ActionDict[actionId].MarkAsCompleted();
         }
 
-        public void ChangeThoughtSubject(Guid thoughtId, string subject)
+        public void ThoughtSubjectChanged(Guid thoughtId, string subject)
         {
             ((ThoughtView) GlobalDict[thoughtId]).Subject = subject;
         }
-        public void ChangeProjectOutcome(ProjectId projectId, string outcome)
+        public void ProjectOutcomeChanged(ProjectId projectId, string outcome)
         {
-            ProjectDict[projectId].Outcome = outcome;
+            ProjectDict[projectId].OutcomeChanged(outcome);
         }
-        public void ChangeActionOutcome(ActionId actionId, string outcome)
+        public void ActionOutcomeChanged(ActionId actionId, string outcome)
         {
-            ActionDict[actionId].ChangeOutcome(outcome);
+            ActionDict[actionId].OutcomeChanged(outcome);
         }
 
-        public void ArchiveAction(ActionId id)
+        public void ActionArchived(ActionId id)
         {
-            var view = ActionDict[id];
-            view.MarkAsArchived();
-            //ProjectDict[view.Project].ActiveActions.Remove(view);
+            ActionDict[id].MarkAsArchived();
+        }
+
+        public void ProjectTypeChanged(ProjectId projectId, ProjectType type)
+        {
+            ProjectDict[projectId].TypeChanged(type);
         }
     }
 
@@ -164,42 +183,46 @@ namespace Gtd.Shell.Projections
 
         public void When(ThoughtCaptured evnt)
         {
-            Update(evnt.Id, s => s.CaptureThought(evnt.ThoughtId, evnt.Thought, evnt.TimeUtc));
+            Update(evnt.Id, s => s.ThoughtCaptured(evnt.ThoughtId, evnt.Thought, evnt.TimeUtc));
         }
         public void When(ThoughtArchived evnt)
         {
-            Update(evnt.Id, s => s.ArchiveThought(evnt.ThoughtId));
+            Update(evnt.Id, s => s.ThoughtArchived(evnt.ThoughtId));
         }
 
         public void When(ProjectDefined evnt)
         {
-            Update(evnt.Id, s => s.DefineProject(evnt.ProjectId, evnt.ProjectOutcome));
+            Update(evnt.Id, s => s.ProjectDefined(evnt.ProjectId, evnt.ProjectOutcome, evnt.Type));
         }
         public void When(ActionDefined evnt)
         {
-            Update(evnt.Id, s => s.DefineAction(evnt.ProjectId, evnt.ActionId, evnt.Outcome));
+            Update(evnt.Id, s => s.ActionDefined(evnt.ProjectId, evnt.ActionId, evnt.Outcome));
         }
         public void When(ActionCompleted evnt)
         {
-            Update(evnt.Id, s => s.CompleteAction(evnt.ActionId));
+            Update(evnt.Id, s => s.ActionCompleted(evnt.ActionId));
         }
         public void When(ActionOutcomeChanged evnt)
         {
-            Update(evnt.Id, s => s.ChangeActionOutcome(evnt.ActionId, evnt.ActionOutcome));
+            Update(evnt.Id, s => s.ActionOutcomeChanged(evnt.ActionId, evnt.ActionOutcome));
         }
 
         public void When(ProjectOutcomeChanged evnt)
         {
-            Update(evnt.Id, s => s.ChangeProjectOutcome(evnt.ProjectId, evnt.ProjectOutcome));
+            Update(evnt.Id, s => s.ProjectOutcomeChanged(evnt.ProjectId, evnt.ProjectOutcome));
         }
 
         public void When(ThoughtSubjectChanged evnt)
         {
-            Update(evnt.Id, s => s.ChangeThoughtSubject(evnt.ThoughtId, evnt.Subject));
+            Update(evnt.Id, s => s.ThoughtSubjectChanged(evnt.ThoughtId, evnt.Subject));
         }
         public void When(ActionArchived evnt)
         {
-            Update(evnt.Id, s => s.ArchiveAction(evnt.ActionId));
+            Update(evnt.Id, s => s.ActionArchived(evnt.ActionId));
+        }
+        public void When(ProjectTypeChanged evnt)
+        {
+            Update(evnt.Id, s => s.ProjectTypeChanged(evnt.ProjectId, evnt.Type));
         }
     }
 }
