@@ -116,13 +116,10 @@ namespace Gtd.Shell
                 {
                     message.AppendFormat("{0} more matches not shown", matches.Length - 10);
                 }
-                
-
 
                 throw new KnownConsoleInputError(message.ToString());
             }
             return matches[0].Value;
-
         }
 
         static bool Matches(Guid id, string match)
