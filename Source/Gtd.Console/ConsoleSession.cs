@@ -135,9 +135,4 @@ namespace Gtd.Shell
                 .StartsWith(match, StringComparison.InvariantCultureIgnoreCase);
         }
     }
-
-   
-
-
-
 }
