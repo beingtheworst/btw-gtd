@@ -6,11 +6,11 @@ namespace Gtd.Shell.Commands
     {
         public string[] Key { get { return new string[] { "actions" , "cd"}; } }
         public string Usage { get { return @"actions [<project-id>]
-List all actions in a project"; } }
+List all actions in a project or all available actions"; } }
         public void Execute(ConsoleEnvironment env, string[] args)
         {
             
-                
+                env.Log.Trace("  Displaying actions from projects, filtered by the current filter. See filter command for more detail");
 
             if (args.Length == 1)
             {
@@ -27,7 +27,7 @@ List all actions in a project"; } }
 
                     if (filtered.Length == 0) continue;
 
-                    env.Log.Info("Project: {0} [ {1} ]  {2}", project.Outcome, project.Type, env.Session.CurrentFilter.FormatActionCount(filtered.Length));
+                    env.Log.Trace("Project: {0} [ {1} ]  {2}", project.Outcome, project.Type, env.Session.CurrentFilter.FormatActionCount(filtered.Length));
 
                     foreach (var action in filtered)
                     {

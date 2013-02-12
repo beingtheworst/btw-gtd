@@ -2,8 +2,12 @@ namespace Gtd.Shell.Commands
 {
     public sealed class FilterCommand : IConsoleCommand
     {
-        public string[] Key { get { return new string[] { "filter","f"}; } }
-        public string Usage { get; private set; }
+        public string[] Key { get { return new[] { "filter","f"}; } }
+        public string Usage
+        {
+            get { return @"f [<optional filter id>]
+    Display currently selected action filter or switch filter to one of the available."; }
+        }
         public void Execute(ConsoleEnvironment env, string[] args)
         {
             if (args.Length == 0)
