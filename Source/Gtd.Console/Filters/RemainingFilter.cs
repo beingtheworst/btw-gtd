@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Gtd.Shell.Projections;
 
 namespace Gtd.Shell.Filters
@@ -7,16 +8,17 @@ namespace Gtd.Shell.Filters
     /// </summary>
     public sealed class RemainingFilter : IFilterCriteria
     {
-        public bool IncludeAction(ProjectView proect, ActionView view)
+        public IEnumerable<ActionView> FilterActions(ProjectView view)
         {
-            if (view.Archived)
-                return false;
-            if (view.Completed)
-                return false;
-
-            return true;
+            foreach (var action in view.Actions)
+            {
+                if (action.Archived)
+                    continue;
+                if (action.Completed)
+                    continue;
+                yield return action;
+            }
         }
-
         public string Title { get { return "Remaining"; } }
         public string Description { get { return "anything that’s not completed"; } }
 

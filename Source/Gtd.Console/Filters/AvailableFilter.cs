@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Gtd.Shell.Projections;
 
 namespace Gtd.Shell.Filters
@@ -7,14 +8,19 @@ namespace Gtd.Shell.Filters
     /// </summary>
     public sealed class AvailableFilter : IFilterCriteria
     {
-        public bool IncludeAction(ProjectView project, ActionView action)
+
+        public IEnumerable<ActionView> FilterActions(ProjectView view)
         {
-            if (action.Archived)
-                return false;
-            if (action.Completed)
-                return false;
-            return true;
+            foreach (var action in view.Actions)
+            {
+                if (action.Archived)
+                    continue;
+                if (action.Completed)
+                    continue;
+                yield return action;
+            }
         }
+
 
         public string Title { get { return "Available"; } }
         public string Description { get { return "actions not blocked, future, or on hold"; } }

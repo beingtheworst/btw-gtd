@@ -1,14 +1,22 @@
+using System.Collections.Generic;
 using Gtd.Shell.Projections;
 
 namespace Gtd.Shell.Filters
 {
     public sealed class NextActionFilter : IFilterCriteria
     {
-        public bool IncludeAction(ProjectView project, ActionView action)
+        public IEnumerable<ActionView> FilterActions(ProjectView view)
         {
-
-            // TODO: implement
-            return false;
+            foreach (var action in view.Actions)
+            {
+                if (action.Completed)
+                    continue;
+                if (action.Archived)
+                    continue;
+                yield return action;
+                yield break;
+            }
+            
         }
 
         public string Title { get { return "Next"; } }
