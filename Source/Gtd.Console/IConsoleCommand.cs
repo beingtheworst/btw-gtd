@@ -30,11 +30,11 @@ namespace Gtd.Shell
                 .Where(t => !t.IsAbstract)
                 .ToArray();
 
+            var instances = consoleCommandTypes.Select(Activator.CreateInstance).OfType<IConsoleCommand>();
 
-            foreach (var type in consoleCommandTypes)
+
+            foreach (var instance in instances.OrderBy(i => i.Key.First()))
             {
-                var instance = (IConsoleCommand) Activator.CreateInstance(type);
-
                 foreach (var s in instance.Key)
                 {
                     Actions.Add(s, instance);
