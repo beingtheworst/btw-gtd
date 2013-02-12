@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Gtd.Shell.Projections;
 
@@ -14,7 +15,11 @@ namespace Gtd.Shell.Filters
                 if (action.Archived)
                     continue;
                 yield return action;
-                yield break;
+
+                if (view.Type != ProjectType.SingleActions)
+                    yield break;
+
+                // single actions lists allow multiple next actions
             }
             
         }
