@@ -1,0 +1,18 @@
+using System.Collections.Generic;
+
+namespace Gtd.Shell
+{
+    public static class FilterCriteria
+    {
+                
+
+        public static IEnumerable<IFilterCriteria>  LoadAllFilters()
+        {
+            yield return new NextActionFilter();
+            yield return new AvailableFilter();
+            yield return new RemainingFilter();
+            yield return new AllActionsFilter();
+        }
+
+    }
+}

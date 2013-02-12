@@ -56,7 +56,12 @@
     <Compile Include="Commands\KnownConsoleInputError.cs" />
     <Compile Include="Commands\ViewInboxCommand.cs" />
     <Compile Include="ConsoleSession.cs" />
-    <Compile Include="IFilterCriteria.cs" />
+    <Compile Include="Filters\AllActionsFilter.cs" />
+    <Compile Include="Filters\AvailableFilter.cs" />
+    <Compile Include="Filters\FilterCriteria.cs" />
+    <Compile Include="Filters\IFilterCriteria.cs" />
+    <Compile Include="Filters\NextActionFilter.cs" />
+    <Compile Include="Filters\RemainingFilter.cs" />
     <Compile Include="LesserEvils\FormatEvil.cs" />
     <Compile Include="IAppendOnlyStore.cs" />
     <Compile Include="ILogger.cs" />

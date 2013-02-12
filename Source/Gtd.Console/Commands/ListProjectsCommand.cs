@@ -47,12 +47,9 @@ namespace Gtd.Shell.Commands
 
             var filtered = project.Actions.Where(a => env.Session.CurrentFilter.IncludeAction(project,a)).ToArray();
 
-            env.Log.Info("Project: {0}", project.Outcome);
+            env.Log.Info("Project: {0} [ {1} ]", project.Outcome, project.Type);
 
-            env.Log.Debug("  Type: {0}. Showing {1} of {2} actions", 
-                project.Type,
-                filtered.Length, 
-                project.Actions.Count);
+            env.Log.Debug("  {0}", env.Session.CurrentFilter.FormatActionCount(filtered.Length));
 
             foreach (var action in filtered)
             {

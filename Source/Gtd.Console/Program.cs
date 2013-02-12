@@ -147,7 +147,7 @@ namespace Gtd.Shell
                     Commands = ConsoleCommands.Actions, 
                     Session = new ConsoleSession(inbox.ViewInstance),
                     ConsoleView = inbox.ViewInstance,
-                    Filters = FilterCriteria.LoadALlFilters().ToList()
+                    Filters = FilterCriteria.LoadAllFilters().ToList()
                 };
             return build;
         }
