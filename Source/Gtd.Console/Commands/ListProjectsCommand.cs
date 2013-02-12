@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Gtd.Shell.Projections;
 
 namespace Gtd.Shell.Commands
@@ -24,14 +25,16 @@ namespace Gtd.Shell.Commands
         {
             var system = env.Session.GetCurrentSystem();
             var projects = system.ProjectList;
-            env.Log.Info("Projects ({0} records)", projects.Count);
+            env.Log.Trace("Projects ({0} records)", projects.Count);
 
             foreach (var entry in projects)
             {
                 var guid = entry.ProjectId.Id;
 
-                var shortId = guid.ToString().ToLowerInvariant().Replace("-", "").Substring(0, 3);
-                env.Log.Info(string.Format("  {0} ({2}) {1, -60}", shortId, entry.Outcome, entry.Actions.Count));
+                var shortId = env.Session.MakePartialKey(guid);
+                var filtered = env.Session.CurrentFilter.FilterActions(entry);
+                var format = env.Session.CurrentFilter.FormatActionCount(filtered.Count());
+                env.Log.Info(string.Format("  {0} {1, -60} ({2}; {3})", shortId, entry.Outcome, format, entry.Type));
             }
         }
     }
