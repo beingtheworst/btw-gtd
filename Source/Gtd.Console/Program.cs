@@ -20,8 +20,7 @@ namespace Gtd.Shell
             var env = ConsoleEnvironment.Build();
             Log.Info("Type 'help' to get more info");
 
-
-            
+            SetupConsoleWindow();
 
             while (true)
             {
@@ -63,6 +62,29 @@ namespace Gtd.Shell
             }
 
  
+        }
+
+        static void SetupConsoleWindow()
+        {
+            // HACK 
+            // try to mess with Console Window size and layout here
+
+            Console.Title = "GTD Interactive Shell - beingtheworst.com";
+
+            // setup Window size values for Console Window that is 60% of Max Possible Size
+            int winWidth = (Console.LargestWindowWidth * 6 / 10);
+            int winHeight = (Console.LargestWindowHeight * 6 / 10);
+
+            // hack - for now, hard code "bigger" buffer than Window sizes above
+            int winBuffWidth = winWidth + 80;
+            int winBuffHeight = winHeight + 300;
+            Console.SetBufferSize(winBuffWidth, winBuffHeight);
+
+            // Buffer is bigger than Window so set the Window Size
+            Console.SetWindowSize(winWidth, winHeight);
+
+            // note that various tricks to center Console Window on launch 
+            // and to change to Font size were ugly so left them out for now
         }
     }
 
@@ -127,6 +149,6 @@ namespace Gtd.Shell
                 };
             return build;
         }
-
     }
+
 }
