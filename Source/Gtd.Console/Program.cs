@@ -14,13 +14,14 @@ namespace Gtd.Shell
         static ILogger Log = LogManager.GetLoggerFor<Program>();
         static void Main(string[] args)
         {
+            SetupConsoleWindow();
             // setup and wire our console environment
             Log.Info("Starting Being The Worst interactive shell :)");
             
             var env = ConsoleEnvironment.Build();
             Log.Info("Type 'help' to get more info");
 
-            SetupConsoleWindow();
+            
 
             while (true)
             {
@@ -76,7 +77,8 @@ namespace Gtd.Shell
             int winHeight = (Console.LargestWindowHeight * 6 / 10);
 
             // hack - for now, hard code "bigger" buffer than Window sizes above
-            int winBuffWidth = winWidth + 80;
+            // suggesting to keep horizontal buffer equal to width - to avoid horizontal scrolling.
+            int winBuffWidth = winWidth;
             int winBuffHeight = winHeight + 300;
             Console.SetBufferSize(winBuffWidth, winBuffHeight);
 
