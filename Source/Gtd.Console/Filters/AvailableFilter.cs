@@ -17,7 +17,15 @@ namespace Gtd.Shell.Filters
                     continue;
                 if (action.Completed)
                     continue;
+
+                
                 yield return action;
+
+                if (view.Type == ProjectType.Sequential)
+                {
+                    // in sequential projects, only one action is active
+                    yield break;
+                }
             }
         }
 

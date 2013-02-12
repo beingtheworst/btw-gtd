@@ -30,11 +30,6 @@ namespace Gtd.Shell.Commands
                 env.Session.UpdateFilter(filter);
                 env.Log.Trace("Changed filter to {0}", filter.Title);
             }
-
-        
-
         }
-
-
     }
 }
