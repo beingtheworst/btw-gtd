@@ -93,7 +93,7 @@ namespace Gtd.Shell
             return matches[0];
         }
 
-        string MakePartialKey(Guid id)
+        public string MakePartialKey(Guid id)
         {
             return id.ToString().ToLowerInvariant().Replace("-", "").Substring(0, NumberOfCHarsForGuid);
         }

@@ -1,3 +1,4 @@
+using System;
 using Gtd.Shell.Projections;
 using System.Linq;
 
@@ -53,10 +54,19 @@ namespace Gtd.Shell.Commands
 
             foreach (var action in filtered)
             {
-                var guid = action.Id.Id;
-                var shortId = guid.ToString().ToLowerInvariant().Replace("-", "").Substring(0, 3);
-                env.Log.Info(string.Format("  [{0}]  {1,-60} {2}", action.Completed ? "X" : " ", action.Outcome,
+                var shortId = env.Session.MakePartialKey(action.Id.Id);
+
+                if (action.Archived)
+                {
+                    env.Log.Trace(string.Format("  [{0}] {1,-60} Archived {2} ", action.Completed ? "V" : " ", action.Outcome,
                     shortId));
+                }
+                else
+                {
+                    env.Log.Info(string.Format("  [{0}] {1,-60}          {2}", action.Completed ? "V" : " ", action.Outcome,
+                    shortId));
+                }
+                
 
             }
         }
