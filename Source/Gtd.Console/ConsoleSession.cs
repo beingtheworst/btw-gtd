@@ -20,7 +20,7 @@ namespace Gtd.Shell
         {
             View = view;
             SystemId = new TrustedSystemId(1);
-            CurrentFilter = new RemainingFilter();
+            CurrentFilter = new AvailableFilter();
         }
 
         public void UpdateFilter(IFilterCriteria filter)
