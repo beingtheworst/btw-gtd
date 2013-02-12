@@ -1,6 +1,6 @@
 using Gtd.Shell.Projections;
 
-namespace Gtd.Shell
+namespace Gtd.Shell.Filters
 {
     public sealed class NextActionFilter : IFilterCriteria
     {
@@ -12,7 +12,7 @@ namespace Gtd.Shell
         }
 
         public string Title { get { return "Next"; } }
-        public string Description { get { return "first available action per project"; } }
+        public string Description { get { return "next thing to do in each eligible project"; } }
         public string FormatActionCount(int actionCount)
         {
             switch (actionCount)

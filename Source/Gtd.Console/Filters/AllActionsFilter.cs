@@ -1,6 +1,6 @@
 using Gtd.Shell.Projections;
 
-namespace Gtd.Shell
+namespace Gtd.Shell.Filters
 {
     public sealed class AllActionsFilter : IFilterCriteria
     {

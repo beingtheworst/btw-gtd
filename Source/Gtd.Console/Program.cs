@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using Gtd.CoreDomain;
 using Gtd.Shell.Commands;
+using Gtd.Shell.Filters;
 using Gtd.Shell.Projections;
 
 namespace Gtd.Shell

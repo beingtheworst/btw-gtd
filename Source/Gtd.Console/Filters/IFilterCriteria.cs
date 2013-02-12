@@ -1,9 +1,6 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
-using Gtd.Shell.Projections;
+﻿using Gtd.Shell.Projections;
 
-namespace Gtd.Shell
+namespace Gtd.Shell.Filters
 {
     public interface IFilterCriteria
     {

@@ -1,7 +1,10 @@
 using Gtd.Shell.Projections;
 
-namespace Gtd.Shell
+namespace Gtd.Shell.Filters
 {
+    /// <summary>
+    /// things you can actually do, because they aren’t blocked by earlier actions in a sequential project
+    /// </summary>
     public sealed class AvailableFilter : IFilterCriteria
     {
         public bool IncludeAction(ProjectView project, ActionView action)

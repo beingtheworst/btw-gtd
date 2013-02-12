@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Gtd.Shell
+namespace Gtd.Shell.Filters
 {
     public static class FilterCriteria
     {

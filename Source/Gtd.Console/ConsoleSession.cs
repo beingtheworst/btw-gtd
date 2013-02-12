@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using Gtd.Shell.Commands;
+using Gtd.Shell.Filters;
 using Gtd.Shell.Projections;
 
 namespace Gtd.Shell
