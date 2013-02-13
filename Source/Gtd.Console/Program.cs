@@ -126,7 +126,7 @@ namespace Gtd.Shell
                 }
                 log.Debug("Event Replay complete.");
             }
-            
+
             var events = new EventStore(messageStore,handler);
 
             var trustedSystem = new TrustedSystemAppService(events, new RealTimeProvider());
