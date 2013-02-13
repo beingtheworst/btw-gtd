@@ -68,6 +68,17 @@ interface TrustedSystem(TrustedSystemId Id)
     ChangeThoughtSubject?(Guid thoughtId, string subject)
         ThoughtSubjectChanged!(Guid thoughtId, string subject, time)
 
+    //MoveThoughtToSomedayMaybe?()
+        //ThoughtMovedToSomedayMaybe!()
+
+    // "GTD Tickler 'file' "
+    // RemindMeAboutThought?(onDay, atTime, usingNotifyMethodof)
+         //ReminderAddedFOrThought!()
+
+    //MoveThoughtToReferenceSystem?()
+        //ThoughtMovedToReferenceSystem!()
+
+
     // [abdullin]: We will add contexts later
 
 }
