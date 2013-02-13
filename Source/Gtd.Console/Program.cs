@@ -15,14 +15,14 @@ namespace Gtd.Shell
         static ILogger Log = LogManager.GetLoggerFor<Program>();
         static void Main(string[] args)
         {
-            SetupConsoleWindow();
             // setup and wire our console environment
-            Log.Info("Starting Being The Worst interactive shell :)");
-            
-            var env = ConsoleEnvironment.Build();
-            Log.Info("Type 'help' to get more info");
+            Log.Info("Starting Being The Worst interactive GTD shell :)");
 
-            
+            Log.Info("");
+            var env = ConsoleEnvironment.Build();
+            Log.Info("");
+            Log.Info("Type 'help' to get more info");
+            Log.Info("");
 
             while (true)
             {
@@ -62,32 +62,6 @@ namespace Gtd.Shell
                     Log.ErrorException(ex, "Failure while processing command '{0}'", split[0]);
                 }
             }
-
- 
-        }
-
-        static void SetupConsoleWindow()
-        {
-            // HACK 
-            // try to mess with Console Window size and layout here
-
-            Console.Title = "GTD Interactive Shell - beingtheworst.com";
-
-            // setup Window size values for Console Window that is 60% of Max Possible Size
-            int winWidth = (Console.LargestWindowWidth * 6 / 10);
-            int winHeight = (Console.LargestWindowHeight * 6 / 10);
-
-            // hack - for now, hard code "bigger" buffer than Window sizes above
-            // suggesting to keep horizontal buffer equal to width - to avoid horizontal scrolling.
-            int winBuffWidth = winWidth;
-            int winBuffHeight = winHeight + 300;
-            Console.SetBufferSize(winBuffWidth, winBuffHeight);
-
-            // Buffer is bigger than Window so set the Window Size
-            Console.SetWindowSize(winWidth, winHeight);
-
-            // note that various tricks to center Console Window on launch 
-            // and to change to Font size were ugly so left them out for now
         }
     }
 
@@ -99,13 +73,9 @@ namespace Gtd.Shell
         public readonly ILogger Log = LogManager.GetLoggerFor<ConsoleEnvironment>();
         
 
-
         public ConsoleView ConsoleView { get; private set; }
         public ConsoleSession Session { get; private set; }
         public IList<IFilterCriteria> Filters { get; private set; } 
-
-
-
 
         public static ConsoleEnvironment Build()
         {
@@ -122,12 +92,31 @@ namespace Gtd.Shell
             var messageStore = new MessageStore(store);
             messageStore.LoadDataContractsFromAssemblyOf(typeof(ActionDefined));
             var currentVersion = store.GetCurrentVersion();
+
+            // setup Window size values for Console Window that is 60% of Max Possible Size
+            int winWidth = (Console.LargestWindowWidth * 6 / 10);
+            int winHeight = (Console.LargestWindowHeight * 6 / 10);
+
+            // hack - for now, hard code "bigger" buffer than Window sizes above
+            // keep horizontal buffer equal to width - to avoid horizontal scrolling
+            int winBuffWidth = winWidth;
+            int winBuffHeight = winHeight + 300;
+            Console.SetBufferSize(winBuffWidth, winBuffHeight);
+
+            // Buffer is bigger than Window so set the Window Size
+            Console.SetWindowSize(winWidth, winHeight);
+
+            // note that various tricks to center Console Window on launch 
+            // and to change to Font size were ugly (PInvoke, etc.) so left them out for now
+
+            Console.Title = "GTD Interactive Shell - Using Trusted System Id#: 1";
+
             var log = LogManager.GetLoggerFor<ConsoleEnvironment>();
-            log.Debug("Event Store ver {0}", currentVersion);
+            log.Debug("Event Stream ver {0} is what your Trusted System is becoming aware of...", currentVersion);
 
             if (currentVersion > 0)
             {
-                log.Debug("Running in-memory replay");
+                log.Debug("Running in-memory replay of all Events that have ever happened to Trusted System: 1");
                 foreach (var record in messageStore.EnumerateAllItems(0, int.MaxValue))
                 {
                     foreach (var item in record.Items.OfType<Event>())
@@ -135,7 +124,7 @@ namespace Gtd.Shell
                         handler.Handle(item);
                     }
                 }
-                log.Debug("Replay complete");
+                log.Debug("Event Replay complete.");
             }
             
             var events = new EventStore(messageStore,handler);
@@ -153,5 +142,4 @@ namespace Gtd.Shell
             return build;
         }
     }
-
 }

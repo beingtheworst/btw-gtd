@@ -6,7 +6,7 @@ namespace Gtd.Shell.Commands
     {
         public string[] Key { get { return new string[] { "actions" , "cd"}; } }
         public string Usage { get { return @"actions [<project-id>]
-List all actions in a project or all available actions"; } }
+    List all actions in a project or all available actions"; } }
         public void Execute(ConsoleEnvironment env, string[] args)
         {
             

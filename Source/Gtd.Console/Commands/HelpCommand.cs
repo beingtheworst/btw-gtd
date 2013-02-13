@@ -19,7 +19,9 @@ namespace Gtd.Shell.Commands
                 env.Log.Info(value.Usage ?? "No Help available");
                 return;
             }
+            env.Log.Info("");
             env.Log.Info("Available commands");
+            env.Log.Info("");
             foreach (var group in env.Commands.GroupBy(p => p.Value).OrderBy(c => c.GetType().Name))
             {
                 var keys = string.Join(", ", group.Select(p => p.Key.ToUpperInvariant()));
@@ -30,7 +32,7 @@ namespace Gtd.Shell.Commands
                     env.Log.Debug("    {0}", usage);
                 }
             }
-
+            env.Log.Info("");
         }
     }
 }
