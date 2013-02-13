@@ -34,7 +34,7 @@ namespace Gtd.Shell.Filters
         public string Description { get { return "actions not blocked, future, or on hold"; } }
         public string FormatActionCount(int actionCount)
         {
-            return string.Format("{0} available", actionCount);
+            return string.Format("{0} actions available", actionCount);
         }
     }
 }

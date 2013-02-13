@@ -4,13 +4,13 @@ namespace Gtd.Shell.Commands
 {
     class ListActionsCommand : IConsoleCommand
     {
-        public string[] Key { get { return new string[] { "actions" , "cd"}; } }
+        public string[] Key { get { return new string[] { "actions" , "cd", "la", "al"}; } }
         public string Usage { get { return @"actions [<project-id>]
     List all actions in a project or all available actions"; } }
         public void Execute(ConsoleEnvironment env, string[] args)
         {
-            
-                env.Log.Trace("  Displaying actions from projects, filtered by the current filter. See filter command for more detail");
+                env.Log.Info("");
+                env.Log.Trace("  Displaying ACTIONS from projects, filtered by the current filter. See filter command for more detail");
 
             if (args.Length == 1)
             {
@@ -27,7 +27,9 @@ namespace Gtd.Shell.Commands
 
                     if (filtered.Length == 0) continue;
 
-                    env.Log.Trace("Project: {0} [ {1} ]  {2}", project.Outcome, project.Type, env.Session.CurrentFilter.FormatActionCount(filtered.Length));
+                    env.Log.Info("");
+                    env.Log.Trace("PROJECT: {0} [ {1} ]  {2}", project.Outcome, project.Type, env.Session.CurrentFilter.FormatActionCount(filtered.Length));
+                    env.Log.Info("");
 
                     foreach (var action in filtered)
                     {
@@ -45,6 +47,7 @@ namespace Gtd.Shell.Commands
                                 shortId));
                         }
                     }
+                    env.Log.Info("");
 
                 }
                 return;
@@ -61,9 +64,12 @@ namespace Gtd.Shell.Commands
 
             var filtered = env.Session.CurrentFilter.FilterActions(project).ToArray();
 
-            env.Log.Info("Project: {0} [ {1} ]", project.Outcome, project.Type);
+            env.Log.Info("");
+            env.Log.Info("PROJECT: {0} [ {1} ]", project.Outcome, project.Type);
+            env.Log.Info("");
 
             env.Log.Debug("  {0}", env.Session.CurrentFilter.FormatActionCount(filtered.Length));
+            env.Log.Info("");
 
             foreach (var action in filtered)
             {
@@ -80,6 +86,7 @@ namespace Gtd.Shell.Commands
                         shortId));
                 }
             }
+            env.Log.Info("");
         }
 
     }

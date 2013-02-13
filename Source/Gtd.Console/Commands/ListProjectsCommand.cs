@@ -25,7 +25,8 @@ namespace Gtd.Shell.Commands
         {
             var system = env.Session.GetCurrentSystem();
             var projects = system.ProjectList;
-            env.Log.Trace("Projects ({0} records)", projects.Count);
+            env.Log.Info("");
+            env.Log.Trace("PROJECTS ({0} records)", projects.Count);
 
             foreach (var entry in projects)
             {
@@ -36,6 +37,7 @@ namespace Gtd.Shell.Commands
                 var format = env.Session.CurrentFilter.FormatActionCount(filtered.Count());
                 env.Log.Info(string.Format("  {0} {1, -60} ({2}; {3})", shortId, entry.Outcome, format, entry.Type));
             }
+            env.Log.Info("");
         }
     }
 }
