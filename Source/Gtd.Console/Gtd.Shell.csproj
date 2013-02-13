@@ -51,6 +51,7 @@
     <Compile Include="Commands\CompleteActionCommand.cs" />
     <Compile Include="Commands\DefineActionCommand.cs" />
     <Compile Include="Commands\DefineProjectCommand.cs" />
+    <Compile Include="Commands\DefineSingleActionProjectCommand.cs" />
     <Compile Include="Commands\ExitCommand.cs" />
     <Compile Include="Commands\FilterCommand.cs" />
     <Compile Include="Commands\HelpCommand.cs" />

@@ -31,6 +31,38 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             Apply(new ProjectDefined(_aggState.Id, projectId, name, defaultProjectType, time));
         }
 
+        public void DefineSingleActionProject(Guid requestId, Guid thoughtId, ITimeProvider provider)
+        {
+            // filter request IDs
+            var time = provider.GetUtcNow();
+            var projectId = new ProjectId(NewGuidIfEmpty(requestId));
+
+            // generate actionId
+            var actionId = new ActionId(Guid.NewGuid());
+
+            // make sure thought exists
+            ThoughtInfo info;
+            if (!_aggState.Thoughts.TryGetValue(thoughtId, out info))
+            {
+                throw DomainError.Named("unknown thought", "Unknown thought {0}", thoughtId);
+            }
+            // TODO: May be able to use this to change the thought subject and then let that cascade down
+            // as both the Project AND Action Outcome in case you wanted to use a different name from original thought
+            //if (info.Subject != subject)
+            //{
+            //    Apply(new ThoughtSubjectChanged(_aggState.Id, thoughtId, subject, time.GetUtcNow()));
+            //}
+
+            // TODO: Not sure if it best to just reuse existing Events and projections (probably)
+            // or if I shoudl create a new composite event for this new command msg.  Thinking the former, not latter is way to go.
+            Apply(new ProjectDefined(_aggState.Id, projectId, info.Subject, ProjectType.SingleActions, time));
+            Apply(new ActionDefined(_aggState.Id, actionId, projectId, info.Subject, time));
+            //Apply(new SingleActionProjectDefined(_aggState.Id, projectId, info.Subject, ProjectType.SingleActions, actionId, info.Subject, time));
+
+            // Maybe Archive the thought from the inbox too?
+            Apply(new ThoughtArchived(_aggState.Id, thoughtId, time));
+        }
+
         public void CaptureThought(Guid requestId, string name, ITimeProvider provider)
         {
             // filter request IDs

@@ -149,6 +149,21 @@ namespace Gtd
         }
     }
     [DataContract(Namespace = "BTW2/GTD")]
+    public partial class DefineSingleActionProject : Command, ITrustedSystemCommand
+    {
+        [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
+        [DataMember(Order = 2)] public Guid RequestId { get; private set; }
+        [DataMember(Order = 3)] public Guid ThoughtId { get; private set; }
+        
+        DefineSingleActionProject () {}
+        public DefineSingleActionProject (TrustedSystemId id, Guid requestId, Guid thoughtId)
+        {
+            Id = id;
+            RequestId = requestId;
+            ThoughtId = thoughtId;
+        }
+    }
+    [DataContract(Namespace = "BTW2/GTD")]
     public partial class ChangeProjectType : Command, ITrustedSystemCommand
     {
         [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
@@ -400,6 +415,7 @@ namespace Gtd
         void When(ArchiveThought c);
         void When(DefineAction c);
         void When(DefineProject c);
+        void When(DefineSingleActionProject c);
         void When(ChangeProjectType c);
         void When(ArchiveAction c);
         void When(CompleteAction c);

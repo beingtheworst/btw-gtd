@@ -42,6 +42,10 @@ interface TrustedSystem(TrustedSystemId Id)
     DefineProject?(requestId, string projectOutcome)
         ProjectDefined!(projectId, string projectOutcome, ProjectType type, time)
 
+    DefineSingleActionProject?(requestId, Guid thoughtId)
+        //TODO: for now I think it may be best to reuse the two events above instead of creating a new one
+        // SingleActionProjectDefined!(projectId, string projectOutcome, ProjectType type, actionId, string actionOutcome, time)
+
     ChangeProjectType?(projectId, ProjectType type)
         ProjectTypeChanged!(projectId, ProjectType type, time)
     
