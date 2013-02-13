@@ -14,7 +14,7 @@ namespace Gtd.Shell
 
         public IFilterCriteria CurrentFilter { get; private set; }
 
-        public int NumberOfCHarsForGuid = 4;
+        public int NumberOfCharsForGuid = 4;
 
         public ConsoleSession(ConsoleView view)
         {
@@ -96,7 +96,7 @@ namespace Gtd.Shell
 
         public string MakePartialKey(Guid id)
         {
-            return id.ToString().ToLowerInvariant().Replace("-", "").Substring(0, NumberOfCHarsForGuid);
+            return id.ToString().ToLowerInvariant().Replace("-", "").Substring(0, NumberOfCharsForGuid);
         }
 
         public IItemView MatchItem(string match)
