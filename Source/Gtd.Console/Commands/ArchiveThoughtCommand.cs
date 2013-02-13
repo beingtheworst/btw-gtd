@@ -13,7 +13,9 @@ namespace Gtd.Shell.Commands
                 return new[]
                     {
                         "archive",
-                        "rm"
+                        "rm",
+                        "trash",
+                        "tr"
                     };
             }
         }
