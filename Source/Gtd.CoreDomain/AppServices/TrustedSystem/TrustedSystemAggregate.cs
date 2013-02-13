@@ -63,9 +63,6 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             Apply(new ThoughtArchived(_aggState.Id, thoughtId, provider.GetUtcNow()));
         }
 
-
-        // Helper Methods
-
         public void CompleteAction(ActionId actionId, ITimeProvider provider)
         {
             ActionInfo info;
@@ -82,25 +79,6 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
                 info.Outcome, 
                 provider.GetUtcNow()));
 
-        }
-
-        static Guid NewGuidIfEmpty(Guid requestId)
-        {
-            return requestId == Guid.Empty ? Guid.NewGuid() : requestId;
-        }
-
-        /// <summary> Make aggregate realize that the event happened by applying it to the state
-        /// and adding to the list of uncommitted events</summary>
-        /// <param name="newEventThatHappened"></param>
-        void Apply(ITrustedSystemEvent newEventThatHappened)
-        {
-            // TODO: [kstreet] In the Factory sample these two lines of code were called
-            // the other way around (MakeStateRealize was called AFTER the newEventThatHappened was added to List)
-            // Does it matter?  Is one approach a little safer/more accurate than the other?
-
-            _aggState.MakeStateRealize(newEventThatHappened);
-
-            EventsThatCausedChange.Add((Event)newEventThatHappened);
         }
 
         public void ChangeActionOutcome(ActionId actionId, string outcome, ITimeProvider time)
@@ -174,6 +152,28 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             {
                 Apply(new ActionArchived(_aggState.Id, actionId, action.Project, time.GetUtcNow()));
             }
+        }
+
+
+
+
+        //
+        // Aggregate Helper Methods Below
+        //
+
+        static Guid NewGuidIfEmpty(Guid requestId)
+        {
+            return requestId == Guid.Empty ? Guid.NewGuid() : requestId;
+        }
+
+        /// <summary> Make aggregate realize that the event happened by applying it to the state
+        /// and adding to the list of uncommitted events</summary>
+        /// <param name="newEventThatHappened"></param>
+        void Apply(ITrustedSystemEvent newEventThatHappened)
+        {
+            _aggState.MakeStateRealize(newEventThatHappened);
+
+            EventsThatCausedChange.Add((Event)newEventThatHappened);
         }
     }
 }
