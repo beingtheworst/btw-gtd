@@ -15,6 +15,10 @@ namespace Gtd.Shell.Commands
             // To prevent this, always wrap a call to the Clear method in a try…catch block
 
             Console.Clear();
+
+            env.Log.Info("");
+            env.Log.Info("Type 'help' to get more info");
+            env.Log.Info("");
         }
     }
 }
