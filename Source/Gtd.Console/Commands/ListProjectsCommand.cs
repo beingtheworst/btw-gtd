@@ -27,6 +27,7 @@ namespace Gtd.Shell.Commands
             var projects = system.ProjectList;
             env.Log.Info("");
             env.Log.Trace("PROJECTS ({0} records)", projects.Count);
+            env.Log.Info("");
 
             foreach (var entry in projects)
             {
