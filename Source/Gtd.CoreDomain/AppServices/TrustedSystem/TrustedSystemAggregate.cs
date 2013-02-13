@@ -48,6 +48,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             }
             // TODO: May be able to use this to change the thought subject and then let that cascade down
             // as both the Project AND Action Outcome in case you wanted to use a different name from original thought
+            // With current design it may be better to kick off a "RENAME" command or Apply Renamed event for that purpose though.
             //if (info.Subject != subject)
             //{
             //    Apply(new ThoughtSubjectChanged(_aggState.Id, thoughtId, subject, time.GetUtcNow()));
