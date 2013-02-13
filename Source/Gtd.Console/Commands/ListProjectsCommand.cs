@@ -6,7 +6,7 @@ namespace Gtd.Shell.Commands
 {
     class ListProjectsCommand : IConsoleCommand
     {
-        public string[] Key { get { return new string[] {"list", "ls"};} }
+        public string[] Key { get { return new string[] {"list", "ls", "lp", "pl"};} }
         public string Usage { get { return @"list
     Return list of all projects available"; } }
 
