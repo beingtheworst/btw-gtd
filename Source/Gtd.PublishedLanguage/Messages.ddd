@@ -68,6 +68,22 @@ interface TrustedSystem(TrustedSystemId Id)
     ChangeThoughtSubject?(Guid thoughtId, string subject)
         ThoughtSubjectChanged!(Guid thoughtId, string subject, time)
 
+    
+    // optional Date when action becomes relevant for us. 
+    // we don't want to be bother about that action till then
+    ProvideStartDateForAction?(actionId, DateTime newStartDate)
+        StartDateAssignedToAction!(actionId, DateTime newStartDate)
+        ActionStartDateMoved!(actionId, DateTime oldstartDate, DateTime newStartDate)    
+        StartDateRemovedFromAction!(actionId, DateTime oldStartDate)
+
+    // Date by which we really have to complete the action
+    // we want to be really reminded if we get close to that date
+    ProvideDueDateForAction?(actionId, DateTime newDueDate)
+        DueDateAssignedToAction!(actionId, DateTime newDueDate)
+        ActionDueDateMoved!(actionId, DateTime oldDueDate, DateTime newDueDate)            
+        DueDateRemovedFromAction!(actionId, DateTime oldDueDate)
+
+
     //MoveThoughtToSomedayMaybe?()
         //ThoughtMovedToSomedayMaybe!()
 

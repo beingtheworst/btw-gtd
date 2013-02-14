@@ -122,6 +122,38 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             Thoughts[e.ThoughtId].ChangeSubject(e.Subject);
         }
 
+        public void When(StartDateAssignedToAction e)
+        {
+            Actions[e.ActionId].StartDateAssigned(e.NewStartDate);
+        }
+
+        public void When(ActionStartDateMoved e)
+        {
+            Actions[e.ActionId].StartDateMoved(e.OldstartDate, e.NewStartDate);
+        }
+
+        public void When(StartDateRemovedFromAction e)
+        {
+            Actions[e.ActionId].StartDateRemoved(e.OldStartDate);
+        }
+
+
+        public void When(DueDateAssignedToAction e)
+        {
+            Actions[e.ActionId].DueDateAssigned(e.NewDueDate);
+        }
+
+        public void When(ActionDueDateMoved e)
+        {
+            Actions[e.ActionId].DueDateMoved(e.OldDueDate, e.NewDueDate);
+        }
+
+        public void When(DueDateRemovedFromAction e)
+        {
+            Actions[e.ActionId].DueDateRemoved(e.OldDueDate);
+        }
+
+
         public void When(ActionCompleted evnt)
         {
             Actions[evnt.ActionId].MarkAsCompleted();
@@ -143,6 +175,10 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
         public ActionId Id { get; private set; }
         public string Outcome { get; private set; }
         public ProjectId Project { get; private set; }
+
+        public DateTime StartDate { get; private set; }
+
+        public DateTime DueDate { get; private set; }
 
         public bool HasProject { get { return !Project.IsEmpty; } }
 
@@ -194,10 +230,55 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
         {
             Outcome = newName;
         }
+      
+
         public void EnsureCleanRemoval()
         {
             if (HasProject)
                 throw new InvalidOperationException("Can't remove action that is still assigned to project");
+        }
+
+
+        public void StartDateMoved(DateTime oldTime, DateTime newTime)
+        {
+            if (StartDate != oldTime)
+                throw new ArgumentException("Expected old time matching to actual date");
+            StartDate = newTime;
+        }
+
+        public void StartDateAssigned(DateTime startDate)
+        {
+            if (StartDate != DateTime.MinValue)
+                throw new ArgumentException("Expected null date");
+            StartDate = startDate;
+        }
+
+        public void StartDateRemoved(DateTime startDate)
+        {
+            if (StartDate != startDate)
+                throw new ArgumentException("Expected old time matching to actual date");
+            StartDate = DateTime.MinValue;
+        }
+
+        public void DueDateRemoved(DateTime dueDate)
+        {
+            if (DueDate != dueDate)
+                throw new ArgumentException("Expected old time matching to actual date");
+            DueDate = DateTime.MinValue;
+        }
+
+        public void DueDateMoved(DateTime oldTime, DateTime newTime)
+        {
+            if (DueDate != oldTime)
+                throw new ArgumentException("Expected old time matching to actual date");
+            DueDate = newTime;
+        }
+
+        public void DueDateAssigned(DateTime dueDate)
+        {
+            if (DueDate != DateTime.MinValue)
+                throw new ArgumentException("Expected null date");
+            DueDate = dueDate;
         }
     }
 

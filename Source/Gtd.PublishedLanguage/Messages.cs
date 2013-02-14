@@ -408,6 +408,130 @@ namespace Gtd
             TimeUtc = timeUtc;
         }
     }
+    [DataContract(Namespace = "BTW2/GTD")]
+    public partial class ProvideStartDateForAction : Command, ITrustedSystemCommand
+    {
+        [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
+        [DataMember(Order = 2)] public ActionId ActionId { get; private set; }
+        [DataMember(Order = 3)] public DateTime NewStartDate { get; private set; }
+        
+        ProvideStartDateForAction () {}
+        public ProvideStartDateForAction (TrustedSystemId id, ActionId actionId, DateTime newStartDate)
+        {
+            Id = id;
+            ActionId = actionId;
+            NewStartDate = newStartDate;
+        }
+    }
+    [DataContract(Namespace = "BTW2/GTD")]
+    public partial class StartDateAssignedToAction : Event, ITrustedSystemEvent
+    {
+        [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
+        [DataMember(Order = 2)] public ActionId ActionId { get; private set; }
+        [DataMember(Order = 3)] public DateTime NewStartDate { get; private set; }
+        
+        StartDateAssignedToAction () {}
+        public StartDateAssignedToAction (TrustedSystemId id, ActionId actionId, DateTime newStartDate)
+        {
+            Id = id;
+            ActionId = actionId;
+            NewStartDate = newStartDate;
+        }
+    }
+    [DataContract(Namespace = "BTW2/GTD")]
+    public partial class ActionStartDateMoved : Event, ITrustedSystemEvent
+    {
+        [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
+        [DataMember(Order = 2)] public ActionId ActionId { get; private set; }
+        [DataMember(Order = 3)] public DateTime OldstartDate { get; private set; }
+        [DataMember(Order = 4)] public DateTime NewStartDate { get; private set; }
+        
+        ActionStartDateMoved () {}
+        public ActionStartDateMoved (TrustedSystemId id, ActionId actionId, DateTime oldstartDate, DateTime newStartDate)
+        {
+            Id = id;
+            ActionId = actionId;
+            OldstartDate = oldstartDate;
+            NewStartDate = newStartDate;
+        }
+    }
+    [DataContract(Namespace = "BTW2/GTD")]
+    public partial class StartDateRemovedFromAction : Event, ITrustedSystemEvent
+    {
+        [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
+        [DataMember(Order = 2)] public ActionId ActionId { get; private set; }
+        [DataMember(Order = 3)] public DateTime OldStartDate { get; private set; }
+        
+        StartDateRemovedFromAction () {}
+        public StartDateRemovedFromAction (TrustedSystemId id, ActionId actionId, DateTime oldStartDate)
+        {
+            Id = id;
+            ActionId = actionId;
+            OldStartDate = oldStartDate;
+        }
+    }
+    [DataContract(Namespace = "BTW2/GTD")]
+    public partial class ProvideDueDateForAction : Command, ITrustedSystemCommand
+    {
+        [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
+        [DataMember(Order = 2)] public ActionId ActionId { get; private set; }
+        [DataMember(Order = 3)] public DateTime NewDueDate { get; private set; }
+        
+        ProvideDueDateForAction () {}
+        public ProvideDueDateForAction (TrustedSystemId id, ActionId actionId, DateTime newDueDate)
+        {
+            Id = id;
+            ActionId = actionId;
+            NewDueDate = newDueDate;
+        }
+    }
+    [DataContract(Namespace = "BTW2/GTD")]
+    public partial class DueDateAssignedToAction : Event, ITrustedSystemEvent
+    {
+        [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
+        [DataMember(Order = 2)] public ActionId ActionId { get; private set; }
+        [DataMember(Order = 3)] public DateTime NewDueDate { get; private set; }
+        
+        DueDateAssignedToAction () {}
+        public DueDateAssignedToAction (TrustedSystemId id, ActionId actionId, DateTime newDueDate)
+        {
+            Id = id;
+            ActionId = actionId;
+            NewDueDate = newDueDate;
+        }
+    }
+    [DataContract(Namespace = "BTW2/GTD")]
+    public partial class ActionDueDateMoved : Event, ITrustedSystemEvent
+    {
+        [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
+        [DataMember(Order = 2)] public ActionId ActionId { get; private set; }
+        [DataMember(Order = 3)] public DateTime OldDueDate { get; private set; }
+        [DataMember(Order = 4)] public DateTime NewDueDate { get; private set; }
+        
+        ActionDueDateMoved () {}
+        public ActionDueDateMoved (TrustedSystemId id, ActionId actionId, DateTime oldDueDate, DateTime newDueDate)
+        {
+            Id = id;
+            ActionId = actionId;
+            OldDueDate = oldDueDate;
+            NewDueDate = newDueDate;
+        }
+    }
+    [DataContract(Namespace = "BTW2/GTD")]
+    public partial class DueDateRemovedFromAction : Event, ITrustedSystemEvent
+    {
+        [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
+        [DataMember(Order = 2)] public ActionId ActionId { get; private set; }
+        [DataMember(Order = 3)] public DateTime OldDueDate { get; private set; }
+        
+        DueDateRemovedFromAction () {}
+        public DueDateRemovedFromAction (TrustedSystemId id, ActionId actionId, DateTime oldDueDate)
+        {
+            Id = id;
+            ActionId = actionId;
+            OldDueDate = oldDueDate;
+        }
+    }
     
     public interface ITrustedSystemApplicationService
     {
@@ -422,6 +546,8 @@ namespace Gtd
         void When(ChangeActionOutcome c);
         void When(ChangeProjectOutcome c);
         void When(ChangeThoughtSubject c);
+        void When(ProvideStartDateForAction c);
+        void When(ProvideDueDateForAction c);
     }
     
     public interface ITrustedSystemState
@@ -440,6 +566,12 @@ namespace Gtd
         void When(ActionOutcomeChanged e);
         void When(ProjectOutcomeChanged e);
         void When(ThoughtSubjectChanged e);
+        void When(StartDateAssignedToAction e);
+        void When(ActionStartDateMoved e);
+        void When(StartDateRemovedFromAction e);
+        void When(DueDateAssignedToAction e);
+        void When(ActionDueDateMoved e);
+        void When(DueDateRemovedFromAction e);
     }
     #endregion
 }

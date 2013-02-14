@@ -208,5 +208,55 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
 
             EventsThatCausedChange.Add((Event)newEventThatHappened);
         }
+
+        public void ProvideStartDateForAction(ActionId actionId, DateTime newStartDate)
+        {
+            var action = GetActionOrThrow(actionId);
+            if (newStartDate == action.StartDate)
+                return;
+            if (newStartDate == DateTime.MinValue)
+            {
+                Apply(new StartDateRemovedFromAction(_aggState.Id, actionId, action.StartDate));
+                return;
+            }
+            
+            if (action.DueDate != DateTime.MinValue && newStartDate > action.DueDate)
+            {
+                throw DomainError.Named("", "New start date is later than due date");
+            }
+
+
+            if (action.StartDate == DateTime.MinValue)
+            {
+                Apply(new StartDateAssignedToAction(_aggState.Id, actionId, newStartDate));
+                return;
+            }
+            Apply(new ActionStartDateMoved(_aggState.Id, actionId, action.StartDate, newStartDate));
+        }
+
+        public void ProvideDueDateForAction(ActionId actionId, DateTime newDueDate)
+        {
+            var action = GetActionOrThrow(actionId);
+            if (newDueDate == action.DueDate)
+                return;
+            if (newDueDate == DateTime.MinValue)
+            {
+                Apply(new DueDateRemovedFromAction(_aggState.Id, actionId, action.DueDate));
+                return;
+            }
+
+            if (action.StartDate != DateTime.MinValue && newDueDate < action.StartDate)
+            {
+                throw DomainError.Named("", "New due date is earlier than start date");
+            }
+
+
+            if (action.DueDate == DateTime.MinValue)
+            {
+                Apply(new DueDateAssignedToAction(_aggState.Id, actionId, newDueDate));
+                return;
+            }
+            Apply(new ActionDueDateMoved(_aggState.Id, actionId, action.DueDate, newDueDate));
+        }
     }
 }

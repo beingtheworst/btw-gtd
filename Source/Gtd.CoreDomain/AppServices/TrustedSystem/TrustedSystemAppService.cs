@@ -71,6 +71,16 @@ namespace Gtd.CoreDomain
             ChangeAggregate(cmd.Id, agg => agg.ChangeThoughtSubject(cmd.ThoughtId, cmd.Subject, _time));
         }
 
+        public void When(ProvideStartDateForAction cmd)
+        {
+            ChangeAggregate(cmd.Id, agg => agg.ProvideStartDateForAction(cmd.ActionId, cmd.NewStartDate));
+        }
+
+        public void When(ProvideDueDateForAction cmd)
+        {
+            ChangeAggregate(cmd.Id, agg => agg.ProvideDueDateForAction(cmd.ActionId, cmd.NewDueDate));
+        }
+
         // lifetime change management & atomic consistency boundary of an Aggregate & its contents
         void ChangeAggregate(TrustedSystemId aggregateIdOf, Action<TrustedSystemAggregate> usingThisMethod)
         {
