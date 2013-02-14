@@ -1,4 +1,6 @@
+using System;
 using System.Linq;
+using Gtd.Shell.Projections;
 
 namespace Gtd.Shell.Commands
 {
@@ -39,12 +41,14 @@ namespace Gtd.Shell.Commands
                         {
                             env.Log.Trace(string.Format("  [{0}] {1,-60} Archived {2} ", action.Completed ? "V" : " ", action.Outcome,
                                 shortId));
-                            
+
+                            PrintDetail(env, action);
                         }
                         else
                         {
                             env.Log.Info(string.Format("  [{0}] {1,-60}          {2}", action.Completed ? "V" : " ", action.Outcome,
                                 shortId));
+                            PrintDetail(env, action);
                         }
                     }
                     env.Log.Info("");
@@ -56,6 +60,24 @@ namespace Gtd.Shell.Commands
             throw new KnownConsoleInputError("Currently this command expects project ID or nothing");
 
             
+        }
+
+        static void PrintDetail(ConsoleEnvironment env, ActionView action)
+        {
+            var detail = "";
+            if (action.StartDate != DateTime.MinValue)
+            {
+                detail += string.Format("  Starts: {0}.", action.StartDate.ToShortDateString());
+            }
+            if (action.DueDate != DateTime.MinValue)
+            {
+                detail += string.Format(" Due: {0}.", action.DueDate.ToShortDateString());
+            }
+            detail = detail.Trim();
+            if (!string.IsNullOrWhiteSpace(detail))
+            {
+                env.Log.Trace("    " + detail);
+            }
         }
 
         static void ListActionsInProject(ConsoleEnvironment env, string projectMatch)

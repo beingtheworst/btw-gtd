@@ -55,6 +55,7 @@
     <Compile Include="Commands\DefineSingleActionProjectCommand.cs" />
     <Compile Include="Commands\ExitCommand.cs" />
     <Compile Include="Commands\FilterCommand.cs" />
+    <Compile Include="Commands\ForecastViewCommand.cs" />
     <Compile Include="Commands\HelpCommand.cs" />
     <Compile Include="Commands\ListActionsCommand.cs" />
     <Compile Include="Commands\ListProjectsCommand.cs" />
