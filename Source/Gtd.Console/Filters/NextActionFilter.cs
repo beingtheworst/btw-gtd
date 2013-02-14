@@ -16,7 +16,7 @@ namespace Gtd.Shell.Filters
                     continue;
                 yield return action;
 
-                if (view.Type != ProjectType.SingleActions)
+                if (view.Type != ProjectType.List)
                     yield break;
 
                 // single actions lists allow multiple next actions

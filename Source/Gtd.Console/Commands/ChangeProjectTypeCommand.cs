@@ -26,7 +26,7 @@ namespace Gtd.Shell.Commands
             }
             else if (lowerInvariant.StartsWith("si"))
             {
-                changeTo = ProjectType.SingleActions;
+                changeTo = ProjectType.List;
             }
             else
             {

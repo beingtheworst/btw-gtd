@@ -18,6 +18,7 @@ namespace Gtd.Shell.Filters
                 if (action.Completed)
                     continue;
 
+
                 
                 yield return action;
 

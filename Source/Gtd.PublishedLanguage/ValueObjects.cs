@@ -100,7 +100,7 @@ namespace Gtd
 
     public enum ProjectType
     {
-        SingleActions,
+        List,
         Sequential,
         Parallel
     }

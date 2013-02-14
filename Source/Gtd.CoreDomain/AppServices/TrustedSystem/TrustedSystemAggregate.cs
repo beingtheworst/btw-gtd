@@ -27,7 +27,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             var time = provider.GetUtcNow();
             var projectId = new ProjectId(NewGuidIfEmpty(requestId));
 
-            var defaultProjectType = ProjectType.SingleActions;
+            var defaultProjectType = ProjectType.List;
             Apply(new ProjectDefined(_aggState.Id, projectId, name, defaultProjectType, time));
         }
 
@@ -56,7 +56,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
 
             // TODO: Not sure if it best to just reuse existing Events and projections (probably)
             // or if I shoudl create a new composite event for this new command msg.  Thinking the former, not latter is way to go.
-            Apply(new ProjectDefined(_aggState.Id, projectId, info.Subject, ProjectType.SingleActions, time));
+            Apply(new ProjectDefined(_aggState.Id, projectId, info.Subject, ProjectType.List, time));
             Apply(new ActionDefined(_aggState.Id, actionId, projectId, info.Subject, time));
             //Apply(new SingleActionProjectDefined(_aggState.Id, projectId, info.Subject, ProjectType.SingleActions, actionId, info.Subject, time));
 
