@@ -50,7 +50,7 @@
     <Compile Include="Commands\AssignStartDateCommand.cs" />
     <Compile Include="Commands\CaptureThoughtCommand.cs" />
     <Compile Include="Commands\ChangeProjectTypeCommand.cs" />
-    <Compile Include="Commands\ClsCommand.cs" />
+    <Compile Include="Commands\ClearConsoleCommand.cs" />
     <Compile Include="Commands\CompleteActionCommand.cs" />
     <Compile Include="Commands\DefineActionCommand.cs" />
     <Compile Include="Commands\DefineProjectCommand.cs" />

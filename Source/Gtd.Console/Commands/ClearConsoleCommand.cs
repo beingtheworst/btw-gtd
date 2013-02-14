@@ -2,7 +2,7 @@
 
 namespace Gtd.Shell.Commands
 {
-    class ClsCommand : IConsoleCommand
+    class ClearConsoleCommand : IConsoleCommand
     {
         public string[] Key { get { return new[] {"cls", "clear"}; } }
         public string Usage { get { return @"cls
