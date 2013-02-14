@@ -92,7 +92,7 @@ namespace Gtd.Shell.Commands
             {
                 if (TryRepresent(value, new[] {"w", "wk", "week"}, (diff, source) => source.AddDays(7 * diff) , out span))
                     return true;
-                if (TryRepresent(value, new string[] {"d", "day", "days"},(diff, source) => source.AddDays(7*diff), out span))
+                if (TryRepresent(value, new string[] {"d", "day", "days"},(diff, source) => source.AddDays(diff), out span))
                     return true;
                 if (TryRepresent(value, new string[] {"m", "mth", "month"}, (diff, source) => source.AddMonths((int)diff),out span)) ;
 

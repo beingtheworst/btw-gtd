@@ -69,14 +69,14 @@ interface TrustedSystem(TrustedSystemId Id)
         ThoughtSubjectChanged!(Guid thoughtId, string subject, time)
 
     
-    // optional Date when action becomes relevant for us. 
+    // optional Date when project or action becomes available and relevant for us. 
     // we don't want to be bother about that action till then
     ProvideStartDateForAction?(actionId, DateTime newStartDate)
         StartDateAssignedToAction!(actionId, DateTime newStartDate)
         ActionStartDateMoved!(actionId, DateTime oldstartDate, DateTime newStartDate)    
         StartDateRemovedFromAction!(actionId, DateTime oldStartDate)
 
-    // Date by which we really have to complete the action
+    // Date when project or action is past due
     // we want to be really reminded if we get close to that date
     ProvideDueDateForAction?(actionId, DateTime newDueDate)
         DueDateAssignedToAction!(actionId, DateTime newDueDate)

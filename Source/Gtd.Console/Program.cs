@@ -75,7 +75,9 @@ namespace Gtd.Shell
 
         public ConsoleView ConsoleView { get; private set; }
         public ConsoleSession Session { get; private set; }
-        public IList<IFilterCriteria> Filters { get; private set; } 
+        public IList<IFilterCriteria> Filters { get; private set; }
+
+        public DateTime CurrentDate { get { return DateTime.Now; } }
 
         public static ConsoleEnvironment Build()
         {
