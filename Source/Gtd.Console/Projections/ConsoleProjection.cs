@@ -66,7 +66,8 @@ namespace Gtd.Shell.Projections
         public bool Completed { get; private set; }
         public bool Archived { get; private set; }
         public ProjectId Project { get; private set; }
-
+        public DateTime StartDate { get; private set; }
+        public DateTime DueDate { get; private set; }
         public ActionView(ActionId action, string outcome, ProjectId project)
         {
             Id = action;
@@ -94,6 +95,15 @@ namespace Gtd.Shell.Projections
         {
             Archived = true;
 
+        }
+
+        public void StartDateAssigned(DateTime newStartDate)
+        {
+            StartDate = newStartDate;
+        }
+        public void DueDateAssigned(DateTime newDueDate)
+        {
+            DueDate = newDueDate;
         }
     }
 
@@ -165,7 +175,17 @@ namespace Gtd.Shell.Projections
         {
             ProjectDict[projectId].TypeChanged(type);
         }
+
+        public void StartDateAssigned(ActionId actionId, DateTime newStartDate)
+        {
+            ActionDict[actionId].StartDateAssigned(newStartDate);
+        }
+        public void DueDateAssigned(ActionId actionId, DateTime newDueDate)
+        {
+            ActionDict[actionId].DueDateAssigned(newDueDate);
+        }
     }
+
 
     public sealed class ConsoleProjection
     {
@@ -224,5 +244,30 @@ namespace Gtd.Shell.Projections
         {
             Update(evnt.Id, s => s.ProjectTypeChanged(evnt.ProjectId, evnt.Type));
         }
+        public void When(StartDateAssignedToAction evnt)
+        {
+            Update(evnt.Id, s => s.StartDateAssigned(evnt.ActionId, evnt.NewStartDate));
+        }
+        public void When(DueDateAssignedToAction evnt)
+        {
+            Update(evnt.Id, s => s.DueDateAssigned(evnt.ActionId, evnt.NewDueDate));
+        }
+        public void When(StartDateRemovedFromAction evnt)
+        {
+            Update(evnt.Id, s => s.StartDateAssigned(evnt.ActionId, DateTime.MinValue));
+        }
+        public void When(DueDateRemovedFromAction evnt)
+        {
+            Update(evnt.Id, s => s.DueDateAssigned(evnt.ActionId, DateTime.MinValue));
+        }
+        public void When(ActionStartDateMoved evnt)
+        {
+            Update(evnt.Id, s => s.StartDateAssigned(evnt.ActionId, evnt.NewStartDate));
+        }
+        public void When(ActionDueDateMoved evnt)
+        {
+            Update(evnt.Id, s => s.DueDateAssigned(evnt.ActionId, evnt.NewDueDate));
+        }
+
     }
 }
