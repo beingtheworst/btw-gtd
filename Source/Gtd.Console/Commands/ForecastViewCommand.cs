@@ -6,13 +6,12 @@ namespace Gtd.Shell.Commands
 {
     class ForecastViewCommand : IConsoleCommand
     {
-        public string[] Key { get { return new string[]{"forecast", "overdue"};} }
+        public string[] Key { get { return new[]{"forecast", "overdue"};} }
         public string Usage { get { return @"forecast
     Displays overdue items"; } }
         public void Execute(ConsoleEnvironment env, string[] args)
         {
             var system = env.Session.GetCurrentSystem();
-
 
             var open = system.ActionDict.Values
                              .Where(v => !v.Completed)
