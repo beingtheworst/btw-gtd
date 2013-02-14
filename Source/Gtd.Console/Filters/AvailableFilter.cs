@@ -1,4 +1,12 @@
+#region (c) 2011-2013 BeingTheWorst.com
+
+// This project is a sample code for http://beingtheworst.com
+
+#endregion
+
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Gtd.Shell.Projections;
 
 namespace Gtd.Shell.Filters
@@ -8,31 +16,42 @@ namespace Gtd.Shell.Filters
     /// </summary>
     public sealed class AvailableFilter : IFilterCriteria
     {
-
         public IEnumerable<ActionView> FilterActions(ProjectView view)
         {
-            foreach (var action in view.Actions)
+            if (view.Type == ProjectType.Sequential)
             {
-                if (action.Archived)
-                    continue;
-                if (action.Completed)
-                    continue;
+                var filtered = view.Actions
+                                   .Where(v => !v.Completed)
+                                   .FirstOrDefault(v => !v.Archived);
 
+                if (filtered != null && filtered.StartDate <= DateTime.UtcNow)
+                    yield return filtered;
+            }
+            else
+            {
+                var filtered = view.Actions
+                                   .Where(v => !v.Completed)
+                                   .Where(v => !v.Archived)
+                                   .Where(v => v.StartDate <= DateTime.Now);
 
-                
-                yield return action;
-
-                if (view.Type == ProjectType.Sequential)
+                foreach (var action in filtered)
                 {
-                    // in sequential projects, only one action is active
-                    yield break;
+                    yield return action;
                 }
             }
         }
 
 
-        public string Title { get { return "Available"; } }
-        public string Description { get { return "actions not blocked, future, or on hold"; } }
+        public string Title
+        {
+            get { return "Available"; }
+        }
+
+        public string Description
+        {
+            get { return "actions not blocked, future, or on hold"; }
+        }
+
         public string FormatActionCount(int actionCount)
         {
             return string.Format("{0} actions available", actionCount);

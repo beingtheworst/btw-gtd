@@ -1,27 +1,18 @@
 using System;
 using System.Collections.Generic;
 using Gtd.Shell.Projections;
+using System.Linq;
 
 namespace Gtd.Shell.Filters
 {
     public sealed class NextActionFilter : IFilterCriteria
     {
+        readonly AvailableFilter _filter = new AvailableFilter();
         public IEnumerable<ActionView> FilterActions(ProjectView view)
         {
-            foreach (var action in view.Actions)
-            {
-                if (action.Completed)
-                    continue;
-                if (action.Archived)
-                    continue;
-                yield return action;
-
-                if (view.Type != ProjectType.List)
-                    yield break;
-
-                // single actions lists allow multiple next actions
-            }
-            
+            var value = _filter.FilterActions(view).FirstOrDefault();
+            if (value != null)
+                yield return value;
         }
 
         public string Title { get { return "Next"; } }
