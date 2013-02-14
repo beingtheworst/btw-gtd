@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\ArchiveThoughtCommand.cs" />
+    <Compile Include="Commands\AssignDueDateCommand.cs" />
     <Compile Include="Commands\AssignStartDateCommand.cs" />
     <Compile Include="Commands\CaptureThoughtCommand.cs" />
     <Compile Include="Commands\ChangeProjectTypeCommand.cs" />
