@@ -8,5 +8,10 @@ namespace Gtd.Shell.Commands
         {
             
         }
+
+        public KnownConsoleInputError(string format, params object[] args) : base (string.Format(format,args))
+        {
+            
+        }
     }
 }
