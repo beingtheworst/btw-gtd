@@ -14,19 +14,21 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             _aggState = aggregateStateBeforeChanges;
         }
 
-        static Guid NewGuidIfEmpty(Guid requestId)
-        {
-            return requestId == Guid.Empty ? Guid.NewGuid() : requestId;
-        }
-
-        /// <summary> Make aggregate realize that the event happened by applying it to the state
-        /// and adding to the list of uncommitted events</summary>
+        /// <summary> Make Aggregate realize the event happened 
+        /// by applying it to the state and adding to 
+        /// the list of uncommitted events</summary>
         /// <param name="newEventThatHappened"></param>
         void Apply(ITrustedSystemEvent newEventThatHappened)
         {
             _aggState.MakeStateRealize(newEventThatHappened);
 
             EventsThatCausedChange.Add((Event)newEventThatHappened);
+        }
+
+
+        static Guid NewGuidIfEmpty(Guid requestId)
+        {
+            return requestId == Guid.Empty ? Guid.NewGuid() : requestId;
         }
 
 
