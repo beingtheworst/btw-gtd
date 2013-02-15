@@ -5,6 +5,12 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
 {
     public sealed class TrustedSystemState : ITrustedSystemState
     {
+        public TrustedSystemState()
+        {
+        }
+
+        public TrustedSystemId Id { get; private set; }
+
         public static TrustedSystemState BuildStateFromEventHistory(IEnumerable<Event> events)
         {
             var aggState = new TrustedSystemState();
@@ -14,11 +20,6 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
                 aggState.MakeStateRealize((ITrustedSystemEvent) eventThatHappened);
             }
             return aggState;
-        }
-
-        public TrustedSystemState()
-        {
-         
         }
 
         public void MakeStateRealize(ITrustedSystemEvent thisEventTypeHappened)
@@ -38,9 +39,8 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             ((dynamic)this).When((dynamic)thisEventTypeHappened);
         }
 
-        public TrustedSystemId Id { get; private set; }
 
-        // When Methods
+        // When methods reacting to Events to change in memory state of the Aggregate
 
         public void When(TrustedSystemCreated evnt)
         {
@@ -101,7 +101,6 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             oldProject.RemoveAction(action.Id);
         }
 
-
         public void When(ActionArchived evnt)
         {
             Actions[evnt.ActionId].MakeArchived();
@@ -137,7 +136,6 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             Actions[e.ActionId].StartDateRemoved(e.OldStartDate);
         }
 
-
         public void When(DueDateAssignedToAction e)
         {
             Actions[e.ActionId].DueDateAssigned(e.NewDueDate);
@@ -153,7 +151,6 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             Actions[e.ActionId].DueDateRemoved(e.OldDueDate);
         }
 
-
         public void When(ActionCompleted evnt)
         {
             Actions[evnt.ActionId].MarkAsCompleted();
@@ -167,8 +164,8 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
     }
 
     /// <summary>
-    /// Action entity for the aggregate state. It maintains only invariants within itself.
-    /// Invariants between entities are maintained by the state
+    /// These Value Objects maintain only invariants within themselves.
+    /// Invariants between entities are maintained by the state.
     /// </summary>
     public sealed class ActionInfo // VO
     {
@@ -281,7 +278,6 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             DueDate = dueDate;
         }
     }
-
 
     public sealed class ProjectInfo
     {
