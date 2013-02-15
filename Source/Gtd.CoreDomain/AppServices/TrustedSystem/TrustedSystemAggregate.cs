@@ -14,7 +14,34 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             _aggState = aggregateStateBeforeChanges;
         }
 
-        // Aggregate Behaviors (Methods)
+        static Guid NewGuidIfEmpty(Guid requestId)
+        {
+            return requestId == Guid.Empty ? Guid.NewGuid() : requestId;
+        }
+
+        /// <summary> Make aggregate realize that the event happened by applying it to the state
+        /// and adding to the list of uncommitted events</summary>
+        /// <param name="newEventThatHappened"></param>
+        void Apply(ITrustedSystemEvent newEventThatHappened)
+        {
+            _aggState.MakeStateRealize(newEventThatHappened);
+
+            EventsThatCausedChange.Add((Event)newEventThatHappened);
+        }
+
+
+        // Aggregate-Specific Behaviors (Methods) Below
+
+        ActionInfo GetActionOrThrow(ActionId id)
+        {
+            ActionInfo info;
+            if (!_aggState.Actions.TryGetValue(id, out info))
+            {
+                throw DomainError.Named("unknown action", "Unknown action {0}", id);
+            }
+            return info;
+
+        }
 
         public void Create(TrustedSystemId id)
         {
@@ -167,17 +194,6 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             }
         }
 
-        ActionInfo GetActionOrThrow(ActionId id)
-        {
-            ActionInfo info;
-            if (!_aggState.Actions.TryGetValue(id, out info))
-            {
-                throw DomainError.Named("unknown action", "Unknown action {0}", id);
-            }
-            return info;
-
-        }
-
         public void ArchiveAction(ActionId actionId, ITimeProvider time)
         {
             var action = GetActionOrThrow(actionId);
@@ -235,26 +251,6 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
                 return;
             }
             Apply(new ActionDueDateMoved(_aggState.Id, actionId, action.DueDate, newDueDate));
-        }
-
-
-        //
-        // Aggregate Helper Methods Below
-        //
-
-        static Guid NewGuidIfEmpty(Guid requestId)
-        {
-            return requestId == Guid.Empty ? Guid.NewGuid() : requestId;
-        }
-
-        /// <summary> Make aggregate realize that the event happened by applying it to the state
-        /// and adding to the list of uncommitted events</summary>
-        /// <param name="newEventThatHappened"></param>
-        void Apply(ITrustedSystemEvent newEventThatHappened)
-        {
-            _aggState.MakeStateRealize(newEventThatHappened);
-
-            EventsThatCausedChange.Add((Event)newEventThatHappened);
         }
 
     }
