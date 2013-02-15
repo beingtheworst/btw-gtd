@@ -11,8 +11,8 @@ namespace Gtd.Shell.Commands
     List all actions in a project or all available actions"; } }
         public void Execute(ConsoleEnvironment env, string[] args)
         {
-                env.Log.Info("");
-                env.Log.Trace("  Displaying ACTIONS from projects, filtered by the current filter. See filter command for more detail");
+            env.Log.Info("");
+            env.Log.Trace("  Displaying ACTIONS from projects, filtered by filter {0}. See filter command for more detail", env.Session.CurrentFilter.Title);
 
             if (args.Length == 1)
             {
