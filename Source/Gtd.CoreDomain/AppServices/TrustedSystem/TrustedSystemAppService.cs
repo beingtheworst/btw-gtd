@@ -8,13 +8,58 @@ namespace Gtd.CoreDomain
         readonly IEventStore _eventStore;
         readonly ITimeProvider _time;
 
-
         public TrustedSystemAppService(IEventStore eventStore, ITimeProvider time)
         {
             _eventStore = eventStore;
             _time = time;
         }
 
+        // lifetime change management
+        // atomic consistency boundary of an Aggregate & its contents
+        void ChangeAggregate(TrustedSystemId aggregateIdOf, Action<TrustedSystemAggregate> usingThisMethod)
+        {
+            var eventStreamId = aggregateIdOf.Id.ToString();
+            var eventStream = _eventStore.LoadEventStream(eventStreamId);
+
+            var aggStateBeforeChanges = TrustedSystemState.BuildStateFromEventHistory(eventStream.Events);
+
+            var aggregateToChange = new TrustedSystemAggregate(aggStateBeforeChanges);
+
+            // HACK
+            if (eventStream.Events.Count == 0)
+            {
+                aggregateToChange.Create(aggregateIdOf);
+            }
+
+            usingThisMethod(aggregateToChange);
+
+            _eventStore.AppendEventsToStream(eventStreamId, eventStream.StreamVersion, aggregateToChange.EventsThatCausedChange);
+        }
+
+
+        // TODO: [kstreet] when we add Aggregate #2 
+        // will we want to move this general "Time" stuff?
+        public interface ITimeProvider
+        {
+            DateTime GetUtcNow();
+        }
+        public sealed class RealTimeProvider : ITimeProvider
+        {
+            public DateTime GetUtcNow()
+            {
+                return DateTime.UtcNow;
+            }
+        }
+
+
+        // Ability to Execute Command Messages, required by IAppService
+        public void Execute(Command cmd)          
+        {
+            ((dynamic)this).When((dynamic)cmd);
+        }
+
+
+        // When methods reacting to Executed Command to call corresponding Aggregate method
 
         public void When(CaptureThought cmd)
         {
@@ -79,46 +124,6 @@ namespace Gtd.CoreDomain
         public void When(ProvideDueDateForAction cmd)
         {
             ChangeAggregate(cmd.Id, agg => agg.ProvideDueDateForAction(cmd.ActionId, cmd.NewDueDate));
-        }
-
-        // lifetime change management & atomic consistency boundary of an Aggregate & its contents
-        void ChangeAggregate(TrustedSystemId aggregateIdOf, Action<TrustedSystemAggregate> usingThisMethod)
-        {
-            var eventStreamId = aggregateIdOf.Id.ToString();
-            var eventStream = _eventStore.LoadEventStream(eventStreamId);
-
-            var aggStateBeforeChanges = TrustedSystemState.BuildStateFromEventHistory(eventStream.Events);
-
-
-            var aggregateToChange = new TrustedSystemAggregate(aggStateBeforeChanges);
-
-            // HACK
-            if (eventStream.Events.Count == 0)
-            {
-                aggregateToChange.Create(aggregateIdOf);
-            }
-
-            usingThisMethod(aggregateToChange);
-
-            _eventStore.AppendEventsToStream(eventStreamId, eventStream.StreamVersion, aggregateToChange.EventsThatCausedChange);
-        }
-
-        public void Execute(Command cmd)
-        {
-            ((dynamic) this).When((dynamic) cmd);
-        }
-    }
-
-    public interface ITimeProvider
-    {
-        DateTime GetUtcNow();
-    }
-
-    public sealed class RealTimeProvider : ITimeProvider
-    {
-        public DateTime GetUtcNow()
-        {
-            return DateTime.UtcNow;
         }
     }
 }
