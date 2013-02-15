@@ -196,78 +196,77 @@ namespace Gtd.Shell.Projections
             update(ViewInstance.Systems[id]);
         }
 
-        public void When(TrustedSystemCreated evnt)
+        public void When(TrustedSystemCreated e)
         {
-            ViewInstance.Systems.Add(evnt.Id, new TrustedSystem());
+            ViewInstance.Systems.Add(e.Id, new TrustedSystem());
         }
 
-        public void When(ThoughtCaptured evnt)
+        public void When(ThoughtCaptured e)
         {
-            Update(evnt.Id, s => s.ThoughtCaptured(evnt.ThoughtId, evnt.Thought, evnt.TimeUtc));
+            Update(e.Id, s => s.ThoughtCaptured(e.ThoughtId, e.Thought, e.TimeUtc));
         }
-        public void When(ThoughtArchived evnt)
+        public void When(ThoughtArchived e)
         {
-            Update(evnt.Id, s => s.ThoughtArchived(evnt.ThoughtId));
-        }
-
-        public void When(ProjectDefined evnt)
-        {
-            Update(evnt.Id, s => s.ProjectDefined(evnt.ProjectId, evnt.ProjectOutcome, evnt.Type));
-        }
-        public void When(ActionDefined evnt)
-        {
-            Update(evnt.Id, s => s.ActionDefined(evnt.ProjectId, evnt.ActionId, evnt.Outcome));
-        }
-        public void When(ActionCompleted evnt)
-        {
-            Update(evnt.Id, s => s.ActionCompleted(evnt.ActionId));
-        }
-        public void When(ActionOutcomeChanged evnt)
-        {
-            Update(evnt.Id, s => s.ActionOutcomeChanged(evnt.ActionId, evnt.ActionOutcome));
+            Update(e.Id, s => s.ThoughtArchived(e.ThoughtId));
         }
 
-        public void When(ProjectOutcomeChanged evnt)
+        public void When(ProjectDefined e)
         {
-            Update(evnt.Id, s => s.ProjectOutcomeChanged(evnt.ProjectId, evnt.ProjectOutcome));
+            Update(e.Id, s => s.ProjectDefined(e.ProjectId, e.ProjectOutcome, e.Type));
+        }
+        public void When(ActionDefined e)
+        {
+            Update(e.Id, s => s.ActionDefined(e.ProjectId, e.ActionId, e.Outcome));
+        }
+        public void When(ActionCompleted e)
+        {
+            Update(e.Id, s => s.ActionCompleted(e.ActionId));
+        }
+        public void When(ActionOutcomeChanged e)
+        {
+            Update(e.Id, s => s.ActionOutcomeChanged(e.ActionId, e.ActionOutcome));
         }
 
-        public void When(ThoughtSubjectChanged evnt)
+        public void When(ProjectOutcomeChanged e)
         {
-            Update(evnt.Id, s => s.ThoughtSubjectChanged(evnt.ThoughtId, evnt.Subject));
-        }
-        public void When(ActionArchived evnt)
-        {
-            Update(evnt.Id, s => s.ActionArchived(evnt.ActionId));
-        }
-        public void When(ProjectTypeChanged evnt)
-        {
-            Update(evnt.Id, s => s.ProjectTypeChanged(evnt.ProjectId, evnt.Type));
-        }
-        public void When(StartDateAssignedToAction evnt)
-        {
-            Update(evnt.Id, s => s.StartDateAssigned(evnt.ActionId, evnt.NewStartDate));
-        }
-        public void When(DueDateAssignedToAction evnt)
-        {
-            Update(evnt.Id, s => s.DueDateAssigned(evnt.ActionId, evnt.NewDueDate));
-        }
-        public void When(StartDateRemovedFromAction evnt)
-        {
-            Update(evnt.Id, s => s.StartDateAssigned(evnt.ActionId, DateTime.MinValue));
-        }
-        public void When(DueDateRemovedFromAction evnt)
-        {
-            Update(evnt.Id, s => s.DueDateAssigned(evnt.ActionId, DateTime.MinValue));
-        }
-        public void When(ActionStartDateMoved evnt)
-        {
-            Update(evnt.Id, s => s.StartDateAssigned(evnt.ActionId, evnt.NewStartDate));
-        }
-        public void When(ActionDueDateMoved evnt)
-        {
-            Update(evnt.Id, s => s.DueDateAssigned(evnt.ActionId, evnt.NewDueDate));
+            Update(e.Id, s => s.ProjectOutcomeChanged(e.ProjectId, e.ProjectOutcome));
         }
 
+        public void When(ThoughtSubjectChanged e)
+        {
+            Update(e.Id, s => s.ThoughtSubjectChanged(e.ThoughtId, e.Subject));
+        }
+        public void When(ActionArchived e)
+        {
+            Update(e.Id, s => s.ActionArchived(e.ActionId));
+        }
+        public void When(ProjectTypeChanged e)
+        {
+            Update(e.Id, s => s.ProjectTypeChanged(e.ProjectId, e.Type));
+        }
+        public void When(StartDateAssignedToAction e)
+        {
+            Update(e.Id, s => s.StartDateAssigned(e.ActionId, e.NewStartDate));
+        }
+        public void When(DueDateAssignedToAction e)
+        {
+            Update(e.Id, s => s.DueDateAssigned(e.ActionId, e.NewDueDate));
+        }
+        public void When(StartDateRemovedFromAction e)
+        {
+            Update(e.Id, s => s.StartDateAssigned(e.ActionId, DateTime.MinValue));
+        }
+        public void When(DueDateRemovedFromAction e)
+        {
+            Update(e.Id, s => s.DueDateAssigned(e.ActionId, DateTime.MinValue));
+        }
+        public void When(ActionStartDateMoved e)
+        {
+            Update(e.Id, s => s.StartDateAssigned(e.ActionId, e.NewStartDate));
+        }
+        public void When(ActionDueDateMoved e)
+        {
+            Update(e.Id, s => s.DueDateAssigned(e.ActionId, e.NewDueDate));
+        }
     }
 }
