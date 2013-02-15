@@ -163,11 +163,11 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
         public readonly HashSet<Guid> Inbox = new HashSet<Guid>(); 
     }
 
-    /// <summary>
-    /// These Value Objects maintain only invariants within themselves.
+
+    /// <summary> These Value Objects maintain only invariants within themselves.
     /// Invariants between entities are maintained by the state.
     /// </summary>
-    public sealed class ActionInfo // VO
+    public sealed class ActionInfo
     {
         public ActionId Id { get; private set; }
         public string Outcome { get; private set; }
@@ -216,6 +216,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
                 throw new InvalidOperationException("NewProject == Empty");
             Project = newProject;
         }
+
         public void RemoveFromProject(ProjectId project)
         {
             if (project != Project)
@@ -228,13 +229,11 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             Outcome = newName;
         }
       
-
         public void EnsureCleanRemoval()
         {
             if (HasProject)
                 throw new InvalidOperationException("Can't remove action that is still assigned to project");
         }
-
 
         public void StartDateMoved(DateTime oldTime, DateTime newTime)
         {
@@ -312,6 +311,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
         {
             _actions.Add(action);
         }
+
         public void RemoveAction(ActionId action)
         {
             _actions.Remove(action);
