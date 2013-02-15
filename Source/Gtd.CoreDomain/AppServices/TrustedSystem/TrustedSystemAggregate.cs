@@ -187,28 +187,6 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             }
         }
 
-
-
-
-        //
-        // Aggregate Helper Methods Below
-        //
-
-        static Guid NewGuidIfEmpty(Guid requestId)
-        {
-            return requestId == Guid.Empty ? Guid.NewGuid() : requestId;
-        }
-
-        /// <summary> Make aggregate realize that the event happened by applying it to the state
-        /// and adding to the list of uncommitted events</summary>
-        /// <param name="newEventThatHappened"></param>
-        void Apply(ITrustedSystemEvent newEventThatHappened)
-        {
-            _aggState.MakeStateRealize(newEventThatHappened);
-
-            EventsThatCausedChange.Add((Event)newEventThatHappened);
-        }
-
         public void ProvideStartDateForAction(ActionId actionId, DateTime newStartDate)
         {
             var action = GetActionOrThrow(actionId);
@@ -219,7 +197,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
                 Apply(new StartDateRemovedFromAction(_aggState.Id, actionId, action.StartDate));
                 return;
             }
-            
+
             if (action.DueDate != DateTime.MinValue && newStartDate > action.DueDate)
             {
                 throw DomainError.Named("", "New start date is later than due date");
@@ -258,5 +236,26 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             }
             Apply(new ActionDueDateMoved(_aggState.Id, actionId, action.DueDate, newDueDate));
         }
+
+
+        //
+        // Aggregate Helper Methods Below
+        //
+
+        static Guid NewGuidIfEmpty(Guid requestId)
+        {
+            return requestId == Guid.Empty ? Guid.NewGuid() : requestId;
+        }
+
+        /// <summary> Make aggregate realize that the event happened by applying it to the state
+        /// and adding to the list of uncommitted events</summary>
+        /// <param name="newEventThatHappened"></param>
+        void Apply(ITrustedSystemEvent newEventThatHappened)
+        {
+            _aggState.MakeStateRealize(newEventThatHappened);
+
+            EventsThatCausedChange.Add((Event)newEventThatHappened);
+        }
+
     }
 }
