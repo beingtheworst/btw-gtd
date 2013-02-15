@@ -37,22 +37,8 @@ namespace Gtd.CoreDomain
         }
 
 
-        // TODO: [kstreet] when we add Aggregate #2 
-        // will we want to move this general "Time" stuff?
-        public interface ITimeProvider
-        {
-            DateTime GetUtcNow();
-        }
-        public sealed class RealTimeProvider : ITimeProvider
-        {
-            public DateTime GetUtcNow()
-            {
-                return DateTime.UtcNow;
-            }
-        }
 
-
-        // Ability to Execute Command Messages, required by IAppService
+        // Ability to Execute Command Messages (IAppService)
         public void Execute(Command cmd)          
         {
             ((dynamic)this).When((dynamic)cmd);
@@ -124,6 +110,22 @@ namespace Gtd.CoreDomain
         public void When(ProvideDueDateForAction cmd)
         {
             ChangeAggregate(cmd.Id, agg => agg.ProvideDueDateForAction(cmd.ActionId, cmd.NewDueDate));
+        }
+
+    }
+
+
+    // TODO: [kstreet] when we add Aggregate #2 
+    // will we want to move this general "Time" stuff?
+    public interface ITimeProvider
+    {
+        DateTime GetUtcNow();
+    }
+    public sealed class RealTimeProvider : ITimeProvider
+    {
+        public DateTime GetUtcNow()
+        {
+            return DateTime.UtcNow;
         }
     }
 }
