@@ -42,31 +42,31 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
 
         // When methods reacting to Events to change in memory state of the Aggregate
 
-        public void When(TrustedSystemCreated evnt)
+        public void When(TrustedSystemCreated e)
         {
-            Id = evnt.Id;
+            Id = e.Id;
         }
 
-        public void When(ThoughtCaptured evnt)
+        public void When(ThoughtCaptured e)
         {
-            var info = new ThoughtInfo(evnt.ThoughtId, evnt.Thought);
-            Thoughts.Add(evnt.ThoughtId, info);
-            Inbox.Add(evnt.ThoughtId);
+            var info = new ThoughtInfo(e.ThoughtId, e.Thought);
+            Thoughts.Add(e.ThoughtId, info);
+            Inbox.Add(e.ThoughtId);
         }
 
-        public void When(ThoughtArchived evnt)
+        public void When(ThoughtArchived e)
         {
-            Inbox.Remove(evnt.ThoughtId);
+            Inbox.Remove(e.ThoughtId);
         }
 
-        public void When(ActionDefined evnt)
+        public void When(ActionDefined e)
         {
-            Actions.Add(evnt.ActionId, new ActionInfo(evnt.ActionId, evnt.Outcome));
+            Actions.Add(e.ActionId, new ActionInfo(e.ActionId, e.Outcome));
         }
 
-        public void When(ProjectDefined evnt)
+        public void When(ProjectDefined e)
         {
-            Projects.Add(evnt.ProjectId, new ProjectInfo(evnt.ProjectId, evnt.ProjectOutcome, evnt.Type));
+            Projects.Add(e.ProjectId, new ProjectInfo(e.ProjectId, e.ProjectOutcome, e.Type));
         }
 
         public void When(ProjectTypeChanged e)
@@ -74,46 +74,46 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             Projects[e.ProjectId].ChangeType(e.Type);
         }
 
-        public void When(ActionAssignedToProject evnt)
+        public void When(ActionAssignedToProject e)
         {
-            var action = Actions[evnt.ActionId];
-            var project = Projects[evnt.NewProject];
+            var action = Actions[e.ActionId];
+            var project = Projects[e.NewProject];
 
             action.LinkToProject(project.Id);
             project.AddAction(action.Id);
         }
 
-        public void When(ActionRemovedFromProject evnt)
+        public void When(ActionRemovedFromProject e)
         {
-            Actions[evnt.ActionId].RemoveFromProject(evnt.OldProject);
-            Projects[evnt.OldProject].RemoveAction(evnt.ActionId);
+            Actions[e.ActionId].RemoveFromProject(e.OldProject);
+            Projects[e.OldProject].RemoveAction(e.ActionId);
         }
 
-        public void When(ActionMovedToProject evnt)
+        public void When(ActionMovedToProject e)
         {
-            var action = Actions[evnt.ActionId];
-            var oldProject = Projects[evnt.OldProject];
-            var newProject = Projects[evnt.NewProject];
+            var action = Actions[e.ActionId];
+            var oldProject = Projects[e.OldProject];
+            var newProject = Projects[e.NewProject];
 
-            action.MoveToProject(evnt.OldProject, evnt.NewProject);
+            action.MoveToProject(e.OldProject, e.NewProject);
             
             newProject.AddAction(action.Id);
             oldProject.RemoveAction(action.Id);
         }
 
-        public void When(ActionArchived evnt)
+        public void When(ActionArchived e)
         {
-            Actions[evnt.ActionId].MakeArchived();
+            Actions[e.ActionId].MakeArchived();
         }
 
-        public void When(ActionOutcomeChanged evnt)
+        public void When(ActionOutcomeChanged e)
         {
-            Actions[evnt.ActionId].ChangeOutcome(evnt.ActionOutcome);
+            Actions[e.ActionId].ChangeOutcome(e.ActionOutcome);
         }
 
-        public void When(ProjectOutcomeChanged evnt)
+        public void When(ProjectOutcomeChanged e)
         {
-            Projects[evnt.ProjectId].ChangeOutcome(evnt.ProjectOutcome);
+            Projects[e.ProjectId].ChangeOutcome(e.ProjectOutcome);
         }
 
         public void When(ThoughtSubjectChanged e)
@@ -151,9 +151,9 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             Actions[e.ActionId].DueDateRemoved(e.OldDueDate);
         }
 
-        public void When(ActionCompleted evnt)
+        public void When(ActionCompleted e)
         {
-            Actions[evnt.ActionId].MarkAsCompleted();
+            Actions[e.ActionId].MarkAsCompleted();
         }
 
 
