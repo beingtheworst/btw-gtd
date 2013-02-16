@@ -158,9 +158,12 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
 
 
         public readonly IDictionary<ActionId, ActionInfo> Actions = new Dictionary<ActionId, ActionInfo>(); 
-        public readonly IDictionary<ProjectId, ProjectInfo> Projects = new Dictionary<ProjectId, ProjectInfo>(); 
-        public readonly IDictionary<Guid, ThoughtInfo> Thoughts = new Dictionary<Guid, ThoughtInfo>(); 
-        public readonly HashSet<Guid> Inbox = new HashSet<Guid>(); 
+        public readonly IDictionary<ProjectId, ProjectInfo> Projects = new Dictionary<ProjectId, ProjectInfo>();
+        public readonly IDictionary<ThoughtId, ThoughtInfo> Thoughts = new Dictionary<ThoughtId, ThoughtInfo>();
+
+        // TODO: Got Stuck here on how to handle this with ThoughtId where it was <Guid> in HashSet
+        public readonly HashSet<ThoughtId> Inbox = new HashSet<ThoughtId>();
+        
     }
 
 
@@ -320,12 +323,11 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
 
     public sealed class ThoughtInfo
     {
-        public Guid Id { get; private set; }
+        public ThoughtId Id { get; private set; }
         public string Subject { get; private set; }
 
-        public ThoughtInfo(Guid id, string subject)
+        public ThoughtInfo(ThoughtId id, string subject)
         {
-            Enforce.NotEmpty(id, "id");
             Enforce.NotEmpty(subject, "subject");
 
             Id = id;

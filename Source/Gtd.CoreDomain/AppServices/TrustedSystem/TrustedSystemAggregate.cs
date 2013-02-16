@@ -26,9 +26,9 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
         }
 
 
-        static Guid NewGuidIfEmpty(Guid requestId)
+        static Guid NewGuidIfEmpty(RequestId requestId)
         {
-            return requestId == Guid.Empty ? Guid.NewGuid() : requestId;
+            return requestId.IsEmpty ? new RequestId(Guid.NewGuid()).Id : requestId.Id;
         }
 
 
@@ -50,7 +50,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             Apply(new TrustedSystemCreated(id));
         }
 
-        public void DefineProject(Guid requestId, string name, ITimeProvider provider)
+        public void DefineProject(RequestId requestId, string name, ITimeProvider provider)
         {
             // filter request IDs
             var time = provider.GetUtcNow();
@@ -60,7 +60,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             Apply(new ProjectDefined(_aggState.Id, projectId, name, defaultProjectType, time));
         }
 
-        public void DefineSingleActionProject(Guid requestId, Guid thoughtId, ITimeProvider provider)
+        public void DefineSingleActionProject(RequestId requestId, ThoughtId thoughtId, ITimeProvider provider)
         {
             // filter request IDs
             var time = provider.GetUtcNow();
@@ -93,7 +93,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             Apply(new ThoughtArchived(_aggState.Id, thoughtId, time));
         }
 
-        public void CaptureThought(Guid requestId, string name, ITimeProvider provider)
+        public void CaptureThought(RequestId requestId, string name, ITimeProvider provider)
         {
             // filter request IDs
             //var time = provider.GetUtcNow();
@@ -102,7 +102,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             Apply(new ThoughtCaptured(_aggState.Id, NewGuidIfEmpty(requestId), name, provider.GetUtcNow()));
         }
 
-        public void DefineAction(Guid requestId, ProjectId projectId, string outcome, ITimeProvider provider)
+        public void DefineAction(RequestId requestId, ProjectId projectId, string outcome, ITimeProvider provider)
         {
             // filter request IDs
             var time = provider.GetUtcNow();
@@ -117,7 +117,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             Apply(new ActionDefined(_aggState.Id, actionId, projectId, outcome , time));
         }
 
-        public void ArchiveThought(Guid thoughtId, ITimeProvider provider)
+        public void ArchiveThought(ThoughtId thoughtId, ITimeProvider provider)
         {
             if (!_aggState.Inbox.Contains(thoughtId))
                 throw DomainError.Named("no thought", "Thought {0} not found", thoughtId);
@@ -170,7 +170,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             }
         }
 
-        public void ChangeThoughtSubject(Guid thoughtId, string subject, ITimeProvider time)
+        public void ChangeThoughtSubject(ThoughtId thoughtId, string subject, ITimeProvider time)
         {
             ThoughtInfo info;
             if (!_aggState.Thoughts.TryGetValue(thoughtId, out info))

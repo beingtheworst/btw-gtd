@@ -8,14 +8,15 @@ namespace Gtd
 
 // RequestId allows client software to generate a GUID to pass as a correlation Id in the Commands it sends to server.
 // The client can then check the server's views to see if the Id exists, and if so, can report that the request was received by server.
-const requestId = Guid RequestId
-
 // If a RequestId is provided by the client, that same Id will be assigned to the ProjectId/ActionId
 // to ease correlation between a client's request and the associated Command and Event messages resulting from it.
-// TODO: Consider adding unique integral (integer) number to these in the future to improve human lookup/UX/readability.
+// TODO: Consider adding unique integral (integer) number to these in the future to improve human lookup/UX/readability. (using shortId for now)
+
+const requestId = RequestId RequestId
+const thoughtId = ThoughtId ThoughtId
+
 const projectId = ProjectId ProjectId
 const actionId = ActionId ActionId
-
 
 // TODO: Consider delegation?
 
@@ -31,10 +32,10 @@ interface TrustedSystem(TrustedSystemId Id)
      
     // Captures an entry inside the inbox
     CaptureThought?(requestId, string thought)
-        ThoughtCaptured!(Guid thoughtId, string thought, time)
+        ThoughtCaptured!(thoughtId, string thought, time)
 
-    ArchiveThought?(Guid thoughtId)
-        ThoughtArchived!(Guid thoughtId, time)
+    ArchiveThought?(thoughtId)
+        ThoughtArchived!(thoughtId, time)
     
     DefineAction?(requestId, projectId, string outcome)
         ActionDefined!(actionId, projectId, string outcome, time)
@@ -42,7 +43,7 @@ interface TrustedSystem(TrustedSystemId Id)
     DefineProject?(requestId, string projectOutcome)
         ProjectDefined!(projectId, string projectOutcome, ProjectType type, time)
 
-    DefineSingleActionProject?(requestId, Guid thoughtId)
+    DefineSingleActionProject?(requestId, thoughtId)
         //TODO: for now I think it may be best to reuse the two events above instead of creating a new one
         // SingleActionProjectDefined!(projectId, string projectOutcome, ProjectType type, actionId, string actionOutcome, time)
 
@@ -65,8 +66,8 @@ interface TrustedSystem(TrustedSystemId Id)
     ChangeProjectOutcome?(projectId, string outcome)
         ProjectOutcomeChanged!(projectId, string projectOutcome, time)
 
-    ChangeThoughtSubject?(Guid thoughtId, string subject)
-        ThoughtSubjectChanged!(Guid thoughtId, string subject, time)
+    ChangeThoughtSubject?(thoughtId, string subject)
+        ThoughtSubjectChanged!(thoughtId, string subject, time)
 
     
     // optional Date when project or action becomes available and relevant for us. 

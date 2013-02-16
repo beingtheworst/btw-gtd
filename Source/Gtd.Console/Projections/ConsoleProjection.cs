@@ -16,7 +16,7 @@ namespace Gtd.Shell.Projections
 
     public sealed class ThoughtView : IItemView
     {
-        public Guid Id;
+        public ThoughtId Id;
         public string Subject;
         public DateTime Added;
 
@@ -112,11 +112,10 @@ namespace Gtd.Shell.Projections
         public List<ThoughtView> Thoughts = new List<ThoughtView>(); 
         public List<ProjectView> ProjectList = new List<ProjectView>(); 
         public Dictionary<ProjectId, ProjectView> ProjectDict = new Dictionary<ProjectId, ProjectView>(); 
-        public Dictionary<ActionId, ActionView> ActionDict = new Dictionary<ActionId, ActionView>(); 
+        public Dictionary<ActionId, ActionView> ActionDict = new Dictionary<ActionId, ActionView>();
+        public Dictionary<ThoughtId, IItemView> GlobalDict = new Dictionary<ThoughtId, IItemView>();
 
-        public Dictionary<Guid, IItemView> GlobalDict = new Dictionary<Guid, IItemView>();
-       
-        public void ThoughtCaptured(Guid thoughtId, string thought, DateTime date)
+        public void ThoughtCaptured(ThoughtId thoughtId, string thought, DateTime date)
         {
             var item = new ThoughtView()
                 {
@@ -126,7 +125,7 @@ namespace Gtd.Shell.Projections
             GlobalDict.Add(thoughtId, item);
         }
 
-        public void ThoughtArchived(Guid thoughtId)
+        public void ThoughtArchived(ThoughtId thoughtId)
         {
             Thoughts.RemoveAll(t => t.Id == thoughtId);
         }
@@ -153,7 +152,7 @@ namespace Gtd.Shell.Projections
             ActionDict[actionId].MarkAsCompleted();
         }
 
-        public void ThoughtSubjectChanged(Guid thoughtId, string subject)
+        public void ThoughtSubjectChanged(ThoughtId thoughtId, string subject)
         {
             ((ThoughtView) GlobalDict[thoughtId]).Subject = subject;
         }
