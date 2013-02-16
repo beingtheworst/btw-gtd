@@ -114,10 +114,15 @@ namespace Gtd.Shell
             Console.Title = "GTD Interactive Shell - Using Trusted System Id#: 1";
 
             var log = LogManager.GetLoggerFor<ConsoleEnvironment>();
-            log.Debug("Event Stream ver {0} is what your Trusted System is becoming aware of...", currentVersion);
+
+            if (currentVersion < 1)
+            {
+                log.Debug("Event Stream ver {0}.  Trusted System has no Event history yet, capture a thought (CT).", currentVersion);
+            }
 
             if (currentVersion > 0)
             {
+                log.Debug("Event Stream ver {0} is what your Trusted System is becoming aware of...", currentVersion);
                 log.Debug("Running in-memory replay of all Events that have ever happened to Trusted System: 1");
                 foreach (var record in messageStore.EnumerateAllItems(0, int.MaxValue))
                 {

@@ -160,8 +160,6 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
         public readonly IDictionary<ActionId, ActionInfo> Actions = new Dictionary<ActionId, ActionInfo>(); 
         public readonly IDictionary<ProjectId, ProjectInfo> Projects = new Dictionary<ProjectId, ProjectInfo>();
         public readonly IDictionary<ThoughtId, ThoughtInfo> Thoughts = new Dictionary<ThoughtId, ThoughtInfo>();
-
-        // TODO: Got Stuck here on how to handle this with ThoughtId where it was <Guid> in HashSet
         public readonly HashSet<ThoughtId> Inbox = new HashSet<ThoughtId>();
         
     }
