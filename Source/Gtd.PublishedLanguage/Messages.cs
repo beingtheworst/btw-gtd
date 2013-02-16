@@ -22,11 +22,11 @@ namespace Gtd
     public partial class CaptureThought : Command, ITrustedSystemCommand
     {
         [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
-        [DataMember(Order = 2)] public Guid RequestId { get; private set; }
+        [DataMember(Order = 2)] public RequestId RequestId { get; private set; }
         [DataMember(Order = 3)] public string Thought { get; private set; }
         
         CaptureThought () {}
-        public CaptureThought (TrustedSystemId id, Guid requestId, string thought)
+        public CaptureThought (TrustedSystemId id, RequestId requestId, string thought)
         {
             Id = id;
             RequestId = requestId;
@@ -37,12 +37,12 @@ namespace Gtd
     public partial class ThoughtCaptured : Event, ITrustedSystemEvent
     {
         [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
-        [DataMember(Order = 2)] public Guid ThoughtId { get; private set; }
+        [DataMember(Order = 2)] public ThoughtId ThoughtId { get; private set; }
         [DataMember(Order = 3)] public string Thought { get; private set; }
         [DataMember(Order = 4)] public DateTime TimeUtc { get; private set; }
         
         ThoughtCaptured () {}
-        public ThoughtCaptured (TrustedSystemId id, Guid thoughtId, string thought, DateTime timeUtc)
+        public ThoughtCaptured (TrustedSystemId id, ThoughtId thoughtId, string thought, DateTime timeUtc)
         {
             Id = id;
             ThoughtId = thoughtId;
@@ -54,10 +54,10 @@ namespace Gtd
     public partial class ArchiveThought : Command, ITrustedSystemCommand
     {
         [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
-        [DataMember(Order = 2)] public Guid ThoughtId { get; private set; }
+        [DataMember(Order = 2)] public ThoughtId ThoughtId { get; private set; }
         
         ArchiveThought () {}
-        public ArchiveThought (TrustedSystemId id, Guid thoughtId)
+        public ArchiveThought (TrustedSystemId id, ThoughtId thoughtId)
         {
             Id = id;
             ThoughtId = thoughtId;
@@ -67,11 +67,11 @@ namespace Gtd
     public partial class ThoughtArchived : Event, ITrustedSystemEvent
     {
         [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
-        [DataMember(Order = 2)] public Guid ThoughtId { get; private set; }
+        [DataMember(Order = 2)] public ThoughtId ThoughtId { get; private set; }
         [DataMember(Order = 3)] public DateTime TimeUtc { get; private set; }
         
         ThoughtArchived () {}
-        public ThoughtArchived (TrustedSystemId id, Guid thoughtId, DateTime timeUtc)
+        public ThoughtArchived (TrustedSystemId id, ThoughtId thoughtId, DateTime timeUtc)
         {
             Id = id;
             ThoughtId = thoughtId;
@@ -82,12 +82,12 @@ namespace Gtd
     public partial class DefineAction : Command, ITrustedSystemCommand
     {
         [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
-        [DataMember(Order = 2)] public Guid RequestId { get; private set; }
+        [DataMember(Order = 2)] public RequestId RequestId { get; private set; }
         [DataMember(Order = 3)] public ProjectId ProjectId { get; private set; }
         [DataMember(Order = 4)] public string Outcome { get; private set; }
         
         DefineAction () {}
-        public DefineAction (TrustedSystemId id, Guid requestId, ProjectId projectId, string outcome)
+        public DefineAction (TrustedSystemId id, RequestId requestId, ProjectId projectId, string outcome)
         {
             Id = id;
             RequestId = requestId;
@@ -118,11 +118,11 @@ namespace Gtd
     public partial class DefineProject : Command, ITrustedSystemCommand
     {
         [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
-        [DataMember(Order = 2)] public Guid RequestId { get; private set; }
+        [DataMember(Order = 2)] public RequestId RequestId { get; private set; }
         [DataMember(Order = 3)] public string ProjectOutcome { get; private set; }
         
         DefineProject () {}
-        public DefineProject (TrustedSystemId id, Guid requestId, string projectOutcome)
+        public DefineProject (TrustedSystemId id, RequestId requestId, string projectOutcome)
         {
             Id = id;
             RequestId = requestId;
@@ -152,11 +152,11 @@ namespace Gtd
     public partial class DefineSingleActionProject : Command, ITrustedSystemCommand
     {
         [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
-        [DataMember(Order = 2)] public Guid RequestId { get; private set; }
-        [DataMember(Order = 3)] public Guid ThoughtId { get; private set; }
+        [DataMember(Order = 2)] public RequestId RequestId { get; private set; }
+        [DataMember(Order = 3)] public ThoughtId ThoughtId { get; private set; }
         
         DefineSingleActionProject () {}
-        public DefineSingleActionProject (TrustedSystemId id, Guid requestId, Guid thoughtId)
+        public DefineSingleActionProject (TrustedSystemId id, RequestId requestId, ThoughtId thoughtId)
         {
             Id = id;
             RequestId = requestId;
@@ -380,11 +380,11 @@ namespace Gtd
     public partial class ChangeThoughtSubject : Command, ITrustedSystemCommand
     {
         [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
-        [DataMember(Order = 2)] public Guid ThoughtId { get; private set; }
+        [DataMember(Order = 2)] public ThoughtId ThoughtId { get; private set; }
         [DataMember(Order = 3)] public string Subject { get; private set; }
         
         ChangeThoughtSubject () {}
-        public ChangeThoughtSubject (TrustedSystemId id, Guid thoughtId, string subject)
+        public ChangeThoughtSubject (TrustedSystemId id, ThoughtId thoughtId, string subject)
         {
             Id = id;
             ThoughtId = thoughtId;
@@ -395,12 +395,12 @@ namespace Gtd
     public partial class ThoughtSubjectChanged : Event, ITrustedSystemEvent
     {
         [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
-        [DataMember(Order = 2)] public Guid ThoughtId { get; private set; }
+        [DataMember(Order = 2)] public ThoughtId ThoughtId { get; private set; }
         [DataMember(Order = 3)] public string Subject { get; private set; }
         [DataMember(Order = 4)] public DateTime TimeUtc { get; private set; }
         
         ThoughtSubjectChanged () {}
-        public ThoughtSubjectChanged (TrustedSystemId id, Guid thoughtId, string subject, DateTime timeUtc)
+        public ThoughtSubjectChanged (TrustedSystemId id, ThoughtId thoughtId, string subject, DateTime timeUtc)
         {
             Id = id;
             ThoughtId = thoughtId;

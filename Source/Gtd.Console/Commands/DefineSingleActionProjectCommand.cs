@@ -25,8 +25,8 @@ namespace Gtd.Shell.Commands
 
             if (thought != null)
             {
-
-                env.TrustedSystem.When(new DefineSingleActionProject(env.Session.SystemId, Guid.Empty, thought.Id));
+                var requestId = new RequestId(Guid.NewGuid());
+                env.TrustedSystem.When(new DefineSingleActionProject(env.Session.SystemId, requestId, thought.Id));
                 env.Log.Info("Single Action Project defined from a thought!");
                 return;
             }

@@ -27,8 +27,9 @@ namespace Gtd.Shell.Commands
                 return;
             }
 
+            var requestId = new RequestId(Guid.NewGuid());
             var outcome = string.Join(" ", args);
-            env.TrustedSystem.When(new DefineProject(env.Session.SystemId, Guid.Empty, outcome));
+            env.TrustedSystem.When(new DefineProject(env.Session.SystemId, requestId, outcome));
             env.Log.Info("Project defined!");
         }
     }

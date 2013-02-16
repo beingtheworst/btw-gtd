@@ -15,10 +15,13 @@ namespace Gtd.Shell.Commands
                 env.Log.Error("You must provide project ID and action outcome");
                 return;
             }
+
+            var requestId = new RequestId(Guid.NewGuid());
+
             var project = env.Session.MatchProject(args[0]);
 
             var outcome = string.Join(" ", args.Skip(1));
-            env.TrustedSystem.When(new DefineAction(env.Session.SystemId, Guid.Empty, project.ProjectId, outcome));
+            env.TrustedSystem.When(new DefineAction(env.Session.SystemId, requestId, project.ProjectId, outcome));
             env.Log.Trace("Action defined for project '{0}'", project.Outcome);
         }
     }

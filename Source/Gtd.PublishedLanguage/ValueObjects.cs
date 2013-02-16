@@ -9,8 +9,6 @@ namespace Gtd
     {
         public const string TagValue = "trustedSystem";
 
-
-
         public TrustedSystemId(long id)
         {
             Contract.Requires(id > 0);
@@ -27,6 +25,92 @@ namespace Gtd
         public override long Id { get; protected set; }
 
         public TrustedSystemId() { }
+    }
+
+    [DataContract(Namespace = "BTW2/GTD")]
+    public struct RequestId
+    {
+        [DataMember(Order = 1)]
+        public Guid Id { get; private set; }
+
+        public bool IsEmpty { get { return Id == Guid.Empty; } }
+
+        public static RequestId Empty = new RequestId(Guid.Empty);
+
+        public RequestId(Guid id)
+            : this()
+        {
+            Id = id;
+        }
+
+        public bool Equals(RequestId other)
+        {
+            return Id.Equals(other.Id);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            return obj is RequestId && Equals((RequestId)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
+
+        public static bool operator ==(RequestId left, RequestId right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(RequestId left, RequestId right)
+        {
+            return !left.Equals(right);
+        }
+    }
+
+    [DataContract(Namespace = "BTW2/GTD")]
+    public struct ThoughtId
+    {
+        [DataMember(Order = 1)]
+        public Guid Id { get; private set; }
+
+        public bool IsEmpty { get { return Id == Guid.Empty; } }
+
+        public static ThoughtId Empty = new ThoughtId(Guid.Empty);
+
+        public ThoughtId(Guid id)
+            : this()
+        {
+            Id = id;
+        }
+
+        public bool Equals(ThoughtId other)
+        {
+            return Id.Equals(other.Id);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            return obj is ThoughtId && Equals((ThoughtId)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
+
+        public static bool operator ==(ThoughtId left, ThoughtId right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(ThoughtId left, ThoughtId right)
+        {
+            return !left.Equals(right);
+        }
     }
 
     [DataContract(Namespace = "BTW2/GTD")]
@@ -70,6 +154,7 @@ namespace Gtd
             return !left.Equals(right);
         }
     }
+
     [DataContract(Namespace = "BTW2/GTD")]
     public struct ActionId
     {
