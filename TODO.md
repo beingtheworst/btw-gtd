@@ -8,7 +8,7 @@ The simplest way to do first production deployment with one server and multiple 
 
 We want to have proper support for terms like: now, 2w, tomorrow, today, 3 days etc
 
-#### Strongly-type thought IDs
+#### Strongly-type thought IDs (In Progress in [strong-id](https://github.com/beingtheworst/btw-gtd/tree/strong-id) branch)
 
 Currently thoughtIds and request IDs are loosely-typed GUIDs. Strong-type them to reduce potential confusion
 
