@@ -8,10 +8,6 @@ The simplest way to do first production deployment with one server and multiple 
 
 We want to have proper support for terms like: now, 2w, tomorrow, today, 3 days etc
 
-#### Strongly-type thought IDs (In Progress in [strong-id](https://github.com/beingtheworst/btw-gtd/tree/strong-id) branch)
-
-Currently thoughtIds and request IDs are loosely-typed GUIDs. Strong-type them to reduce potential confusion
-
 #### Add perspectives to the domain model
 
 Perspective is just a collection of filters applied to the CD action. We can keep these settings inside an aggregate, making them available to all clients
