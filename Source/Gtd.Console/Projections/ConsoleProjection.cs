@@ -113,7 +113,7 @@ namespace Gtd.Shell.Projections
         public List<ProjectView> ProjectList = new List<ProjectView>(); 
         public Dictionary<ProjectId, ProjectView> ProjectDict = new Dictionary<ProjectId, ProjectView>(); 
         public Dictionary<ActionId, ActionView> ActionDict = new Dictionary<ActionId, ActionView>();
-        public Dictionary<ThoughtId, IItemView> GlobalDict = new Dictionary<ThoughtId, IItemView>();
+        public Dictionary<Guid, IItemView> DictOfAllItems = new Dictionary<Guid, IItemView>();
 
         public void ThoughtCaptured(ThoughtId thoughtId, string thought, DateTime date)
         {
@@ -122,7 +122,7 @@ namespace Gtd.Shell.Projections
                     Added = date, Id = thoughtId, Subject = thought
                 };
             Thoughts.Add(item);
-            GlobalDict.Add(thoughtId, item);
+            DictOfAllItems.Add(thoughtId.Id, item);
         }
 
         public void ThoughtArchived(ThoughtId thoughtId)
@@ -136,7 +136,7 @@ namespace Gtd.Shell.Projections
             var project = new ProjectView(projectId, projectOutcome, type);
             ProjectList.Add(project);
             ProjectDict.Add(projectId, project);
-            GlobalDict.Add(projectId.Id, project);
+            DictOfAllItems.Add(projectId.Id, project);
         }
 
         public void ActionDefined(ProjectId projectId, ActionId actionId, string outcome)
@@ -145,7 +145,7 @@ namespace Gtd.Shell.Projections
 
             ProjectDict[projectId].Actions.Add(action);
             ActionDict.Add(actionId, action);
-            GlobalDict.Add(actionId.Id, action);
+            DictOfAllItems.Add(actionId.Id, action);
         }
         public void ActionCompleted(ActionId actionId)
         {
@@ -154,7 +154,7 @@ namespace Gtd.Shell.Projections
 
         public void ThoughtSubjectChanged(ThoughtId thoughtId, string subject)
         {
-            ((ThoughtView) GlobalDict[thoughtId]).Subject = subject;
+            ((ThoughtView) DictOfAllItems[thoughtId.Id]).Subject = subject;
         }
         public void ProjectOutcomeChanged(ProjectId projectId, string outcome)
         {

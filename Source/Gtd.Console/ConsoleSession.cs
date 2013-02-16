@@ -79,7 +79,7 @@ namespace Gtd.Shell
         {
             var system = GetCurrentSystem();
             var matches = system.Thoughts
-                      .Where(p => Matches(p.Id, match))
+                      .Where(p => MatchesThought(p.Id, match))
                       .ToArray();
             if (matches.Length == 0)
             {
@@ -102,7 +102,7 @@ namespace Gtd.Shell
         public IItemView MatchItem(string match)
         {
             var system = GetCurrentSystem();
-            var matches = system.GlobalDict.Where(p => Matches(p.Key, match)).ToArray();
+            var matches = system.DictOfAllItems.Where(p => Matches(p.Key, match)).ToArray();
             if (matches.Length == 0)
             {
                 var message = string.Format("No items match criteria '{0}'", match);
@@ -126,6 +126,11 @@ namespace Gtd.Shell
                 throw new KnownConsoleInputError(message.ToString());
             }
             return matches[0].Value;
+        }
+
+        static bool MatchesThought(ThoughtId id, string match)
+        {
+            return Matches(id.Id, match);
         }
 
         static bool Matches(Guid id, string match)

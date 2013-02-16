@@ -98,8 +98,9 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             // filter request IDs
             //var time = provider.GetUtcNow();
             //var id = new ActionId(NewGuidIfEmpty(requestId));
+            var id = new ThoughtId(NewGuidIfEmpty(requestId));
 
-            Apply(new ThoughtCaptured(_aggState.Id, NewGuidIfEmpty(requestId), name, provider.GetUtcNow()));
+            Apply(new ThoughtCaptured(_aggState.Id, id, name, provider.GetUtcNow()));
         }
 
         public void DefineAction(RequestId requestId, ProjectId projectId, string outcome, ITimeProvider provider)

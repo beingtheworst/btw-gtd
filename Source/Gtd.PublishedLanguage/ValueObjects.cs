@@ -9,8 +9,6 @@ namespace Gtd
     {
         public const string TagValue = "trustedSystem";
 
-
-
         public TrustedSystemId(long id)
         {
             Contract.Requires(id > 0);
