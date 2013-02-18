@@ -72,7 +72,6 @@
     <Compile Include="Filters\NextActionFilter.cs" />
     <Compile Include="Filters\RemainingFilter.cs" />
     <Compile Include="LesserEvils\FormatEvil.cs" />
-    <Compile Include="IAppendOnlyStore.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="InMemoryStore.cs" />
     <Compile Include="IConsoleCommand.cs" />
@@ -82,6 +81,10 @@
     <Compile Include="SynchronousEventHandler.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Btw.Portable\Btw.Portable.csproj">
+      <Project>{A435667B-5C71-41A0-A7C8-4700BDADF8B2}</Project>
+      <Name>Btw.Portable</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Gtd.CoreDomain\Gtd.CoreDomain.csproj">
       <Project>{BAB02576-30C8-4DE2-AC43-23766F9FD6A1}</Project>
       <Name>Gtd.CoreDomain</Name>
