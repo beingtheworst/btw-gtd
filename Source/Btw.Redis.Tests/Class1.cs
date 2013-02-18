@@ -18,8 +18,9 @@ namespace Btw.Redis.Tests
             {
                 using (var store = new RedisAppendOnlyStore(test))
                 {
-                    store.ResetStore();
-                    Console.WriteLine(store.GetCurrentVersion());
+
+                    store.Append("test", new byte[1], 0);
+                    
                 }
             }
         } 

@@ -30,16 +30,26 @@ namespace Gtd.Redis
                 throw new ArgumentException("Buffer must contain at least one byte.");
 
             _client.EvalInt(@"
+local expected = tonumber(ARGV[2])
+
 local storeVersion = redis.call('HLEN', 'STORE')
 local streamVersion = redis.call('LLEN', KEYS[1])
 
-if (streamVersion == ARGV[2]) then
+if expected == -1 then
+    expected = streamVersion
+end
+
+if streamVersion == expected then
+
+    if streamVersion == 0 then
+        redis.call('RPUSH','STREAMS', KEYS[1])
+    end
 
     redis.call('HSET', 'STORE',storeVersion+1,ARGV[1])
     redis.call('RPUSH',KEYS[1],storeVersion+1)
     return streamVersion+1
 else
-    return redis.error_reply('Stream version invalid: ' + streamVersion)
+    return redis.error_reply('Stream version invalid. Expected ' .. expected .. ' actual ' .. streamVersion)
 end
 ", 1, Encoding.UTF8.GetBytes(streamName), data, Encoding.UTF8.GetBytes(expectedStreamVersion.ToString()));
             // TODO: catch stream conflicts
@@ -112,7 +122,7 @@ return events", 1, Encoding.UTF8.GetBytes(start.ToString()), Encoding.UTF8.GetBy
 
         public void ResetStore()
         {
-            throw new NotSupportedException();
+            _client.Del("STORE");
         }
 
         public long GetCurrentVersion()
