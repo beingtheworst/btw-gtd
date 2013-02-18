@@ -15,14 +15,25 @@ namespace Btw.Redis.Tests
         public void Name()
         {
             using (var test = new RedisClient())
+            using (var store = new RedisAppendOnlyStore(test))
             {
-                using (var store = new RedisAppendOnlyStore(test))
-                {
-
-                    store.Append("test", new byte[1], 0);
-                    
-                }
+                store.Append("test", new byte[1], 0);
             }
+            
         } 
+
+        [Test]
+        public void ReadAll()
+        {
+            using (var test = new RedisClient())
+            using (var store = new RedisAppendOnlyStore(test))
+            {
+                foreach (var dataWithVersion in store.ReadRecords("test", 0, int.MaxValue))
+                {
+                    Console.WriteLine(dataWithVersion.StreamVersion);
+                }
+                
+            }
+        }
     }
 }

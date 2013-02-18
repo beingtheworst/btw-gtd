@@ -69,11 +69,18 @@ end
             var end = maxCount == Int32.MaxValue ? maxCount : maxCount + afterVersion - 1;
 
             var items = _client.Eval(@"
-local vers = redis.call('LRANGE', KEYS[1], ARGV[1], ARGV[1]+ARGV[2])
+local streamName = KEYS[1]
+local start = ARGV[1]
+local finish = ARGV[2]
+redis.log(redis.LOG_WARNING,'LRANGE ' .. streamName .. ' ' .. start .. ' ' .. finish)
+local vers = redis.call('LRANGE', KEYS[1], ARGV[1], ARGV[2])
+
+
+
 local events = {}
 local count = 0
 for ver in pairs(vers) do
-    events[count] = redis.call('HGET','STORE',_)
+    events[count] = redis.call('HGET','STORE',ver)
     count = count + 1
 end
 return events", 1, Encoding.UTF8.GetBytes(streamName), Encoding.UTF8.GetBytes(start.ToString()), Encoding.UTF8.GetBytes(end.ToString()));
