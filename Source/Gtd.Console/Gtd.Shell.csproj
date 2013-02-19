@@ -35,6 +35,12 @@
     <Reference Include="protobuf-net">
       <HintPath>..\..\Library\ProtoBuf-net\protobuf-net.dll</HintPath>
     </Reference>
+    <Reference Include="ServiceStack.Interfaces">
+      <HintPath>..\..\Library\ServiceStack\ServiceStack.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Redis">
+      <HintPath>..\..\Library\ServiceStack\ServiceStack.Redis.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -84,6 +90,10 @@
     <ProjectReference Include="..\Btw.Portable\Btw.Portable.csproj">
       <Project>{A435667B-5C71-41A0-A7C8-4700BDADF8B2}</Project>
       <Name>Btw.Portable</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Btw.Redis\Btw.Redis.csproj">
+      <Project>{66A6C5E4-3732-4955-8247-620377E261F2}</Project>
+      <Name>Btw.Redis</Name>
     </ProjectReference>
     <ProjectReference Include="..\Gtd.CoreDomain\Gtd.CoreDomain.csproj">
       <Project>{BAB02576-30C8-4DE2-AC43-23766F9FD6A1}</Project>

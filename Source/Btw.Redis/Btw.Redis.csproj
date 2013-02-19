@@ -53,10 +53,6 @@
       <Project>{A435667B-5C71-41A0-A7C8-4700BDADF8B2}</Project>
       <Name>Btw.Portable</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Gtd.Console\Gtd.Shell.csproj">
-      <Project>{B5516C60-3F2C-4CF1-9174-ED3ED2C7BF75}</Project>
-      <Name>Gtd.Shell</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

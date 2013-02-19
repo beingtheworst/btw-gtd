@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using Gtd.CoreDomain;
+using Gtd.Redis;
 using Gtd.Shell.Commands;
 using Gtd.Shell.Filters;
 using Gtd.Shell.Projections;
+using ServiceStack.Redis;
 
 namespace Gtd.Shell
 {
@@ -18,8 +21,13 @@ namespace Gtd.Shell
             // setup and wire our console environment
             Log.Info("Starting Being The Worst interactive GTD shell :)");
 
+            var setup = new Setup();
+            setup.UseRedis = true;
+
+            Log.Info(setup.ToString());
+
             Log.Info("");
-            var env = ConsoleEnvironment.Build();
+            var env = ConsoleEnvironment.Build(setup);
             Log.Info("");
             Log.Info("Type 'help' to get more info");
             Log.Info("");
@@ -65,6 +73,19 @@ namespace Gtd.Shell
         }
     }
 
+    public class Setup
+    {
+        public bool UseRedis;
+
+        public override string ToString()
+        {
+            var builder = new StringBuilder();
+            builder.AppendFormat("UseRedis={0}", UseRedis).AppendLine();
+
+            return builder.ToString();
+        }
+    }
+
     public sealed class ConsoleEnvironment
     {
         public IEventStore Store { get; private set; }
@@ -79,18 +100,33 @@ namespace Gtd.Shell
 
         public DateTime CurrentDate { get { return DateTime.Now; } }
 
-        public static ConsoleEnvironment Build()
+        public static ConsoleEnvironment Build(Setup setup)
         {
             var handler = new SynchronousEventHandler();
 
             var inbox = new ConsoleProjection();
             handler.RegisterHandler(inbox);
+            IAppendOnlyStore store;
+            if (setup.UseRedis)
+            {
+                store = new RedisAppendOnlyStore(new RedisClient());
+                try
+                {
+                    store.GetCurrentVersion();
+                }
+                catch (RedisException ex)
+                {
+                    throw new ApplicationException("It looks like redis is not running. Please start Library\\Redis.Win\\redis.server.exe :)");
+                }
+            }
+            else
+            {
+                var file = new FileAppendOnlyStore(new DirectoryInfo(Directory.GetCurrentDirectory()));
+                file.Initialize();
+                store = file;
+            }
 
-            //var store = new InMemoryStore(handler);
             
-
-            var store = new FileAppendOnlyStore(new DirectoryInfo(Directory.GetCurrentDirectory()));
-            store.Initialize();
             var messageStore = new MessageStore(store);
             messageStore.LoadDataContractsFromAssemblyOf(typeof(ActionDefined));
             var currentVersion = store.GetCurrentVersion();

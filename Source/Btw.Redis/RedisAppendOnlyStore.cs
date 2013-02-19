@@ -130,8 +130,6 @@ return events", 0, Encoding.UTF8.GetBytes(start.ToString()), Encoding.UTF8.GetBy
             {
                 yield return new StoreData(items[i], i + start + 1);
             }
-
-            throw new Exception(items.ToArray().ToString());
         }
 
         public void Close()

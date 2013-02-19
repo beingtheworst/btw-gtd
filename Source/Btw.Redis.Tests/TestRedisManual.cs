@@ -17,7 +17,7 @@ namespace Btw.Redis.Tests
             using (var test = new RedisClient())
             using (var store = new RedisAppendOnlyStore(test))
             {
-                store.Append("test", Encoding.UTF8.GetBytes("me data"), -1);
+                store.Append("test2", Encoding.UTF8.GetBytes("me data"), -1);
             }
             
         } 
