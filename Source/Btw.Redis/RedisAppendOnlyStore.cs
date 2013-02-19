@@ -47,14 +47,20 @@ if streamVersion == expected then
 
     redis.call('HSET', 'STORE',storeVersion+1,ARGV[1])
     redis.call('RPUSH',KEYS[1],storeVersion+1)
+    -- TODO: remove this thing from the code!
+    
     return streamVersion+1
 else
     return redis.error_reply('Stream version invalid. Expected ' .. expected .. ' actual ' .. streamVersion)
 end
 ", 1, Encoding.UTF8.GetBytes(streamName), data, Encoding.UTF8.GetBytes(expectedStreamVersion.ToString()));
+
+
             // TODO: catch stream conflicts
 
-         
+
+            // TODO: this is NOT the way to go in production
+            _client.Save();
         }
 
         public IEnumerable<StreamData> ReadRecords(string streamName, long afterVersion, int maxCount)
