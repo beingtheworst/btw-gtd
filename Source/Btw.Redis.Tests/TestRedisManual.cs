@@ -30,6 +30,10 @@ namespace Btw.Redis.Tests
             {
                 var dataWithVersions = store.ReadRecords("test", 0, int.MaxValue).ToArray();
                 Console.WriteLine(dataWithVersions.Length);
+
+                var records = store.ReadRecords(0, int.MaxValue).ToArray();
+                Console.WriteLine(records.Length);
+                
             }
         }
     }

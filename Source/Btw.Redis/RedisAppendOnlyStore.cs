@@ -105,26 +105,26 @@ return events", 1, Encoding.UTF8.GetBytes(streamName), Encoding.UTF8.GetBytes(st
             var end = maxCount == Int32.MaxValue ? maxCount : maxCount + afterVersion - 1;
 
             var items = _client.Eval(@"
-local storeVersion = redis.call('HLEN', 'STORE')
+local store = redis.call('HLEN', 'STORE')
 
-local start = ARGV[1]
-local end = ARGV[2]
+local start = tonumber(ARGV[1])
+local finish = tonumber(ARGV[2])
 
 if start > store then
   start = store
 end
 
-if end > store then
-  end = store
+if finish > store then
+  finish = store
 end
 
 
 local events = {}
 
-for i = start, end do
+for i = start, finish do
     events[i] = redis.call('HGET','STORE',i)    
 end
-return events", 1, Encoding.UTF8.GetBytes(start.ToString()), Encoding.UTF8.GetBytes(end.ToString()));
+return events", 0, Encoding.UTF8.GetBytes(start.ToString()), Encoding.UTF8.GetBytes(end.ToString()));
 
             for (int i = 0; i < items.Length; i++)
             {
