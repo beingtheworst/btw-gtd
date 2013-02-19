@@ -44,7 +44,7 @@ namespace Gtd.Shell
         /// <param name="afterVersion">The after version.</param>
         /// <param name="maxCount">The max count.</param>
         /// <returns></returns>
-        IEnumerable<DataWithKey> ReadRecords(long afterVersion, int maxCount);
+        IEnumerable<StoreData> ReadRecords(long afterVersion, int maxCount);
 
         void Close();
         void ResetStore();
@@ -63,18 +63,16 @@ namespace Gtd.Shell
             Data = data;
         }
     }
-    public sealed class DataWithKey
+    public sealed class StoreData
     {
-        public readonly string Key;
         public readonly byte[] Data;
-        public readonly long StreamVersion;
         public readonly long StoreVersion;
 
-        public DataWithKey(string key, byte[] data, long streamVersion, long storeVersion)
+        public StoreData(byte[] data, long storeVersion)
         {
-            Key = key;
+            
             Data = data;
-            StreamVersion = streamVersion;
+            
             StoreVersion = storeVersion;
         }
     }
@@ -122,7 +120,7 @@ namespace Gtd.Shell
 
         // caches
         readonly ConcurrentDictionary<string, StreamData[]> _cacheByKey = new ConcurrentDictionary<string, StreamData[]>();
-        DataWithKey[] _cacheFull = new DataWithKey[0];
+        StoreData[] _cacheFull = new StoreData[0];
 
         public void Initialize()
         {
@@ -145,7 +143,7 @@ namespace Gtd.Shell
             try
             {
                 _thread.EnterWriteLock();
-                _cacheFull = new DataWithKey[0];
+                _cacheFull = new StoreData[0];
                 foreach (var record in EnumerateHistory())
                 {
                     AddToCaches(record.Name, record.Bytes, record.Stamp);
@@ -256,7 +254,7 @@ namespace Gtd.Shell
         {
             var storeVersion = _cacheFull.Length + 1;
             var record = new StreamData(commit, buffer);
-            _cacheFull = ImmutableAdd(_cacheFull, new DataWithKey(key, buffer, commit, storeVersion));
+            _cacheFull = ImmutableAdd(_cacheFull, new StoreData(buffer, commit));//, buffer, storeVersion
             _cacheByKey.AddOrUpdate(key, s => new[] { record }, (s, records) => ImmutableAdd(records, record));
         }
 
@@ -283,7 +281,7 @@ namespace Gtd.Shell
             return result.Skip((int)afterVersion).Take(maxCount);
         }
 
-        public IEnumerable<DataWithKey> ReadRecords(long afterVersion, int maxCount)
+        public IEnumerable<StoreData> ReadRecords(long afterVersion, int maxCount)
         {
             // collection is immutable so we don't care about locks
             return _cacheFull.Skip((int)afterVersion).Take(maxCount);
@@ -305,7 +303,7 @@ namespace Gtd.Shell
         {
             Close();
             Directory.Delete(_info.FullName, true);
-            _cacheFull = new DataWithKey[0];
+            _cacheFull = new StoreData[0];
             _cacheByKey.Clear();
             Initialize();
         }
@@ -577,7 +575,7 @@ namespace Gtd.Shell
                             throw new InvalidOperationException("Failed to deserialize class, probably event store format changed. Please delete all *.dat files.", ex);
                         }
                     }
-                    yield return new StoreRecord(record.Key, objects, record.StoreVersion, record.StreamVersion);
+                    yield return new StoreRecord(record.StoreVersion, objects);
                 }
             }
         }
@@ -621,17 +619,16 @@ namespace Gtd.Shell
     public struct StoreRecord
     {
         public readonly object[] Items;
-        public readonly long StoreVersion;
+        
         public readonly long StreamVersion;
-        public readonly string Key;
+        
 
 
-        public StoreRecord(string key, object[] items, long storeVersion, long streamVersion)
+        public StoreRecord(long streamVersion, object[] items)
         {
             Items = items;
-            StoreVersion = storeVersion;
             StreamVersion = streamVersion;
-            Key = key;
+            
         }
     }
 

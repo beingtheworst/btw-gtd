@@ -65,7 +65,10 @@ end
             if (maxCount == 0)
                 yield break;
 
-            var start = afterVersion < 0 ? 0 : afterVersion;
+            if (afterVersion < 0)
+                throw new ArgumentOutOfRangeException("afterVersion");
+
+            var start = afterVersion;
             var end = maxCount == Int32.MaxValue ? maxCount : maxCount + afterVersion - 1;
 
             var items = _client.Eval(@"
@@ -83,19 +86,22 @@ return events", 1, Encoding.UTF8.GetBytes(streamName), Encoding.UTF8.GetBytes(st
 
             for (int i = 0; i < items.Length; i++)
             {
-                yield return new StreamData(i+start,items[i]);
+                yield return new StreamData(i+start+1,items[i]);
             }
 
         }
 
-        public IEnumerable<DataWithKey> ReadRecords(long afterVersion, int maxCount)
+        public IEnumerable<StoreData> ReadRecords(long afterVersion, int maxCount)
         {
             if (maxCount < 0)
                 throw new ArgumentOutOfRangeException("maxCount", "Must be zero or greater.");
             if (maxCount == 0)
                 yield break;
 
-            var start = afterVersion < 0 ? 0 : afterVersion;
+            if (afterVersion < 0)
+                throw new ArgumentOutOfRangeException("afterVersion");
+
+            var start = afterVersion;
             var end = maxCount == Int32.MaxValue ? maxCount : maxCount + afterVersion - 1;
 
             var items = _client.Eval(@"
@@ -119,6 +125,12 @@ for i = start, end do
     events[i] = redis.call('HGET','STORE',i)    
 end
 return events", 1, Encoding.UTF8.GetBytes(start.ToString()), Encoding.UTF8.GetBytes(end.ToString()));
+
+            for (int i = 0; i < items.Length; i++)
+            {
+                yield return new StoreData(items[i], i + start + 1);
+            }
+
             throw new Exception(items.ToArray().ToString());
         }
 
