@@ -37,7 +37,7 @@ namespace Gtd.Shell
         /// <param name="afterVersion">The after version.</param>
         /// <param name="maxCount">The max count.</param>
         /// <returns></returns>
-        IEnumerable<DataWithVersion> ReadRecords(string streamName, long afterVersion, int maxCount);
+        IEnumerable<StreamData> ReadRecords(string streamName, long afterVersion, int maxCount);
         /// <summary>
         /// Reads the records across all streams.
         /// </summary>
@@ -51,17 +51,16 @@ namespace Gtd.Shell
         long GetCurrentVersion();
     }
 
-    public sealed class DataWithVersion
+    public struct StreamData
     {
+        
         public readonly long StreamVersion;
-        public readonly long StoreVersion;
         public readonly byte[] Data;
 
-        public DataWithVersion(long streamVersion, byte[] data, long storeVersion)
+        public StreamData(long streamVersion, byte[] data)
         {
             StreamVersion = streamVersion;
             Data = data;
-            StoreVersion = storeVersion;
         }
     }
     public sealed class DataWithKey
@@ -122,7 +121,7 @@ namespace Gtd.Shell
         FileStream _currentWriter;
 
         // caches
-        readonly ConcurrentDictionary<string, DataWithVersion[]> _cacheByKey = new ConcurrentDictionary<string, DataWithVersion[]>();
+        readonly ConcurrentDictionary<string, StreamData[]> _cacheByKey = new ConcurrentDictionary<string, StreamData[]>();
         DataWithKey[] _cacheFull = new DataWithKey[0];
 
         public void Initialize()
@@ -205,7 +204,7 @@ namespace Gtd.Shell
             {
                 _thread.EnterWriteLock();
 
-                var list = _cacheByKey.GetOrAdd(streamName, s => new DataWithVersion[0]);
+                var list = _cacheByKey.GetOrAdd(streamName, s => new StreamData[0]);
                 if (expectedStreamVersion >= 0)
                 {
                     if (list.Length != expectedStreamVersion)
@@ -256,7 +255,7 @@ namespace Gtd.Shell
         void AddToCaches(string key, byte[] buffer, long commit)
         {
             var storeVersion = _cacheFull.Length + 1;
-            var record = new DataWithVersion(commit, buffer, storeVersion);
+            var record = new StreamData(commit, buffer);
             _cacheFull = ImmutableAdd(_cacheFull, new DataWithKey(key, buffer, commit, storeVersion));
             _cacheByKey.AddOrUpdate(key, s => new[] { record }, (s, records) => ImmutableAdd(records, record));
         }
@@ -269,7 +268,7 @@ namespace Gtd.Shell
             return copy;
         }
 
-        public IEnumerable<DataWithVersion> ReadRecords(string streamName, long afterVersion, int maxCount)
+        public IEnumerable<StreamData> ReadRecords(string streamName, long afterVersion, int maxCount)
         {
             if (afterVersion < 0)
                 throw new ArgumentOutOfRangeException("afterVersion", "Must be zero or greater.");
@@ -278,8 +277,8 @@ namespace Gtd.Shell
                 throw new ArgumentOutOfRangeException("maxCount", "Must be more than zero.");
 
             // no lock is needed.
-            DataWithVersion[] list;
-            var result = _cacheByKey.TryGetValue(streamName, out list) ? list : Enumerable.Empty<DataWithVersion>();
+            StreamData[] list;
+            var result = _cacheByKey.TryGetValue(streamName, out list) ? list : Enumerable.Empty<StreamData>();
 
             return result.Skip((int)afterVersion).Take(maxCount);
         }
@@ -520,7 +519,7 @@ namespace Gtd.Shell
             
         }
 
-        public IEnumerable<StoreRecord> EnumerateMessages(string key, long version, int count)
+        public IEnumerable<StreamRecord> EnumerateMessages(string key, long version, int count)
         {
             var records = _appendOnlyStore.ReadRecords(key, 0, int.MaxValue);
             foreach (var record in records)
@@ -537,7 +536,7 @@ namespace Gtd.Shell
                         var len = bin.ReadInt32();
                         objects[i] = RuntimeTypeModel.Default.Deserialize(bin.BaseStream, null, type, len);
                     }
-                    yield return new StoreRecord(key, objects, record.StoreVersion, record.StreamVersion);
+                    yield return new StreamRecord(record.StreamVersion, key, objects);
                 }
             }
         }
@@ -602,6 +601,20 @@ namespace Gtd.Shell
                 }
                 _appendOnlyStore.Append(name, mem.ToArray(), streamVersion);
             }
+        }
+    }
+
+    public struct StreamRecord
+    {
+        public readonly long StreamVersion;
+        public readonly string Key;
+        public readonly object[] Items;
+
+        public StreamRecord(long streamVersion, string key, object[] items)
+        {
+            StreamVersion = streamVersion;
+            Key = key;
+            Items = items;
         }
     }
 
