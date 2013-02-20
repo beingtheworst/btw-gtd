@@ -21,13 +21,9 @@ namespace Gtd.Shell
             // setup and wire our console environment
             Log.Info("Starting Being The Worst interactive GTD shell :)");
 
-            var setup = new Setup();
-            setup.UseRedis = true;
-
-            Log.Info(setup.ToString());
-
+            
             Log.Info("");
-            var env = ConsoleEnvironment.Build(setup);
+            var env = ConsoleEnvironment.Build();
             Log.Info("");
             Log.Info("Type 'help' to get more info");
             Log.Info("");
@@ -73,18 +69,6 @@ namespace Gtd.Shell
         }
     }
 
-    public class Setup
-    {
-        public bool UseRedis;
-
-        public override string ToString()
-        {
-            var builder = new StringBuilder();
-            builder.AppendFormat("UseRedis={0}", UseRedis).AppendLine();
-
-            return builder.ToString();
-        }
-    }
 
     public sealed class ConsoleEnvironment
     {
@@ -100,36 +84,19 @@ namespace Gtd.Shell
 
         public DateTime CurrentDate { get { return DateTime.Now; } }
 
-        public static ConsoleEnvironment Build(Setup setup)
+        public static ConsoleEnvironment Build()
         {
             var handler = new SynchronousEventHandler();
 
             var inbox = new ConsoleProjection();
             handler.RegisterHandler(inbox);
-            IAppendOnlyStore store;
-            if (setup.UseRedis)
-            {
-                store = new RedisAppendOnlyStore(new RedisClient());
-                try
-                {
-                    store.GetCurrentVersion();
-                }
-                catch (RedisException ex)
-                {
-                    throw new ApplicationException("It looks like redis is not running. Please start Library\\Redis.Win\\redis.server.exe :)");
-                }
-            }
-            else
-            {
-                var file = new FileAppendOnlyStore(new DirectoryInfo(Directory.GetCurrentDirectory()));
-                file.Initialize();
-                store = file;
-            }
+            var file = new FileAppendOnlyStore(new DirectoryInfo(Directory.GetCurrentDirectory()));
+            file.Initialize();
 
-            
-            var messageStore = new MessageStore(store);
+
+            var messageStore = new MessageStore(file);
             messageStore.LoadDataContractsFromAssemblyOf(typeof(ActionDefined));
-            var currentVersion = store.GetCurrentVersion();
+            var currentVersion = ((IAppendOnlyStore) file).GetCurrentVersion();
 
             // setup Window size values for Console Window that is 60% of Max Possible Size
             int winWidth = (Console.LargestWindowWidth * 6 / 10);
