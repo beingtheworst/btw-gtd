@@ -5,7 +5,7 @@ using System.Text;
 using Gtd.Shell;
 using ServiceStack.Redis;
 
-namespace Gtd.Redis
+namespace Btw.Redis
 {
     public class RedisAppendOnlyStore : IAppendOnlyStore
     {

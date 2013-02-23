@@ -14,6 +14,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{CBDBCC09-581A-465B-B658-10A7399DAEFF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Btw.Redis.Tests", "Btw.Redis.Tests\Btw.Redis.Tests.csproj", "{E3E34C03-6297-4D4F-8F51-722E864DE1FE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{66A6C5E4-3732-4955-8247-620377E261F2} = {66A6C5E4-3732-4955-8247-620377E261F2}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Btw.Redis", "Btw.Redis\Btw.Redis.csproj", "{66A6C5E4-3732-4955-8247-620377E261F2}"
 EndProject
