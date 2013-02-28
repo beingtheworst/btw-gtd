@@ -5,11 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using Gtd.CoreDomain;
-using Btw.Redis;
 using Gtd.Shell.Commands;
 using Gtd.Shell.Filters;
 using Gtd.Shell.Projections;
-using ServiceStack.Redis;
 
 namespace Gtd.Shell
 {
