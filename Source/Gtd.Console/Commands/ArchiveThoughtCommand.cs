@@ -86,15 +86,28 @@ namespace Gtd.Shell.Commands
             if (string.IsNullOrWhiteSpace(value))
                 return false;
 
-            value = value.Trim();
+            value = value.Trim().ToLowerInvariant();
+
+            switch (value)
+            {
+                case "now":
+                    span = DateTime.UtcNow;
+                    return true;
+                case "today":
+                    span = DateTime.UtcNow.Date.AddHours(8);
+                    return true;
+                case "tomorrow":
+                    span = DateTime.UtcNow.Date.AddHours(8).AddDays(1);
+                    return true;
+            }
 
             try
             {
                 if (TryRepresent(value, new[] {"w", "wk", "week"}, (diff, source) => source.AddDays(7 * diff) , out span))
                     return true;
-                if (TryRepresent(value, new string[] {"d", "day", "days"},(diff, source) => source.AddDays(diff), out span))
+                if (TryRepresent(value, new[] {"d", "day", "days"},(diff, source) => source.AddDays(diff), out span))
                     return true;
-                if (TryRepresent(value, new string[] {"m", "mth", "month"}, (diff, source) => source.AddMonths((int)diff),out span)) ;
+                if (TryRepresent(value, new[] {"m", "mth", "month"}, (diff, source) => source.AddMonths((int)diff),out span)) ;
 
                 
 
