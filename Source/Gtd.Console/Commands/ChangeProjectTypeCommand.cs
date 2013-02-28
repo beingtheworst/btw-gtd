@@ -20,11 +20,11 @@ namespace Gtd.Shell.Commands
             {
                 changeTo = ProjectType.Parallel;
             }
-            else if (lowerInvariant.StartsWith("se"))
+            else if (lowerInvariant.StartsWith("s"))
             {
                 changeTo = ProjectType.Sequential;
             }
-            else if (lowerInvariant.StartsWith("li"))
+            else if (lowerInvariant.StartsWith("l"))
             {
                 changeTo = ProjectType.List;
             }
@@ -35,7 +35,7 @@ namespace Gtd.Shell.Commands
             }
 
 
-            env.TrustedSystem.When(new Gtd.ChangeProjectType(env.Session.SystemId, project.ProjectId, changeTo));
+            env.TrustedSystem.When(new ChangeProjectType(env.Session.SystemId, project.ProjectId, changeTo));
             env.Log.Trace("Projec type changed");
         }
     }
