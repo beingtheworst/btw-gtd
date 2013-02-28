@@ -29,9 +29,10 @@ namespace Gtd.Shell.Filters
             }
             else
             {
-                var filtered = view.Actions
-                                   .Where(v => !v.Completed)
-                                   .Where(v => !v.Archived)
+                var availableActions = view.Actions
+                    .Where(v => !v.Completed)
+                    .Where(v => !v.Archived);
+                var filtered = availableActions
                                    .Where(v => v.StartDate <= DateTime.Now);
 
                 foreach (var action in filtered)
