@@ -2,9 +2,9 @@ namespace Gtd.Shell.Commands
 {
     public sealed class ChangeProjectTypeCommand : IConsoleCommand
     {
-        public string[] Key { get { return new string[] { "type", "cp"};} }
-        public string Usage { get { return @"type <projectId> seq | si | par
-    Change project type"; } }
+        public string[] Key { get { return new[] { "type", "pt", "ct"};} }
+        public string Usage { get { return @"type <projectId> seq | li | par
+    Change project type to Sequential | List | Parallel"; } }
         public void Execute(ConsoleEnvironment env, string[] args)
         {
             if (args.Length != 2)
@@ -24,7 +24,7 @@ namespace Gtd.Shell.Commands
             {
                 changeTo = ProjectType.Sequential;
             }
-            else if (lowerInvariant.StartsWith("si"))
+            else if (lowerInvariant.StartsWith("li"))
             {
                 changeTo = ProjectType.List;
             }
