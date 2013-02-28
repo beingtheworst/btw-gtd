@@ -28,7 +28,7 @@ Set optional Date when project or action is past due"; }
                 return;
             }
 
-            if (!Parser.TryParseDate(value, out span))
+            if (!FriendlyDateParser.TryParseDate(value, out span))
             {
                 throw new KnownConsoleInputError("Failed to parse due date '{0}'", value);
             }

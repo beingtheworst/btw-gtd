@@ -68,6 +68,7 @@
     <Compile Include="Commands\ListActionsCommand.cs" />
     <Compile Include="Commands\ListProjectsCommand.cs" />
     <Compile Include="Commands\KnownConsoleInputError.cs" />
+    <Compile Include="FriendlyDateParser.cs" />
     <Compile Include="Commands\RenameSubjectCommand.cs" />
     <Compile Include="Commands\ViewInboxCommand.cs" />
     <Compile Include="ConsoleSession.cs" />

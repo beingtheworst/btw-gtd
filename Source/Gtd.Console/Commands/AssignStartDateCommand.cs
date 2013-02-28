@@ -32,7 +32,7 @@ Set optional Date when project or action becomes available or relevant";
                 return;
             }
             
-            if (!Parser.TryParseDate(value, out span))
+            if (!FriendlyDateParser.TryParseDate(value, out span))
             {
                 throw new KnownConsoleInputError("Failed to parse start date '{0}'", value);
             }
