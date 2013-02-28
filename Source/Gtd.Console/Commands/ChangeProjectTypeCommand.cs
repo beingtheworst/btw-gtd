@@ -2,7 +2,7 @@ namespace Gtd.Shell.Commands
 {
     public sealed class ChangeProjectTypeCommand : IConsoleCommand
     {
-        public string[] Key { get { return new[] { "type", "pt", "ct"};} }
+        public string[] Key { get { return new[] { "type", "pt", "cp"};} }
         public string Usage { get { return @"type <projectId> seq | li | par
     Change project type to Sequential | List | Parallel"; } }
         public void Execute(ConsoleEnvironment env, string[] args)
