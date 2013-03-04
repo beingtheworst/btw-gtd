@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using Btw.Portable;
 using Gtd.CoreDomain;
 using Gtd.Shell.Commands;
 using Gtd.Shell.Filters;

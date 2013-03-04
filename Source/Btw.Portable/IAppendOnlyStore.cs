@@ -11,8 +11,7 @@ using System.Threading;
 using ProtoBuf;
 using ProtoBuf.Meta;
 
-
-namespace Gtd.Shell
+namespace Btw.Portable
 {
     // [abdullin]: currently we are using append-only store from Lokad.CQRS
 
