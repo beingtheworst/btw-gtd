@@ -1,0 +1,28 @@
+﻿<Properties GitUserInfo="UsingGIT">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Gtd.Console/Program.cs">
+    <Files>
+      <File FileName="Btw.Redis.Tests/TestRedisManual.cs" Line="22" Column="13" />
+      <File FileName="Gtd.Console/Program.cs" Line="128" Column="5" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="Infrastructure" expanded="True">
+            <Node name="Btw.Redis" expanded="True" />
+          </Node>
+          <Node name="Gtd.Shell" expanded="True">
+            <Node name="Program.cs" selected="True" />
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="MonoDevelop.NUnit.TestPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
