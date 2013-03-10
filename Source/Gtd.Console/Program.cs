@@ -71,6 +71,8 @@ namespace Gtd.Shell
 
     public sealed class ConsoleEnvironment
     {
+
+
         public IEventStore Store { get; private set; }
         public ITrustedSystemApplicationService TrustedSystem { get; private set; }
         public IDictionary<string, IConsoleCommand> Commands { get; private set; }
@@ -82,6 +84,11 @@ namespace Gtd.Shell
         public IList<IFilterCriteria> Filters { get; private set; }
 
         public DateTime CurrentDate { get { return DateTime.Now; } }
+
+		public static bool IsMono ()
+		{
+			return typeof (object).Assembly.GetType ("Mono.Runtime") != null;
+		}
 
         public static ConsoleEnvironment Build()
         {
@@ -97,21 +104,28 @@ namespace Gtd.Shell
             messageStore.LoadDataContractsFromAssemblyOf(typeof(ActionDefined));
             var currentVersion = ((IAppendOnlyStore) file).GetCurrentVersion();
 
-            // setup Window size values for Console Window that is 60% of Max Possible Size
-            int winWidth = (Console.LargestWindowWidth * 6 / 10);
-            int winHeight = (Console.LargestWindowHeight * 6 / 10);
+			if (!IsMono ()) {
 
-            // hack - for now, hard code "bigger" buffer than Window sizes above
-            // keep horizontal buffer equal to width - to avoid horizontal scrolling
-            int winBuffWidth = winWidth;
-            int winBuffHeight = winHeight + 300;
-            Console.SetBufferSize(winBuffWidth, winBuffHeight);
 
-            // Buffer is bigger than Window so set the Window Size
-            Console.SetWindowSize(winWidth, winHeight);
 
-            // note that various tricks to center Console Window on launch 
-            // and to change to Font size were ugly (PInvoke, etc.) so left them out for now
+				// setup Window size values for Console Window that is 60% of Max Possible Size
+				int winWidth = (Console.LargestWindowWidth * 6 / 10);
+				int winHeight = (Console.LargestWindowHeight * 6 / 10);
+
+				// hack - for now, hard code "bigger" buffer than Window sizes above
+				// keep horizontal buffer equal to width - to avoid horizontal scrolling
+				int winBuffWidth = winWidth;
+				int winBuffHeight = winHeight + 300;
+
+
+				Console.SetBufferSize (winBuffWidth, winBuffHeight);
+
+				// Buffer is bigger than Window so set the Window Size
+				Console.SetWindowSize (winWidth, winHeight);
+
+				// note that various tricks to center Console Window on launch 
+				// and to change to Font size were ugly (PInvoke, etc.) so left them out for now
+			}
 
             Console.Title = "GTD Interactive Shell - Using Trusted System Id#: 1";
 
