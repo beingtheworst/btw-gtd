@@ -175,7 +175,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
         
     }
 
-    // ActionInfo in an example of an Entity class that represents a GTD Action
+    // ActionInfo is an example of an Entity class that represents a GTD Action
     // that only exists within this transient state class for brief moments at a time.
     // It is one of the multiple possible representations of a GTD Action in the system.
     // (another may be a View of a GTD Action that only exists in the console)
