@@ -8,7 +8,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
     /// (likely milliseconds) when the Aggregate is loaded from Event history and
     /// the Events are replayed through this state class. When changes are made to
     /// an Aggregate, and the results are saved back to the Event Stream state,
-    /// the system drops all references to this class instance and it is garbabge collected.
+    /// the system drops all references to this class instance and it is garbage collected.
     /// </summary>
     public sealed class TrustedSystemState : ITrustedSystemState
     {
