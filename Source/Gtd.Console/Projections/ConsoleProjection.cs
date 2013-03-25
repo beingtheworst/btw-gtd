@@ -107,6 +107,14 @@ namespace Gtd.Shell.Projections
         }
     }
 
+    // This is an in-memory View that the Projection class is updating the state of.
+    // In a production system, Projection classes tend to be updating state
+    // to a persistent disk (file, Redis, etc.) or into some other system 
+    // rather than in-memory.  May also be broken down into smaller Views so that we
+    // don't just throw around one big/large object.
+    // This in-memory View is currently loaded in almost every Console command that
+    // displays information to the shell/console screen.
+    // (ex: Gtd.Shell.Commands.ListActionsCommand)
     public sealed class TrustedSystem
     {
         public List<ThoughtView> Thoughts = new List<ThoughtView>(); 

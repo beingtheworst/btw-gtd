@@ -11,7 +11,7 @@ namespace Gtd.Shell.Commands
             get
             {
                 return @"due <actionId> <date>
-Set optional Date when project or action becomes available or relevant";
+Set optional Date when project or action becomes available or relevant (hide from me until then)";
             }
         }
         public void Execute(ConsoleEnvironment env, string[] args)

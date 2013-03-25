@@ -3,6 +3,13 @@ using System.Collections.Generic;
 
 namespace Gtd.CoreDomain.AppServices.TrustedSystem
 {
+    /// <summary>
+    /// This AggregateState class typically exists for very short periods at a time
+    /// (likely milliseconds) when the Aggregate is loaded from Event history and
+    /// the Events are replayed through this state class. When changes are made to
+    /// an Aggregate, and the results are saved back to the Event Stream state,
+    /// the system drops all references to this class instance and it is garbabge collected.
+    /// </summary>
     public sealed class TrustedSystemState : ITrustedSystemState
     {
         public TrustedSystemState()
@@ -156,6 +163,10 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             Actions[e.ActionId].MarkAsCompleted();
         }
 
+        // The When methods in this transient state class are reacting to 
+        // Events, and this state class tends to contain a lot of 
+        // Entities (things that have Ids we care about).
+        // We see some of these Ids acting as keys to the Dictionaries below.
 
         public readonly IDictionary<ActionId, ActionInfo> Actions = new Dictionary<ActionId, ActionInfo>(); 
         public readonly IDictionary<ProjectId, ProjectInfo> Projects = new Dictionary<ProjectId, ProjectInfo>();
@@ -164,10 +175,21 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
         
     }
 
+    // ActionInfo in an example of an Entity class that represents a GTD Action
+    // that only exists within this transient state class for brief moments at a time.
+    // It is one of the multiple possible representations of a GTD Action in the system.
+    // (another may be a View of a GTD Action that only exists in the console)
+    // ActionInfo is implemented using the CQS pattern. ActionInfo and the other
+    // "Info" classes below have no publically settable properties.
 
-    /// <summary> These Value Objects maintain only invariants within themselves.
-    /// Invariants between entities are maintained by the state.
+    /// <summary> These "Info" objects maintain only invariants within themselves.
+    /// Invariants between entities are maintained by the state. This helps to achieve
+    /// more encapsulated code. This code is pleasant to work with and we know
+    /// that there will be no side effects. Rules/biz logic can be enforced in this class
+    /// and they will not be broken by outside or new parties/developers to the code.
+    /// (ex: if Action is Archived then its current Completion state must never change)
     /// </summary>
+    
     public sealed class ActionInfo
     {
         public ActionId Id { get; private set; }

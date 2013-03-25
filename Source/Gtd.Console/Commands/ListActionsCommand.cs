@@ -23,6 +23,7 @@ namespace Gtd.Shell.Commands
 
             if (args.Length == 0)
             {
+                // GetCurrentSystem is using the TrustedSystem View from the ConsoleProjection class.
                 foreach (var project in env.Session.GetCurrentSystem().ProjectList)
                 {
                     var filtered = env.Session.CurrentFilter.FilterActions(project).ToArray();
