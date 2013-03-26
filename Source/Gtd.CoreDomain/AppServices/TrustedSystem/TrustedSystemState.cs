@@ -81,6 +81,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             Projects[e.ProjectId].ChangeType(e.Type);
         }
 
+        // TODO: Nothing generates this Event yet
         public void When(ActionAssignedToProject e)
         {
             var action = Actions[e.ActionId];
@@ -90,12 +91,14 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             project.AddAction(action.Id);
         }
 
+        // TODO: Nothing generates this Event yet
         public void When(ActionRemovedFromProject e)
         {
             Actions[e.ActionId].RemoveFromProject(e.OldProject);
             Projects[e.OldProject].RemoveAction(e.ActionId);
         }
 
+        // TODO: Nothing generates this Event yet
         public void When(ActionMovedToProject e)
         {
             var action = Actions[e.ActionId];
