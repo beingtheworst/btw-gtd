@@ -3,6 +3,23 @@ using System.Collections.Generic;
 
 namespace Gtd.CoreDomain.AppServices.TrustedSystem
 {
+    /// <summary> This is the behavioral half of our A+ES implementation.
+    /// 
+    /// We split the Aggregate and Event Sourcing (A+ES) implementation
+    /// into two distinct classes:
+    /// - one for state (AggregateNameState),
+    /// - and one for behavior (AggregateName),
+    /// with the state object being held by the behavioral object (this Aggregate class).
+    /// 
+    /// The two objects collaborate exclusively through the Aggregate's Apply() method.
+    /// This ensures that an Aggregate's state is changed only by means of Events.
+    /// When Events cause state changes to an Aggregate, 
+    /// the instant in-memory realization and reflection of this is in AggregateNameState,
+    /// and the durable reflection of these changes are persisted back to 
+    /// the Event Stream by the ApplicationService.  The AppService is what loads and calls 
+    /// the Aggregate and its behaviors, and acts as the
+    /// atomic consistency boundary of an Aggregate & its contents.
+    /// </summary>
     public sealed class TrustedSystemAggregate
     {
         readonly TrustedSystemState _aggState;

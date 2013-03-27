@@ -3,12 +3,25 @@ using System.Collections.Generic;
 
 namespace Gtd.CoreDomain.AppServices.TrustedSystem
 {
-    /// <summary>
+    /// <summary> This is the current in-memory "state" half of our A+ES implementation.
+    /// 
+    /// We split the Aggregate and Event Sourcing (A+ES) implementation
+    /// into two distinct classes:
+    /// - one for state (AggregateNameState),
+    /// - and one for behavior (AggregateName),
+    /// with the state object (this class) being held by the behavioral object (the Aggregate).
+    /// 
+    /// The two objects collaborate exclusively through the Aggregate's Apply() method.
+    /// This ensures that an Aggregate's state is changed only by means of Events.
     /// This AggregateState class typically exists for very short periods at a time
-    /// (likely milliseconds) when the Aggregate is loaded from Event history and
-    /// the Events are replayed through this state class. When changes are made to
-    /// an Aggregate, and the results are saved back to the Event Stream state,
-    /// the system drops all references to this class instance and it is garbage collected.
+    /// (likely milliseconds) when the Aggregate is loaded from Event Stream history and
+    /// the Events are replayed through this state class to derive current Aggregate state.
+    /// This current in-memory state ensures that Aggregate behaviors (methods)
+    /// with multiple steps, have up-to-date state to operate on for each subsequent step.
+    /// 
+    /// When changes are made to an Aggregate, and the results are persisted back to 
+    /// the Event Stream by the ApplicationService, the system drops all references 
+    /// to this state class instance and it is garbage collected.
     /// </summary>
     public sealed class TrustedSystemState : ITrustedSystemState
     {
@@ -47,7 +60,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
         }
 
 
-        // When methods reacting to Events to change in memory state of the Aggregate
+        // When methods reacting to Events to change in-memory state of the Aggregate
 
         public void When(TrustedSystemCreated e)
         {
