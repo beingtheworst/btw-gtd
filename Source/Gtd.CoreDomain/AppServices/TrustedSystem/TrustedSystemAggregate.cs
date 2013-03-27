@@ -20,8 +20,12 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
         /// <param name="newEventThatHappened"></param>
         void Apply(ITrustedSystemEvent newEventThatHappened)
         {
+            // update Agg's in-memory state so if a behavior (method) has 
+            // multiple steps, each subsequent step has up-to-date state to operate on
             _aggState.MakeStateRealize(newEventThatHappened);
 
+            // update Agg's public collection of change causing Events so the 
+            // AppService can use it to persist AggState as appended Events to this Agg's Event Stream
             EventsThatCausedChange.Add((Event)newEventThatHappened);
         }
 
