@@ -5,7 +5,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
 {
     /// <summary> This is the behavioral half of our A+ES implementation.
     /// 
-    /// We split the Aggregate and Event Sourcing (A+ES) implementation
+    /// We split the Aggregates and Event Sourcing (A+ES) implementation
     /// into two distinct classes:
     /// - one for state (AggregateNameState),
     /// - and one for behavior (AggregateName),
