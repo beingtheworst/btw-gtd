@@ -34,7 +34,8 @@ namespace Gtd.Client
                     .When<RequestCapture>().Do(CaptureThought)
                     .When<RequestRemove>().Do(RemoveCapturedThought)
                 .InState(AppState.Loading)
-                    .When<ShowInbox>().Do(_bus.Publish)
+                    .When<RequestShowInbox>().Do(_bus.Publish)
+                    
                     .When<FormLoad>().Do(Deal)
                     .When<AppInit>().Do(_bus.Publish)
                     .When<Event>().Do(PassThroughEvent)
@@ -76,7 +77,7 @@ namespace Gtd.Client
                 _mainQueue.Enqueue(e);
             }
 
-            _mainQueue.Enqueue(new ShowInbox());
+            _mainQueue.Enqueue(new RequestShowInbox());
 
         }
 

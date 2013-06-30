@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Threading;
+using System.Windows.Forms;
 using Gtd.Shell;
 
 namespace Gtd.Client
@@ -74,6 +75,13 @@ namespace Gtd.Client
         /// </summary>
         void Publish(Message message);
     }
+
+    public interface IQueue
+    {
+        void Enqueue(Message message);
+    }
+
+    
 
 
     /// <summary>
@@ -266,9 +274,23 @@ namespace Gtd.Client
         {
             List<IMessageHandler> list;
             if (!_typeLookup.TryGetValue(type, out list)) return;
-            foreach (var handler in list)
+
+            if (typeof(IFormCommand).IsAssignableFrom(type))
             {
-                handler.TryHandle(message);
+                foreach (var handler in list)
+                {
+                    var copy = handler;
+
+                    Form.ActiveForm.Invoke(new Action(() => copy.TryHandle(message)));
+
+                }
+            }
+            else
+            {
+                foreach (var handler in list)
+                {
+                    handler.TryHandle(message);
+                }
             }
         }
     }

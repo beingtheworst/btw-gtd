@@ -119,9 +119,9 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.TreeView _tree;
         private System.Windows.Forms.ToolStripMenuItem inboxToolStripMenuItem;
         protected internal System.Windows.Forms.ToolStripMenuItem captureToolStripMenuItem;
+        public System.Windows.Forms.TreeView _tree;
     }
 }
 

@@ -79,7 +79,7 @@ namespace Gtd.Client
     }
 
     public class InboxViewController : 
-        IHandle<AppInit>, IHandle<ShowInbox>, IHandle<ThoughtCaptured>,  IHandle<ThoughtArchived>
+        IHandle<AppInit>, IHandle<RequestShowInbox>, IHandle<ThoughtCaptured>,  IHandle<ThoughtArchived>
 
     {
         readonly IMainDock _dock;
@@ -90,7 +90,7 @@ namespace Gtd.Client
         public void SubscribeTo(ISubscriber bus)
         {
             bus.Subscribe<AppInit>(this);
-            bus.Subscribe<ShowInbox>(this);
+            bus.Subscribe<RequestShowInbox>(this);
             bus.Subscribe<ThoughtCaptured>(this);
             bus.Subscribe<ThoughtArchived>(this);
         }
@@ -108,7 +108,7 @@ namespace Gtd.Client
             _dock.RegisterDock(_view, "inbox");
         }
 
-        public void Handle(ShowInbox message)
+        public void Handle(RequestShowInbox message)
         {
             _dock.SwitchTo("inbox");
             _queue.Publish(new InboxShown());
@@ -127,7 +127,7 @@ namespace Gtd.Client
 
     }
 
-    public class ShowInbox : Message
+    public class RequestShowInbox : Message
     {
         
     }

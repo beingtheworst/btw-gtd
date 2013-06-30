@@ -78,8 +78,6 @@ namespace Gtd.Client
                     _panels[_activePanel].Visible = true;
                 }));
         }
-
-        
     }
 
     public sealed class MainFormController : IHandle<AppInit>
