@@ -31,6 +31,7 @@
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.button1 = new System.Windows.Forms.Button();
             this._toProject = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // listBox1
@@ -71,16 +72,28 @@
             this._toProject.SelectedIndexChanged += new System.EventHandler(this._toProject_SelectedIndexChanged);
             this._toProject.SelectionChangeCommitted += new System.EventHandler(this._toProject_SelectionChangeCommitted);
             // 
+            // label1
+            // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(111, 262);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(46, 13);
+            this.label1.TabIndex = 3;
+            this.label1.Text = "Move to";
+            // 
             // InboxView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.label1);
             this.Controls.Add(this._toProject);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.listBox1);
             this.Name = "InboxView";
             this.Size = new System.Drawing.Size(298, 295);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -89,5 +102,6 @@
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ComboBox _toProject;
+        private System.Windows.Forms.Label label1;
     }
 }

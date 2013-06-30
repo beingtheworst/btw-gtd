@@ -31,10 +31,9 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.captureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.inboxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.projectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this._tree = new System.Windows.Forms.TreeView();
-            this.projectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -53,7 +52,6 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.captureToolStripMenuItem,
-            this.inboxToolStripMenuItem,
             this.projectToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -64,14 +62,14 @@
             // captureToolStripMenuItem
             // 
             this.captureToolStripMenuItem.Name = "captureToolStripMenuItem";
-            this.captureToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
-            this.captureToolStripMenuItem.Text = "Capture";
+            this.captureToolStripMenuItem.Size = new System.Drawing.Size(110, 20);
+            this.captureToolStripMenuItem.Text = "Capture Thought";
             // 
-            // inboxToolStripMenuItem
+            // projectToolStripMenuItem
             // 
-            this.inboxToolStripMenuItem.Name = "inboxToolStripMenuItem";
-            this.inboxToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
-            this.inboxToolStripMenuItem.Text = "Inbox";
+            this.projectToolStripMenuItem.Name = "projectToolStripMenuItem";
+            this.projectToolStripMenuItem.Size = new System.Drawing.Size(93, 20);
+            this.projectToolStripMenuItem.Text = "Define Project";
             // 
             // splitContainer1
             // 
@@ -93,13 +91,6 @@
             this._tree.Name = "_tree";
             this._tree.Size = new System.Drawing.Size(231, 431);
             this._tree.TabIndex = 0;
-            // 
-            // projectToolStripMenuItem
-            // 
-            this.projectToolStripMenuItem.Name = "projectToolStripMenuItem";
-            this.projectToolStripMenuItem.Size = new System.Drawing.Size(64, 20);
-            this.projectToolStripMenuItem.Text = "+Project";
-            
             // 
             // Form1
             // 
@@ -128,7 +119,6 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.ToolStripMenuItem inboxToolStripMenuItem;
         protected internal System.Windows.Forms.ToolStripMenuItem captureToolStripMenuItem;
         public System.Windows.Forms.TreeView _tree;
         private System.Windows.Forms.ToolStripMenuItem projectToolStripMenuItem;

@@ -47,8 +47,8 @@ namespace Gtd.Client
             controller.SetMainQueue(mainQueue);
             events.SetDispatcher(mainQueue);
 
-            var view = new SystemView();
-            view.Subscribe(bus);
+            var view = new SystemProjection();
+            view.SubscribeTo(bus);
 
             // create services and bind them to the bus
 
@@ -60,7 +60,7 @@ namespace Gtd.Client
             var inboxView = new InboxViewController(form,mainQueue,view);
             inboxView.SubscribeTo(bus);
 
-            var tree = new TreeViewController(form._tree, mainQueue);
+            var tree = new TreeViewController(form._tree, mainQueue,view);
             tree.SubscribeTo(bus);
 
             
@@ -172,8 +172,10 @@ namespace Gtd.Client
         
     }
 
-    public sealed class FormLoad : Message
+    public sealed class FormLoading : Message
     {
         
     }
+
+    public sealed class FormLoaded : Message{}
 }

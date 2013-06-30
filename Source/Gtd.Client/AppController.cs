@@ -37,8 +37,8 @@ namespace Gtd.Client
                     .When<RequestMoveThoughtsToProject>().Do(Handle)
                 .InState(AppState.Loading)
                     .When<RequestShowInbox>().Do(_bus.Publish)
-                    
-                    .When<FormLoad>().Do(Deal)
+                    .When<FormLoaded>().Do(_bus.Publish)
+                    .When<FormLoading>().Do(Deal)
                     .When<AppInit>().Do(_bus.Publish)
                     .When<Event>().Do(PassThroughEvent)
                 .InState(AppState.InboxView)
@@ -54,6 +54,8 @@ namespace Gtd.Client
             _bus.Publish(r);
             ChangeAggregate(a => a.DefineProject(new RequestId(), r.Outcome, new RealTimeProvider() ));
         }
+
+
 
         void Handle(RequestMoveThoughtsToProject r)
         {
@@ -80,7 +82,7 @@ namespace Gtd.Client
             _bus.Publish(e);
         }
 
-        void Deal(FormLoad obj)
+        void Deal(FormLoading obj)
         {
             _bus.Publish(obj);
 
@@ -91,6 +93,8 @@ namespace Gtd.Client
                 _mainQueue.Enqueue(e);
             }
 
+
+            _mainQueue.Enqueue(new FormLoaded());
             _mainQueue.Enqueue(new RequestShowInbox());
 
         }

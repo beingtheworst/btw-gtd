@@ -24,7 +24,8 @@ namespace Gtd.Client
 
 
 
-            Load += (sender, args) => sink.Publish(new FormLoad());
+            Load += (sender, args) => sink.Publish(new FormLoading());
+            //Shown += (sender, args) => sink.Publish(new FormLoaded());
             captureToolStripMenuItem.Click += (sender, args) =>
                 {
                     var c = CaptureThoughtForm.TryGetUserInput(this);

@@ -89,14 +89,14 @@ namespace Gtd.Client
         
         void _toProject_DropDown(object sender, EventArgs e)
         {
-            
+
             _toProject.BeginUpdate();
             try
             {
                 _toProject.Items.Clear();
                 foreach (var info in _view.ListProjects())
                 {
-                    _toProject.Items.Add(new Display(info, info.Outcome));
+                    _toProject.Items.Add(new Display(info.ProjectId, info.Outcome));
                 }
             }
             finally
@@ -107,7 +107,7 @@ namespace Gtd.Client
 
         private void _toProject_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            var id = ((ProjectInfo) (((Display) _toProject.SelectedItem).Value)).Id;
+            var id = ((ProjectId)(((Display)_toProject.SelectedItem).Value));
 
             var thoughtIds = listBox1.SelectedItems.Cast<Thought>().Select(t => t.Id).ToArray();
             _sink.Publish(new RequestMoveThoughtsToProject(thoughtIds, id));
