@@ -28,12 +28,12 @@ namespace Gtd.Client
             captureToolStripMenuItem.Click += (sender, args) =>
                 {
                     var c = CaptureThoughtForm.TryGetUserInput(this);
-                    if (null != c) _sink.Publish(new RequestCapture(c));
+                    if (null != c) _sink.Publish(new RequestCaptureThought(c));
                 };
             projectToolStripMenuItem.Click += (sender, args) =>
                 {
                     var c = DefineProjectForm.TryGetUserInput(this);
-                    if (null != c) _sink.Publish(new RequestNewProject(c));
+                    if (null != c) _sink.Publish(new RequestDefineNewProject(c));
                 };
 
 
@@ -105,32 +105,44 @@ namespace Gtd.Client
         }
     }
 
-    public sealed class RequestNewProject : Message
+    public sealed class RequestMoveThoughtsToProject : Message
+    {
+        public readonly ThoughtId[] Thoughts;
+        public readonly ProjectId Project;
+
+        public RequestMoveThoughtsToProject(ThoughtId[] thoughts, ProjectId project)
+        {
+            Thoughts = thoughts;
+            Project = project;
+        }
+    }
+
+    public sealed class RequestDefineNewProject : Message
     {
         public readonly string Outcome;
 
-        public RequestNewProject(string outcome)
+        public RequestDefineNewProject(string outcome)
         {
             Outcome = outcome;
         }
     }
 
-    public sealed class RequestCapture : Message
+    public sealed class RequestCaptureThought : Message
     {
         public readonly string Thought;
 
-        public RequestCapture(string thought)
+        public RequestCaptureThought(string thought)
         {
             Thought = thought;
         }
     }
 
 
-    public sealed class RequestRemove : Message
+    public sealed class RequestArchiveThought : Message
     {
         public readonly ThoughtId Id;
 
-        public RequestRemove(ThoughtId id)
+        public RequestArchiveThought(ThoughtId id)
         {
             Id = id;
         }

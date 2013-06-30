@@ -73,6 +73,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SystemView.cs" />
     <Compile Include="TreeViewController.cs" />
     <EmbeddedResource Include="CaptureThoughtForm.resx">
       <DependentUpon>CaptureThoughtForm.cs</DependentUpon>

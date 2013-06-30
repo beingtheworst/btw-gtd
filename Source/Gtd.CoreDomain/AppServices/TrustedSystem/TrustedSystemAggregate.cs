@@ -139,6 +139,32 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             Apply(new ActionDefined(_aggState.Id, actionId, projectId, outcome , time));
         }
 
+        public void MoveThoughtsToProject(ThoughtId[] thoughts, ProjectId projectId,
+            ITimeProvider provider)
+        {
+            ProjectInfo p;
+            if (!_aggState.Projects.TryGetValue(projectId, out p))
+            {
+                throw DomainError.Named("unknown-project", "Unknown project {0}", projectId);
+            }
+            var dateTime = provider.GetUtcNow();
+            foreach (var t in thoughts)
+            {
+                ThoughtInfo info;
+                if (!_aggState.Thoughts.TryGetValue(t, out info))
+                {
+                    throw DomainError.Named("unknown-thought", "Unknown thought {0}", t);
+                }
+
+                
+                Apply(new ThoughtArchived(_aggState.Id, t, dateTime));
+                Apply(new ActionDefined(_aggState.Id,new ActionId(Guid.NewGuid()),projectId, info.Subject,dateTime ));
+
+
+            }
+
+        }
+
         public void ArchiveThought(ThoughtId thoughtId, ITimeProvider provider)
         {
             if (!_aggState.Inbox.Contains(thoughtId))

@@ -30,6 +30,7 @@
         {
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.button1 = new System.Windows.Forms.Button();
+            this._toProject = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // listBox1
@@ -49,7 +50,7 @@
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button1.Enabled = false;
-            this.button1.Location = new System.Drawing.Point(13, 259);
+            this.button1.Location = new System.Drawing.Point(3, 259);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 1;
@@ -57,10 +58,24 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // _toProject
+            // 
+            this._toProject.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this._toProject.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this._toProject.FormattingEnabled = true;
+            this._toProject.Location = new System.Drawing.Point(163, 259);
+            this._toProject.Name = "_toProject";
+            this._toProject.Size = new System.Drawing.Size(121, 21);
+            this._toProject.TabIndex = 2;
+            this._toProject.DropDown += new System.EventHandler(this._toProject_DropDown);
+            this._toProject.SelectedIndexChanged += new System.EventHandler(this._toProject_SelectedIndexChanged);
+            this._toProject.SelectionChangeCommitted += new System.EventHandler(this._toProject_SelectionChangeCommitted);
+            // 
             // InboxView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this._toProject);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.listBox1);
             this.Name = "InboxView";
@@ -73,5 +88,6 @@
 
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ComboBox _toProject;
     }
 }

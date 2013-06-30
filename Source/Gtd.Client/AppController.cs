@@ -7,7 +7,7 @@ namespace Gtd.Client
 {
     public sealed class AppController : IHandle<Message>
     {
-        IPublisher _bus;
+        readonly IPublisher _bus;
         readonly IEventStore _store;
         QueuedHandler _mainQueue;
 
@@ -31,9 +31,10 @@ namespace Gtd.Client
             return new FsmBuilder<AppState>()
                 .InAllStates()
                     .When<InboxShown>().Do(shown => _state = AppState.InboxView)
-                    .When<RequestCapture>().Do(CaptureThought)
-                    .When<RequestRemove>().Do(RemoveCapturedThought)
-                    .When<RequestNewProject>().Do(DefineNewProject)
+                    .When<RequestCaptureThought>().Do(Handle)
+                    .When<RequestArchiveThought>().Do(Handle)
+                    .When<RequestDefineNewProject>().Do(Handle)
+                    .When<RequestMoveThoughtsToProject>().Do(Handle)
                 .InState(AppState.Loading)
                     .When<RequestShowInbox>().Do(_bus.Publish)
                     
@@ -48,20 +49,26 @@ namespace Gtd.Client
                 .Build(() => (int) _state);
         }
 
-        void DefineNewProject(RequestNewProject r)
+        void Handle(RequestDefineNewProject r)
         {
             _bus.Publish(r);
             ChangeAggregate(a => a.DefineProject(new RequestId(), r.Outcome, new RealTimeProvider() ));
         }
 
-        void RemoveCapturedThought(RequestRemove r)
+        void Handle(RequestMoveThoughtsToProject r)
+        {
+            _bus.Publish(r);
+            ChangeAggregate(a => a.MoveThoughtsToProject(r.Thoughts, r.Project, new RealTimeProvider()));
+        }
+
+        void Handle(RequestArchiveThought r)
         {
             // do something
             _bus.Publish(r);
             ChangeAggregate(a => a.ArchiveThought(r.Id,new RealTimeProvider()));
         }
 
-        void CaptureThought(RequestCapture c)
+        void Handle(RequestCaptureThought c)
         {
             _bus.Publish(c);
 

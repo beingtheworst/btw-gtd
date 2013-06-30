@@ -9,10 +9,15 @@ namespace Gtd.Client
     {
 
         IPublisher _sink;
-        public InboxView(IPublisher sink)
+        readonly ISystemView _view;
+
+        public InboxView(IPublisher sink, ISystemView view)
         {
             _sink = sink;
+            _view = view;
             InitializeComponent();
+
+            _toProject.Enabled = false;
         }
 
         sealed class Thought
@@ -67,19 +72,70 @@ namespace Gtd.Client
         {
             foreach (Thought index in listBox1.SelectedItems)
             {
-                _sink.Publish(new RequestRemove(index.Id));
+                _sink.Publish(new RequestArchiveThought(index.Id));
             }
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             button1.Enabled = listBox1.SelectedIndices.Count > 0;
+            _toProject.Enabled = listBox1.SelectedIndices.Count > 0;
         }
 
+        private void _toProject_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+        
+        void _toProject_DropDown(object sender, EventArgs e)
+        {
+            
+            _toProject.BeginUpdate();
+            try
+            {
+                _toProject.Items.Clear();
+                foreach (var info in _view.ListProjects())
+                {
+                    _toProject.Items.Add(new Display(info, info.Outcome));
+                }
+            }
+            finally
+            {
+                _toProject.EndUpdate();
+            }
+        }
+
+        private void _toProject_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            var id = ((ProjectInfo) (((Display) _toProject.SelectedItem).Value)).Id;
+
+            var thoughtIds = listBox1.SelectedItems.Cast<Thought>().Select(t => t.Id).ToArray();
+            _sink.Publish(new RequestMoveThoughtsToProject(thoughtIds, id));
+        }
     }
 
+    public sealed class Display
+    {
+        public object Value;
+        public string Text;
+
+        public Display(object value, string text)
+        {
+            Value = value;
+            Text = text;
+        }
+
+        public override string ToString()
+        {
+            return Text;
+        }
+    }
+
+    
+
+
     public class InboxViewController : 
-        IHandle<AppInit>, IHandle<RequestShowInbox>, IHandle<ThoughtCaptured>,  IHandle<ThoughtArchived>
+        IHandle<AppInit>, IHandle<RequestShowInbox>, IHandle<ThoughtCaptured>,  IHandle<ThoughtArchived>, IHandle<ProjectDefined>
 
     {
         readonly IMainDock _dock;
@@ -93,13 +149,14 @@ namespace Gtd.Client
             bus.Subscribe<RequestShowInbox>(this);
             bus.Subscribe<ThoughtCaptured>(this);
             bus.Subscribe<ThoughtArchived>(this);
+            bus.Subscribe<ProjectDefined>(this);
         }
 
-        public InboxViewController(IMainDock dock, IPublisher queue)
+        public InboxViewController(IMainDock dock, IPublisher queue, ISystemView view)
         {
             _dock = dock;
             _queue = queue;
-            _view = new InboxView(queue);
+            _view = new InboxView(queue, view);
             
         }
 
@@ -124,7 +181,13 @@ namespace Gtd.Client
             _view.RemoveThought(message.ThoughtId);
         }
 
+        IDictionary<ProjectId,string> _projects = new Dictionary<ProjectId, string>(); 
 
+
+        public void Handle(ProjectDefined message)
+        {
+            _projects.Add(message.ProjectId, message.ProjectOutcome);
+        }
     }
 
     public class RequestShowInbox : Message

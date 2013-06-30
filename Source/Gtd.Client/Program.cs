@@ -47,6 +47,9 @@ namespace Gtd.Client
             controller.SetMainQueue(mainQueue);
             events.SetDispatcher(mainQueue);
 
+            var view = new SystemView();
+            view.Subscribe(bus);
+
             // create services and bind them to the bus
 
             var form = new Form1(mainQueue);
@@ -54,14 +57,13 @@ namespace Gtd.Client
             bus.Subscribe<AppInit>(main);
 
 
-            var inboxView = new InboxViewController(form,mainQueue);
+            var inboxView = new InboxViewController(form,mainQueue,view);
             inboxView.SubscribeTo(bus);
 
             var tree = new TreeViewController(form._tree, mainQueue);
             tree.SubscribeTo(bus);
+
             
-
-
             mainQueue.Enqueue(new AppInit());
             mainQueue.Start();
             

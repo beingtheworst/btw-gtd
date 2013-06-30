@@ -8,7 +8,7 @@ namespace Gtd.Client
         IHandle<AppInit>, 
         IHandle<ThoughtCaptured>, 
         IHandle<ThoughtArchived>,
-        IHandle<ProjectDefined>
+        IHandle<ProjectDefined>, IHandle<ActionDefined>
     {
         readonly TreeView _tree;
         readonly IPublisher _queue;
@@ -28,6 +28,7 @@ namespace Gtd.Client
             bus.Subscribe<ThoughtCaptured>(this);
             bus.Subscribe<ThoughtArchived>(this);
             bus.Subscribe<ProjectDefined>(this);
+            bus.Subscribe<ActionDefined>(this);
         }
 
         public void Handle(AppInit message)
@@ -80,6 +81,11 @@ namespace Gtd.Client
                     var node = _tree.Nodes.Add(message.ProjectId.ToString(), message.ProjectOutcome);
                     _projectNodes[message.ProjectId] = node;
                 });
+        }
+
+        public void Handle(ActionDefined message)
+        {
+            
         }
     }
 
