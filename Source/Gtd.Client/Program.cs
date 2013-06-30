@@ -25,7 +25,7 @@ namespace Gtd.Client
 
             var bus = new InMemoryBus("UI");
 
-            var form = new Form1();
+            
 
 
             var file = new FileAppendOnlyStore(new DirectoryInfo(Directory.GetCurrentDirectory()));
@@ -49,7 +49,7 @@ namespace Gtd.Client
 
             // create services and bind them to the bus
 
-            
+            var form = new Form1(mainQueue);
             var main = new MainFormController(form, mainQueue);
             bus.Subscribe<AppInit>(main);
 

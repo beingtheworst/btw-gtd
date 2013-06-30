@@ -1,13 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace Gtd.Client
 {
-    public sealed class TreeViewController : IHandle<AppInit>, IHandle<ThoughtCaptured>, IHandle<ThoughtArchived>
+    public sealed class TreeViewController : 
+        IHandle<AppInit>, 
+        IHandle<ThoughtCaptured>, 
+        IHandle<ThoughtArchived>,
+        IHandle<ProjectDefined>
     {
         readonly TreeView _tree;
         readonly IPublisher _queue;
-        TreeNode _treeNode;
+        TreeNode _inboxNode;
+        
 
         public TreeViewController(TreeView tree, IPublisher queue)
         {
@@ -21,6 +27,7 @@ namespace Gtd.Client
             bus.Subscribe<AppInit>(this);
             bus.Subscribe<ThoughtCaptured>(this);
             bus.Subscribe<ThoughtArchived>(this);
+            bus.Subscribe<ProjectDefined>(this);
         }
 
         public void Handle(AppInit message)
@@ -30,12 +37,12 @@ namespace Gtd.Client
 
         void InitTreeView()
         {
-            _treeNode = _tree.Nodes.Add("inbox", "Inbox");
+            _inboxNode = _tree.Nodes.Add("inbox", "Inbox");
         }
 
         void UpdateInboxNode(int count)
         {
-            _treeNode.Text = string.Format("Inbox ({0})", count);
+            _inboxNode.Text = string.Format("Inbox ({0})", count);
         }
 
         int thoughts = 0;
@@ -51,6 +58,28 @@ namespace Gtd.Client
             thoughts -= 1;
 
             _tree.Invoke(new Action(() => UpdateInboxNode(thoughts)));
+        }
+
+        void Sync(Action act)
+        {
+            if (_tree.InvokeRequired)
+            {
+                _tree.Invoke(act);
+                return;
+            }
+            act();
+        }
+
+
+        IDictionary<ProjectId, TreeNode> _projectNodes = new Dictionary<ProjectId, TreeNode>(); 
+
+        public void Handle(ProjectDefined message)
+        {
+            Sync(() =>
+                {
+                    var node = _tree.Nodes.Add(message.ProjectId.ToString(), message.ProjectOutcome);
+                    _projectNodes[message.ProjectId] = node;
+                });
         }
     }
 

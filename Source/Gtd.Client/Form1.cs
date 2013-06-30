@@ -15,28 +15,32 @@ namespace Gtd.Client
 {
     public partial class Form1 : Form, IMainDock
     {
-        public Form1()
+        readonly IPublisher _sink;
+
+        public Form1(IPublisher sink)
         {
+            _sink = sink;
             InitializeComponent();
 
 
-            
 
+            Load += (sender, args) => sink.Publish(new FormLoad());
+            captureToolStripMenuItem.Click += (sender, args) =>
+                {
+                    var c = CaptureThoughtForm.TryGetUserInput(this);
+                    if (null != c) _sink.Publish(new RequestCapture(c));
+                };
+            projectToolStripMenuItem.Click += (sender, args) =>
+                {
+                    var c = DefineProjectForm.TryGetUserInput(this);
+                    if (null != c) _sink.Publish(new RequestNewProject(c));
+                };
 
-            
 
             // wire in all controllers
-
-
-
-
         }
 
 
-
-
-        
-     
         private void Form1_Load(object sender, EventArgs e)
         {
             // when we are loading the form for the 1st time
@@ -78,6 +82,8 @@ namespace Gtd.Client
                     _panels[_activePanel].Visible = true;
                 }));
         }
+
+        
     }
 
     public sealed class MainFormController : IHandle<AppInit>
@@ -90,8 +96,7 @@ namespace Gtd.Client
             _mainForm = mainForm;
             _queue = queue;
 
-            _mainForm.Load += (sender, args) => _queue.Publish(new FormLoad());
-            _mainForm.captureToolStripMenuItem.Click += (sender, args) => _queue.Publish(new RequestCapture());
+            
         }
 
         public void Handle(AppInit message)
@@ -100,7 +105,25 @@ namespace Gtd.Client
         }
     }
 
-    public sealed class RequestCapture : Message {}
+    public sealed class RequestNewProject : Message
+    {
+        public readonly string Outcome;
+
+        public RequestNewProject(string outcome)
+        {
+            Outcome = outcome;
+        }
+    }
+
+    public sealed class RequestCapture : Message
+    {
+        public readonly string Thought;
+
+        public RequestCapture(string thought)
+        {
+            Thought = thought;
+        }
+    }
 
 
     public sealed class RequestRemove : Message

@@ -33,6 +33,7 @@ namespace Gtd.Client
                     .When<InboxShown>().Do(shown => _state = AppState.InboxView)
                     .When<RequestCapture>().Do(CaptureThought)
                     .When<RequestRemove>().Do(RemoveCapturedThought)
+                    .When<RequestNewProject>().Do(DefineNewProject)
                 .InState(AppState.Loading)
                     .When<RequestShowInbox>().Do(_bus.Publish)
                     
@@ -47,6 +48,12 @@ namespace Gtd.Client
                 .Build(() => (int) _state);
         }
 
+        void DefineNewProject(RequestNewProject r)
+        {
+            _bus.Publish(r);
+            ChangeAggregate(a => a.DefineProject(new RequestId(), r.Outcome, new RealTimeProvider() ));
+        }
+
         void RemoveCapturedThought(RequestRemove r)
         {
             // do something
@@ -58,7 +65,7 @@ namespace Gtd.Client
         {
             _bus.Publish(c);
 
-            ChangeAggregate(aggregate => aggregate.CaptureThought(new RequestId(), "test", new RealTimeProvider() ));
+            ChangeAggregate(aggregate => aggregate.CaptureThought(new RequestId(), c.Thought, new RealTimeProvider() ));
         }
 
         void PassThroughEvent(Event e)

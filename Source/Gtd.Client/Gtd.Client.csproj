@@ -45,6 +45,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppController.cs" />
+    <Compile Include="CaptureThoughtForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CaptureThoughtForm.Designer.cs">
+      <DependentUpon>CaptureThoughtForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DefineProjectForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DefineProjectForm.Designer.cs">
+      <DependentUpon>DefineProjectForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -62,6 +74,12 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TreeViewController.cs" />
+    <EmbeddedResource Include="CaptureThoughtForm.resx">
+      <DependentUpon>CaptureThoughtForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DefineProjectForm.resx">
+      <DependentUpon>DefineProjectForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
