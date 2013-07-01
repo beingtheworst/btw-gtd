@@ -52,7 +52,7 @@ namespace Gtd.Client
 
             // create services and bind them to the bus
 
-            var form = new Form1(mainQueue);
+            var form = new MainForm(mainQueue);
             var main = new MainFormController(form, mainQueue);
             bus.Subscribe<AppInit>(main);
 

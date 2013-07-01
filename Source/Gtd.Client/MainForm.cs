@@ -13,11 +13,11 @@ using Gtd.Shell.Projections;
 
 namespace Gtd.Client
 {
-    public partial class Form1 : Form, IMainDock
+    public partial class MainForm : Form, IMainDock
     {
         readonly IPublisher _sink;
 
-        public Form1(IPublisher sink)
+        public MainForm(IPublisher sink)
         {
             _sink = sink;
             InitializeComponent();
@@ -89,10 +89,10 @@ namespace Gtd.Client
 
     public sealed class MainFormController : IHandle<AppInit>
     {
-        Form1 _mainForm;
+        MainForm _mainForm;
         IPublisher _queue;
 
-        public MainFormController(Form1 mainForm, IPublisher queue)
+        public MainFormController(MainForm mainForm, IPublisher queue)
         {
             _mainForm = mainForm;
             _queue = queue;
