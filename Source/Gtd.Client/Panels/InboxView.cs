@@ -37,7 +37,7 @@ namespace Gtd.Client
             }
         }
 
-        IDictionary<ThoughtId, Thought> _thoughts = new Dictionary<ThoughtId, Thought>(); 
+        readonly IDictionary<ThoughtId, Thought> _thoughts = new Dictionary<ThoughtId, Thought>(); 
 
         public void AddThought(string thought, ThoughtId thoughtId)
         {
@@ -65,7 +65,6 @@ namespace Gtd.Client
                 listBox1.Items.Remove(t);
                 _thoughts.Remove(t.Id);
             }
-            
         }
 
         private void button1_Click(object sender, EventArgs e)
