@@ -7,8 +7,7 @@ namespace Gtd.Client
 {
     public partial class InboxView : UserControl
     {
-
-        IPublisher _sink;
+        readonly IPublisher _sink;
         readonly ISystemView _view;
 
         public InboxView(IPublisher sink, ISystemView view)
