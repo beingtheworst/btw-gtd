@@ -47,7 +47,7 @@ namespace Gtd.Client
             controller.SetMainQueue(mainQueue);
             events.SetDispatcher(mainQueue);
 
-            var view = new SystemProjection();
+            var view = new SystemProjection(events);
             view.SubscribeTo(bus);
 
             // create services and bind them to the bus

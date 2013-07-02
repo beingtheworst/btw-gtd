@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Gtd.CoreDomain;
 
 namespace Gtd.Client
 {
@@ -208,9 +209,17 @@ namespace Gtd.Client
         IHandle<ThoughtArchived>,
         IHandle<ProjectDefined>,
         IHandle<ActionDefined>,
-        ISystemView
+        IHandle<FormLoading>,
+    ISystemView
 
     {
+        readonly IEventStore _store;
+
+        public SystemProjection(IEventStore store)
+        {
+            _store = store;
+        }
+
         public void SubscribeTo(ISubscriber bus)
         {
             bus.Subscribe<TrustedSystemCreated>(this);
@@ -218,6 +227,7 @@ namespace Gtd.Client
             bus.Subscribe<ThoughtArchived>(this);
             bus.Subscribe<ProjectDefined>(this);
             bus.Subscribe<ActionDefined>(this);
+            bus.Subscribe<FormLoading>(this);
         }
 
         public SystemView ViewInstance = new SystemView();
@@ -318,6 +328,14 @@ namespace Gtd.Client
         public void Handle(ActionDueDateMoved e)
         {
             Update(e.Id, s => s.DueDateAssigned(e.ActionId, e.NewDueDate));
+        }
+
+        public void Handle(FormLoading _)
+        {
+            foreach (var e in _store.LoadEventStream("app").Events)
+            {
+                ((dynamic) this).Handle((dynamic) e);
+            }
         }
     }
 }

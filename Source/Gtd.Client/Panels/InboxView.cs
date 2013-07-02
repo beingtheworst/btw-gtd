@@ -104,6 +104,28 @@ namespace Gtd.Client
         {
             _adapter.WhenCaptureThoughtClicked();
         }
+
+        public void LoadThoughts(ThoughtView[] listInbox)
+        {
+            listBox1.BeginUpdate();
+            try
+            {
+                foreach (var view in listInbox)
+                {
+                    var t = new Thought(view.Subject, view.Id);
+                    _thoughts.Add(view.Id, t);
+                    listBox1.Items.Add(t);
+                }
+                listBox1.Visible = listBox1.Items.Count > 0;
+
+                
+
+            }
+            finally
+            {
+                listBox1.EndUpdate();
+            }
+        }
     }
 
     public sealed class Display

@@ -6,7 +6,7 @@ namespace Gtd.Client
         IHandle<AppInit>,
         IHandle<RequestShowInbox>,
         IHandle<ThoughtCaptured>,  
-        IHandle<ThoughtArchived>
+        IHandle<ThoughtArchived>, IHandle<FormLoaded>
     {
         readonly IMainDock _dock;
         readonly IPublisher _queue;
@@ -20,6 +20,7 @@ namespace Gtd.Client
             bus.Subscribe<RequestShowInbox>(this);
             bus.Subscribe<ThoughtCaptured>(this);
             bus.Subscribe<ThoughtArchived>(this);
+            bus.Subscribe<FormLoaded>(this);
         }
 
         public InboxViewAdapter(IMainDock dock, IPublisher queue, ISystemView view)
@@ -35,8 +36,16 @@ namespace Gtd.Client
             _dock.RegisterDock(_control, "inbox");
         }
 
+        bool _shown = false; 
+
         public void Handle(RequestShowInbox message)
         {
+            if (!_shown)
+            {
+                _control.Sync(() => _control.LoadThoughts(_view.ListInbox()));
+                _shown = true;
+            }
+
             _dock.SwitchTo("inbox");
             _queue.Publish(new InboxShown());
         }
@@ -72,6 +81,11 @@ namespace Gtd.Client
         public IList<ProjectView> ListProjects()
         {
             return _view.ListProjects();
+        }
+
+        public void Handle(FormLoaded message)
+        {
+            
         }
     }
 }

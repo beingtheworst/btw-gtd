@@ -86,13 +86,6 @@ namespace Gtd.Client
         {
             _bus.Publish(obj);
 
-            // freeze UI somehow
-
-            foreach (var e in _store.LoadEventStream("app").Events)
-            {
-                _mainQueue.Enqueue(e);
-            }
-
 
             _mainQueue.Enqueue(new FormLoaded());
             _mainQueue.Enqueue(new RequestShowInbox());
