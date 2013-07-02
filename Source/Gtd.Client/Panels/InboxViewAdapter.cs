@@ -2,15 +2,15 @@
 
 namespace Gtd.Client
 {
-    public class InboxViewController : 
+    public class InboxViewAdapter : 
         IHandle<AppInit>,
         IHandle<RequestShowInbox>,
         IHandle<ThoughtCaptured>,  
         IHandle<ThoughtArchived>
-
     {
         readonly IMainDock _dock;
         readonly IPublisher _queue;
+        readonly ISystemView _view;
 
         readonly InboxView _control;
 
@@ -22,12 +22,12 @@ namespace Gtd.Client
             bus.Subscribe<ThoughtArchived>(this);
         }
 
-        public InboxViewController(IMainDock dock, IPublisher queue, ISystemView view)
+        public InboxViewAdapter(IMainDock dock, IPublisher queue, ISystemView view)
         {
             _dock = dock;
             _queue = queue;
-            _control = new InboxView(queue, view);
-            
+            _view = view;
+            _control = new InboxView(this);
         }
 
         public void Handle(AppInit message)
@@ -49,6 +49,29 @@ namespace Gtd.Client
         public void Handle(ThoughtArchived message)
         {
             _control.Sync(() => _control.RemoveThought(message.ThoughtId));
+        }
+
+        public void WhenRequestedThoughtsArchival(IEnumerable<ThoughtId> thoughtIds)
+        {
+            foreach (var id in thoughtIds)
+            {
+                _queue.Publish(new RequestArchiveThought(id));
+            }
+        }
+
+        public void WhenRequestedMoveThoughtsToProject(ProjectId id, ThoughtId[] thoughtIds)
+        {
+            _queue.Publish(new RequestMoveThoughtsToProject(thoughtIds, id));
+        }
+
+        public void WhenCaptureThoughtClicked()
+        {
+            _queue.Publish(new CaptureThoughtClicked());
+        }
+
+        public IList<ProjectView> ListProjects()
+        {
+            return _view.ListProjects();
         }
     }
 }

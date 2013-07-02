@@ -57,7 +57,7 @@ namespace Gtd.Client
             main.SubscribeTo(bus);
 
 
-            var inboxView = new InboxViewController(form,mainQueue,view);
+            var inboxView = new InboxViewAdapter(form,mainQueue,view);
             inboxView.SubscribeTo(bus);
 
             var tree = new TreeViewController(form._tree, mainQueue,view);

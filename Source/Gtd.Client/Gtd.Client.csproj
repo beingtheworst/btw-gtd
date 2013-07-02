@@ -71,7 +71,7 @@
     <Compile Include="Panels\InboxView.Designer.cs">
       <DependentUpon>InboxView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Panels\InboxViewController.cs" />
+    <Compile Include="Panels\InboxViewAdapter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SystemView.cs" />

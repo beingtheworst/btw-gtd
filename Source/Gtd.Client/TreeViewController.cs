@@ -47,8 +47,6 @@ namespace Gtd.Client
 
         void UpdateInboxNode()
         {
-            
-
             _inboxNode.Text = string.Format("Inbox ({0})", _view.ListInbox().Length);
         }
 

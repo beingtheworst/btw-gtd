@@ -7,13 +7,11 @@ namespace Gtd.Client
 {
     public partial class InboxView : UserControl
     {
-        readonly IPublisher _sink;
-        readonly ISystemView _view;
+        readonly InboxViewAdapter _adapter;
 
-        public InboxView(IPublisher sink, ISystemView view)
+        public InboxView(InboxViewAdapter adapter)
         {
-            _sink = sink;
-            _view = view;
+            _adapter = adapter;
             InitializeComponent();
 
             _toProject.Enabled = false;
@@ -59,10 +57,12 @@ namespace Gtd.Client
 
         private void button1_Click(object sender, EventArgs e)
         {
-            foreach (Thought index in listBox1.SelectedItems)
-            {
-                _sink.Publish(new RequestArchiveThought(index.Id));
-            }
+            _adapter.WhenRequestedThoughtsArchival(GetSelectedThoughtIds());
+        }
+
+        ThoughtId[] GetSelectedThoughtIds()
+        {
+            return listBox1.SelectedItems.Cast<Thought>().Select(t => t.Id).ToArray();
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -83,7 +83,7 @@ namespace Gtd.Client
             try
             {
                 _toProject.Items.Clear();
-                foreach (var info in _view.ListProjects())
+                foreach (var info in _adapter.ListProjects())
                 {
                     _toProject.Items.Add(new Display(info.ProjectId, info.Outcome));
                 }
@@ -97,14 +97,12 @@ namespace Gtd.Client
         private void _toProject_SelectionChangeCommitted(object sender, EventArgs e)
         {
             var id = ((ProjectId)(((Display)_toProject.SelectedItem).Value));
-
-            var thoughtIds = listBox1.SelectedItems.Cast<Thought>().Select(t => t.Id).ToArray();
-            _sink.Publish(new RequestMoveThoughtsToProject(thoughtIds, id));
+            _adapter.WhenRequestedMoveThoughtsToProject(id, GetSelectedThoughtIds());
         }
 
         private void _capture_Click(object sender, EventArgs e)
         {
-            _sink.Publish(new CaptureThoughtClicked());
+            _adapter.WhenCaptureThoughtClicked();
         }
     }
 
