@@ -43,11 +43,12 @@ namespace Gtd.Client
 
         public void Handle(ThoughtCaptured message)
         {
-            _control.AddThought(message.Thought, message.ThoughtId);
+            _control.Sync(() => _control.AddThought(message.Thought, message.ThoughtId));
+            
         }
         public void Handle(ThoughtArchived message)
         {
-            _control.RemoveThought(message.ThoughtId);
+            _control.Sync(() => _control.RemoveThought(message.ThoughtId));
         }
     }
 }

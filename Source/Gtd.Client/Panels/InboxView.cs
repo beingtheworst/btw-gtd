@@ -41,30 +41,21 @@ namespace Gtd.Client
 
         public void AddThought(string thought, ThoughtId thoughtId)
         {
-            if (InvokeRequired)
-            {
-                Invoke(new Action(() => AddThought(thought, thoughtId)));
-                return;
-            }
             var t = new Thought(thought, thoughtId);
             _thoughts.Add(thoughtId, t);
             listBox1.Items.Add(t);
+            listBox1.Visible = listBox1.Items.Count > 0;
         }
 
         public void RemoveThought(ThoughtId thought)
         {
-            if (InvokeRequired)
-            {
-                Invoke(new Action(() => RemoveThought(thought)));
-                return;
-            }
-
             Thought t;
             if (_thoughts.TryGetValue(thought, out t))
             {
                 listBox1.Items.Remove(t);
                 _thoughts.Remove(t.Id);
             }
+            listBox1.Visible = listBox1.Items.Count > 0;
         }
 
         private void button1_Click(object sender, EventArgs e)
