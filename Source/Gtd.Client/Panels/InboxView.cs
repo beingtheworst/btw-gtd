@@ -111,6 +111,11 @@ namespace Gtd.Client
             var thoughtIds = listBox1.SelectedItems.Cast<Thought>().Select(t => t.Id).ToArray();
             _sink.Publish(new RequestMoveThoughtsToProject(thoughtIds, id));
         }
+
+        private void _capture_Click(object sender, EventArgs e)
+        {
+            _sink.Publish(new CaptureThoughtClicked());
+        }
     }
 
     public sealed class Display

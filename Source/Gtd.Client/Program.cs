@@ -54,7 +54,7 @@ namespace Gtd.Client
 
             var form = new MainForm(mainQueue);
             var main = new MainFormController(form, mainQueue);
-            bus.Subscribe<AppInit>(main);
+            main.SubscribeTo(bus);
 
 
             var inboxView = new InboxViewController(form,mainQueue,view);

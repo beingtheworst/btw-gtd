@@ -26,11 +26,7 @@ namespace Gtd.Client
 
             Load += (sender, args) => sink.Publish(new FormLoading());
             //Shown += (sender, args) => sink.Publish(new FormLoaded());
-            captureToolStripMenuItem.Click += (sender, args) =>
-                {
-                    var c = CaptureThoughtForm.TryGetUserInput(this);
-                    if (null != c) _sink.Publish(new RequestCaptureThought(c));
-                };
+            captureToolStripMenuItem.Click += (sender, args) => _sink.Publish(new CaptureThoughtClicked());
             projectToolStripMenuItem.Click += (sender, args) =>
                 {
                     var c = DefineProjectForm.TryGetUserInput(this);
@@ -87,7 +83,9 @@ namespace Gtd.Client
         
     }
 
-    public sealed class MainFormController : IHandle<AppInit>
+    public sealed class MainFormController : 
+        IHandle<AppInit>,
+        IHandle<CaptureThoughtClicked>
     {
         MainForm _mainForm;
         IPublisher _queue;
@@ -100,9 +98,40 @@ namespace Gtd.Client
             
         }
 
+        public void SubscribeTo(ISubscriber bus)
+        {
+            bus.Subscribe<AppInit>(this);
+            bus.Subscribe<CaptureThoughtClicked>(this);
+        }
+
         public void Handle(AppInit message)
         {
             
+        }
+
+        public void Handle(CaptureThoughtClicked message)
+        {
+            _mainForm.Sync(() =>
+                {
+                    var c = CaptureThoughtForm.TryGetUserInput(_mainForm);
+                    if (null != c) _queue.Publish(new RequestCaptureThought(c));
+                });
+            
+        }
+    }
+
+    public static class ExtendControl
+    {
+        public static void Sync(this Control self, Action act)
+        {
+            if (self.InvokeRequired)
+            {
+                self.Invoke(act);
+            }
+            else
+            {
+                act();
+            }
         }
     }
 
@@ -137,6 +166,13 @@ namespace Gtd.Client
             Thought = thought;
         }
     }
+
+    public sealed class CaptureThoughtClicked : Message
+    {
+        
+    }
+
+
 
 
     public sealed class RequestArchiveThought : Message
