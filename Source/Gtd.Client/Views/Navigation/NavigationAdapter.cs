@@ -22,7 +22,7 @@ namespace Gtd.Client
 
         NavigationAdapter(Region region, IPublisher queue, ISystemView view)
         {
-            _tree = new NavigationView();
+            _tree = new NavigationView(this);
             _region = region;
             _queue = queue;
             _view = view;
@@ -100,10 +100,13 @@ namespace Gtd.Client
 
         void AddProjectNode(ProjectId projectId, string outcome)
         {
-            var key = projectId.ToString();
+            var key = "project|" + projectId.ToString();
             _tree.AddNode(key, outcome);
             _projectNodes[projectId] = key;
+            _nodes[key] = projectId;
         }
+
+        IDictionary<string,object> _nodes = new Dictionary<string, object>(); 
 
         public void Handle(ActionDefined message)
         {
@@ -125,6 +128,16 @@ namespace Gtd.Client
                     UpdateInboxNode();
                 });
 
+        }
+
+        public void WhenNodeSelected(string tag)
+        {
+            var node = _nodes[tag];
+
+            if (node is ProjectId)
+            {
+                _queue.Publish(new RequestShowProject((ProjectId) node));
+            }
         }
     }
 

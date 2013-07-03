@@ -53,6 +53,8 @@ namespace Gtd.Client
             // then we add adapters on top of that
 
             var form = new MainForm();
+
+
             MainFormAdapter.Wire(form, mainQueue, bus);
             InboxAdapter.Wire(form.MainRegion, mainQueue, bus, view);
             NavigationAdapter.Wire(form.NavigationRegion, mainQueue, bus, view);
