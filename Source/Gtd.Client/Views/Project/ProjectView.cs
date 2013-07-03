@@ -13,6 +13,7 @@ namespace Gtd.Client.Views.Actions
         {
             _actionList.BeginUpdate();
 
+            _projectName.Text = project.GetTitle();
             try
             {
                 _actionList.Items.Clear();
@@ -87,15 +88,9 @@ namespace Gtd.Client.Views.Actions
 
             control.AttachTo(adapter);
 
-
-
-
             mainRegion.RegisterDock(control, "project");
 
             bus.Subscribe<RequestShowProject>(adapter);
-
-
-
         }
 
         public void Handle(RequestShowProject message)
