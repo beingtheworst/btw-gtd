@@ -1,24 +1,33 @@
 ﻿namespace Gtd.Client
 {
-    public sealed class MainFormController : 
+    public sealed class MainFormAdapter : 
         IHandle<AppInit>,
         IHandle<CaptureThoughtClicked>
     {
         readonly MainForm _mainForm;
         readonly IPublisher _queue;
 
-        public MainFormController(MainForm mainForm, IPublisher queue)
+        public MainFormAdapter(MainForm mainForm, IPublisher queue)
         {
             _mainForm = mainForm;
             _queue = queue;
-
-            
         }
 
-        public void SubscribeTo(ISubscriber bus)
+        public static MainFormAdapter Wire(MainForm form, IPublisher queue, ISubscriber bus)
         {
-            bus.Subscribe<AppInit>(this);
-            bus.Subscribe<CaptureThoughtClicked>(this);
+            var adapter = new MainFormAdapter(form, queue);
+
+            bus.Subscribe<AppInit>(adapter);
+            bus.Subscribe<CaptureThoughtClicked>(adapter);
+            
+            form.SetAdapter(adapter);
+            
+            return adapter;
+        }
+
+        public void Publish(Message m)
+        {
+            _queue.Publish(m);
         }
 
         public void Handle(AppInit message)

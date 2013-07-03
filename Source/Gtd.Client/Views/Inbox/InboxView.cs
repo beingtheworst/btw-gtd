@@ -7,9 +7,9 @@ namespace Gtd.Client
 {
     public partial class InboxView : UserControl
     {
-        readonly InboxViewController _controller;
+        readonly InboxAdapter _controller;
 
-        public InboxView(InboxViewController controller)
+        public InboxView(InboxAdapter controller)
         {
             _controller = controller;
             InitializeComponent();

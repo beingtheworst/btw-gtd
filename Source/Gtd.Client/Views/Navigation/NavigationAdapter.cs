@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace Gtd.Client
 {
-    public sealed class NavigationViewController : 
+    public sealed class NavigationAdapter : 
         IHandle<AppInit>, 
         IHandle<FormLoaded>,
     IHandle<ThoughtCaptured>, 
@@ -18,21 +18,25 @@ namespace Gtd.Client
 
         bool _visible;
 
-        public NavigationViewController(TreeView tree, IPublisher queue, ISystemView view)
+        NavigationAdapter(TreeView tree, IPublisher queue, ISystemView view)
         {
             _tree = tree;
             _queue = queue;
             _view = view;
         }
 
-        public void SubscribeTo(ISubscriber bus)
+        public static NavigationAdapter Wire(TreeView control, IPublisher queue, ISubscriber bus, ISystemView view)
         {
-            bus.Subscribe<AppInit>(this);
-            bus.Subscribe<ThoughtCaptured>(this);
-            bus.Subscribe<ThoughtArchived>(this);
-            bus.Subscribe<ProjectDefined>(this);
-            bus.Subscribe<ActionDefined>(this);
-            bus.Subscribe<FormLoaded>(this);
+            var adapter  = new NavigationAdapter(control, queue, view);
+
+            bus.Subscribe<AppInit>(adapter);
+            bus.Subscribe<ThoughtCaptured>(adapter);
+            bus.Subscribe<ThoughtArchived>(adapter);
+            bus.Subscribe<ProjectDefined>(adapter);
+            bus.Subscribe<ActionDefined>(adapter);
+            bus.Subscribe<FormLoaded>(adapter);
+
+            return adapter ;
         }
 
         public void Handle(AppInit message)

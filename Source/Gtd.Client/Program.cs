@@ -52,53 +52,17 @@ namespace Gtd.Client
 
             // create services and bind them to the bus
 
-            var form = new MainForm(mainQueue);
-            var main = new MainFormController(form, mainQueue);
-            main.SubscribeTo(bus);
+            var form = new MainForm();
 
 
-            var inboxView = new InboxViewController(form,mainQueue,view);
-            inboxView.SubscribeTo(bus);
+            MainFormAdapter.Wire(form, mainQueue, bus);
+            InboxAdapter.Wire(form, mainQueue, bus, view);
+            NavigationAdapter.Wire(form._tree, mainQueue, bus, view);
 
-            var tree = new NavigationViewController(form._tree, mainQueue,view);
-            tree.SubscribeTo(bus);
-
-            
             mainQueue.Enqueue(new AppInit());
             mainQueue.Start();
             
             Application.Run(form);
-
-
-
-            //var handler = new SynchronousEventHandler();
-
-
-            //var form = new Form1();
-            //handler.RegisterHandler(form);
-            //var file = new FileAppendOnlyStore(new DirectoryInfo(Directory.GetCurrentDirectory()));
-            //file.Initialize();
-
-
-            //var messageStore = new MessageStore(file);
-            //messageStore.LoadDataContractsFromAssemblyOf(typeof(ActionDefined));
-
-            //foreach (var record in messageStore.EnumerateAllItems(0, int.MaxValue))
-            //{
-            //    foreach (var item in record.Items.OfType<Event>())
-            //    {
-            //        handler.Handle(item);
-            //    }
-            //}
-
-            //var events = new EventStore(messageStore, handler);
-
-            //var trustedSystem = new TrustedSystemAppService(events, new RealTimeProvider());
-
-
-            //form.App = trustedSystem;
-            //handler.RegisterHandler(form);
-            //Application.Run(form);
         }
     }
 

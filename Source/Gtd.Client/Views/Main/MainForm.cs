@@ -1,40 +1,33 @@
 ﻿using System;
-using System.Collections.Concurrent;
+
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using Gtd.CoreDomain;
-using Gtd.Shell;
-using Gtd.Shell.Projections;
 
 namespace Gtd.Client
 {
     public partial class MainForm : Form, IMainDock
     {
-        readonly IPublisher _sink;
+        
+         MainFormAdapter _adapter;
 
-        public MainForm(IPublisher sink)
+        public MainForm()
         {
-            _sink = sink;
             InitializeComponent();
+        }
 
+        public void SetAdapter(MainFormAdapter adapter)
+        {
+            _adapter = adapter;
 
+            Load += (sender, args) => _adapter.Publish(new FormLoading());
+            captureToolStripMenuItem.Click += (sender, args) => _adapter.Publish(new CaptureThoughtClicked());
 
-            Load += (sender, args) => sink.Publish(new FormLoading());
-            //Shown += (sender, args) => sink.Publish(new FormLoaded());
-            captureToolStripMenuItem.Click += (sender, args) => _sink.Publish(new CaptureThoughtClicked());
             projectToolStripMenuItem.Click += (sender, args) =>
-                {
-                    var c = DefineProjectForm.TryGetUserInput(this);
-                    if (null != c) _sink.Publish(new RequestDefineNewProject(c));
-                };
+            {
+                var c = DefineProjectForm.TryGetUserInput(this);
+                if (null != c) _adapter.Publish(new RequestDefineNewProject(c));
+            };
 
-
-            // wire in all controllers
         }
 
 
@@ -46,7 +39,7 @@ namespace Gtd.Client
 
         }
 
-        IDictionary<string, UserControl> _panels = new Dictionary<string, UserControl>();
+        readonly IDictionary<string, UserControl> _panels = new Dictionary<string, UserControl>();
         string _activePanel = null;
 
         public void RegisterDock(UserControl control, string key)
