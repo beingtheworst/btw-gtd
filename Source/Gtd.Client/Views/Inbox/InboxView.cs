@@ -7,11 +7,11 @@ namespace Gtd.Client
 {
     public partial class InboxView : UserControl
     {
-        readonly InboxViewAdapter _adapter;
+        readonly InboxViewController _controller;
 
-        public InboxView(InboxViewAdapter adapter)
+        public InboxView(InboxViewController controller)
         {
-            _adapter = adapter;
+            _controller = controller;
             InitializeComponent();
 
             _toProject.Enabled = false;
@@ -57,7 +57,7 @@ namespace Gtd.Client
 
         private void button1_Click(object sender, EventArgs e)
         {
-            _adapter.WhenRequestedThoughtsArchival(GetSelectedThoughtIds());
+            _controller.WhenRequestedThoughtsArchival(GetSelectedThoughtIds());
         }
 
         ThoughtId[] GetSelectedThoughtIds()
@@ -83,7 +83,7 @@ namespace Gtd.Client
             try
             {
                 _toProject.Items.Clear();
-                foreach (var info in _adapter.ListProjects())
+                foreach (var info in _controller.ListProjects())
                 {
                     _toProject.Items.Add(new Display(info.ProjectId, info.Outcome));
                 }
@@ -97,12 +97,12 @@ namespace Gtd.Client
         private void _toProject_SelectionChangeCommitted(object sender, EventArgs e)
         {
             var id = ((ProjectId)(((Display)_toProject.SelectedItem).Value));
-            _adapter.WhenRequestedMoveThoughtsToProject(id, GetSelectedThoughtIds());
+            _controller.WhenRequestedMoveThoughtsToProject(id, GetSelectedThoughtIds());
         }
 
         private void _capture_Click(object sender, EventArgs e)
         {
-            _adapter.WhenCaptureThoughtClicked();
+            _controller.WhenCaptureThoughtClicked();
         }
 
         public void LoadThoughts(ThoughtView[] listInbox)

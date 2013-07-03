@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace Gtd.Client
 {
-    public sealed class TreeViewController : 
+    public sealed class NavigationViewController : 
         IHandle<AppInit>, 
         IHandle<FormLoaded>,
     IHandle<ThoughtCaptured>, 
@@ -18,7 +18,7 @@ namespace Gtd.Client
 
         bool _visible;
 
-        public TreeViewController(TreeView tree, IPublisher queue, ISystemView view)
+        public NavigationViewController(TreeView tree, IPublisher queue, ISystemView view)
         {
             _tree = tree;
             _queue = queue;
