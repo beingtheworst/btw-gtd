@@ -9,6 +9,7 @@ namespace Gtd.Client
     {
         IList<ProjectView> ListProjects();
         ThoughtView[] ListInbox();
+        ProjectView GetProjectOrNull(ProjectId id);
     }
 
     public sealed class SystemView 
@@ -232,7 +233,14 @@ namespace Gtd.Client
 
         public SystemView ViewInstance = new SystemView();
 
-
+        public ProjectView GetProjectOrNull(ProjectId id)
+        {
+            // HACK!!!
+            var firstOrDefault = ViewInstance.Systems.Select(v => v.Value).FirstOrDefault();
+            if (null == firstOrDefault)
+                return null;
+            return firstOrDefault.ProjectDict[id];
+        }
 
         public IList<ProjectView> ListProjects()
         {

@@ -100,7 +100,7 @@ namespace Gtd.Client
 
         void AddProjectNode(ProjectId projectId, string outcome)
         {
-            var key = "project|" + projectId.ToString();
+            var key = ToKey(projectId);
             _tree.AddNode(key, outcome);
             _projectNodes[projectId] = key;
             _nodes[key] = projectId;
@@ -113,6 +113,11 @@ namespace Gtd.Client
             //Sync(() => 
             //    _v
             //    _projectNodes[message.ProjectId].Text);
+        }
+
+        static string ToKey(ProjectId id)
+        {
+            return "project|" + id.Id;
         }
 
         public void Handle(FormLoaded message)

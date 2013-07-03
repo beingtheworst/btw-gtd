@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Btw.Portable;
+using Gtd.Client.Views.Actions;
 using Gtd.CoreDomain;
 
 namespace Gtd.Client
@@ -58,6 +59,7 @@ namespace Gtd.Client
             MainFormAdapter.Wire(form, mainQueue, bus);
             InboxAdapter.Wire(form.MainRegion, mainQueue, bus, view);
             NavigationAdapter.Wire(form.NavigationRegion, mainQueue, bus, view);
+            ProjectAdapter.Wire(form.MainRegion, mainQueue, bus, view);
 
             mainQueue.Enqueue(new AppInit());
             mainQueue.Start();
@@ -142,7 +144,7 @@ namespace Gtd.Client
                     _container.Controls.Add(control);
 
                     _controls.Add(key, control);
-                    _activeControl = control;
+                    //_activeControl = control;
                 });
         }
 
@@ -150,12 +152,20 @@ namespace Gtd.Client
         {
             _container.Sync(() =>
                 {
+                    var requestedControl = _controls[key];
+                    if (requestedControl == _activeControl)
+                        return;
+
                     if (_activeControl != null)
                     {
                         _activeControl.Visible = false;
                     }
-                    _activeControl = _controls[key];
-                    _activeControl.Visible = true;
+
+                    requestedControl.BringToFront();
+                    requestedControl.Visible = true;
+                    
+                    _activeControl = requestedControl;
+                    
                 });
         }
     }

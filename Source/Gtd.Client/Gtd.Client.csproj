@@ -57,6 +57,12 @@
     <Compile Include="DefineProjectForm.Designer.cs">
       <DependentUpon>DefineProjectForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\Project\ProjectView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Project\ProjectView.Designer.cs">
+      <DependentUpon>ProjectView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\Main\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -88,6 +94,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DefineProjectForm.resx">
       <DependentUpon>DefineProjectForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Project\ProjectView.resx">
+      <DependentUpon>ProjectView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Main\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
