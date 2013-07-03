@@ -20,6 +20,8 @@ namespace Gtd.Client
             NavigationRegion = new Region(splitContainer1.Panel1);
         }
 
+
+
         public void SetAdapter(MainFormAdapter adapter)
         {
             _adapter = adapter;
@@ -44,12 +46,13 @@ namespace Gtd.Client
 
         }
 
-        
 
-
-
-
-
+        public void Log(string toString)
+        {
+            var format = string.Format("{0:HH:mm:ss} {1}{2}", DateTime.UtcNow, toString, Environment.NewLine);
+            _log.AppendText(format);
+            _log.ScrollToCaret();
+        }
     }
 
     public static class ExtendControl

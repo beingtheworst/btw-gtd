@@ -267,7 +267,7 @@ namespace Gtd.Client
             {
                 DispatchByType(message, type);
                 type = type.BaseType;
-            } while (type != typeof(Message));
+            } while (type != typeof(object));
         }
 
         void DispatchByType(Message message, Type type)
