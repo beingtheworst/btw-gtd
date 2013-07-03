@@ -87,7 +87,7 @@ namespace Gtd.Client
         }
 
 
-        IDictionary<ProjectId, string> _projectNodes = new Dictionary<ProjectId, string>(); 
+        readonly IDictionary<ProjectId, string> _projectNodes = new Dictionary<ProjectId, string>(); 
 
         
 
@@ -132,6 +132,11 @@ namespace Gtd.Client
 
         public void WhenNodeSelected(string tag)
         {
+            if (tag == "inbox")
+            {
+                _queue.Publish(new RequestShowInbox());
+                return;
+            }
             var node = _nodes[tag];
 
             if (node is ProjectId)
