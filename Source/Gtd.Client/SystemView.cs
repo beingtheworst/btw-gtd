@@ -211,6 +211,7 @@ namespace Gtd.Client
         IHandle<ProjectDefined>,
         IHandle<ActionDefined>,
         IHandle<FormLoading>,
+        IHandle<ActionCompleted>,
     ISystemView
 
     {
@@ -229,6 +230,7 @@ namespace Gtd.Client
             bus.Subscribe<ProjectDefined>(this);
             bus.Subscribe<ActionDefined>(this);
             bus.Subscribe<FormLoading>(this);
+            bus.Subscribe<ActionCompleted>(this);
         }
 
         public SystemView ViewInstance = new SystemView();

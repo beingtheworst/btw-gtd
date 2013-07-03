@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using Gtd.Client.Views.Actions;
 using Gtd.CoreDomain;
 using Gtd.CoreDomain.AppServices.TrustedSystem;
 
@@ -35,6 +36,7 @@ namespace Gtd.Client
                     .When<RequestArchiveThought>().Do(Handle)
                     .When<RequestDefineNewProject>().Do(Handle)
                     .When<RequestMoveThoughtsToProject>().Do(Handle)
+                    .When<RequestActionCheck>().Do(Handle)
                 .InState(AppState.Loading)
                     .When<RequestShowInbox>().Do(_bus.Publish)
                     .When<FormLoaded>().Do(_bus.Publish)
@@ -55,7 +57,10 @@ namespace Gtd.Client
             ChangeAggregate(a => a.DefineProject(new RequestId(), r.Outcome, new RealTimeProvider() ));
         }
 
-
+        void Handle(RequestActionCheck r)
+        {
+            ChangeAggregate(a => a.CompleteAction(r.Id, new RealTimeProvider()));
+        }
 
         void Handle(RequestMoveThoughtsToProject r)
         {
