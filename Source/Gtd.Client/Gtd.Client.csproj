@@ -77,6 +77,12 @@
     <Compile Include="SystemView.cs" />
     <Compile Include="Views\Main\MainFormAdapter.cs" />
     <Compile Include="Views\Navigation\NavigationAdapter.cs" />
+    <Compile Include="Views\Navigation\NavigationView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Navigation\NavigationView.Designer.cs">
+      <DependentUpon>NavigationView.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="CaptureThoughtForm.resx">
       <DependentUpon>CaptureThoughtForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -98,6 +104,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Views\Navigation\NavigationView.resx">
+      <DependentUpon>NavigationView.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

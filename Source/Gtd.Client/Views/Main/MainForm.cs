@@ -5,14 +5,19 @@ using System.Windows.Forms;
 
 namespace Gtd.Client
 {
-    public partial class MainForm : Form, IMainDock
+    public partial class MainForm : Form
     {
         
          MainFormAdapter _adapter;
+        public readonly Region MainRegion;
+        public readonly Region NavigationRegion;
 
         public MainForm()
         {
             InitializeComponent();
+
+            MainRegion = new Region(splitContainer1.Panel2);
+            NavigationRegion = new Region(splitContainer1.Panel1);
         }
 
         public void SetAdapter(MainFormAdapter adapter)
@@ -39,41 +44,12 @@ namespace Gtd.Client
 
         }
 
-        readonly IDictionary<string, UserControl> _panels = new Dictionary<string, UserControl>();
-        string _activePanel = null;
-
-        public void RegisterDock(UserControl control, string key)
-        {
-            
-            var panel = splitContainer1.Panel2;
-
-            panel.Invoke(new Action(() =>
-                {
-                    control.Visible = false;
-                    control.Dock = DockStyle.Fill;
-                    panel.Controls.Add(control);
-
-                    _panels.Add(key, control);
-                }));
-
-            
-        }
-
-        public void SwitchTo(string key)
-        {
-            var panel = splitContainer1.Panel2;
-            panel.Invoke(new Action(() =>
-                {
-                    if (_activePanel != null)
-                    {
-                        _panels[_activePanel].Visible = false;
-                    }
-                    _activePanel = key;
-                    _panels[_activePanel].Visible = true;
-                }));
-        }
-
         
+
+
+
+
+
     }
 
     public static class ExtendControl

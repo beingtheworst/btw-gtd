@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using Gtd.Client.Views.Navigation;
 
 namespace Gtd.Client
 {
@@ -11,21 +12,23 @@ namespace Gtd.Client
         IHandle<ThoughtArchived>,
         IHandle<ProjectDefined>, IHandle<ActionDefined>
     {
-        readonly TreeView _tree;
+        readonly NavigationView _tree;
+        readonly Region _region;
         readonly IPublisher _queue;
         readonly ISystemView _view;
-        TreeNode _inboxNode;
+        
 
         bool _visible;
 
-        NavigationAdapter(TreeView tree, IPublisher queue, ISystemView view)
+        NavigationAdapter(Region region, IPublisher queue, ISystemView view)
         {
-            _tree = tree;
+            _tree = new NavigationView();
+            _region = region;
             _queue = queue;
             _view = view;
         }
 
-        public static NavigationAdapter Wire(TreeView control, IPublisher queue, ISubscriber bus, ISystemView view)
+        public static NavigationAdapter Wire(Region control, IPublisher queue, ISubscriber bus, ISystemView view)
         {
             var adapter  = new NavigationAdapter(control, queue, view);
 
@@ -36,22 +39,24 @@ namespace Gtd.Client
             bus.Subscribe<ActionDefined>(adapter);
             bus.Subscribe<FormLoaded>(adapter);
 
+
+
             return adapter ;
         }
 
         public void Handle(AppInit message)
         {
-            _tree.Invoke(new Action(InitTreeView));
+            _region.RegisterDock(_tree, "nav-tree");
+            _region.SwitchTo("nav-tree");
+
+            _tree.Sync(() => _tree.AddNode("inbox","Inbox"));
         }
 
-        void InitTreeView()
-        {
-            _inboxNode = _tree.Nodes.Add("inbox", "Inbox");
-        }
+        
 
         void UpdateInboxNode()
         {
-            _inboxNode.Text = string.Format("Inbox ({0})", _view.ListInbox().Length);
+            _tree.UpdateNode("inbox",string.Format("Inbox ({0})", _view.ListInbox().Length));
         }
 
         
@@ -82,7 +87,7 @@ namespace Gtd.Client
         }
 
 
-        IDictionary<ProjectId, TreeNode> _projectNodes = new Dictionary<ProjectId, TreeNode>(); 
+        IDictionary<ProjectId, string> _projectNodes = new Dictionary<ProjectId, string>(); 
 
         
 
@@ -95,8 +100,9 @@ namespace Gtd.Client
 
         void AddProjectNode(ProjectId projectId, string outcome)
         {
-            var node = _tree.Nodes.Add(projectId.ToString(), outcome);
-            _projectNodes[projectId] = node;
+            var key = projectId.ToString();
+            _tree.AddNode(key, outcome);
+            _projectNodes[projectId] = key;
         }
 
         public void Handle(ActionDefined message)

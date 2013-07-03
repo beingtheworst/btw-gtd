@@ -33,10 +33,8 @@
             this.captureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.projectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this._tree = new System.Windows.Forms.TreeView();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -76,23 +74,11 @@
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.Location = new System.Drawing.Point(0, 24);
             this.splitContainer1.Name = "splitContainer1";
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this._tree);
             this.splitContainer1.Size = new System.Drawing.Size(693, 431);
             this.splitContainer1.SplitterDistance = 231;
             this.splitContainer1.TabIndex = 2;
             // 
-            // _tree
-            // 
-            this._tree.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._tree.Location = new System.Drawing.Point(0, 0);
-            this._tree.Name = "_tree";
-            this._tree.Size = new System.Drawing.Size(231, 431);
-            this._tree.TabIndex = 0;
-            // 
-            // Form1
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -101,12 +87,11 @@
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Name = "Form1";
+            this.Name = "MainForm";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.splitContainer1.Panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -120,7 +105,6 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.SplitContainer splitContainer1;
         protected internal System.Windows.Forms.ToolStripMenuItem captureToolStripMenuItem;
-        public System.Windows.Forms.TreeView _tree;
         private System.Windows.Forms.ToolStripMenuItem projectToolStripMenuItem;
     }
 }

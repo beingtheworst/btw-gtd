@@ -8,13 +8,13 @@ namespace Gtd.Client
         IHandle<ThoughtCaptured>,  
         IHandle<ThoughtArchived>, IHandle<FormLoaded>
     {
-        readonly IMainDock _dock;
+        readonly Region _dock;
         readonly IPublisher _queue;
         readonly ISystemView _view;
 
         readonly InboxView _control;
 
-        InboxAdapter(IMainDock dock, IPublisher queue, ISystemView view)
+        InboxAdapter(Region dock, IPublisher queue, ISystemView view)
         {
             _dock = dock;
             _queue = queue;
@@ -22,7 +22,7 @@ namespace Gtd.Client
             _control = new InboxView(this);
         }
 
-        public static InboxAdapter Wire(MainForm form, IPublisher queue, ISubscriber bus, ISystemView view)
+        public static InboxAdapter Wire(Region form, IPublisher queue, ISubscriber bus, ISystemView view)
         {
             var adapter = new InboxAdapter(form, queue, view);
 

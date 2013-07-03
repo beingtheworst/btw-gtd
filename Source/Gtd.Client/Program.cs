@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Windows.Forms;
 using Btw.Portable;
 using Gtd.CoreDomain;
-using Gtd.Shell;
-using Gtd.Shell.Projections;
 
 namespace Gtd.Client
 {
@@ -52,12 +49,13 @@ namespace Gtd.Client
 
             // create services and bind them to the bus
 
+            // we wire all controls together in a native way.
+            // then we add adapters on top of that
+
             var form = new MainForm();
-
-
             MainFormAdapter.Wire(form, mainQueue, bus);
-            InboxAdapter.Wire(form, mainQueue, bus, view);
-            NavigationAdapter.Wire(form._tree, mainQueue, bus, view);
+            InboxAdapter.Wire(form.MainRegion, mainQueue, bus, view);
+            NavigationAdapter.Wire(form.NavigationRegion, mainQueue, bus, view);
 
             mainQueue.Enqueue(new AppInit());
             mainQueue.Start();
@@ -121,10 +119,43 @@ namespace Gtd.Client
     }
 
 
-    public interface IMainDock
+    
+    public sealed class Region 
     {
-        void RegisterDock(UserControl control, string key);
-        void SwitchTo(string key);
+        readonly Control _container;
+        IDictionary<string,Control> _controls= new Dictionary<string, Control>();
+        Control _activeControl;
+
+        public Region(Control container)
+        {
+            _container = container;
+        }
+
+        public void RegisterDock(UserControl control, string key)
+        {
+            _container.Sync(() =>
+                {
+                    control.Visible = false;
+                    control.Dock = DockStyle.Fill;
+                    _container.Controls.Add(control);
+
+                    _controls.Add(key, control);
+                    _activeControl = control;
+                });
+        }
+
+        public void SwitchTo(string key)
+        {
+            _container.Sync(() =>
+                {
+                    if (_activeControl != null)
+                    {
+                        _activeControl.Visible = false;
+                    }
+                    _activeControl = _controls[key];
+                    _activeControl.Visible = true;
+                });
+        }
     }
 
 
