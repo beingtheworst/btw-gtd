@@ -5,10 +5,9 @@ using System.Windows.Forms;
 
 namespace Gtd.Client
 {
-    public partial class MainForm : Form
+    public partial class MainForm : Form, ILogControl
     {
-        
-         MainFormAdapter _adapter;
+        MainFormAdapter _adapter;
         public readonly Region MainRegion;
         public readonly Region NavigationRegion;
 
@@ -49,11 +48,15 @@ namespace Gtd.Client
 
         public void Log(string toString)
         {
-            var format = string.Format("{0:HH:mm:ss} {1}{2}", DateTime.UtcNow, toString, Environment.NewLine);
-            _log.AppendText(format);
-            _log.ScrollToCaret();
+            _log.Sync(() =>
+                {
+                    var format = string.Format("{0:HH:mm:ss} {1}{2}", DateTime.UtcNow, toString, Environment.NewLine);
+                    _log.AppendText(format);
+                    _log.ScrollToCaret();
+                });
         }
     }
+
 
     public static class ExtendControl
     {

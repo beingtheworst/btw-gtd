@@ -60,6 +60,7 @@ namespace Gtd.Client
             InboxAdapter.Wire(form.MainRegion, mainQueue, bus, view);
             NavigationAdapter.Wire(form.NavigationRegion, mainQueue, bus, view);
             ProjectAdapter.Wire(form.MainRegion, mainQueue, bus, view);
+            LogController.Wire(form, bus);
 
             mainQueue.Enqueue(new AppInit());
             mainQueue.Start();
@@ -67,7 +68,6 @@ namespace Gtd.Client
             Application.Run(form);
         }
     }
-
 
 
     public sealed class AppEventStore : IEventStore
