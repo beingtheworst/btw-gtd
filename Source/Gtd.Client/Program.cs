@@ -20,10 +20,7 @@ namespace Gtd.Client
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-
             var bus = new InMemoryBus("UI");
-
-            
 
 
             var file = new FileAppendOnlyStore(new DirectoryInfo(Directory.GetCurrentDirectory()));
@@ -56,7 +53,9 @@ namespace Gtd.Client
             var form = new MainForm();
 
 
-            MainFormController.Wire(form, mainQueue, bus);
+            var filterService = new FilterService();
+
+            MainFormController.Wire(form, mainQueue, bus,filterService);
             InboxAdapter.Wire(form.MainRegion, mainQueue, bus, view);
             NavigationAdapter.Wire(form.NavigationRegion, mainQueue, bus, view);
             ProjectAdapter.Wire(form.MainRegion, mainQueue, bus, view);

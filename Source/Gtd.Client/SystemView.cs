@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Gtd.CoreDomain;
+using Gtd.Shell.Filters;
 
 namespace Gtd.Client
 {
@@ -10,6 +11,16 @@ namespace Gtd.Client
         IList<ProjectView> ListProjects();
         ThoughtView[] ListInbox();
         ProjectView GetProjectOrNull(ProjectId id);
+    }
+
+    public sealed class FilterService
+    {
+        public readonly List<IFilterCriteria> Filters = new List<IFilterCriteria>(); 
+        public FilterService()
+        {
+            Filters.AddRange(FilterCriteria.LoadAllFilters());
+
+        }
     }
 
     public sealed class SystemView 

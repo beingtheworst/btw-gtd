@@ -35,6 +35,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this._menuGoToInbox = new System.Windows.Forms.ToolStripMenuItem();
+            this._filter = new System.Windows.Forms.ToolStripComboBox();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -46,23 +47,24 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this._menuGoToInbox,
             this._menuCaptureThought,
-            this._menuDefineProject});
+            this._menuDefineProject,
+            this._filter});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(693, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(693, 27);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // _menuCaptureThought
             // 
             this._menuCaptureThought.Name = "_menuCaptureThought";
-            this._menuCaptureThought.Size = new System.Drawing.Size(110, 20);
+            this._menuCaptureThought.Size = new System.Drawing.Size(110, 23);
             this._menuCaptureThought.Text = "Capture Thought";
             // 
             // _menuDefineProject
             // 
             this._menuDefineProject.Name = "_menuDefineProject";
-            this._menuDefineProject.Size = new System.Drawing.Size(93, 20);
+            this._menuDefineProject.Size = new System.Drawing.Size(93, 23);
             this._menuDefineProject.Text = "Define Project";
             // 
             // _log
@@ -90,17 +92,25 @@
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 24);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 27);
             this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Size = new System.Drawing.Size(693, 353);
+            this.splitContainer1.Size = new System.Drawing.Size(693, 350);
             this.splitContainer1.SplitterDistance = 231;
             this.splitContainer1.TabIndex = 4;
             // 
             // _menuGoToInbox
             // 
             this._menuGoToInbox.Name = "_menuGoToInbox";
-            this._menuGoToInbox.Size = new System.Drawing.Size(83, 20);
+            this._menuGoToInbox.Size = new System.Drawing.Size(83, 23);
             this._menuGoToInbox.Text = "Go To Inbox";
+            // 
+            // _filter
+            // 
+            this._filter.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this._filter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this._filter.IntegralHeight = false;
+            this._filter.Name = "_filter";
+            this._filter.Size = new System.Drawing.Size(121, 23);
             // 
             // MainForm
             // 
@@ -133,6 +143,7 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.ToolStripMenuItem _menuGoToInbox;
+        private System.Windows.Forms.ToolStripComboBox _filter;
     }
 }
 

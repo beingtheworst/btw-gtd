@@ -9,16 +9,18 @@ namespace Gtd.Client
     {
         readonly MainForm _mainForm;
         readonly IPublisher _queue;
+        readonly FilterService _service;
 
-        public MainFormController(MainForm mainForm, IPublisher queue)
+        public MainFormController(MainForm mainForm, IPublisher queue, FilterService service)
         {
             _mainForm = mainForm;
             _queue = queue;
+            _service = service;
         }
 
-        public static MainFormController Wire(MainForm form, IPublisher queue, ISubscriber bus)
+        public static MainFormController Wire(MainForm form, IPublisher queue, ISubscriber bus, FilterService service)
         {
-            var adapter = new MainFormController(form, queue);
+            var adapter = new MainFormController(form, queue, service);
 
             bus.Subscribe<AppInit>(adapter);
             bus.Subscribe<CaptureThoughtClicked>(adapter);
@@ -40,7 +42,7 @@ namespace Gtd.Client
 
         public void Handle(AppInit message)
         {
-            
+            _mainForm.DisplayFilters(_service.Filters);
         }
 
         public void Handle(CaptureThoughtClicked message)

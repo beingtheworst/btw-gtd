@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
+using Gtd.Shell.Filters;
 
 namespace Gtd.Client
 {
@@ -37,6 +39,7 @@ namespace Gtd.Client
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            _filter.SelectedIndex = 0;
             // when we are loading the form for the 1st time
         }
 
@@ -49,6 +52,22 @@ namespace Gtd.Client
                     _menuCaptureThought.Visible = true;
                     _menuDefineProject.Visible = true;
                 });
+        }
+
+        public void DisplayFilters(ICollection<IFilterCriteria> filters)
+        {
+            if (filters.Count == 0)
+                throw new ArgumentException("Filters can't be empty","filters");
+            this.Sync(() =>
+                {
+                    foreach (var filterCriteria in filters)
+                    {
+                        _filter.Items.Add("(WIP): " + filterCriteria.Title);
+                    }
+                    _filter.SelectedIndex = 0;
+
+                });
+            
         }
 
 
