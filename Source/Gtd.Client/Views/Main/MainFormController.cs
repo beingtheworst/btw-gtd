@@ -6,7 +6,7 @@ namespace Gtd.Client
         IHandle<AppInit>,
         IHandle<CaptureThoughtClicked>,
         IHandle<Ui.InboxHidden>,
-        IHandle<Ui.InboxDisplayed>
+        IHandle<Ui.InboxDisplayed>, IHandle<Ui.ProjectDisplayed>
     {
         readonly MainForm _mainForm;
         readonly IPublisher _queue;
@@ -25,6 +25,7 @@ namespace Gtd.Client
             bus.Subscribe<CaptureThoughtClicked>(adapter);
             bus.Subscribe<Ui.InboxDisplayed>(adapter);
             bus.Subscribe<Ui.InboxHidden>(adapter);
+            bus.Subscribe<Ui.ProjectDisplayed>(adapter);
 
             form.SetAdapter(adapter);
             
@@ -56,13 +57,18 @@ namespace Gtd.Client
 
         public void Handle(Ui.InboxHidden message)
         {
-            _mainForm.ShowGoToInbox();
+            
         }
 
         public void Handle(Ui.InboxDisplayed message)
         {
             // replace with panel-specific menu may be
-            _mainForm.HideGoToInbox();
+            _mainForm.ShowInboxMenu();
+        }
+
+        public void Handle(Ui.ProjectDisplayed message)
+        {
+            _mainForm.ShowProjectMenu(message.Id);
         }
     }
 }

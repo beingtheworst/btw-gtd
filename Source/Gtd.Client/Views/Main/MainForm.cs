@@ -24,9 +24,9 @@ namespace Gtd.Client
             _controller = controller;
 
             Load += (sender, args) => _controller.Publish(new FormLoading());
-            captureToolStripMenuItem.Click += (sender, args) => _controller.Publish(new CaptureThoughtClicked());
+            _menuCaptureThought.Click += (sender, args) => _controller.Publish(new CaptureThoughtClicked());
 
-            projectToolStripMenuItem.Click += (sender, args) =>
+            _menuDefineProject.Click += (sender, args) =>
             {
                 var c = DefineProjectForm.TryGetUserInput(this);
                 if (null != c) _controller.Publish(new Ui.DefineNewProject(c));
@@ -40,16 +40,27 @@ namespace Gtd.Client
             // when we are loading the form for the 1st time
         }
 
-        public void HideGoToInbox()
+
+        public void ShowInboxMenu()
         {
-            this.Sync(() => goToInboxToolStripMenuItem.Visible = false);
+            this.Sync(() =>
+                {
+                    _menuGoToInbox.Visible = false;
+                    _menuCaptureThought.Visible = true;
+                    _menuDefineProject.Visible = true;
+                });
         }
 
-        public void ShowGoToInbox()
-        {
-            this.Sync(() => goToInboxToolStripMenuItem.Visible = true);
-        }
 
+        public void ShowProjectMenu(ProjectId id)
+        {
+            this.Sync(() =>
+                {
+                    _menuCaptureThought.Visible = true;
+                    _menuGoToInbox.Visible = true;
+                    _menuDefineProject.Visible = true;
+                });
+        }
 
         public void Log(string toString)
         {

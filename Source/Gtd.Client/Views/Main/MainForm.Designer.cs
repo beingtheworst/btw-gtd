@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.captureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.projectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this._menuCaptureThought = new System.Windows.Forms.ToolStripMenuItem();
+            this._menuDefineProject = new System.Windows.Forms.ToolStripMenuItem();
             this._log = new System.Windows.Forms.RichTextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.goToInboxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this._menuGoToInbox = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -44,26 +44,26 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.goToInboxToolStripMenuItem,
-            this.captureToolStripMenuItem,
-            this.projectToolStripMenuItem});
+            this._menuGoToInbox,
+            this._menuCaptureThought,
+            this._menuDefineProject});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(693, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
-            // captureToolStripMenuItem
+            // _menuCaptureThought
             // 
-            this.captureToolStripMenuItem.Name = "captureToolStripMenuItem";
-            this.captureToolStripMenuItem.Size = new System.Drawing.Size(110, 20);
-            this.captureToolStripMenuItem.Text = "Capture Thought";
+            this._menuCaptureThought.Name = "_menuCaptureThought";
+            this._menuCaptureThought.Size = new System.Drawing.Size(110, 20);
+            this._menuCaptureThought.Text = "Capture Thought";
             // 
-            // projectToolStripMenuItem
+            // _menuDefineProject
             // 
-            this.projectToolStripMenuItem.Name = "projectToolStripMenuItem";
-            this.projectToolStripMenuItem.Size = new System.Drawing.Size(93, 20);
-            this.projectToolStripMenuItem.Text = "Define Project";
+            this._menuDefineProject.Name = "_menuDefineProject";
+            this._menuDefineProject.Size = new System.Drawing.Size(93, 20);
+            this._menuDefineProject.Text = "Define Project";
             // 
             // _log
             // 
@@ -96,11 +96,11 @@
             this.splitContainer1.SplitterDistance = 231;
             this.splitContainer1.TabIndex = 4;
             // 
-            // goToInboxToolStripMenuItem
+            // _menuGoToInbox
             // 
-            this.goToInboxToolStripMenuItem.Name = "goToInboxToolStripMenuItem";
-            this.goToInboxToolStripMenuItem.Size = new System.Drawing.Size(83, 20);
-            this.goToInboxToolStripMenuItem.Text = "Go To Inbox";
+            this._menuGoToInbox.Name = "_menuGoToInbox";
+            this._menuGoToInbox.Size = new System.Drawing.Size(83, 20);
+            this._menuGoToInbox.Text = "Go To Inbox";
             // 
             // MainForm
             // 
@@ -127,12 +127,12 @@
         #endregion
 
         private System.Windows.Forms.MenuStrip menuStrip1;
-        protected internal System.Windows.Forms.ToolStripMenuItem captureToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem projectToolStripMenuItem;
+        protected internal System.Windows.Forms.ToolStripMenuItem _menuCaptureThought;
+        private System.Windows.Forms.ToolStripMenuItem _menuDefineProject;
         private System.Windows.Forms.RichTextBox _log;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.ToolStripMenuItem goToInboxToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem _menuGoToInbox;
     }
 }
 
