@@ -67,14 +67,14 @@ namespace Gtd.Client.Views.Actions
         readonly ProjectView _control;
         readonly ISystemView _view;
         readonly Region _mainRegion;
-        readonly IPublisher _sync;
+        readonly IPublisher _bus;
 
-        ProjectAdapter(ProjectView control, ISystemView view, Region mainRegion, IPublisher sync)
+        ProjectAdapter(ProjectView control, ISystemView view, Region mainRegion, IPublisher bus)
         {
             _control = control;
             _view = view;
             _mainRegion = mainRegion;
-            _sync = sync;
+            _bus = bus;
         }
 
         public static void Wire(Region mainRegion, IPublisher queuedHandler, ISubscriber bus, ISystemView view)
@@ -90,16 +90,16 @@ namespace Gtd.Client.Views.Actions
 
             mainRegion.RegisterDock(control, "project");
 
-            bus.Subscribe<Ui.DisplayProject>(adapter);
+            bus.Subscribe(adapter);
         }
 
         public void Handle(Ui.DisplayProject message)
         {
-            
             var project = _view.GetProjectOrNull(message.Id);
             
             _control.Sync(() => _control.DisplayProject(project));
             _mainRegion.SwitchTo("project");
+            _bus.Publish(new Ui.ProjectDisplayed(message.Id));
         }
 
 
@@ -111,7 +111,7 @@ namespace Gtd.Client.Views.Actions
 
         public void RequestActionCheck(ActionId id)
         {
-            _sync.Publish(new Ui.CompleteAction(id));
+            _bus.Publish(new Ui.CompleteAction(id));
         }
     }
 

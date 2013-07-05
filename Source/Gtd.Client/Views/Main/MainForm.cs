@@ -90,7 +90,8 @@ namespace Gtd.Client
     public enum AppState
     {
         Loading,
-        InboxView
+        InboxView,
+        Project
     }
 
 

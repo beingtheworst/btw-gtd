@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using Gtd.Client.Views.Actions;
 using Gtd.CoreDomain;
 using Gtd.CoreDomain.AppServices.TrustedSystem;
 
@@ -19,24 +18,23 @@ namespace Gtd.Client
             _bus = bus;
             _store = store;
 
-
-            _fsm = CreateFsm();
-
-            
+            _fsm = CreateStateMachine();
         }
 
         AppState _state = AppState.Loading;
 
-        FiniteStateMachine<AppState> CreateFsm()
+        FiniteStateMachine<AppState> CreateStateMachine()
         {
             return new FsmBuilder<AppState>()
                 .InAllStates()
                     .When<Ui.InboxDisplayed>().Do(shown => _state = AppState.InboxView)
-                    .When<Ui.CaptureThought>().Do(Handle)
-                    .When<Ui.ArchiveThought>().Do(Handle)
-                    .When<Ui.DefineNewProject>().Do(Handle)
-                    .When<Ui.MoveThoughtsToProject>().Do(Handle)
-                    .When<Ui.CompleteAction>().Do(Handle)
+
+                    .When<Ui.CaptureThought>().Do(UpdateAggregate)
+                    .When<Ui.ArchiveThought>().Do(UpdateAggregate)
+                    .When<Ui.DefineNewProject>().Do(UpdateAggregate)
+                    .When<Ui.MoveThoughtsToProject>().Do(UpdateAggregate)
+                    .When<Ui.CompleteAction>().Do(UpdateAggregate)
+
                 .InState(AppState.Loading)
                     .When<Ui.DisplayInbox>().Do(_bus.Publish)
                     .When<FormLoaded>().Do(_bus.Publish)
@@ -44,6 +42,9 @@ namespace Gtd.Client
                     .When<AppInit>().Do(_bus.Publish)
                     .When<Event>().Do(PassThroughEvent)
                 .InState(AppState.InboxView)
+                    
+                
+                    
                 .WhenOther().Do(_bus.Publish)
                     
                 
@@ -51,31 +52,31 @@ namespace Gtd.Client
                 .Build(() => (int) _state);
         }
 
-        void Handle(Ui.DefineNewProject r)
+        void UpdateAggregate(Ui.DefineNewProject r)
         {
             _bus.Publish(r);
             ChangeAggregate(a => a.DefineProject(new RequestId(), r.Outcome, new RealTimeProvider() ));
         }
 
-        void Handle(Ui.CompleteAction r)
+        void UpdateAggregate(Ui.CompleteAction r)
         {
             ChangeAggregate(a => a.CompleteAction(r.Id, new RealTimeProvider()));
         }
 
-        void Handle(Ui.MoveThoughtsToProject r)
+        void UpdateAggregate(Ui.MoveThoughtsToProject r)
         {
             _bus.Publish(r);
             ChangeAggregate(a => a.MoveThoughtsToProject(r.Thoughts, r.Project, new RealTimeProvider()));
         }
 
-        void Handle(Ui.ArchiveThought r)
+        void UpdateAggregate(Ui.ArchiveThought r)
         {
             // do something
             _bus.Publish(r);
             ChangeAggregate(a => a.ArchiveThought(r.Id,new RealTimeProvider()));
         }
 
-        void Handle(Ui.CaptureThought c)
+        void UpdateAggregate(Ui.CaptureThought c)
         {
             _bus.Publish(c);
 
@@ -133,4 +134,6 @@ namespace Gtd.Client
             _fsm.Handle(message);
         }
     }
+
+    
 }
