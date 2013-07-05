@@ -37,11 +37,7 @@ namespace Gtd.Client
         }
 
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            _filter.SelectedIndex = 0;
-            // when we are loading the form for the 1st time
-        }
+        
 
 
         public void ShowInboxMenu()

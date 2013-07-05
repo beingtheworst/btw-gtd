@@ -12,7 +12,6 @@
 
         }
 
-
         public class DisplayProject : Message
         {
             public readonly ProjectId Id;
