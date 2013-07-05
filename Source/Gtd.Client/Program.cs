@@ -62,6 +62,8 @@ namespace Gtd.Client
             ProjectAdapter.Wire(form.MainRegion, mainQueue, bus, view);
             LogController.Wire(form, bus);
 
+            PanelHideController.WireTo(bus, mainQueue);
+
             mainQueue.Enqueue(new AppInit());
             mainQueue.Start();
             

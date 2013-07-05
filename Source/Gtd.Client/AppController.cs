@@ -27,7 +27,6 @@ namespace Gtd.Client
         {
             return new FsmBuilder<AppState>()
                 .InAllStates()
-                    .When<Ui.InboxDisplayed>().Do(shown => _state = AppState.InboxView)
 
                     .When<Ui.CaptureThought>().Do(UpdateAggregate)
                     .When<Ui.ArchiveThought>().Do(UpdateAggregate)
@@ -41,7 +40,7 @@ namespace Gtd.Client
                     .When<FormLoading>().Do(Deal)
                     .When<AppInit>().Do(_bus.Publish)
                     .When<Event>().Do(PassThroughEvent)
-                .InState(AppState.InboxView)
+                
                     
                 
                     
@@ -134,6 +133,4 @@ namespace Gtd.Client
             _fsm.Handle(message);
         }
     }
-
-    
 }
