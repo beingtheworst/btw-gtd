@@ -2,26 +2,29 @@
 
 namespace Gtd.Client
 {
-    public sealed class MainFormAdapter : 
+    public sealed class MainFormController : 
         IHandle<AppInit>,
-        IHandle<CaptureThoughtClicked>
+        IHandle<CaptureThoughtClicked>,
+        IHandle<Ui.InboxHidden>,
+        IHandle<Ui.InboxDisplayed>
     {
         readonly MainForm _mainForm;
         readonly IPublisher _queue;
 
-        public MainFormAdapter(MainForm mainForm, IPublisher queue)
+        public MainFormController(MainForm mainForm, IPublisher queue)
         {
             _mainForm = mainForm;
             _queue = queue;
         }
 
-        public static MainFormAdapter Wire(MainForm form, IPublisher queue, ISubscriber bus)
+        public static MainFormController Wire(MainForm form, IPublisher queue, ISubscriber bus)
         {
-            var adapter = new MainFormAdapter(form, queue);
+            var adapter = new MainFormController(form, queue);
 
             bus.Subscribe<AppInit>(adapter);
             bus.Subscribe<CaptureThoughtClicked>(adapter);
-            //bus.Subscribe<InboxShown>(adapter);
+            bus.Subscribe<Ui.InboxDisplayed>(adapter);
+            bus.Subscribe<Ui.InboxHidden>(adapter);
 
             form.SetAdapter(adapter);
             
@@ -49,6 +52,17 @@ namespace Gtd.Client
                     if (null != c) _queue.Publish(new Ui.CaptureThought(c));
                 });
             
+        }
+
+        public void Handle(Ui.InboxHidden message)
+        {
+            _mainForm.ShowGoToInbox();
+        }
+
+        public void Handle(Ui.InboxDisplayed message)
+        {
+            // replace with panel-specific menu may be
+            _mainForm.HideGoToInbox();
         }
     }
 }

@@ -1,13 +1,11 @@
 ﻿using System;
-
-using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace Gtd.Client
 {
     public partial class MainForm : Form, ILogControl
     {
-        MainFormAdapter _adapter;
+        MainFormController _controller;
         public readonly Region MainRegion;
         public readonly Region NavigationRegion;
 
@@ -21,17 +19,17 @@ namespace Gtd.Client
 
 
 
-        public void SetAdapter(MainFormAdapter adapter)
+        public void SetAdapter(MainFormController controller)
         {
-            _adapter = adapter;
+            _controller = controller;
 
-            Load += (sender, args) => _adapter.Publish(new FormLoading());
-            captureToolStripMenuItem.Click += (sender, args) => _adapter.Publish(new CaptureThoughtClicked());
+            Load += (sender, args) => _controller.Publish(new FormLoading());
+            captureToolStripMenuItem.Click += (sender, args) => _controller.Publish(new CaptureThoughtClicked());
 
             projectToolStripMenuItem.Click += (sender, args) =>
             {
                 var c = DefineProjectForm.TryGetUserInput(this);
-                if (null != c) _adapter.Publish(new Ui.DefineNewProject(c));
+                if (null != c) _controller.Publish(new Ui.DefineNewProject(c));
             };
 
         }
@@ -40,9 +38,16 @@ namespace Gtd.Client
         private void Form1_Load(object sender, EventArgs e)
         {
             // when we are loading the form for the 1st time
-            
+        }
 
+        public void HideGoToInbox()
+        {
+            this.Sync(() => goToInboxToolStripMenuItem.Visible = false);
+        }
 
+        public void ShowGoToInbox()
+        {
+            this.Sync(() => goToInboxToolStripMenuItem.Visible = true);
         }
 
 

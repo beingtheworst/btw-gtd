@@ -34,6 +34,7 @@
             this._log = new System.Windows.Forms.RichTextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.goToInboxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -43,6 +44,7 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.goToInboxToolStripMenuItem,
             this.captureToolStripMenuItem,
             this.projectToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
@@ -94,6 +96,12 @@
             this.splitContainer1.SplitterDistance = 231;
             this.splitContainer1.TabIndex = 4;
             // 
+            // goToInboxToolStripMenuItem
+            // 
+            this.goToInboxToolStripMenuItem.Name = "goToInboxToolStripMenuItem";
+            this.goToInboxToolStripMenuItem.Size = new System.Drawing.Size(83, 20);
+            this.goToInboxToolStripMenuItem.Text = "Go To Inbox";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -124,6 +132,7 @@
         private System.Windows.Forms.RichTextBox _log;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.ToolStripMenuItem goToInboxToolStripMenuItem;
     }
 }
 

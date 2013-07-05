@@ -84,7 +84,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SystemView.cs" />
-    <Compile Include="Views\Main\MainFormAdapter.cs" />
+    <Compile Include="Views\Main\MainFormController.cs" />
     <Compile Include="Views\Navigation\NavigationAdapter.cs" />
     <Compile Include="Views\Navigation\NavigationView.cs">
       <SubType>UserControl</SubType>
