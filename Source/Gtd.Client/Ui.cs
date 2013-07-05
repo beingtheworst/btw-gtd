@@ -52,6 +52,12 @@
             }
         }
 
+        public sealed class CaptureThoughtClicked : Message
+        {
+
+        }
+
+
         public sealed class CaptureThought : Message
         {
             public readonly string Thought;

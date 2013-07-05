@@ -4,7 +4,7 @@ namespace Gtd.Client
 {
     public sealed class MainFormController : 
         IHandle<AppInit>,
-        IHandle<CaptureThoughtClicked>,
+        IHandle<Ui.CaptureThoughtClicked>,
         IHandle<Ui.InboxDisplayed>, IHandle<Ui.ProjectDisplayed>
     {
         readonly MainForm _mainForm;
@@ -23,7 +23,7 @@ namespace Gtd.Client
             var adapter = new MainFormController(form, queue, service);
 
             bus.Subscribe<AppInit>(adapter);
-            bus.Subscribe<CaptureThoughtClicked>(adapter);
+            bus.Subscribe<Ui.CaptureThoughtClicked>(adapter);
             bus.Subscribe<Ui.InboxDisplayed>(adapter);
             bus.Subscribe<Ui.ProjectDisplayed>(adapter);
 
@@ -45,7 +45,7 @@ namespace Gtd.Client
             _mainForm.DisplayFilters(_service.Filters);
         }
 
-        public void Handle(CaptureThoughtClicked message)
+        public void Handle(Ui.CaptureThoughtClicked message)
         {
             _mainForm.Sync(() =>
                 {

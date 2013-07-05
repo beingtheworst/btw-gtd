@@ -9,7 +9,7 @@ namespace Gtd.Client
     {
         readonly IPublisher _bus;
         readonly IEventStore _store;
-        QueuedHandler _mainQueue;
+        QueuedHandler _queue;
 
         readonly FiniteStateMachine<AppState> _fsm;
 
@@ -54,7 +54,9 @@ namespace Gtd.Client
         void UpdateAggregate(Ui.DefineNewProject r)
         {
             _bus.Publish(r);
-            ChangeAggregate(a => a.DefineProject(new RequestId(), r.Outcome, new RealTimeProvider() ));
+            var newGuid = Guid.NewGuid();
+            ChangeAggregate(a => a.DefineProject(new RequestId(newGuid), r.Outcome, new RealTimeProvider()));
+            _queue.Enqueue(new Ui.DisplayProject(new ProjectId(newGuid)));
         }
 
         void UpdateAggregate(Ui.CompleteAction r)
@@ -92,8 +94,8 @@ namespace Gtd.Client
             _bus.Publish(obj);
 
 
-            _mainQueue.Enqueue(new FormLoaded());
-            _mainQueue.Enqueue(new Ui.DisplayInbox());
+            _queue.Enqueue(new FormLoaded());
+            _queue.Enqueue(new Ui.DisplayInbox());
 
         }
 
@@ -124,7 +126,7 @@ namespace Gtd.Client
 
         public void SetMainQueue(QueuedHandler mainQueue)
         {
-            _mainQueue = mainQueue;
+            _queue = mainQueue;
         }
 
         public void Handle(Message message)

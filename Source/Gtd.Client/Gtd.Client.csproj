@@ -44,7 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppController.cs" />
+    <Compile Include="Controller\AppController.cs" />
     <Compile Include="CaptureThoughtForm.cs">
       <SubType>Form</SubType>
     </Compile>

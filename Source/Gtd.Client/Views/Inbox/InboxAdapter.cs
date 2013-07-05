@@ -79,7 +79,7 @@ namespace Gtd.Client
 
         public void WhenCaptureThoughtClicked()
         {
-            _queue.Publish(new CaptureThoughtClicked());
+            _queue.Publish(new Ui.CaptureThoughtClicked());
         }
 
         public IList<ProjectView> ListProjects()
