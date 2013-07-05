@@ -11,10 +11,6 @@
         {
 
         }
-        public class InboxHidden : Message
-        {
-            
-        }
 
 
         public class DisplayProject : Message
@@ -32,15 +28,6 @@
             public readonly ProjectId Id;
 
             public ProjectDisplayed(ProjectId id)
-            {
-                Id = id;
-            }
-        }
-        public class ProjectHidden : Message
-        {
-            public readonly ProjectId Id;
-
-            public ProjectHidden(ProjectId id)
             {
                 Id = id;
             }

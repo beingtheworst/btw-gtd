@@ -5,7 +5,6 @@ namespace Gtd.Client
     public sealed class MainFormController : 
         IHandle<AppInit>,
         IHandle<CaptureThoughtClicked>,
-        IHandle<Ui.InboxHidden>,
         IHandle<Ui.InboxDisplayed>, IHandle<Ui.ProjectDisplayed>
     {
         readonly MainForm _mainForm;
@@ -24,7 +23,6 @@ namespace Gtd.Client
             bus.Subscribe<AppInit>(adapter);
             bus.Subscribe<CaptureThoughtClicked>(adapter);
             bus.Subscribe<Ui.InboxDisplayed>(adapter);
-            bus.Subscribe<Ui.InboxHidden>(adapter);
             bus.Subscribe<Ui.ProjectDisplayed>(adapter);
 
             form.SetAdapter(adapter);
@@ -55,10 +53,6 @@ namespace Gtd.Client
             
         }
 
-        public void Handle(Ui.InboxHidden message)
-        {
-            
-        }
 
         public void Handle(Ui.InboxDisplayed message)
         {
