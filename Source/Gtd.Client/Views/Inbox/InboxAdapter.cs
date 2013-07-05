@@ -40,7 +40,7 @@ namespace Gtd.Client
             _dock.RegisterDock(_control, "inbox");
         }
 
-        bool _shown = false; 
+        bool _shown; 
 
         public void Handle(Ui.DisplayInbox message)
         {
@@ -51,7 +51,7 @@ namespace Gtd.Client
             }
 
             _dock.SwitchTo("inbox");
-            _queue.Publish(new Ui.InboxShown());
+            _queue.Publish(new Ui.InboxDisplayed());
         }
 
         public void Handle(ThoughtCaptured message)

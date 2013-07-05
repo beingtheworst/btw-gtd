@@ -31,7 +31,7 @@ namespace Gtd.Client
         {
             return new FsmBuilder<AppState>()
                 .InAllStates()
-                    .When<Ui.InboxShown>().Do(shown => _state = AppState.InboxView)
+                    .When<Ui.InboxDisplayed>().Do(shown => _state = AppState.InboxView)
                     .When<Ui.CaptureThought>().Do(Handle)
                     .When<Ui.ArchiveThought>().Do(Handle)
                     .When<Ui.DefineNewProject>().Do(Handle)

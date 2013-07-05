@@ -7,7 +7,7 @@
         {
 
         }
-        public class InboxShown : Message
+        public class InboxDisplayed : Message
         {
 
         }
