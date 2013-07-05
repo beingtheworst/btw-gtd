@@ -21,6 +21,8 @@ namespace Gtd.Client
 
             bus.Subscribe<AppInit>(adapter);
             bus.Subscribe<CaptureThoughtClicked>(adapter);
+            //bus.Subscribe<InboxShown>(adapter);
+
             form.SetAdapter(adapter);
             
             return adapter;
@@ -44,7 +46,7 @@ namespace Gtd.Client
             _mainForm.Sync(() =>
                 {
                     var c = CaptureThoughtForm.TryGetUserInput(_mainForm);
-                    if (null != c) _queue.Publish(new RequestCaptureThought(c));
+                    if (null != c) _queue.Publish(new Ui.CaptureThought(c));
                 });
             
         }

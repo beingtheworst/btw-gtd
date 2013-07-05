@@ -62,7 +62,7 @@ namespace Gtd.Client.Views.Actions
         }
     }
 
-    public sealed class ProjectAdapter : IHandle<RequestShowProject>
+    public sealed class ProjectAdapter : IHandle<Ui.DisplayProject>
     {
         readonly ProjectView _control;
         readonly ISystemView _view;
@@ -90,10 +90,10 @@ namespace Gtd.Client.Views.Actions
 
             mainRegion.RegisterDock(control, "project");
 
-            bus.Subscribe<RequestShowProject>(adapter);
+            bus.Subscribe<Ui.DisplayProject>(adapter);
         }
 
-        public void Handle(RequestShowProject message)
+        public void Handle(Ui.DisplayProject message)
         {
             
             var project = _view.GetProjectOrNull(message.Id);
@@ -111,17 +111,8 @@ namespace Gtd.Client.Views.Actions
 
         public void RequestActionCheck(ActionId id)
         {
-            _sync.Publish(new RequestActionCheck(id));
+            _sync.Publish(new Ui.CompleteAction(id));
         }
     }
 
-    public class RequestActionCheck : Message
-    {
-        public readonly ActionId Id;
-
-        public RequestActionCheck(ActionId id)
-        {
-            Id = id;
-        }
-    }
 }

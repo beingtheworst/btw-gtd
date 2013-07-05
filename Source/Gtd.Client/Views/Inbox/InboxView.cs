@@ -146,25 +146,7 @@ namespace Gtd.Client
     }
 
 
-    public class RequestShowInbox : Message
-    {
-        
-    }
-    public class RequestShowProject : Message
-    {
-        public readonly ProjectId Id;
-
-        public RequestShowProject(ProjectId id)
-        {
-            Id = id;
-        }
-    }
 
     
-
-    public class InboxShown : Message
-    {
-        
-    }
 
 }

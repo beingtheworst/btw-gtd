@@ -31,7 +31,7 @@ namespace Gtd.Client
             projectToolStripMenuItem.Click += (sender, args) =>
             {
                 var c = DefineProjectForm.TryGetUserInput(this);
-                if (null != c) _adapter.Publish(new RequestDefineNewProject(c));
+                if (null != c) _adapter.Publish(new Ui.DefineNewProject(c));
             };
 
         }
@@ -73,37 +73,8 @@ namespace Gtd.Client
         }
     }
 
-    public sealed class RequestMoveThoughtsToProject : Message
-    {
-        public readonly ThoughtId[] Thoughts;
-        public readonly ProjectId Project;
-
-        public RequestMoveThoughtsToProject(ThoughtId[] thoughts, ProjectId project)
-        {
-            Thoughts = thoughts;
-            Project = project;
-        }
-    }
-
-    public sealed class RequestDefineNewProject : Message
-    {
-        public readonly string Outcome;
-
-        public RequestDefineNewProject(string outcome)
-        {
-            Outcome = outcome;
-        }
-    }
-
-    public sealed class RequestCaptureThought : Message
-    {
-        public readonly string Thought;
-
-        public RequestCaptureThought(string thought)
-        {
-            Thought = thought;
-        }
-    }
+   
+   
 
     public sealed class CaptureThoughtClicked : Message
     {
@@ -113,15 +84,6 @@ namespace Gtd.Client
 
 
 
-    public sealed class RequestArchiveThought : Message
-    {
-        public readonly ThoughtId Id;
-
-        public RequestArchiveThought(ThoughtId id)
-        {
-            Id = id;
-        }
-    }
 
 
 

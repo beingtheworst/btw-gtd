@@ -139,14 +139,14 @@ namespace Gtd.Client
         {
             if (tag == "inbox")
             {
-                _queue.Publish(new RequestShowInbox());
+                _queue.Publish(new Ui.DisplayInbox());
                 return;
             }
             var node = _nodes[tag];
 
             if (node is ProjectId)
             {
-                _queue.Publish(new RequestShowProject((ProjectId) node));
+                _queue.Publish(new Ui.DisplayProject((ProjectId) node));
             }
         }
     }

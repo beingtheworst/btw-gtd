@@ -31,14 +31,14 @@ namespace Gtd.Client
         {
             return new FsmBuilder<AppState>()
                 .InAllStates()
-                    .When<InboxShown>().Do(shown => _state = AppState.InboxView)
-                    .When<RequestCaptureThought>().Do(Handle)
-                    .When<RequestArchiveThought>().Do(Handle)
-                    .When<RequestDefineNewProject>().Do(Handle)
-                    .When<RequestMoveThoughtsToProject>().Do(Handle)
-                    .When<RequestActionCheck>().Do(Handle)
+                    .When<Ui.InboxShown>().Do(shown => _state = AppState.InboxView)
+                    .When<Ui.CaptureThought>().Do(Handle)
+                    .When<Ui.ArchiveThought>().Do(Handle)
+                    .When<Ui.DefineNewProject>().Do(Handle)
+                    .When<Ui.MoveThoughtsToProject>().Do(Handle)
+                    .When<Ui.CompleteAction>().Do(Handle)
                 .InState(AppState.Loading)
-                    .When<RequestShowInbox>().Do(_bus.Publish)
+                    .When<Ui.DisplayInbox>().Do(_bus.Publish)
                     .When<FormLoaded>().Do(_bus.Publish)
                     .When<FormLoading>().Do(Deal)
                     .When<AppInit>().Do(_bus.Publish)
@@ -51,31 +51,31 @@ namespace Gtd.Client
                 .Build(() => (int) _state);
         }
 
-        void Handle(RequestDefineNewProject r)
+        void Handle(Ui.DefineNewProject r)
         {
             _bus.Publish(r);
             ChangeAggregate(a => a.DefineProject(new RequestId(), r.Outcome, new RealTimeProvider() ));
         }
 
-        void Handle(RequestActionCheck r)
+        void Handle(Ui.CompleteAction r)
         {
             ChangeAggregate(a => a.CompleteAction(r.Id, new RealTimeProvider()));
         }
 
-        void Handle(RequestMoveThoughtsToProject r)
+        void Handle(Ui.MoveThoughtsToProject r)
         {
             _bus.Publish(r);
             ChangeAggregate(a => a.MoveThoughtsToProject(r.Thoughts, r.Project, new RealTimeProvider()));
         }
 
-        void Handle(RequestArchiveThought r)
+        void Handle(Ui.ArchiveThought r)
         {
             // do something
             _bus.Publish(r);
             ChangeAggregate(a => a.ArchiveThought(r.Id,new RealTimeProvider()));
         }
 
-        void Handle(RequestCaptureThought c)
+        void Handle(Ui.CaptureThought c)
         {
             _bus.Publish(c);
 
@@ -93,7 +93,7 @@ namespace Gtd.Client
 
 
             _mainQueue.Enqueue(new FormLoaded());
-            _mainQueue.Enqueue(new RequestShowInbox());
+            _mainQueue.Enqueue(new Ui.DisplayInbox());
 
         }
 
