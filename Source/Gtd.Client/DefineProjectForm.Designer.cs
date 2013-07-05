@@ -43,7 +43,7 @@
             this._ok.Name = "_ok";
             this._ok.Size = new System.Drawing.Size(75, 23);
             this._ok.TabIndex = 5;
-            this._ok.Text = "Capture";
+            this._ok.Text = "Define";
             this._ok.UseVisualStyleBackColor = true;
             // 
             // _cancel
@@ -78,6 +78,7 @@
             this.Controls.Add(this._cancel);
             this.Controls.Add(this.textBox1);
             this.Name = "DefineProjectForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "DefineProjectForm";
             this.Load += new System.EventHandler(this.DefineProjectForm_Load);
             this.ResumeLayout(false);
