@@ -59,6 +59,7 @@
     </Compile>
     <Compile Include="Controller\LogController.cs" />
     <Compile Include="Ui.cs" />
+    <Compile Include="Views\Project\ProjectController.cs" />
     <Compile Include="Views\Project\ProjectView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -79,12 +80,12 @@
     <Compile Include="Views\Inbox\InboxView.Designer.cs">
       <DependentUpon>InboxView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\Inbox\InboxAdapter.cs" />
+    <Compile Include="Views\Inbox\InboxController.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SystemView.cs" />
     <Compile Include="Views\Main\MainFormController.cs" />
-    <Compile Include="Views\Navigation\NavigationAdapter.cs" />
+    <Compile Include="Views\Navigation\NavigationController.cs" />
     <Compile Include="Views\Navigation\NavigationView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -146,9 +147,7 @@
       <Name>Gtd.PublishedLanguage</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Panels\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

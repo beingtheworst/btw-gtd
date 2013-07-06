@@ -11,7 +11,7 @@ namespace Gtd.Client.Views.Navigation
 {
     public partial class NavigationView : UserControl
     {
-        public NavigationView(NavigationAdapter navigationAdapter)
+        public NavigationView(NavigationController navigationController)
         {
             InitializeComponent();
 
@@ -19,7 +19,7 @@ namespace Gtd.Client.Views.Navigation
                 {
                     if (args.Node != null)
                     {
-                        navigationAdapter.WhenNodeSelected((string)args.Node.Tag);
+                        navigationController.WhenNodeSelected((string)args.Node.Tag);
                     }
                 };
         }

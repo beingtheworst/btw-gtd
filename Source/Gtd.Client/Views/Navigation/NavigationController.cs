@@ -5,7 +5,7 @@ using Gtd.Client.Views.Navigation;
 
 namespace Gtd.Client
 {
-    public sealed class NavigationAdapter : 
+    public sealed class NavigationController : 
         IHandle<AppInit>, 
         IHandle<FormLoaded>,
     IHandle<ThoughtCaptured>, 
@@ -20,7 +20,7 @@ namespace Gtd.Client
 
         bool _visible;
 
-        NavigationAdapter(Region region, IPublisher queue, ISystemView view)
+        NavigationController(Region region, IPublisher queue, ISystemView view)
         {
             _tree = new NavigationView(this);
             _region = region;
@@ -28,9 +28,9 @@ namespace Gtd.Client
             _view = view;
         }
 
-        public static NavigationAdapter Wire(Region control, IPublisher queue, ISubscriber bus, ISystemView view)
+        public static NavigationController Wire(Region control, IPublisher queue, ISubscriber bus, ISystemView view)
         {
-            var adapter  = new NavigationAdapter(control, queue, view);
+            var adapter  = new NavigationController(control, queue, view);
 
             bus.Subscribe<AppInit>(adapter);
             bus.Subscribe<ThoughtCaptured>(adapter);

@@ -56,9 +56,9 @@ namespace Gtd.Client
             var filterService = new FilterService();
 
             MainFormController.Wire(form, mainQueue, bus,filterService);
-            InboxAdapter.Wire(form.MainRegion, mainQueue, bus, view);
-            NavigationAdapter.Wire(form.NavigationRegion, mainQueue, bus, view);
-            ProjectAdapter.Wire(form.MainRegion, mainQueue, bus, view);
+            InboxController.Wire(form.MainRegion, mainQueue, bus, view);
+            NavigationController.Wire(form.NavigationRegion, mainQueue, bus, view);
+            ProjectController.Wire(form.MainRegion, mainQueue, bus, view);
             LogController.Wire(form, bus);
 
             
