@@ -28,11 +28,11 @@ namespace Gtd.Client
             return new FsmBuilder<AppState>()
                 .InAllStates()
 
-                    .When<Ui.CaptureThought>().Do(UpdateAggregate)
-                    .When<Ui.ArchiveThought>().Do(UpdateAggregate)
-                    .When<Ui.DefineNewProject>().Do(UpdateAggregate)
-                    .When<Ui.MoveThoughtsToProject>().Do(UpdateAggregate)
-                    .When<Ui.CompleteAction>().Do(UpdateAggregate)
+                    .When<Ui.CaptureThoughtWizardCompleted>().Do(UpdateAggregate)
+                    .When<Ui.ArchiveThoughtClicked>().Do(UpdateAggregate)
+                    .When<Ui.DefineNewProjectWizardCompleted>().Do(UpdateAggregate)
+                    .When<Ui.MoveThoughtsToProjectClicked>().Do(UpdateAggregate)
+                    .When<Ui.CompleteActionClicked>().Do(UpdateAggregate)
 
                 .InState(AppState.Loading)
                     .When<Ui.DisplayInbox>().Do(_bus.Publish)
@@ -51,7 +51,7 @@ namespace Gtd.Client
                 .Build(() => (int) _state);
         }
 
-        void UpdateAggregate(Ui.DefineNewProject r)
+        void UpdateAggregate(Ui.DefineNewProjectWizardCompleted r)
         {
             _bus.Publish(r);
             var newGuid = Guid.NewGuid();
@@ -59,25 +59,25 @@ namespace Gtd.Client
             _queue.Enqueue(new Ui.DisplayProject(new ProjectId(newGuid)));
         }
 
-        void UpdateAggregate(Ui.CompleteAction r)
+        void UpdateAggregate(Ui.CompleteActionClicked r)
         {
             ChangeAggregate(a => a.CompleteAction(r.Id, new RealTimeProvider()));
         }
 
-        void UpdateAggregate(Ui.MoveThoughtsToProject r)
+        void UpdateAggregate(Ui.MoveThoughtsToProjectClicked r)
         {
             _bus.Publish(r);
             ChangeAggregate(a => a.MoveThoughtsToProject(r.Thoughts, r.Project, new RealTimeProvider()));
         }
 
-        void UpdateAggregate(Ui.ArchiveThought r)
+        void UpdateAggregate(Ui.ArchiveThoughtClicked r)
         {
             // do something
             _bus.Publish(r);
             ChangeAggregate(a => a.ArchiveThought(r.Id,new RealTimeProvider()));
         }
 
-        void UpdateAggregate(Ui.CaptureThought c)
+        void UpdateAggregate(Ui.CaptureThoughtWizardCompleted c)
         {
             _bus.Publish(c);
 

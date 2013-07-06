@@ -1,16 +1,16 @@
-﻿namespace Gtd.Client
+﻿#region (c) 2012-2013 Copyright BeingTheWorst.com Podcast
+
+// See being the worst podcast for more details
+
+#endregion
+
+namespace Gtd.Client
 {
     public static class Ui
     {
+        public class DisplayInbox : Message {}
 
-        public class DisplayInbox : Message
-        {
-
-        }
-        public class InboxDisplayed : Message
-        {
-
-        }
+        public class InboxDisplayed : Message {}
 
         public class DisplayProject : Message
         {
@@ -32,70 +32,61 @@
             }
         }
 
-        public class CompleteAction : Message
+        public class CompleteActionClicked : Message
         {
             public readonly ActionId Id;
 
-            public CompleteAction(ActionId id)
+            public CompleteActionClicked(ActionId id)
             {
                 Id = id;
             }
         }
 
-        public sealed class DefineNewProject : Message
+        public sealed class DefineNewProjectWizardCompleted : Message
         {
             public readonly string Outcome;
 
-            public DefineNewProject(string outcome)
+            public DefineNewProjectWizardCompleted(string outcome)
             {
                 Outcome = outcome;
             }
         }
 
-        public sealed class CaptureThoughtClicked : Message
-        {
+        public sealed class CaptureThoughtClicked : Message {}
 
-        }
-
-        public sealed class DefineProjectClicked : Message
-        {
-            
-        }
+        public sealed class DefineProjectClicked : Message {}
 
 
-        public sealed class CaptureThought : Message
+        public sealed class CaptureThoughtWizardCompleted : Message
         {
             public readonly string Thought;
 
-            public CaptureThought(string thought)
+            public CaptureThoughtWizardCompleted(string thought)
             {
                 Thought = thought;
             }
         }
 
-        public sealed class MoveThoughtsToProject : Message
+        public sealed class MoveThoughtsToProjectClicked : Message
         {
             public readonly ThoughtId[] Thoughts;
             public readonly ProjectId Project;
 
-            public MoveThoughtsToProject(ThoughtId[] thoughts, ProjectId project)
+            public MoveThoughtsToProjectClicked(ThoughtId[] thoughts, ProjectId project)
             {
                 Thoughts = thoughts;
                 Project = project;
             }
         }
 
-        public sealed class ArchiveThought : Message
+        public sealed class ArchiveThoughtClicked : Message
         {
             public readonly ThoughtId Id;
 
-            public ArchiveThought(ThoughtId id)
+            public ArchiveThoughtClicked(ThoughtId id)
             {
                 Id = id;
             }
         }
-
-
-
     }
 }

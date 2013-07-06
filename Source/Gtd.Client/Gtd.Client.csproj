@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppEventStore.cs" />
     <Compile Include="Controllers\AppController.cs" />
     <Compile Include="Views\CaptureThought\CaptureThoughtForm.cs">
       <SubType>Form</SubType>

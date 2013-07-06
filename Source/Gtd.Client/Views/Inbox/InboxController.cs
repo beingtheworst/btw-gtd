@@ -68,13 +68,13 @@ namespace Gtd.Client
         {
             foreach (var id in thoughtIds)
             {
-                _queue.Publish(new Ui.ArchiveThought(id));
+                _queue.Publish(new Ui.ArchiveThoughtClicked(id));
             }
         }
 
         public void WhenRequestedMoveThoughtsToProject(ProjectId id, ThoughtId[] thoughtIds)
         {
-            _queue.Publish(new Ui.MoveThoughtsToProject(thoughtIds, id));
+            _queue.Publish(new Ui.MoveThoughtsToProjectClicked(thoughtIds, id));
         }
 
         public void WhenCaptureThoughtClicked()

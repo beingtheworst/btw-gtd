@@ -19,7 +19,7 @@
 
         public void Handle(Ui.CaptureThoughtClicked message)
         {
-            _form.TryGetUserInput(s => _queue.Enqueue(new Ui.CaptureThought(s)));
+            _form.TryGetUserInput(s => _queue.Enqueue(new Ui.CaptureThoughtWizardCompleted(s)));
         }
     }
 }

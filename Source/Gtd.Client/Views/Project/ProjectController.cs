@@ -49,7 +49,7 @@
 
         public void RequestActionCheck(ActionId id)
         {
-            _bus.Publish(new Ui.CompleteAction(id));
+            _bus.Publish(new Ui.CompleteActionClicked(id));
         }
     }
 }
