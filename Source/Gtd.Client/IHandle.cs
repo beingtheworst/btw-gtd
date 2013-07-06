@@ -300,7 +300,7 @@ namespace Gtd.Client
     /// messages to the specified message handler. This is done in a separate
     /// thread.
     /// </summary>
-    public sealed class QueuedHandler : IHandle<Message>, IPublisher
+    public sealed class QueuedHandler : IHandle<Message>, IPublisher, IMessageQueue
     {
         readonly IHandle<Message> _consumer;
         readonly ConcurrentQueue<Message> _queue = new ConcurrentQueue<Message>();
@@ -399,6 +399,11 @@ namespace Gtd.Client
             Ensure.NotNull(message, "message");
             _queue.Enqueue(message);
         }
+    }
+
+    public interface IMessageQueue
+    {
+        void Enqueue(Message message);
     }
 
     /// <summary>

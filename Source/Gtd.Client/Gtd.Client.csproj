@@ -44,21 +44,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controller\AppController.cs" />
-    <Compile Include="CaptureThoughtForm.cs">
+    <Compile Include="Controllers\AppController.cs" />
+    <Compile Include="Views\CaptureThought\CaptureThoughtForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CaptureThoughtForm.Designer.cs">
+    <Compile Include="Views\CaptureThought\CaptureThoughtForm.Designer.cs">
       <DependentUpon>CaptureThoughtForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="DefineProjectForm.cs">
+    <Compile Include="Views\CaptureThought\DefineProjectController.cs" />
+    <Compile Include="Views\DefineProject\DefineProjectForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DefineProjectForm.Designer.cs">
+    <Compile Include="Views\DefineProject\DefineProjectForm.Designer.cs">
       <DependentUpon>DefineProjectForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controller\LogController.cs" />
+    <Compile Include="Views\Main\LogController.cs" />
     <Compile Include="Ui.cs" />
+    <Compile Include="Views\CaptureThought\CaptureThoughtController.cs" />
     <Compile Include="Views\Project\ProjectController.cs" />
     <Compile Include="Views\Project\ProjectView.cs">
       <SubType>UserControl</SubType>
@@ -92,10 +94,10 @@
     <Compile Include="Views\Navigation\NavigationView.Designer.cs">
       <DependentUpon>NavigationView.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="CaptureThoughtForm.resx">
+    <EmbeddedResource Include="Views\CaptureThought\CaptureThoughtForm.resx">
       <DependentUpon>CaptureThoughtForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DefineProjectForm.resx">
+    <EmbeddedResource Include="Views\DefineProject\DefineProjectForm.resx">
       <DependentUpon>DefineProjectForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Project\ProjectView.resx">

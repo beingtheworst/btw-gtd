@@ -11,21 +11,23 @@ namespace Gtd.Client
 {
     public partial class DefineProjectForm : Form
     {
-        public DefineProjectForm()
+        readonly Form _parent;
+
+        public DefineProjectForm(Form parent)
         {
+            _parent = parent;
             InitializeComponent();
         }
 
-        public static string TryGetUserInput(IWin32Window owner)
+        public void TryGetUserInput(Action<string> future)
         {
-            using (var f = new DefineProjectForm())
+            _parent.Sync(() =>
             {
-                if (f.ShowDialog(owner) == DialogResult.OK)
-                {
-                    return f.textBox1.Text;
-                }
-                return null;
-            }
+                textBox1.Text = null;
+                if (ShowDialog(_parent) != DialogResult.OK) return;
+                var text = textBox1.Text;
+                future(text);
+            });
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)

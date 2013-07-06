@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Btw.Portable;
 using Gtd.Client.Views.Actions;
+using Gtd.Client.Views.CaptureThought;
 using Gtd.CoreDomain;
 
 namespace Gtd.Client
@@ -52,7 +53,6 @@ namespace Gtd.Client
 
             var form = new MainForm();
 
-
             var filterService = new FilterService();
 
             MainFormController.Wire(form, mainQueue, bus,filterService);
@@ -61,7 +61,8 @@ namespace Gtd.Client
             ProjectController.Wire(form.MainRegion, mainQueue, bus, view);
             LogController.Wire(form, bus);
 
-            
+            CaptureThoughtController.Wire(new CaptureThoughtForm(form), bus, mainQueue);
+            DefineProjectController.Wire(new DefineProjectForm(form),bus, mainQueue);
 
             mainQueue.Enqueue(new AppInit());
             mainQueue.Start();

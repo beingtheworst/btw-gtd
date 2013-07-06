@@ -57,6 +57,11 @@
 
         }
 
+        public sealed class DefineProjectClicked : Message
+        {
+            
+        }
+
 
         public sealed class CaptureThought : Message
         {

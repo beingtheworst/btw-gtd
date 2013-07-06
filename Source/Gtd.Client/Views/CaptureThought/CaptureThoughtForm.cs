@@ -5,21 +5,24 @@ namespace Gtd.Client
 {
     public partial class CaptureThoughtForm : Form
     {
-        public CaptureThoughtForm()
+        readonly MainForm _parent;
+
+        public CaptureThoughtForm(MainForm parent)
         {
+            _parent = parent;
             InitializeComponent();
         }
 
-        public static string TryGetUserInput(IWin32Window owner)
+
+        public void TryGetUserInput(Action<string> future)
         {
-            using (var f = new CaptureThoughtForm())
-            {
-                if (f.ShowDialog(owner) == DialogResult.OK)
+            _parent.Sync(() =>
                 {
-                    return f.textBox1.Text;
-                }
-                return null;
-            }
+                    textBox1.Text = null;
+                    if (ShowDialog(_parent) != DialogResult.OK) return;
+                    var text = textBox1.Text;
+                    future(text);
+                });
         }
 
         private void CaptureThoughtForm_Load(object sender, EventArgs e)

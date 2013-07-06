@@ -26,21 +26,12 @@ namespace Gtd.Client
             _controller = controller;
 
             Load += (sender, args) => _controller.Publish(new FormLoading());
+
             _menuCaptureThought.Click += (sender, args) => _controller.Publish(new Ui.CaptureThoughtClicked());
-
-            _menuDefineProject.Click += (sender, args) =>
-            {
-                var c = DefineProjectForm.TryGetUserInput(this);
-                if (null != c) _controller.Publish(new Ui.DefineNewProject(c));
-            };
-
+            _menuDefineProject.Click += (sender, args) => _controller.Publish(new Ui.DefineProjectClicked());
             _menuGoToInbox.Click += (sender, args) => _controller.Publish(new Ui.DisplayInbox());
 
         }
-
-
-        
-
 
         public void ShowInboxMenu()
         {
