@@ -248,29 +248,26 @@ namespace Gtd.Client
 
         public ProjectView GetProjectOrNull(ProjectId id)
         {
-            // HACK!!!
-            var firstOrDefault = ViewInstance.Systems.Select(v => v.Value).FirstOrDefault();
-            if (null == firstOrDefault)
-                return null;
-            return firstOrDefault.ProjectDict[id];
+            return GetCurrentSystem().ProjectDict[id];
         }
 
         public IList<ProjectView> ListProjects()
         {
-            // HACK!!!
-            var firstOrDefault = ViewInstance.Systems.Select(v => v.Value).FirstOrDefault();
-            if (null == firstOrDefault)
-                return new ProjectView[0];
-            return firstOrDefault.ProjectList.ToArray();
+            return GetCurrentSystem().ProjectList.ToArray();
+        }
+
+        public TrustedSystem GetCurrentSystem()
+        {
+            var system = ViewInstance.Systems.Select(v => v.Value).FirstOrDefault();
+            if (null == system)
+                throw new InvalidOperationException("System should be available");
+            return system;
         }
 
         public ThoughtView[] ListInbox()
         {
-            var firstOrDefault = ViewInstance.Systems.Select(v => v.Value).FirstOrDefault();
-            if (null == firstOrDefault)
-                return new ThoughtView[0];
 
-            return firstOrDefault.Thoughts.ToArray();
+            return GetCurrentSystem().Thoughts.ToArray();
         }
 
         void Update(TrustedSystemId id, Action<TrustedSystem> update)
