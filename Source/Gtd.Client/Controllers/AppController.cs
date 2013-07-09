@@ -28,11 +28,12 @@ namespace Gtd.Client
             return new FsmBuilder<AppState>()
                 .InAllStates()
 
-                    .When<Ui.CaptureThoughtWizardCompleted>().Do(UpdateAggregate)
-                    .When<Ui.ArchiveThoughtClicked>().Do(UpdateAggregate)
-                    .When<Ui.DefineNewProjectWizardCompleted>().Do(UpdateAggregate)
-                    .When<Ui.MoveThoughtsToProjectClicked>().Do(UpdateAggregate)
-                    .When<Ui.CompleteActionClicked>().Do(UpdateAggregate)
+                    .When<Ui.CaptureThoughtWizardCompleted>().Do(CaptureThought)
+                    .When<Ui.ArchiveThoughtClicked>().Do(ArchiveThought)
+                    .When<Ui.DefineNewProjectWizardCompleted>().Do(DefineProject)
+                    .When<Ui.MoveThoughtsToProjectClicked>().Do(MoveThoughtsToProject)
+                    .When<Ui.CompleteActionClicked>().Do(CompleteAction)
+                    
 
                 .InState(AppState.Loading)
                     .When<Ui.DisplayInbox>().Do(_bus.Publish)
@@ -40,18 +41,12 @@ namespace Gtd.Client
                     .When<FormLoading>().Do(Deal)
                     .When<AppInit>().Do(_bus.Publish)
                     .When<Event>().Do(PassThroughEvent)
-                
-                    
-                
                     
                 .WhenOther().Do(_bus.Publish)
-                    
-                
-                
                 .Build(() => (int) _state);
         }
 
-        void UpdateAggregate(Ui.DefineNewProjectWizardCompleted r)
+        void DefineProject(Ui.DefineNewProjectWizardCompleted r)
         {
             _bus.Publish(r);
             var newGuid = Guid.NewGuid();
@@ -59,25 +54,25 @@ namespace Gtd.Client
             _queue.Enqueue(new Ui.DisplayProject(new ProjectId(newGuid)));
         }
 
-        void UpdateAggregate(Ui.CompleteActionClicked r)
+        void CompleteAction(Ui.CompleteActionClicked r)
         {
             ChangeAggregate(a => a.CompleteAction(r.Id, new RealTimeProvider()));
         }
 
-        void UpdateAggregate(Ui.MoveThoughtsToProjectClicked r)
+        void MoveThoughtsToProject(Ui.MoveThoughtsToProjectClicked r)
         {
             _bus.Publish(r);
             ChangeAggregate(a => a.MoveThoughtsToProject(r.Thoughts, r.Project, new RealTimeProvider()));
         }
 
-        void UpdateAggregate(Ui.ArchiveThoughtClicked r)
+        void ArchiveThought(Ui.ArchiveThoughtClicked r)
         {
             // do something
             _bus.Publish(r);
             ChangeAggregate(a => a.ArchiveThought(r.Id,new RealTimeProvider()));
         }
 
-        void UpdateAggregate(Ui.CaptureThoughtWizardCompleted c)
+        void CaptureThought(Ui.CaptureThoughtWizardCompleted c)
         {
             _bus.Publish(c);
 
@@ -93,10 +88,8 @@ namespace Gtd.Client
         {
             _bus.Publish(obj);
 
-
             _queue.Enqueue(new FormLoaded());
             _queue.Enqueue(new Ui.DisplayInbox());
-
         }
 
         // lifetime change management
