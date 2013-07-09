@@ -59,6 +59,8 @@ namespace Gtd.Client
                     _currentSystem = profile.GetCurrentSustemId();
                 });
             UpdateDomain(system => system.InitIfNeeded(_currentSystem));
+
+            _queue.Enqueue(new ProfileLoaded(_currentSystem));
             
         }
 

@@ -116,6 +116,16 @@ namespace Gtd.Client
 
     public sealed class AppInit : Message { }
 
+    public sealed class ProfileLoaded : Message
+    {
+        public readonly TrustedSystemId SystemId;
+
+        public ProfileLoaded(TrustedSystemId systemId)
+        {
+            SystemId = systemId;
+        }
+    }
+
     public sealed class FormLoading : Message { }
 
     public sealed class FormLoaded : Message{}

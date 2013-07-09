@@ -221,9 +221,9 @@ namespace Gtd.Client
         IHandle<ThoughtArchived>,
         IHandle<ProjectDefined>,
         IHandle<ActionDefined>,
-        IHandle<FormLoading>,
+        
         IHandle<ActionCompleted>,
-    ISystemView
+    ISystemView, IHandle<ProfileLoaded>
 
     {
         readonly IEventStore _store;
@@ -240,8 +240,10 @@ namespace Gtd.Client
             bus.Subscribe<ThoughtArchived>(this);
             bus.Subscribe<ProjectDefined>(this);
             bus.Subscribe<ActionDefined>(this);
-            bus.Subscribe<FormLoading>(this);
+
             bus.Subscribe<ActionCompleted>(this);
+
+            bus.Subscribe<ProfileLoaded>(this);
         }
 
         public SystemView ViewInstance = new SystemView();
@@ -258,10 +260,10 @@ namespace Gtd.Client
 
         public TrustedSystem GetCurrentSystem()
         {
-            var system = ViewInstance.Systems.Select(v => v.Value).FirstOrDefault();
-            if (null == system)
-                throw new InvalidOperationException("System should be available");
-            return system;
+            if (null == _currentSystem)
+            
+                throw new InvalidOperationException("User profile should point to a system");
+            return ViewInstance.Systems[_currentSystem];
         }
 
         public ThoughtView[] ListInbox()
@@ -348,12 +350,21 @@ namespace Gtd.Client
             Update(e.Id, s => s.DueDateAssigned(e.ActionId, e.NewDueDate));
         }
 
-        public void Handle(FormLoading _)
+        public void Handle(ProfileLoaded evt)
         {
-            foreach (var e in _store.LoadEventStream("app").Events)
+            _currentSystem = evt.SystemId;
+            var eventStreamId = "system-" + _currentSystem.Id;
+            foreach (var e in _store.LoadEventStream(eventStreamId).Events)
             {
                 ((dynamic) this).Handle((dynamic) e);
             }
+        }
+
+        TrustedSystemId _currentSystem;
+
+        public void Handle(ClientProfileSwitchedToTrustedSystem message)
+        {
+            _currentSystem = message.Id;
         }
     }
 }
