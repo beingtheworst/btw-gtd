@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 
 namespace Gtd.CoreDomain
@@ -13,8 +14,14 @@ namespace Gtd.CoreDomain
 
     public sealed class EventStream
     {
-        public long StreamVersion;
-        public List<Event> Events = new List<Event>();
+        public EventStream(long streamVersion, ReadOnlyCollection<Event> events)
+        {
+            StreamVersion = streamVersion;
+            Events = (events);
+        }
+
+        public readonly long StreamVersion;
+        public readonly IList<Event> Events;
     }
 
     public interface IEventStore

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Btw.Portable;
 using Gtd.CoreDomain;
@@ -44,16 +45,14 @@ namespace Gtd.Client
         }
         public EventStream LoadEventStream(string name)
         {
-
-
-            // TODO: make this lazy somehow?
-            var stream = new EventStream();
+            var list = new List<Event>();
+            var streamVersion = 0L;
             foreach (var record in _store.EnumerateMessages(name, 0, int.MaxValue))
             {
-                stream.Events.AddRange(record.Items.Cast<Event>());
-                stream.StreamVersion = record.StreamVersion;
+                list.AddRange(record.Items.Cast<Event>());
+                streamVersion = record.StreamVersion;
             }
-            return stream;
+            return new EventStream(streamVersion, new ReadOnlyCollection<Event>(list));
         }
     }
 }

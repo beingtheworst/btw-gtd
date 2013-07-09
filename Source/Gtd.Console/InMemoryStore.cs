@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Gtd.CoreDomain;
 
@@ -18,13 +19,9 @@ namespace Gtd.Shell
 
         public EventStream LoadEventStream(string id)
         {
-            var eventStream = _eventStore.GetOrAdd(id, new Event[0]).ToList();
+            var eventStream = _eventStore.GetOrAdd(id, new Event[0]);
 
-            return new EventStream()
-                {
-                    Events = eventStream,
-                    StreamVersion = eventStream.Count
-                };
+            return new EventStream(eventStream.Count, new ReadOnlyCollection<Event>(eventStream));
         }
 
         public void AppendEventsToStream(string id, long expectedVersion, ICollection<Event> events)

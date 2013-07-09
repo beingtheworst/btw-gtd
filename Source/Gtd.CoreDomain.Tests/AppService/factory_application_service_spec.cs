@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Gtd.CoreDomain.Tests.AppService
@@ -73,11 +74,7 @@ namespace Gtd.CoreDomain.Tests.AppService
         EventStream IEventStore.LoadEventStream(string id)
         {
             var events = Store.Where(i => id.Equals(i.Item1)).Select(i => i.Item2).ToList();
-            return new EventStream
-            {
-                Events = events,
-                StreamVersion = events.Count
-            };
+            return new EventStream(events.Count, new ReadOnlyCollection<Event>(events));
         }
 
         void IEventStore.AppendEventsToStream(string id, long expectedVersion, ICollection<Event> events)
