@@ -532,6 +532,31 @@ namespace Gtd
             OldDueDate = oldDueDate;
         }
     }
+    [DataContract(Namespace = "BTW2/GTD")]
+    public partial class InitClientProfileIfNeeded : Command
+    {
+    }
+    [DataContract(Namespace = "BTW2/GTD")]
+    public partial class ClientProfileSwitchedToTrustedSystem : Event, IClientProfileEvent
+    {
+        [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
+        
+        ClientProfileSwitchedToTrustedSystem () {}
+        public ClientProfileSwitchedToTrustedSystem (TrustedSystemId id)
+        {
+            Id = id;
+        }
+    }
+    
+    public interface IClientProfileApplicationService
+    {
+        void When(InitClientProfileIfNeeded c);
+    }
+    
+    public interface IClientProfileState
+    {
+        void When(ClientProfileSwitchedToTrustedSystem e);
+    }
     
     public interface ITrustedSystemApplicationService
     {

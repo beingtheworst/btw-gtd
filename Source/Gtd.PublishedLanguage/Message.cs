@@ -17,4 +17,9 @@ namespace Gtd
     {
         TrustedSystemId Id { get; }
     }
+
+    public interface IClientProfileEvent
+    {
+        
+    }
 }

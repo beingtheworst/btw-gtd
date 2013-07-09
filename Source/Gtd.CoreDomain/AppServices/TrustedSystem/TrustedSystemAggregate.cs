@@ -303,5 +303,12 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             Apply(new ActionDueDateMoved(_aggState.Id, actionId, action.DueDate, newDueDate));
         }
 
+        public void InitIfNeeded(TrustedSystemId id)
+        {
+            if (_aggState.Id == null)
+            {
+                Create(id);
+            }
+        }
     }
 }

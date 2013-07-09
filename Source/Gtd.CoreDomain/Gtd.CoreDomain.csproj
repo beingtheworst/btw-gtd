@@ -44,6 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppServices\ClientProfile\ClientProfileAggregate.cs" />
+    <Compile Include="AppServices\ClientProfile\ClientProfileState.cs" />
     <Compile Include="AppServices\TrustedSystem\TrustedSystemAggregate.cs" />
     <Compile Include="AppServices\TrustedSystem\TrustedSystemState.cs" />
     <Compile Include="DomainError.cs" />

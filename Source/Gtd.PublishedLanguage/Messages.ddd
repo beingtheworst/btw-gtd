@@ -100,3 +100,13 @@ interface TrustedSystem(TrustedSystemId Id)
 
 }
 
+interface ClientProfile()
+{
+    if ? = Command
+        
+    if ! = Event, IClientProfileEvent
+    InitClientProfileIfNeeded?()
+
+    ClientProfileSwitchedToTrustedSystem!(TrustedSystemId id)
+}
+
