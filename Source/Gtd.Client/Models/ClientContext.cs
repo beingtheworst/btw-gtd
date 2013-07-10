@@ -24,10 +24,13 @@ namespace Gtd.Client.Models
             return CurrentModel.ProjectList;
         }
 
-        public ThoughtView[] ListInbox()
+        public IList<ThoughtView> ListInbox()
         {
-            return CurrentModel.Thoughts.ToArray();
+            var thoughts = CurrentModel.Thoughts;
+            
+            return thoughts.ToArray();
         }
+
 
         public ProjectView GetProjectOrNull(ProjectId id)
         {

@@ -57,7 +57,8 @@ namespace Gtd.Client
 
         void UpdateInboxNode()
         {
-            _tree.UpdateNode("inbox",string.Format("Inbox ({0})", _view.ListInbox().Length));
+            
+            _tree.UpdateNode("inbox",string.Format("Inbox ({0})", _view.ListInbox().Count));
         }
 
         
