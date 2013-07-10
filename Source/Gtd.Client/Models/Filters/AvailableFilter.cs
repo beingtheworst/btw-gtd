@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Gtd.Shell.Projections;
+using Gtd.Client.Models;
 
 namespace Gtd.Shell.Filters
 {

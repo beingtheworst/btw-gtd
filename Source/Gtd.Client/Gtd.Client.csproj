@@ -49,6 +49,12 @@
   <ItemGroup>
     <Compile Include="AppEventStore.cs" />
     <Compile Include="Controllers\AppController.cs" />
+    <Compile Include="Models\Filters\AllActionsFilter.cs" />
+    <Compile Include="Models\Filters\AvailableFilter.cs" />
+    <Compile Include="Models\Filters\FilterCriteria.cs" />
+    <Compile Include="Models\Filters\IFilterCriteria.cs" />
+    <Compile Include="Models\Filters\NextActionFilter.cs" />
+    <Compile Include="Models\Filters\RemainingFilter.cs" />
     <Compile Include="Models\ClientModelController.cs" />
     <Compile Include="Models\ClientContext.cs" />
     <Compile Include="Views\CaptureThought\CaptureThoughtForm.cs">

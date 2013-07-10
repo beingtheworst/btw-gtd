@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Gtd.Shell.Projections;
+using Gtd.Client.Models;
 using System.Linq;
 
 namespace Gtd.Shell.Filters
