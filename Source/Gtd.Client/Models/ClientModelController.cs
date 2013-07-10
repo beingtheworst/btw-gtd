@@ -12,7 +12,7 @@ namespace Gtd.Client.Models
         
         IHandle<ActionCompleted>,
 
-        IHandle<ProfileLoaded>
+        IHandle<ProfileLoaded>, IHandle<Ui.FilterChanged>
 
     {
         readonly IEventStore _store;
@@ -41,6 +41,7 @@ namespace Gtd.Client.Models
             bus.Subscribe<ActionCompleted>(this);
 
             bus.Subscribe<ProfileLoaded>(this);
+            bus.Subscribe<Ui.FilterChanged>(this);
         }
 
 
@@ -149,12 +150,13 @@ namespace Gtd.Client.Models
             {
                 ((dynamic) this).Handle((dynamic) e);
             }
-
-            
-            
             _provider.SwitchToModel(_current);
         }
 
-        
+
+        public void Handle(Ui.FilterChanged message)
+        {
+            _provider.SwitchToFilter(message.Criteria);
+        }
     }
 }
