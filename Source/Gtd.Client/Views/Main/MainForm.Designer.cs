@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this._menuGoToInbox = new System.Windows.Forms.ToolStripMenuItem();
             this._menuCaptureThought = new System.Windows.Forms.ToolStripMenuItem();
             this._menuDefineProject = new System.Windows.Forms.ToolStripMenuItem();
+            this._filter = new System.Windows.Forms.ToolStripComboBox();
             this._log = new System.Windows.Forms.RichTextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this._menuGoToInbox = new System.Windows.Forms.ToolStripMenuItem();
-            this._filter = new System.Windows.Forms.ToolStripComboBox();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -55,6 +55,12 @@
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
+            // _menuGoToInbox
+            // 
+            this._menuGoToInbox.Name = "_menuGoToInbox";
+            this._menuGoToInbox.Size = new System.Drawing.Size(83, 23);
+            this._menuGoToInbox.Text = "Go To Inbox";
+            // 
             // _menuCaptureThought
             // 
             this._menuCaptureThought.Name = "_menuCaptureThought";
@@ -66,6 +72,15 @@
             this._menuDefineProject.Name = "_menuDefineProject";
             this._menuDefineProject.Size = new System.Drawing.Size(93, 23);
             this._menuDefineProject.Text = "Define Project";
+            // 
+            // _filter
+            // 
+            this._filter.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this._filter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this._filter.IntegralHeight = false;
+            this._filter.Name = "_filter";
+            this._filter.Size = new System.Drawing.Size(121, 23);
+            this._filter.SelectedIndexChanged += new System.EventHandler(this._filter_SelectedIndexChanged);
             // 
             // _log
             // 
@@ -97,20 +112,6 @@
             this.splitContainer1.Size = new System.Drawing.Size(693, 350);
             this.splitContainer1.SplitterDistance = 231;
             this.splitContainer1.TabIndex = 4;
-            // 
-            // _menuGoToInbox
-            // 
-            this._menuGoToInbox.Name = "_menuGoToInbox";
-            this._menuGoToInbox.Size = new System.Drawing.Size(83, 23);
-            this._menuGoToInbox.Text = "Go To Inbox";
-            // 
-            // _filter
-            // 
-            this._filter.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this._filter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this._filter.IntegralHeight = false;
-            this._filter.Name = "_filter";
-            this._filter.Size = new System.Drawing.Size(121, 23);
             // 
             // MainForm
             // 

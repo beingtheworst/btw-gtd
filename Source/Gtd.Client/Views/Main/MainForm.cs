@@ -31,6 +31,12 @@ namespace Gtd.Client
             _menuDefineProject.Click += (sender, args) => _controller.Publish(new Ui.DefineProjectClicked());
             _menuGoToInbox.Click += (sender, args) => _controller.Publish(new Ui.DisplayInbox());
 
+            _filter.SelectedIndexChanged += (sender, args) =>
+                {
+                    var item = (FilterDisplay) _filter.SelectedItem;
+                    _controller.Publish(new Ui.FilterChanged(item.Criteria));
+                };
+
         }
 
         public void ShowInboxMenu()
@@ -43,6 +49,20 @@ namespace Gtd.Client
                 });
         }
 
+        sealed class FilterDisplay
+        {
+            public readonly IFilterCriteria Criteria;
+
+            public FilterDisplay(IFilterCriteria criteria)
+            {
+                Criteria = criteria;
+            }
+            public override string ToString()
+            {
+                return "(not yet): " + Criteria.Title;
+            }
+        }
+
         public void DisplayFilters(ICollection<IFilterCriteria> filters)
         {
             if (filters.Count == 0)
@@ -51,10 +71,9 @@ namespace Gtd.Client
                 {
                     foreach (var filterCriteria in filters)
                     {
-                        _filter.Items.Add("(WIP): " + filterCriteria.Title);
+                        _filter.Items.Add(new FilterDisplay(filterCriteria));
                     }
                     _filter.SelectedIndex = 0;
-
                 });
             
         }
@@ -78,6 +97,11 @@ namespace Gtd.Client
                     _log.AppendText(format);
                     _log.ScrollToCaret();
                 });
+        }
+
+        private void _filter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 

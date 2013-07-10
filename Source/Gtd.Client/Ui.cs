@@ -4,6 +4,8 @@
 
 #endregion
 
+using Gtd.Shell.Filters;
+
 namespace Gtd.Client
 {
     public static class Ui
@@ -86,6 +88,16 @@ namespace Gtd.Client
             public ArchiveThoughtClicked(ThoughtId id)
             {
                 Id = id;
+            }
+        }
+
+        public sealed class FilterChanged : Message
+        {
+            public readonly IFilterCriteria Criteria;
+
+            public FilterChanged(IFilterCriteria criteria)
+            {
+                Criteria = criteria;
             }
         }
     }

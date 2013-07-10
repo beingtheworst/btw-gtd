@@ -4,8 +4,6 @@ namespace Gtd.Shell.Filters
 {
     public static class FilterCriteria
     {
-                
-
         public static IEnumerable<IFilterCriteria>  LoadAllFilters()
         {
             yield return new NextActionFilter();
