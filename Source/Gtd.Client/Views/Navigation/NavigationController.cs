@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using Gtd.Client.Models;
 using Gtd.Client.Views.Navigation;
+using System.Linq;
 
 namespace Gtd.Client
 {
@@ -130,7 +131,9 @@ namespace Gtd.Client
                 {
                     foreach (var project in _view.ListProjects())
                     {
-                        AddProjectNode(project.ProjectId, string.Format("{0} ({1})", project.Outcome, project.Actions.Count));
+                        var actions = _view.CurrentFilter.FilterActions(project);
+                        var count = _view.CurrentFilter.FormatActionCount(actions.Count());
+                        AddProjectNode(project.ProjectId, string.Format("{0} ({1})", project.Outcome, count));
                     }
                     UpdateInboxNode();
                 });
