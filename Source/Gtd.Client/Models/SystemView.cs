@@ -1,17 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using Gtd.CoreDomain;
 using Gtd.Shell.Filters;
 
-namespace Gtd.Client
+namespace Gtd.Client.Models
 {
-    public interface ISystemView
-    {
-        IList<ProjectView> ListProjects();
-        ThoughtView[] ListInbox();
-        ProjectView GetProjectOrNull(ProjectId id);
-    }
+    
 
     public sealed class FilterService
     {
@@ -25,7 +18,7 @@ namespace Gtd.Client
 
     public sealed class SystemView 
     {
-        public IDictionary<TrustedSystemId, TrustedSystem> Systems = new Dictionary<TrustedSystemId, TrustedSystem>();
+        public IDictionary<TrustedSystemId, ClientModel> Systems = new Dictionary<TrustedSystemId, ClientModel>();
     }
 
     public interface IItemView
@@ -126,21 +119,23 @@ namespace Gtd.Client
         }
     }
 
-    // This is an in-memory View that the Projection class is updating the state of.
-    // In a production system, Projection classes tend to be updating state
-    // to a persistent disk (file, Redis, etc.) or into some other system 
-    // rather than in-memory.  May also be broken down into smaller Views so that we
-    // don't just throw around one big/large object.
-    // This in-memory View is currently loaded in almost every Console command that
-    // displays information to the shell/console screen.
-    // (ex: Gtd.Shell.Commands.ListActionsCommand)
-    public sealed class TrustedSystem
+    public sealed class ModelService
+    {
+        
+    }
+    
+    public sealed class ClientModel
     {
         public List<ThoughtView> Thoughts = new List<ThoughtView>();
         public List<ProjectView> ProjectList = new List<ProjectView>();
         public Dictionary<ProjectId, ProjectView> ProjectDict = new Dictionary<ProjectId, ProjectView>();
         public Dictionary<ActionId, ActionView> ActionDict = new Dictionary<ActionId, ActionView>();
         public Dictionary<Guid, IItemView> DictOfAllItems = new Dictionary<Guid, IItemView>();
+
+
+        
+
+        public TrustedSystemId Id { get; private set; }
 
         public void ThoughtCaptured(ThoughtId thoughtId, string thought, DateTime date)
         {
@@ -212,159 +207,21 @@ namespace Gtd.Client
         {
             ActionDict[actionId].DueDateAssigned(newDueDate);
         }
-    }
 
 
-    public sealed class SystemProjection :
-        IHandle<TrustedSystemCreated>,
-        IHandle<ThoughtCaptured>,
-        IHandle<ThoughtArchived>,
-        IHandle<ProjectDefined>,
-        IHandle<ActionDefined>,
+
+
         
-        IHandle<ActionCompleted>,
-    ISystemView, IHandle<ProfileLoaded>
-
-    {
-        readonly IEventStore _store;
-
-        public SystemProjection(IEventStore store)
+        public void Create(TrustedSystemId id)
         {
-            _store = store;
+            Id = id;
         }
 
-        public void SubscribeTo(ISubscriber bus)
-        {
-            bus.Subscribe<TrustedSystemCreated>(this);
-            bus.Subscribe<ThoughtCaptured>(this);
-            bus.Subscribe<ThoughtArchived>(this);
-            bus.Subscribe<ProjectDefined>(this);
-            bus.Subscribe<ActionDefined>(this);
-
-            bus.Subscribe<ActionCompleted>(this);
-
-            bus.Subscribe<ProfileLoaded>(this);
-        }
-
-        public SystemView ViewInstance = new SystemView();
-
-        public ProjectView GetProjectOrNull(ProjectId id)
-        {
-            return GetCurrentSystem().ProjectDict[id];
-        }
-
-        public IList<ProjectView> ListProjects()
-        {
-            return GetCurrentSystem().ProjectList.ToArray();
-        }
-
-        public TrustedSystem GetCurrentSystem()
-        {
-            if (null == _currentSystem)
-            
-                throw new InvalidOperationException("User profile should point to a system");
-            return ViewInstance.Systems[_currentSystem];
-        }
-
-        public ThoughtView[] ListInbox()
+        public void Verify(TrustedSystemId id)
         {
 
-            return GetCurrentSystem().Thoughts.ToArray();
-        }
-
-        void Update(TrustedSystemId id, Action<TrustedSystem> update)
-        {
-            update(ViewInstance.Systems[id]);
-        }
-
-        public void Handle(TrustedSystemCreated e)
-        {
-            ViewInstance.Systems.Add(e.Id, new TrustedSystem());
-        }
-
-        public void Handle(ThoughtCaptured e)
-        {
-            Update(e.Id, s => s.ThoughtCaptured(e.ThoughtId, e.Thought, e.TimeUtc));
-        }
-        public void Handle(ThoughtArchived e)
-        {
-            Update(e.Id, s => s.ThoughtArchived(e.ThoughtId));
-        }
-
-        public void Handle(ProjectDefined e)
-        {
-            Update(e.Id, s => s.ProjectDefined(e.ProjectId, e.ProjectOutcome, e.Type));
-        }
-        public void Handle(ActionDefined e)
-        {
-            Update(e.Id, s => s.ActionDefined(e.ProjectId, e.ActionId, e.Outcome));
-        }
-        public void Handle(ActionCompleted e)
-        {
-            Update(e.Id, s => s.ActionCompleted(e.ActionId));
-        }
-        public void Handle(ActionOutcomeChanged e)
-        {
-            Update(e.Id, s => s.ActionOutcomeChanged(e.ActionId, e.ActionOutcome));
-        }
-
-        public void Handle(ProjectOutcomeChanged e)
-        {
-            Update(e.Id, s => s.ProjectOutcomeChanged(e.ProjectId, e.ProjectOutcome));
-        }
-
-        public void Handle(ThoughtSubjectChanged e)
-        {
-            Update(e.Id, s => s.ThoughtSubjectChanged(e.ThoughtId, e.Subject));
-        }
-        public void Handle(ActionArchived e)
-        {
-            Update(e.Id, s => s.ActionArchived(e.ActionId));
-        }
-        public void Handle(ProjectTypeChanged e)
-        {
-            Update(e.Id, s => s.ProjectTypeChanged(e.ProjectId, e.Type));
-        }
-        public void Handle(StartDateAssignedToAction e)
-        {
-            Update(e.Id, s => s.StartDateAssigned(e.ActionId, e.NewStartDate));
-        }
-        public void Handle(DueDateAssignedToAction e)
-        {
-            Update(e.Id, s => s.DueDateAssigned(e.ActionId, e.NewDueDate));
-        }
-        public void Handle(StartDateRemovedFromAction e)
-        {
-            Update(e.Id, s => s.StartDateAssigned(e.ActionId, DateTime.MinValue));
-        }
-        public void Handle(DueDateRemovedFromAction e)
-        {
-            Update(e.Id, s => s.DueDateAssigned(e.ActionId, DateTime.MinValue));
-        }
-        public void Handle(ActionStartDateMoved e)
-        {
-            Update(e.Id, s => s.StartDateAssigned(e.ActionId, e.NewStartDate));
-        }
-        public void Handle(ActionDueDateMoved e)
-        {
-            Update(e.Id, s => s.DueDateAssigned(e.ActionId, e.NewDueDate));
-        }
-
-        public void Handle(ProfileLoaded evt)
-        {
-            _currentSystem = evt.SystemId;
-            var eventStreamId = "system-" + _currentSystem.Id;
-            foreach (var e in _store.LoadEventStream(eventStreamId).Events)
-            {
-                ((dynamic) this).Handle((dynamic) e);
-            }
-        }
-
-        TrustedSystemId _currentSystem;
-
-        public void Handle(ClientProfileSwitchedToTrustedSystem message)
-        {
-            _currentSystem = message.Id;
+            //if (_currentId.Id != id.Id)
+            //    throw new InvalidOperationException();
         }
     }
 }

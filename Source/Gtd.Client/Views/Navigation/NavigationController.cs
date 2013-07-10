@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using Gtd.Client.Models;
 using Gtd.Client.Views.Navigation;
 
 namespace Gtd.Client
@@ -15,12 +16,12 @@ namespace Gtd.Client
         readonly NavigationView _tree;
         readonly Region _region;
         readonly IPublisher _queue;
-        readonly ISystemView _view;
+        readonly ClientModelProvider _view;
         
 
         bool _visible;
 
-        NavigationController(Region region, IPublisher queue, ISystemView view)
+        NavigationController(Region region, IPublisher queue, ClientModelProvider view)
         {
             _tree = new NavigationView(this);
             _region = region;
@@ -28,7 +29,7 @@ namespace Gtd.Client
             _view = view;
         }
 
-        public static NavigationController Wire(Region control, IPublisher queue, ISubscriber bus, ISystemView view)
+        public static NavigationController Wire(Region control, IPublisher queue, ISubscriber bus, ClientModelProvider view)
         {
             var adapter  = new NavigationController(control, queue, view);
 

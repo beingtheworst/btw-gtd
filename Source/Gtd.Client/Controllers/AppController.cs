@@ -119,7 +119,7 @@ namespace Gtd.Client
             if (_currentSystem == null)
                 throw new InvalidOperationException("System ID should be provided by now");
 
-            var eventStreamId = "system-" + _currentSystem.Id;
+            var eventStreamId = _currentSystem.ToStreamId();
             var eventStream = _store.LoadEventStream(eventStreamId);
 
             var state = TrustedSystemState.BuildStateFromEventHistory(eventStream.Events);

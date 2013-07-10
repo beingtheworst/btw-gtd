@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using Gtd.Client.Models;
 
 namespace Gtd.Client.Views.Actions
 {
@@ -9,7 +10,7 @@ namespace Gtd.Client.Views.Actions
             InitializeComponent();
         }
 
-        public void DisplayProject(Client.ProjectView project)
+        public void DisplayProject(Models.ProjectView project)
         {
             _actionList.BeginUpdate();
 

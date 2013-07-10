@@ -24,6 +24,11 @@ namespace Gtd
         [DataMember(Order = 1)]
         public override long Id { get; protected set; }
 
+        public string ToStreamId()
+        {
+            return "system-" + Id;
+        }
+
         public TrustedSystemId() { }
     }
 

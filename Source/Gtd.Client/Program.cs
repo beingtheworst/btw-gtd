@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using Btw.Portable;
+using Gtd.Client.Models;
 using Gtd.Client.Views.Actions;
 using Gtd.Client.Views.CaptureThought;
 
@@ -38,9 +39,10 @@ namespace Gtd.Client
             controller.SetMainQueue(mainQueue);
             events.SetDispatcher(mainQueue);
 
-            var view = new SystemProjection(events);
-            view.SubscribeTo(bus);
+            var provider = new ClientModelProvider();
 
+            ClientModelController.WireTo(events, provider, bus);
+            
             // create services and bind them to the bus
 
             // we wire all controls together in a native way.
@@ -51,9 +53,9 @@ namespace Gtd.Client
             var filterService = new FilterService();
 
             MainFormController.Wire(form, mainQueue, bus,filterService);
-            InboxController.Wire(form.MainRegion, mainQueue, bus, view);
-            NavigationController.Wire(form.NavigationRegion, mainQueue, bus, view);
-            ProjectController.Wire(form.MainRegion, mainQueue, bus, view);
+            InboxController.Wire(form.MainRegion, mainQueue, bus, provider);
+            NavigationController.Wire(form.NavigationRegion, mainQueue, bus, provider);
+            ProjectController.Wire(form.MainRegion, mainQueue, bus, provider);
             LogController.Wire(form, bus);
 
             CaptureThoughtController.Wire(new CaptureThoughtForm(form), bus, mainQueue);
