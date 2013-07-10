@@ -9,10 +9,10 @@ namespace Gtd.Client
 {
     public sealed class NavigationController : 
         IHandle<AppInit>, 
-        IHandle<FormLoaded>,
+        IHandle<ClientModelLoaded>,
     IHandle<ThoughtCaptured>, 
         IHandle<ThoughtArchived>,
-        IHandle<ProjectDefined>, IHandle<ActionDefined>
+        IHandle<ProjectDefined>, IHandle<ActionDefined>, IHandle<Ui.FilterChanged>
     {
         readonly NavigationView _tree;
         readonly Region _region;
@@ -20,7 +20,7 @@ namespace Gtd.Client
         readonly ClientContext _view;
         
 
-        bool _visible;
+        bool _loaded;
 
         NavigationController(Region region, IPublisher queue, ClientContext view)
         {
@@ -39,8 +39,8 @@ namespace Gtd.Client
             bus.Subscribe<ThoughtArchived>(adapter);
             bus.Subscribe<ProjectDefined>(adapter);
             bus.Subscribe<ActionDefined>(adapter);
-            bus.Subscribe<FormLoaded>(adapter);
-
+            bus.Subscribe<ClientModelLoaded>(adapter);
+            bus.Subscribe<Ui.FilterChanged>(adapter);
 
 
             return adapter ;
@@ -51,14 +51,13 @@ namespace Gtd.Client
             _region.RegisterDock(_tree, "nav-tree");
             _region.SwitchTo("nav-tree");
 
-            _tree.Sync(() => _tree.AddNode("inbox","Inbox"));
+            //_tree.Sync(() => _tree.AddNode("inbox","Inbox"));
         }
 
         
 
         void UpdateInboxNode()
         {
-            
             _tree.UpdateNode("inbox",string.Format("Inbox ({0})", _view.ListInbox().Count));
         }
 
@@ -66,7 +65,7 @@ namespace Gtd.Client
 
         public void Handle(ThoughtCaptured message)
         {
-            if (!_visible)
+            if (!_loaded)
                 return;
 
             Sync(UpdateInboxNode);
@@ -74,7 +73,7 @@ namespace Gtd.Client
 
         public void Handle(ThoughtArchived message)
         {
-            if (!_visible)
+            if (!_loaded)
                 return;
             Sync(UpdateInboxNode);
         }
@@ -96,7 +95,7 @@ namespace Gtd.Client
 
         public void Handle(ProjectDefined message)
         {
-            if (!_visible)
+            if (!_loaded)
                 return;
             Sync(() => AddProjectNode(message.ProjectId, message.ProjectOutcome));
         }
@@ -123,21 +122,26 @@ namespace Gtd.Client
             return "project|" + id.Id;
         }
 
-        public void Handle(FormLoaded message)
+        
+
+        public void Handle(ClientModelLoaded message)
         {
-            _visible = true;
+            _loaded = true;
 
-            Sync(() =>
-                {
-                    foreach (var project in _view.ListProjects())
-                    {
-                        var actions = _view.CurrentFilter.FilterActions(project);
-                        var count = _view.CurrentFilter.FormatActionCount(actions.Count());
-                        AddProjectNode(project.ProjectId, string.Format("{0} ({1})", project.Outcome, count));
-                    }
-                    UpdateInboxNode();
-                });
+            Sync(LoadNavigation);
 
+        }
+
+        void LoadNavigation()
+        {
+            _tree.Clear();
+            _tree.AddNode("inbox", string.Format("Inbox ({0})", _view.ListInbox().Count));
+            foreach (var project in _view.ListProjects())
+            {
+                var actions = _view.CurrentFilter.FilterActions(project);
+                var count = _view.CurrentFilter.FormatActionCount(actions.Count());
+                AddProjectNode(project.ProjectId, string.Format("{0} ({1})", project.Outcome, count));
+            }
         }
 
         public void WhenNodeSelected(string tag)
@@ -153,6 +157,12 @@ namespace Gtd.Client
             {
                 _queue.Publish(new Ui.DisplayProject((ProjectId) node));
             }
+        }
+
+        public void Handle(Ui.FilterChanged message)
+        {
+            if (!_loaded) return;
+            Sync(LoadNavigation);
         }
     }
 

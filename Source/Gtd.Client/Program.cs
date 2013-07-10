@@ -41,7 +41,7 @@ namespace Gtd.Client
 
             var provider = new ClientContext();
 
-            ClientModelController.WireTo(events, provider, bus);
+            ClientModelController.WireTo(events, provider, bus, mainQueue);
             
             // create services and bind them to the bus
 
@@ -126,6 +126,11 @@ namespace Gtd.Client
         {
             SystemId = systemId;
         }
+    }
+
+    public sealed class ClientModelLoaded : Message
+    {
+        
     }
 
     public sealed class FormLoading : Message { }

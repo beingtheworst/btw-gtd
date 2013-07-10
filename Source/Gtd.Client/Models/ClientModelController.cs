@@ -17,16 +17,18 @@ namespace Gtd.Client.Models
     {
         readonly IEventStore _store;
         readonly ClientContext _provider;
+        readonly IMessageQueue _queue;
 
-        ClientModelController(IEventStore store, ClientContext provider)
+        ClientModelController(IEventStore store, ClientContext provider, IMessageQueue queue)
         {
             _store = store;
             _provider = provider;
+            _queue = queue;
         }
 
-        public static void WireTo(IEventStore store, ClientContext provider, ISubscriber subscriber)
+        public static void WireTo(IEventStore store, ClientContext provider, ISubscriber subscriber, IMessageQueue queue)
         {
-            var controller = new ClientModelController(store, provider);
+            var controller = new ClientModelController(store, provider, queue);
             controller.SubscribeTo(subscriber);
         }
 
@@ -151,6 +153,8 @@ namespace Gtd.Client.Models
                 ((dynamic) this).Handle((dynamic) e);
             }
             _provider.SwitchToModel(_current);
+
+            _queue.Enqueue(new ClientModelLoaded());
         }
 
 
