@@ -6,9 +6,9 @@ namespace Gtd.Shell.Filters
     {
         public static IEnumerable<IFilterCriteria>  LoadAllFilters()
         {
-            yield return new NextActionFilter();
-            yield return new AvailableFilter();
             yield return new RemainingFilter();
+            yield return new AvailableFilter();
+            yield return new NextActionFilter();
             yield return new AllActionsFilter();
         }
 
