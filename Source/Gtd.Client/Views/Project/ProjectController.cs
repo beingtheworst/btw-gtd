@@ -5,11 +5,11 @@ namespace Gtd.Client.Views.Actions
     public sealed class ProjectController : IHandle<Ui.DisplayProject>
     {
         readonly ProjectView _control;
-        readonly ClientModelProvider _view;
+        readonly ClientContext _view;
         readonly Region _mainRegion;
         readonly IPublisher _bus;
 
-        ProjectController(ProjectView control, ClientModelProvider view, Region mainRegion, IPublisher bus)
+        ProjectController(ProjectView control, ClientContext view, Region mainRegion, IPublisher bus)
         {
             _control = control;
             _view = view;
@@ -17,7 +17,7 @@ namespace Gtd.Client.Views.Actions
             _bus = bus;
         }
 
-        public static void Wire(Region mainRegion, IPublisher queuedHandler, ISubscriber bus, ClientModelProvider view)
+        public static void Wire(Region mainRegion, IPublisher queuedHandler, ISubscriber bus, ClientContext view)
         {
             // passed from external wire as interface implementor
             var control = new ProjectView();

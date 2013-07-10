@@ -16,15 +16,15 @@ namespace Gtd.Client.Models
 
     {
         readonly IEventStore _store;
-        readonly ClientModelProvider _provider;
+        readonly ClientContext _provider;
 
-        ClientModelController(IEventStore store, ClientModelProvider provider)
+        ClientModelController(IEventStore store, ClientContext provider)
         {
             _store = store;
             _provider = provider;
         }
 
-        public static void WireTo(IEventStore store, ClientModelProvider provider, ISubscriber subscriber)
+        public static void WireTo(IEventStore store, ClientContext provider, ISubscriber subscriber)
         {
             var controller = new ClientModelController(store, provider);
             controller.SubscribeTo(subscriber);

@@ -39,7 +39,7 @@ namespace Gtd.Client
             controller.SetMainQueue(mainQueue);
             events.SetDispatcher(mainQueue);
 
-            var provider = new ClientModelProvider();
+            var provider = new ClientContext();
 
             ClientModelController.WireTo(events, provider, bus);
             

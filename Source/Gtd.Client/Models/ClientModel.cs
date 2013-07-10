@@ -16,10 +16,6 @@ namespace Gtd.Client.Models
         }
     }
 
-    public sealed class SystemView 
-    {
-        public IDictionary<TrustedSystemId, ClientModel> Systems = new Dictionary<TrustedSystemId, ClientModel>();
-    }
 
     public interface IItemView
     {
@@ -119,10 +115,6 @@ namespace Gtd.Client.Models
         }
     }
 
-    public sealed class ModelService
-    {
-        
-    }
     
     public sealed class ClientModel
     {

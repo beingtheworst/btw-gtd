@@ -2,29 +2,29 @@
 
 namespace Gtd.Client.Models
 {
-    public sealed class ClientModelProvider 
+    public sealed class ClientContext 
     {
-        public ClientModel Model { get; private set; }
+        public ClientModel CurrentModel { get; private set; }
 
         public void SwitchToModel(ClientModel model)
         {
-            Model = model;
+            CurrentModel = model;
         }
 
 
         public IList<ProjectView> ListProjects()
         {
-            return Model.ProjectList;
+            return CurrentModel.ProjectList;
         }
 
         public ThoughtView[] ListInbox()
         {
-            return Model.Thoughts.ToArray();
+            return CurrentModel.Thoughts.ToArray();
         }
 
         public ProjectView GetProjectOrNull(ProjectId id)
         {
-            return Model.ProjectDict[id];
+            return CurrentModel.ProjectDict[id];
         }
     }
 }

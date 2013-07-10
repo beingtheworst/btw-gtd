@@ -50,7 +50,7 @@
     <Compile Include="AppEventStore.cs" />
     <Compile Include="Controllers\AppController.cs" />
     <Compile Include="Models\ClientModelController.cs" />
-    <Compile Include="Models\ClientModelProvider.cs" />
+    <Compile Include="Models\ClientContext.cs" />
     <Compile Include="Views\CaptureThought\CaptureThoughtForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -91,7 +91,7 @@
     <Compile Include="Views\Inbox\InboxController.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Models\SystemView.cs" />
+    <Compile Include="Models\ClientModel.cs" />
     <Compile Include="Views\Main\MainFormController.cs" />
     <Compile Include="Views\Navigation\NavigationController.cs" />
     <Compile Include="Views\Navigation\NavigationView.cs">
