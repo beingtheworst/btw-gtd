@@ -17,12 +17,12 @@ namespace Gtd.Client
         readonly NavigationView _tree;
         readonly Region _region;
         readonly IPublisher _queue;
-        readonly ClientContext _view;
+        readonly ClientPerspective _view;
         
 
         bool _loaded;
 
-        NavigationController(Region region, IPublisher queue, ClientContext view)
+        NavigationController(Region region, IPublisher queue, ClientPerspective view)
         {
             _tree = new NavigationView(this);
             _region = region;
@@ -30,7 +30,7 @@ namespace Gtd.Client
             _view = view;
         }
 
-        public static NavigationController Wire(Region control, IPublisher queue, ISubscriber bus, ClientContext view)
+        public static NavigationController Wire(Region control, IPublisher queue, ISubscriber bus, ClientPerspective view)
         {
             var adapter  = new NavigationController(control, queue, view);
 

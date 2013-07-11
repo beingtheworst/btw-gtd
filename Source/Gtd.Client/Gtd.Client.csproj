@@ -55,8 +55,8 @@
     <Compile Include="Models\Filters\IFilterCriteria.cs" />
     <Compile Include="Models\Filters\NextActionFilter.cs" />
     <Compile Include="Models\Filters\RemainingFilter.cs" />
-    <Compile Include="Models\ClientModelController.cs" />
-    <Compile Include="Models\ClientContext.cs" />
+    <Compile Include="Models\ClientPerspectiveController.cs" />
+    <Compile Include="Models\ClientPerspective.cs" />
     <Compile Include="Views\CaptureThought\CaptureThoughtForm.cs">
       <SubType>Form</SubType>
     </Compile>

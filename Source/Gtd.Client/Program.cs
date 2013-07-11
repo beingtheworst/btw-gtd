@@ -39,9 +39,9 @@ namespace Gtd.Client
             controller.SetMainQueue(mainQueue);
             events.SetDispatcher(mainQueue);
 
-            var provider = new ClientContext();
+            var provider = new ClientPerspective();
 
-            ClientModelController.WireTo(events, provider, bus, mainQueue);
+            ClientPerspectiveController.WireTo(events, provider, bus, mainQueue);
             
             // create services and bind them to the bus
 

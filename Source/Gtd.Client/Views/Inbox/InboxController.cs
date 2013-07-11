@@ -11,11 +11,11 @@ namespace Gtd.Client
     {
         readonly Region _dock;
         readonly IPublisher _queue;
-        readonly ClientContext _view;
+        readonly ClientPerspective _view;
 
         readonly InboxView _control;
 
-        InboxController(Region dock, IPublisher queue, ClientContext view)
+        InboxController(Region dock, IPublisher queue, ClientPerspective view)
         {
             _dock = dock;
             _queue = queue;
@@ -23,7 +23,7 @@ namespace Gtd.Client
             _control = new InboxView(this);
         }
 
-        public static InboxController Wire(Region form, IPublisher queue, ISubscriber bus, ClientContext view)
+        public static InboxController Wire(Region form, IPublisher queue, ISubscriber bus, ClientPerspective view)
         {
             var adapter = new InboxController(form, queue, view);
 

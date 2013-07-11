@@ -124,9 +124,6 @@ namespace Gtd.Client.Models
         public Dictionary<ActionId, ActionView> ActionDict = new Dictionary<ActionId, ActionView>();
         public Dictionary<Guid, IItemView> DictOfAllItems = new Dictionary<Guid, IItemView>();
 
-
-        
-
         public TrustedSystemId Id { get; private set; }
 
         public void ThoughtCaptured(ThoughtId thoughtId, string thought, DateTime date)
@@ -216,4 +213,7 @@ namespace Gtd.Client.Models
             //    throw new InvalidOperationException();
         }
     }
+
+    
+
 }
