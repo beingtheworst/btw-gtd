@@ -63,7 +63,7 @@
     <Compile Include="Views\CaptureThought\CaptureThoughtForm.Designer.cs">
       <DependentUpon>CaptureThoughtForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\CaptureThought\DefineProjectController.cs" />
+    <Compile Include="Views\DefineProject\DefineProjectController.cs" />
     <Compile Include="Views\DefineProject\DefineProjectForm.cs">
       <SubType>Form</SubType>
     </Compile>
