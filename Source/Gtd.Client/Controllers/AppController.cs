@@ -42,7 +42,8 @@ namespace Gtd.Client
 
         #region Whats a Finite State Machine (Fsm)...
         // It's just a clean way to express logic in the form of
-        // "When we are in this state do this set of stuff, in that state, do this other set of stuff."
+        // "When we are in this state, and something happens, do this set of stuff. 
+        // If in this other state and something happens, then do this other set of stuff."
         // This will likely help us when we implement a disconnected-client that we need to sync with server.
         // We can have a "Synchronizing" state for example, and we may handle messages differently in that state.
         #endregion

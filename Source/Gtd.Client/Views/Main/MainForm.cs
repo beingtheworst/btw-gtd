@@ -26,11 +26,11 @@ namespace Gtd.Client
             _controller = controller;
 
             // Classical .NET controls like a WinForm button 
-            // expose event delegates, like a ".Load, .Click event", that you can subscribe to.
+            // expose event delegates, like a ".Load or .Click event", that you can subscribe to.
             // We subscribe to some of those low-level .NET events here and convert them into
             // more meaningful "UI domain" events that we care about.
             // We then send/publish them to our own custom event handling system
-            // (to our in-memory queue, UI message bus, etc.).
+            // (to our in-memory queue->to potentially the UI message bus, etc.).
 
             Load += (sender, args) => _controller.Publish(new FormLoading());
 
@@ -116,7 +116,9 @@ namespace Gtd.Client
 
     }
 
-
+    // Extension method we added to this MainForm control that takes a C# Action delegate
+    // The MainForm itself, as well as "child View forms", can call this Sync method
+    // to invoke a View action they provide on the same UI thread as the MainForm (mandatory Windows thing).
     public static class ExtendControl
     {
         public static void Sync(this Control self, Action act)

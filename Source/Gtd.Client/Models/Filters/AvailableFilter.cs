@@ -1,6 +1,11 @@
-#region (c) 2011-2013 BeingTheWorst.com
+#region (c) 2012-2013 Copyright BeingTheWorst.com
 
-// This project is a sample code for http://beingtheworst.com
+// This project is sample code that is discussed on the
+// "Being the Worst" podcast.
+// Subscribe to our podcast feed at:
+// http://beingtheworst.com/feed
+// and follow us on twitter @beingtheworst
+// for more details.
 
 #endregion
 

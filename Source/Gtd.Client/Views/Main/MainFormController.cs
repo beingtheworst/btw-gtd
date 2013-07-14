@@ -38,14 +38,17 @@ namespace Gtd.Client
             _queue.Publish(m);
         }
 
-        
+
+        // These simple Handle methods are an example of how 
+        // breaking the UI down into event-driven standalone controllers
+        // allows us to make dynamic menu changes simply based on UI Events
+        // that have occured.  If InBoxDisplayed, show this.
+        // If ProjectDisplayed, show that.
 
         public void Handle(AppInit message)
         {
             _mainForm.DisplayFilters(_service.Filters);
         }
-
-
 
         public void Handle(Ui.InboxDisplayed message)
         {

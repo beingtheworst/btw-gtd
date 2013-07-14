@@ -16,6 +16,9 @@ namespace Gtd.Client
 
         public void TryGetUserInput(Action<string> future)
         {
+            // Use the CaptureThoughtForm to try and get user input
+            // on the same UI (Single Apartment) thread as the main parent form.
+            // If it is able to, call back the Action that was passed in future above.
             _parent.Sync(() =>
                 {
                     textBox1.Text = null;
@@ -34,5 +37,6 @@ namespace Gtd.Client
         {
             _ok.Enabled = !string.IsNullOrWhiteSpace(textBox1.Text);
         }
+
     }
 }
