@@ -8,6 +8,9 @@ using Gtd.Shell.Filters;
 
 namespace Gtd.Client
 {
+    // this is the language of the UI
+    // expressed as Command and Event Messages
+    // this is how the "UI component services" communicate
     public static class Ui
     {
         public class DisplayInbox : Message {}

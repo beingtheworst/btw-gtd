@@ -25,6 +25,13 @@ namespace Gtd.Client
         {
             _controller = controller;
 
+            // Classical .NET controls like a WinForm button 
+            // expose event delegates, like a ".Load, .Click event", that you can subscribe to.
+            // We subscribe to some of those low-level .NET events here and convert them into
+            // more meaningful "UI domain" events that we care about.
+            // We then send/publish them to our own custom event handling system
+            // (to our in-memory queue, UI message bus, etc.).
+
             Load += (sender, args) => _controller.Publish(new FormLoading());
 
             _menuCaptureThought.Click += (sender, args) => _controller.Publish(new Ui.CaptureThoughtClicked());
@@ -91,9 +98,12 @@ namespace Gtd.Client
 
         public void Log(string toString)
         {
+            // _log is the name property of the RichTextBox on the bottom of MainForm
+            // Sync is an extension method we added to this MainForm control (below) that takes a C# Action delegate
             _log.Sync(() =>
-                {
+                {    
                     var format = string.Format("{0:HH:mm:ss} {1}{2}", DateTime.UtcNow, toString, Environment.NewLine);
+                    // append the formatted string the RichTextBox and scroll down
                     _log.AppendText(format);
                     _log.ScrollToCaret();
                 });
@@ -103,6 +113,7 @@ namespace Gtd.Client
         {
 
         }
+
     }
 
 
@@ -121,30 +132,9 @@ namespace Gtd.Client
         }
     }
 
-   
-   
-
-
-
-
-
-
-
-
     public enum AppState
     {
         Loading,
         
     }
-
-
-
-    
-
-
-
-
-    
-
-
 }

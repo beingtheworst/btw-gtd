@@ -187,9 +187,15 @@ namespace Gtd.Client
     }
 
     /// <summary>
-    /// Helper class, which dispatches incoming messages to subscribed message handlers.
-    /// Dispatching is simply passing message to handling method on available instance.
-    /// This class is ported from Event Store and is a more polished implementation
+    /// This helper class dispatches incoming messages to subscribed message handlers.
+    /// Dispatching is simply passing a message to a handling method on an available instance.
+    /// This allows us to send messages to the bus so that interested classes can 
+    /// subscribe to the messages they care about, and the bus will tell them (publish) when they happen.
+    /// This is an in-memory structure that all "approved" event messages go through.
+    /// In our case, after the AppController reads an event from the queue, it places the event in this Bus
+    /// if it has determined that subscribers of the bus should care about the current event right now.
+    /// (ex: tell View/UI subscribed controllers like: CaptureThoughtController, InboxController about it)
+    /// This class is ported from Event Store LLP's Event Store and is a more polished implementation
     /// of "RedirectToWhen" from Lokad.CQRS
     /// </summary>
     public sealed class InMemoryBus : IBus, IPublisher, ISubscriber, IHandle<Message>
@@ -242,6 +248,9 @@ namespace Gtd.Client
         {
             BusName = name;
         }
+
+
+        // TODO: Rinat, why do Publish/Handle have same code with diff names?
 
         /// <summary>
         /// Publishes instance of the message to all subscribers
@@ -296,9 +305,16 @@ namespace Gtd.Client
     }
 
     /// <summary>
-    /// Special handler, which maintains an in-memory queue, sequentially passing
-    /// messages to the specified message handler. This is done in a separate
-    /// thread.
+    /// Collect or synchronize all domain/system events that we have declared that we care about.
+    /// This special handler maintains an in-memory queue, and sequentially passes
+    /// messages to the specified message handler (AppController in this case).
+    /// This is all done in a separate thread.    
+    /// Some of its received events may be "domain events" related to "TrustedSystemAggregate",
+    /// and others may be system events that we defined like "Ui.CaptureThoughtClicked".
+    /// These are just different event message types that belong to different contexts (ex: Gtd vs Ui).
+    /// Whenever somebody does something, that event goes into this in-memory queue to await processing.
+    /// All event messages are captured and accumulated in this queue until some code picks up
+    /// each message and processes it. (ex: AppController will do that in this case).
     /// </summary>
     public sealed class QueuedHandler : IHandle<Message>, IPublisher, IMessageQueue
     {

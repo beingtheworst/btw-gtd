@@ -17,31 +17,54 @@ namespace Gtd.Client
         [STAThread]
         static void Main()
         {
+            // this Client App uses a standard "Windows Forms" application as its host
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            var bus = new InMemoryBus("UI");
+            #region This WinForms host uses its own in-memory message bus to manage the UI...
+            // It uses this in-memory bus to wire user-interface "UI" elements
+            // to the logic that will be triggered when the user interacts with those elements.
+            // This allows us to send messages to the uiBus so that interested UI classes can 
+            // subscribe to the messages they care about, and react to them
+            // when the bus publishes the messages to tell the UI controls what happened.
+            #endregion
+            var uiBus = new InMemoryBus("UI");
 
-            var file = new FileAppendOnlyStore(new DirectoryInfo(Directory.GetCurrentDirectory()));
-            file.Initialize();
+            // .dat file to write Domain Events to this session
+            var fileToStoreEventsIn = 
+                new FileAppendOnlyStore(new DirectoryInfo(Directory.GetCurrentDirectory()));
+            fileToStoreEventsIn.Initialize();
 
-
-            var messageStore = new MessageStore(file);
+            // provide serialization stuff for our file storage
+            var messageStore = new MessageStore(fileToStoreEventsIn);
             messageStore.LoadDataContractsFromAssemblyOf(typeof(ActionDefined));
 
-            var events = new AppEventStore(messageStore);
+            // this WinForm App's own local file-based event storage
+            var appEventStore = new AppEventStore(messageStore);
 
-            var controller = new AppController(bus, events);
+            #region Does App care about this msg? This class controls the App's "main message loop"...
+            // It reads all msgs from in-memory queue (mainQueue below) and determines which messages 
+            // the App will/will not handle at a given time (based on specific app state).
+            // For each queued message that it determines should be handled by
+            // uiBus subscribers, it passes the messages through to our in-memory uiBus,
+            // so bus subscribers can react to the current message when the bus publishes it.
+            #endregion
+            var appController = new AppController(uiBus, appEventStore);
 
-            
-            var mainQueue = new QueuedHandler(controller, "Main Queue");
+            #region This is an in-memory structure through which all events we defined will go...
+            // All domain & system messages we defined are captured 
+            // and accumulated in this queue until some code picks up
+            // each message and processes it.
+            // (ex: AppController, declared above, will do that processing in this case).
+            #endregion
+            var mainQueue = new QueuedHandler(appController, "Main Queue");
 
-            controller.SetMainQueue(mainQueue);
-            events.SetDispatcher(mainQueue);
+            appController.SetMainQueue(mainQueue);
+            appEventStore.SetDispatcher(mainQueue);
 
             var provider = new ClientPerspective();
 
-            ClientPerspectiveController.WireTo(events, provider, bus, mainQueue);
+            ClientPerspectiveController.WireTo(appEventStore, provider, uiBus, mainQueue);
             
             // create services and bind them to the bus
 
@@ -52,14 +75,14 @@ namespace Gtd.Client
 
             var filterService = new FilterService();
 
-            MainFormController.Wire(form, mainQueue, bus,filterService);
-            InboxController.Wire(form.MainRegion, mainQueue, bus, provider);
-            NavigationController.Wire(form.NavigationRegion, mainQueue, bus, provider);
-            ProjectController.Wire(form.MainRegion, mainQueue, bus, provider);
-            LogController.Wire(form, bus);
+            MainFormController.Wire(form, mainQueue, uiBus, filterService);
+            InboxController.Wire(form.MainRegion, mainQueue, uiBus, provider);
+            NavigationController.Wire(form.NavigationRegion, mainQueue, uiBus, provider);
+            ProjectController.Wire(form.MainRegion, mainQueue, uiBus, provider);
+            LogController.Wire(form, uiBus);
 
-            CaptureThoughtController.Wire(new CaptureThoughtForm(form), bus, mainQueue);
-            DefineProjectController.Wire(new DefineProjectForm(form),bus, mainQueue);
+            CaptureThoughtController.Wire(new CaptureThoughtForm(form), uiBus, mainQueue);
+            DefineProjectController.Wire(new DefineProjectForm(form), uiBus, mainQueue);
 
             mainQueue.Enqueue(new AppInit());
             mainQueue.Start();

@@ -51,26 +51,27 @@
             this._filter});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(693, 27);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(8, 2, 0, 2);
+            this.menuStrip1.Size = new System.Drawing.Size(924, 32);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // _menuGoToInbox
             // 
             this._menuGoToInbox.Name = "_menuGoToInbox";
-            this._menuGoToInbox.Size = new System.Drawing.Size(83, 23);
+            this._menuGoToInbox.Size = new System.Drawing.Size(102, 28);
             this._menuGoToInbox.Text = "Go To Inbox";
             // 
             // _menuCaptureThought
             // 
             this._menuCaptureThought.Name = "_menuCaptureThought";
-            this._menuCaptureThought.Size = new System.Drawing.Size(110, 23);
+            this._menuCaptureThought.Size = new System.Drawing.Size(132, 28);
             this._menuCaptureThought.Text = "Capture Thought";
             // 
             // _menuDefineProject
             // 
             this._menuDefineProject.Name = "_menuDefineProject";
-            this._menuDefineProject.Size = new System.Drawing.Size(93, 23);
+            this._menuDefineProject.Size = new System.Drawing.Size(115, 28);
             this._menuDefineProject.Text = "Define Project";
             // 
             // _filter
@@ -79,7 +80,7 @@
             this._filter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this._filter.IntegralHeight = false;
             this._filter.Name = "_filter";
-            this._filter.Size = new System.Drawing.Size(121, 23);
+            this._filter.Size = new System.Drawing.Size(160, 28);
             this._filter.SelectedIndexChanged += new System.EventHandler(this._filter_SelectedIndexChanged);
             // 
             // _log
@@ -88,9 +89,10 @@
             this._log.Dock = System.Windows.Forms.DockStyle.Fill;
             this._log.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this._log.Location = new System.Drawing.Point(0, 0);
+            this._log.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._log.Name = "_log";
             this._log.ReadOnly = true;
-            this._log.Size = new System.Drawing.Size(691, 98);
+            this._log.Size = new System.Drawing.Size(922, 121);
             this._log.TabIndex = 2;
             this._log.Text = "";
             // 
@@ -99,29 +101,33 @@
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel1.Controls.Add(this._log);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 377);
+            this.panel1.Location = new System.Drawing.Point(0, 464);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(693, 100);
+            this.panel1.Size = new System.Drawing.Size(924, 123);
             this.panel1.TabIndex = 3;
             // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 27);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 32);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Size = new System.Drawing.Size(693, 350);
-            this.splitContainer1.SplitterDistance = 231;
+            this.splitContainer1.Size = new System.Drawing.Size(924, 432);
+            this.splitContainer1.SplitterDistance = 308;
+            this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 4;
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(693, 477);
+            this.ClientSize = new System.Drawing.Size(924, 587);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "MainForm";
             this.Text = "Form1";
             this.menuStrip1.ResumeLayout(false);

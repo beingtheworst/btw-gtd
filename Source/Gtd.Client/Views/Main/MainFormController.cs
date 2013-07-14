@@ -49,7 +49,7 @@ namespace Gtd.Client
 
         public void Handle(Ui.InboxDisplayed message)
         {
-            // replace with panel-specific menu may be
+            // replace with panel-specific menu maybe
             _mainForm.ShowInboxMenu();
         }
 

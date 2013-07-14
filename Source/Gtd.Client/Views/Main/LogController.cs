@@ -12,6 +12,10 @@
         public static void Wire(ILogControl control, ISubscriber bus)
         {
             var adapter = new LogController(control);
+
+            // have our logger subscribe to the "main event loop"
+            // of the application so it can see all Messages (Actions/Events, etc.)
+            // the "bus" is part of our in-memory UI messaging architecture (SEDA) 
             bus.Subscribe<Message>(adapter);
         }
 
