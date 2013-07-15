@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gtd.CoreDomain.Tests", "Gtd
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{CBDBCC09-581A-465B-B658-10A7399DAEFF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Btw.Portable", "Btw.Portable\Btw.Portable.csproj", "{A435667B-5C71-41A0-A7C8-4700BDADF8B2}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gtd.Client", "Gtd.Client\Gtd.Client.csproj", "{30F43A1F-E3B4-4D7A-B330-74EAC072B71C}"
 EndProject
 Global
@@ -31,10 +29,6 @@ Global
 		{1B1D22E9-C631-49AD-9633-091DE70DC526}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B1D22E9-C631-49AD-9633-091DE70DC526}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B1D22E9-C631-49AD-9633-091DE70DC526}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A435667B-5C71-41A0-A7C8-4700BDADF8B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A435667B-5C71-41A0-A7C8-4700BDADF8B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A435667B-5C71-41A0-A7C8-4700BDADF8B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A435667B-5C71-41A0-A7C8-4700BDADF8B2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{30F43A1F-E3B4-4D7A-B330-74EAC072B71C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{30F43A1F-E3B4-4D7A-B330-74EAC072B71C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30F43A1F-E3B4-4D7A-B330-74EAC072B71C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -42,9 +36,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{A435667B-5C71-41A0-A7C8-4700BDADF8B2} = {CBDBCC09-581A-465B-B658-10A7399DAEFF}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Gtd.Console\Gtd.Shell.csproj
