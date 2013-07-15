@@ -4,34 +4,34 @@ namespace Gtd.CoreDomain.AppServices.ClientProfile
 {
     public sealed class ClientProfileAggregate
     {
-        public readonly IList<Event> Changes = new List<Event>();
+        public readonly IList<Event> EventsCausingChanges = new List<Event>();
 
-        readonly ClientProfileState _state;
+        readonly ClientProfileState _aggState;
 
-        public ClientProfileAggregate(ClientProfileState state)
+        public ClientProfileAggregate(ClientProfileState aggStateBeforeChanges)
         {
-            _state = state;
+            _aggState = aggStateBeforeChanges;
         }
 
 
         /// <summary> Make Aggregate realize the event happened 
         /// by applying it to the state and adding to 
         /// the list of uncommitted events</summary>
-        /// <param name="newEventThatHappened"></param>
-        void Apply(IClientProfileEvent newEventThatHappened)
+        /// <param name="eventThatHappened"></param>
+        void Apply(IClientProfileEvent eventThatHappened)
         {
             // update Agg's in-memory state so if a behavior (method) has 
             // multiple steps, each subsequent step has up-to-date state to operate on
-            _state.MakeStateRealize(newEventThatHappened);
+            _aggState.MakeStateRealize(eventThatHappened);
 
             // update Agg's public collection of change causing Events so the 
             // AppService can use it to persist AggState as appended Events to this Agg's Event Stream
-            Changes.Add((Event)newEventThatHappened);
+            EventsCausingChanges.Add((Event)eventThatHappened);
         }
 
         public void InitIfNeeded()
         {
-            if (_state.CurrentSystem == null)
+            if (_aggState.CurrentSystem == null)
             {
                 // TODO: generate proper ID somehow
                 Apply(new ClientProfileSwitchedToTrustedSystem(new TrustedSystemId(1)));
@@ -39,9 +39,9 @@ namespace Gtd.CoreDomain.AppServices.ClientProfile
 
         }
 
-        public TrustedSystemId GetCurrentSustemId()
+        public TrustedSystemId GetCurrentSystemId()
         {
-            return _state.CurrentSystem;
+            return _aggState.CurrentSystem;
         }
     }
 }

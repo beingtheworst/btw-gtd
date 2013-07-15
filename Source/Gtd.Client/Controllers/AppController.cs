@@ -79,7 +79,7 @@ namespace Gtd.Client
             UpdateProfile(profile =>
                 {
                     profile.InitIfNeeded();
-                    _currentSystem = profile.GetCurrentSustemId();
+                    _currentSystem = profile.GetCurrentSystemId();
                 });
             UpdateDomain(system => system.InitIfNeeded(_currentSystem));
 
@@ -91,7 +91,7 @@ namespace Gtd.Client
         {
             _uiBus.Publish(r);
             var newGuid = Guid.NewGuid();
-            UpdateDomain(a => a.DefineProject(new RequestId(newGuid), r.Outcome, new RealTimeProvider()));
+            UpdateDomain(agg => agg.DefineProject(new RequestId(newGuid), r.Outcome, new RealTimeProvider()));
             _queue.Enqueue(new Ui.DisplayProject(new ProjectId(newGuid)));
         }
 
@@ -145,14 +145,14 @@ namespace Gtd.Client
             var eventStreamId = _currentSystem.ToStreamId();
             var eventStream = _eventStore.LoadEventStream(eventStreamId);
 
-            var state = TrustedSystemState.BuildStateFromEventHistory(eventStream.Events);
+            var aggStateBeforeChanges = TrustedSystemState.BuildStateFromEventHistory(eventStream.Events);
 
-            var aggregateToChange = new TrustedSystemAggregate(state);
+            var aggToChange = new TrustedSystemAggregate(aggStateBeforeChanges);
 
             
-            usingThisMethod(aggregateToChange);
+            usingThisMethod(aggToChange);
 
-            _eventStore.AppendEventsToStream(eventStreamId, eventStream.StreamVersion, aggregateToChange.EventsThatCausedChange);
+            _eventStore.AppendEventsToStream(eventStreamId, eventStream.StreamVersion, aggToChange.EventsCausingChanges);
         }
 
 
@@ -160,12 +160,12 @@ namespace Gtd.Client
         {
             var eventStreamId = ".profile";
             var eventStream = _eventStore.LoadEventStream(eventStreamId);
-            var state = ClientProfileState.BuildStateFromEventHistory(eventStream.Events);
-            var aggregate = new ClientProfileAggregate(state);
+            var aggStateBeforeChanges = ClientProfileState.BuildStateFromEventHistory(eventStream.Events);
+            var aggToChange = new ClientProfileAggregate(aggStateBeforeChanges);
 
-            updateProfile(aggregate);
+            updateProfile(aggToChange);
 
-            _eventStore.AppendEventsToStream(eventStreamId, eventStream.StreamVersion, aggregate.Changes);
+            _eventStore.AppendEventsToStream(eventStreamId, eventStream.StreamVersion, aggToChange.EventsCausingChanges);
         }
 
 

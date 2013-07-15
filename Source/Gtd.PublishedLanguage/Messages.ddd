@@ -10,9 +10,19 @@ namespace Gtd
 // The client can then check the server's views to see if the Id exists, and if so, can report that the request was received by server.
 // If a RequestId is provided by the client, that same Id will be assigned to the ProjectId/ActionId
 // to ease correlation between a client's request and the associated Command and Event messages resulting from it.
-// TODO: Consider adding unique integral (integer) number to these in the future to improve human lookup/UX/readability. (using shortId for now)
 
 const requestId = RequestId RequestId
+
+
+// I think a "thought" is just one of the many forms of "stuff"
+// one could argue that all stuff that comes into the inbox is "stuff"
+// and it doesn't get a more conceret Id until a human says what it really is
+// "project", "action", "thought".  Maybe UI can assume it is thought by context
+// but I think all stuff should be stuff intil it is transformed to what it really is.
+// that way all "stuff generators" use stuffIds and the code to convert to Action/Project etc.
+// can assume it handles "stuffId" and not a "thoughtId" when the "stuff" is random email msg
+const stuffId = StuffId StuffId
+
 const thoughtId = ThoughtId ThoughtId
 
 const projectId = ProjectId ProjectId
@@ -97,6 +107,34 @@ interface TrustedSystem(TrustedSystemId Id)
 
 
     // [abdullin]: We will add contexts later
+
+
+    // [kstreet]:  7.15.2013
+    // Playing around with some new GTD language from the book.
+    // Want to see what it feels like to use the UI when I conform very closely
+    // to language from the GTD book.
+
+    // example - various "stuff generators" exist - not just thoughts in my head
+    // I may use mutiple clients to get stuff into my trusted system
+    // email inboxes, OneNote/Evernote, Phone audio, text messages, etc.
+    // All is just "Stuff" in GTD lingo
+    // for now use the existing "Inbox" concept to mean "the place all stuff goes"
+    // instead of "Collection Bucket" used in book.
+    //PutStuffInCollectionBucket?(requestId, string stuff)
+    //    StuffPutInCollectionBucket!(stuffId, string stuff, time)
+    PutStuffInInbox?(requestId, string stuff)
+        StuffPutInInbox!(stuffId, string stuff, time)
+
+    TrashStuff?(stuffId)
+        StuffTrashed!(stuffId, time)
+
+    PutStuffInSomedayMaybe?(stuffId, string stuff)
+        StuffPutInSomedayMaybe!(stuffId, string stuff, time)
+
+    PutStuffInReferenceSystem?(stuffId, string stuff)
+        StuffPutInReferenceSystem!(stuffId, string stuff, time)
+    
+    
 
 }
 
