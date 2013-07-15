@@ -149,10 +149,6 @@
       <Project>{A435667B-5C71-41A0-A7C8-4700BDADF8B2}</Project>
       <Name>Btw.Portable</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Gtd.Console\Gtd.Shell.csproj">
-      <Project>{B5516C60-3F2C-4CF1-9174-ED3ED2C7BF75}</Project>
-      <Name>Gtd.Shell</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Gtd.CoreDomain\Gtd.CoreDomain.csproj">
       <Project>{BAB02576-30C8-4DE2-AC43-23766F9FD6A1}</Project>
       <Name>Gtd.CoreDomain</Name>
