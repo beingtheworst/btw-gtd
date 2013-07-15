@@ -3,23 +3,21 @@ using Gtd.CoreDomain;
 
 namespace Gtd.Client.Models
 {
-    public sealed class ClientPerspectiveController :
+    public sealed class ClientModelController :
         IHandle<TrustedSystemCreated>,
         IHandle<ThoughtCaptured>,
         IHandle<ThoughtArchived>,
         IHandle<ProjectDefined>,
         IHandle<ActionDefined>,
-        
         IHandle<ActionCompleted>,
-
-        IHandle<ProfileLoaded>, IHandle<Ui.FilterChanged>
-
+        IHandle<ProfileLoaded>, 
+        IHandle<Ui.FilterChanged>
     {
         readonly IEventStore _store;
         readonly ClientPerspective _provider;
         readonly IMessageQueue _queue;
 
-        ClientPerspectiveController(IEventStore store, ClientPerspective provider, IMessageQueue queue)
+        ClientModelController(IEventStore store, ClientPerspective provider, IMessageQueue queue)
         {
             _store = store;
             _provider = provider;
@@ -28,7 +26,7 @@ namespace Gtd.Client.Models
 
         public static void WireTo(IEventStore store, ClientPerspective provider, ISubscriber subscriber, IMessageQueue queue)
         {
-            var controller = new ClientPerspectiveController(store, provider, queue);
+            var controller = new ClientModelController(store, provider, queue);
             controller.SubscribeTo(subscriber);
         }
 
@@ -39,9 +37,7 @@ namespace Gtd.Client.Models
             bus.Subscribe<ThoughtArchived>(this);
             bus.Subscribe<ProjectDefined>(this);
             bus.Subscribe<ActionDefined>(this);
-
             bus.Subscribe<ActionCompleted>(this);
-
             bus.Subscribe<ProfileLoaded>(this);
             bus.Subscribe<Ui.FilterChanged>(this);
         }

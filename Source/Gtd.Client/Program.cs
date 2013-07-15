@@ -64,7 +64,7 @@ namespace Gtd.Client
 
             var provider = new ClientPerspective();
 
-            ClientPerspectiveController.WireTo(appEventStore, provider, uiBus, mainQueue);
+            ClientModelController.WireTo(appEventStore, provider, uiBus, mainQueue);
             
             // create services and bind them to the bus
 
