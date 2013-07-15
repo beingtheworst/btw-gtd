@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gtd.CoreDomain", "Gtd.CoreD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gtd.CoreDomain.Tests", "Gtd.CoreDomain.Tests\Gtd.CoreDomain.Tests.csproj", "{1B1D22E9-C631-49AD-9633-091DE70DC526}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{CBDBCC09-581A-465B-B658-10A7399DAEFF}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gtd.Client", "Gtd.Client\Gtd.Client.csproj", "{30F43A1F-E3B4-4D7A-B330-74EAC072B71C}"
 EndProject
 Global
