@@ -155,7 +155,7 @@ namespace Gtd.Client.Models
             // switch our provider to this new model
             _provider.SwitchToModel(_model);
 
-            _queue.Enqueue(new ClientModelLoaded());
+            _queue.Enqueue(new Cm.ClientModelLoaded());
         }
 
 
@@ -167,6 +167,12 @@ namespace Gtd.Client.Models
 
     public static class Cm
     {
+
+        public sealed class ClientModelLoaded : Message
+        {
+
+        }
+
         public sealed class ProjectDefined : Message
         {
             

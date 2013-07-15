@@ -9,7 +9,7 @@ namespace Gtd.Client
 {
     public sealed class NavigationController : 
         IHandle<AppInit>, 
-        IHandle<ClientModelLoaded>,
+        IHandle<Cm.ClientModelLoaded>,
     IHandle<ThoughtCaptured>, 
         IHandle<ThoughtArchived>,
         IHandle<ProjectDefined>, IHandle<ActionDefined>, IHandle<Ui.FilterChanged>
@@ -39,7 +39,7 @@ namespace Gtd.Client
             bus.Subscribe<ThoughtArchived>(adapter);
             bus.Subscribe<ProjectDefined>(adapter);
             bus.Subscribe<ActionDefined>(adapter);
-            bus.Subscribe<ClientModelLoaded>(adapter);
+            bus.Subscribe<Cm.ClientModelLoaded>(adapter);
             bus.Subscribe<Ui.FilterChanged>(adapter);
 
 
@@ -124,7 +124,7 @@ namespace Gtd.Client
 
         
 
-        public void Handle(ClientModelLoaded message)
+        public void Handle(Cm.ClientModelLoaded message)
         {
             _loaded = true;
 

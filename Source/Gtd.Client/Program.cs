@@ -199,10 +199,6 @@ namespace Gtd.Client
         }
     }
 
-    public sealed class ClientModelLoaded : Message
-    {
-        
-    }
 
     public sealed class FormLoading : Message { }
 
