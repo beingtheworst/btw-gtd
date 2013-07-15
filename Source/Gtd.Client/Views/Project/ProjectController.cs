@@ -2,7 +2,7 @@
 
 namespace Gtd.Client.Views.Actions
 {
-    public sealed class ProjectController : IHandle<Ui.DisplayProject>
+    public sealed class ProjectController : IHandle<UI.DisplayProject>
     {
         readonly ProjectView _control;
         readonly ClientPerspective _view;
@@ -33,13 +33,13 @@ namespace Gtd.Client.Views.Actions
             bus.Subscribe(adapter);
         }
 
-        public void Handle(Ui.DisplayProject message)
+        public void Handle(UI.DisplayProject message)
         {
             var project = _view.GetProjectOrNull(message.Id);
             
             _control.Sync(() => _control.DisplayProject(project));
             _mainRegion.SwitchTo("project");
-            _bus.Publish(new Ui.ProjectDisplayed(message.Id));
+            _bus.Publish(new UI.ProjectDisplayed(message.Id));
         }
 
 
@@ -51,7 +51,7 @@ namespace Gtd.Client.Views.Actions
 
         public void RequestActionCheck(ActionId id)
         {
-            _bus.Publish(new Ui.CompleteActionClicked(id));
+            _bus.Publish(new UI.CompleteActionClicked(id));
         }
     }
 }

@@ -52,15 +52,15 @@ namespace Gtd.Client
             return new FsmBuilder<AppState>()
                 .InAllStates()
 
-                    .When<Ui.CaptureThoughtWizardCompleted>().Do(CaptureThought)
-                    .When<Ui.ArchiveThoughtClicked>().Do(ArchiveThought)
-                    .When<Ui.DefineNewProjectWizardCompleted>().Do(DefineProject)
-                    .When<Ui.MoveThoughtsToProjectClicked>().Do(MoveThoughtsToProject)
-                    .When<Ui.CompleteActionClicked>().Do(CompleteAction)
+                    .When<UI.CaptureThoughtWizardCompleted>().Do(CaptureThought)
+                    .When<UI.ArchiveThoughtClicked>().Do(ArchiveThought)
+                    .When<UI.DefineNewProjectWizardCompleted>().Do(DefineProject)
+                    .When<UI.MoveThoughtsToProjectClicked>().Do(MoveThoughtsToProject)
+                    .When<UI.CompleteActionClicked>().Do(CompleteAction)
                     
 
                 .InState(AppState.Loading)
-                    .When<Ui.DisplayInbox>().Do(_uiBus.Publish)
+                    .When<UI.DisplayInbox>().Do(_uiBus.Publish)
                     .When<FormLoaded>().Do(_uiBus.Publish)
                     .When<FormLoading>().Do(Deal)
                     .When<AppInit>().Do(InitApplication)
@@ -87,33 +87,33 @@ namespace Gtd.Client
             
         }
 
-        void DefineProject(Ui.DefineNewProjectWizardCompleted r)
+        void DefineProject(UI.DefineNewProjectWizardCompleted r)
         {
             _uiBus.Publish(r);
             var newGuid = Guid.NewGuid();
             UpdateDomain(a => a.DefineProject(new RequestId(newGuid), r.Outcome, new RealTimeProvider()));
-            _queue.Enqueue(new Ui.DisplayProject(new ProjectId(newGuid)));
+            _queue.Enqueue(new UI.DisplayProject(new ProjectId(newGuid)));
         }
 
-        void CompleteAction(Ui.CompleteActionClicked r)
+        void CompleteAction(UI.CompleteActionClicked r)
         {
             UpdateDomain(a => a.CompleteAction(r.Id, new RealTimeProvider()));
         }
 
-        void MoveThoughtsToProject(Ui.MoveThoughtsToProjectClicked r)
+        void MoveThoughtsToProject(UI.MoveThoughtsToProjectClicked r)
         {
             _uiBus.Publish(r);
             UpdateDomain(a => a.MoveThoughtsToProject(r.Thoughts, r.Project, new RealTimeProvider()));
         }
 
-        void ArchiveThought(Ui.ArchiveThoughtClicked r)
+        void ArchiveThought(UI.ArchiveThoughtClicked r)
         {
             // do something
             _uiBus.Publish(r);
             UpdateDomain(a => a.ArchiveThought(r.Id,new RealTimeProvider()));
         }
 
-        void CaptureThought(Ui.CaptureThoughtWizardCompleted c)
+        void CaptureThought(UI.CaptureThoughtWizardCompleted c)
         {
             _uiBus.Publish(c);
 
@@ -130,7 +130,7 @@ namespace Gtd.Client
             _uiBus.Publish(obj);
 
             _queue.Enqueue(new FormLoaded());
-            _queue.Enqueue(new Ui.DisplayInbox());
+            _queue.Enqueue(new UI.DisplayInbox());
         }
 
         // lifetime change management

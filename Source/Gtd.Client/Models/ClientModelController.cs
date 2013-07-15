@@ -11,7 +11,7 @@ namespace Gtd.Client.Models
         IHandle<ActionDefined>,
         IHandle<ActionCompleted>,
         IHandle<ProfileLoaded>, 
-        IHandle<Ui.FilterChanged>
+        IHandle<UI.FilterChanged>
     {
         readonly IEventStore _store;
         readonly ClientPerspective _provider;
@@ -39,7 +39,7 @@ namespace Gtd.Client.Models
             bus.Subscribe<ActionDefined>(this);
             bus.Subscribe<ActionCompleted>(this);
             bus.Subscribe<ProfileLoaded>(this);
-            bus.Subscribe<Ui.FilterChanged>(this);
+            bus.Subscribe<UI.FilterChanged>(this);
         }
 
 
@@ -163,7 +163,7 @@ namespace Gtd.Client.Models
         }
 
 
-        public void Handle(Ui.FilterChanged message)
+        public void Handle(UI.FilterChanged message)
         {
             _provider.SwitchToFilter(message.Criteria);
         }

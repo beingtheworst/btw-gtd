@@ -1,6 +1,6 @@
 namespace Gtd.Client.Views.CaptureThought
 {
-    public sealed class DefineProjectController : IHandle<Ui.DefineProjectClicked>
+    public sealed class DefineProjectController : IHandle<UI.DefineProjectClicked>
     {
         readonly DefineProjectForm _form;
         readonly IMessageQueue _queue;
@@ -14,12 +14,12 @@ namespace Gtd.Client.Views.CaptureThought
         public static void Wire(DefineProjectForm form, ISubscriber source, IMessageQueue target)
         {
             var controller = new DefineProjectController(form, target);
-            source.Subscribe<Ui.DefineProjectClicked>(controller);
+            source.Subscribe<UI.DefineProjectClicked>(controller);
         }
 
-        public void Handle(Ui.DefineProjectClicked message)
+        public void Handle(UI.DefineProjectClicked message)
         {
-            _form.TryGetUserInput(s => _queue.Enqueue(new Ui.DefineNewProjectWizardCompleted(s)));
+            _form.TryGetUserInput(s => _queue.Enqueue(new UI.DefineNewProjectWizardCompleted(s)));
         }
     }
 }

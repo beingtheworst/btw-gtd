@@ -5,7 +5,7 @@ namespace Gtd.Client
 {
     public class InboxController : 
         IHandle<AppInit>,
-        IHandle<Ui.DisplayInbox>,
+        IHandle<UI.DisplayInbox>,
         IHandle<ThoughtCaptured>,  
         IHandle<ThoughtArchived>, IHandle<FormLoaded>
     {
@@ -28,7 +28,7 @@ namespace Gtd.Client
             var adapter = new InboxController(form, queue, view);
 
             bus.Subscribe<AppInit>(adapter);
-            bus.Subscribe<Ui.DisplayInbox>(adapter);
+            bus.Subscribe<UI.DisplayInbox>(adapter);
             bus.Subscribe<ThoughtCaptured>(adapter);
             bus.Subscribe<ThoughtArchived>(adapter);
             bus.Subscribe<FormLoaded>(adapter);
@@ -43,7 +43,7 @@ namespace Gtd.Client
 
         bool _shown; 
 
-        public void Handle(Ui.DisplayInbox message)
+        public void Handle(UI.DisplayInbox message)
         {
             if (!_shown)
             {
@@ -52,7 +52,7 @@ namespace Gtd.Client
             }
 
             _dock.SwitchTo("inbox");
-            _queue.Publish(new Ui.InboxDisplayed());
+            _queue.Publish(new UI.InboxDisplayed());
         }
 
         public void Handle(ThoughtCaptured message)
@@ -69,18 +69,18 @@ namespace Gtd.Client
         {
             foreach (var id in thoughtIds)
             {
-                _queue.Publish(new Ui.ArchiveThoughtClicked(id));
+                _queue.Publish(new UI.ArchiveThoughtClicked(id));
             }
         }
 
         public void WhenRequestedMoveThoughtsToProject(ProjectId id, ThoughtId[] thoughtIds)
         {
-            _queue.Publish(new Ui.MoveThoughtsToProjectClicked(thoughtIds, id));
+            _queue.Publish(new UI.MoveThoughtsToProjectClicked(thoughtIds, id));
         }
 
         public void WhenCaptureThoughtClicked()
         {
-            _queue.Publish(new Ui.CaptureThoughtClicked());
+            _queue.Publish(new UI.CaptureThoughtClicked());
         }
 
         public IList<ProjectView> ListProjects()

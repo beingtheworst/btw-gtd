@@ -6,7 +6,7 @@ namespace Gtd.Client
     public sealed class MainFormController : 
         IHandle<AppInit>,
         
-        IHandle<Ui.InboxDisplayed>, IHandle<Ui.ProjectDisplayed>
+        IHandle<UI.InboxDisplayed>, IHandle<UI.ProjectDisplayed>
     {
         readonly MainForm _mainForm;
         readonly IPublisher _queue;
@@ -24,8 +24,8 @@ namespace Gtd.Client
             var adapter = new MainFormController(form, queue, service);
 
             bus.Subscribe<AppInit>(adapter);
-            bus.Subscribe<Ui.InboxDisplayed>(adapter);
-            bus.Subscribe<Ui.ProjectDisplayed>(adapter);
+            bus.Subscribe<UI.InboxDisplayed>(adapter);
+            bus.Subscribe<UI.ProjectDisplayed>(adapter);
 
             form.SetAdapter(adapter);
             
@@ -50,13 +50,13 @@ namespace Gtd.Client
             _mainForm.DisplayFilters(_service.Filters);
         }
 
-        public void Handle(Ui.InboxDisplayed message)
+        public void Handle(UI.InboxDisplayed message)
         {
             // replace with panel-specific menu maybe
             _mainForm.ShowInboxMenu();
         }
 
-        public void Handle(Ui.ProjectDisplayed message)
+        public void Handle(UI.ProjectDisplayed message)
         {
             _mainForm.ShowProjectMenu(message.Id);
         }

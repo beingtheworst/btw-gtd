@@ -34,14 +34,14 @@ namespace Gtd.Client
 
             Load += (sender, args) => _controller.Publish(new FormLoading());
 
-            _menuCaptureThought.Click += (sender, args) => _controller.Publish(new Ui.CaptureThoughtClicked());
-            _menuDefineProject.Click += (sender, args) => _controller.Publish(new Ui.DefineProjectClicked());
-            _menuGoToInbox.Click += (sender, args) => _controller.Publish(new Ui.DisplayInbox());
+            _menuCaptureThought.Click += (sender, args) => _controller.Publish(new UI.CaptureThoughtClicked());
+            _menuDefineProject.Click += (sender, args) => _controller.Publish(new UI.DefineProjectClicked());
+            _menuGoToInbox.Click += (sender, args) => _controller.Publish(new UI.DisplayInbox());
 
             _filter.SelectedIndexChanged += (sender, args) =>
                 {
                     var item = (FilterDisplay) _filter.SelectedItem;
-                    _controller.Publish(new Ui.FilterChanged(item.Criteria));
+                    _controller.Publish(new UI.FilterChanged(item.Criteria));
                 };
 
         }

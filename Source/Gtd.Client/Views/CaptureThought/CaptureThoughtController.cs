@@ -1,6 +1,6 @@
 ﻿namespace Gtd.Client.Views.CaptureThought
 {
-    public sealed class CaptureThoughtController : IHandle<Ui.CaptureThoughtClicked>
+    public sealed class CaptureThoughtController : IHandle<UI.CaptureThoughtClicked>
     {
         readonly CaptureThoughtForm _form;
         readonly IMessageQueue _queue;
@@ -29,16 +29,16 @@
             // as something that should be called when Ui.CaptureThoughtClicked events happen.
             // "Hey, I implement IHandle<Ui.CaptureThoughtClicked>, so have something call me when it
             // happens so that I can react to it with the code inside of my Handle method below."
-            source.Subscribe<Ui.CaptureThoughtClicked>(controller);
+            source.Subscribe<UI.CaptureThoughtClicked>(controller);
         }
 
         // we registered to be called when Ui.CaptureThoughtClicked happens, so when it does,
         // this Handle method gets called to perform the work related to handling the event.
-        public void Handle(Ui.CaptureThoughtClicked message)
+        public void Handle(UI.CaptureThoughtClicked message)
         {
             // tell the CaptureThoughtForm I control to use its TryGetUserInput method and
             // if it is able to get input, call me back with this method I provide =>
-            _form.TryGetUserInput(s => _queue.Enqueue(new Ui.CaptureThoughtWizardCompleted(s)));
+            _form.TryGetUserInput(s => _queue.Enqueue(new UI.CaptureThoughtWizardCompleted(s)));
         }
     }
 }

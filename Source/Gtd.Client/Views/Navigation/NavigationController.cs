@@ -12,7 +12,7 @@ namespace Gtd.Client
         IHandle<Cm.ClientModelLoaded>,
     IHandle<ThoughtCaptured>, 
         IHandle<ThoughtArchived>,
-        IHandle<Cm.ProjectDefined>, IHandle<ActionDefined>, IHandle<Ui.FilterChanged>
+        IHandle<Cm.ProjectDefined>, IHandle<ActionDefined>, IHandle<UI.FilterChanged>
     {
         readonly NavigationView _tree;
         readonly Region _region;
@@ -40,7 +40,7 @@ namespace Gtd.Client
             bus.Subscribe<Cm.ProjectDefined>(adapter);
             bus.Subscribe<ActionDefined>(adapter);
             bus.Subscribe<Cm.ClientModelLoaded>(adapter);
-            bus.Subscribe<Ui.FilterChanged>(adapter);
+            bus.Subscribe<UI.FilterChanged>(adapter);
 
 
             return adapter ;
@@ -144,18 +144,18 @@ namespace Gtd.Client
         {
             if (tag == "inbox")
             {
-                _queue.Publish(new Ui.DisplayInbox());
+                _queue.Publish(new UI.DisplayInbox());
                 return;
             }
             var node = _nodes[tag];
 
             if (node is ProjectId)
             {
-                _queue.Publish(new Ui.DisplayProject((ProjectId) node));
+                _queue.Publish(new UI.DisplayProject((ProjectId) node));
             }
         }
 
-        public void Handle(Ui.FilterChanged message)
+        public void Handle(UI.FilterChanged message)
         {
             if (!_loaded) return;
             Sync(LoadNavigation);

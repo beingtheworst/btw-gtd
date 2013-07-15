@@ -22,7 +22,8 @@ namespace Gtd.Client
     // that multiple UI (View) and/or platform implementations can "speak" in a common way.
     // WinForms, WPF, HTML Single Page Application (SPA), iOS, WinRT, etc.
     #endregion
-    public static class Ui
+    
+    public static class UI
     {
         public class DisplayInbox : Message {}
 
