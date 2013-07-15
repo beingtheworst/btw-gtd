@@ -9,10 +9,10 @@ namespace Gtd.Client
 {
     public sealed class NavigationController : 
         IHandle<AppInit>, 
-        IHandle<Cm.ClientModelLoaded>,
-    IHandle<ThoughtCaptured>, 
+        IHandle<Dumb.ClientModelLoaded>,
+    IHandle<Dumb.ThoughtAdded>, 
         IHandle<ThoughtArchived>,
-        IHandle<Cm.ProjectDefined>, IHandle<ActionDefined>, IHandle<UI.FilterChanged>
+        IHandle<Dumb.ProjectAdded>, IHandle<ActionDefined>, IHandle<UI.FilterChanged>
     {
         readonly NavigationView _tree;
         readonly Region _region;
@@ -35,11 +35,11 @@ namespace Gtd.Client
             var adapter  = new NavigationController(control, queue, view);
 
             bus.Subscribe<AppInit>(adapter);
-            bus.Subscribe<ThoughtCaptured>(adapter);
+            bus.Subscribe<Dumb.ThoughtAdded>(adapter);
             bus.Subscribe<ThoughtArchived>(adapter);
-            bus.Subscribe<Cm.ProjectDefined>(adapter);
+            bus.Subscribe<Dumb.ProjectAdded>(adapter);
             bus.Subscribe<ActionDefined>(adapter);
-            bus.Subscribe<Cm.ClientModelLoaded>(adapter);
+            bus.Subscribe<Dumb.ClientModelLoaded>(adapter);
             bus.Subscribe<UI.FilterChanged>(adapter);
 
 
@@ -56,26 +56,26 @@ namespace Gtd.Client
 
         
 
-        void UpdateInboxNode()
+        void ReloadInboxNode()
         {
             _tree.UpdateNode("inbox",string.Format("Inbox ({0})", _view.ListInbox().Count));
         }
 
         
 
-        public void Handle(ThoughtCaptured message)
+        public void Handle(Dumb.ThoughtAdded message)
         {
             if (!_loaded)
                 return;
 
-            Sync(UpdateInboxNode);
+            Sync(ReloadInboxNode);
         }
 
         public void Handle(ThoughtArchived message)
         {
             if (!_loaded)
                 return;
-            Sync(UpdateInboxNode);
+            Sync(ReloadInboxNode);
         }
 
         void Sync(Action act)
@@ -93,7 +93,7 @@ namespace Gtd.Client
 
         
 
-        public void Handle(Cm.ProjectDefined message)
+        public void Handle(Dumb.ProjectAdded message)
         {
             if (!_loaded)
                 return;
@@ -120,7 +120,7 @@ namespace Gtd.Client
             //    _projectNodes[message.ProjectId].Text);
         }
 
-        public void Handle(Cm.ClientModelLoaded message)
+        public void Handle(Dumb.ClientModelLoaded message)
         {
             _loaded = true;
 

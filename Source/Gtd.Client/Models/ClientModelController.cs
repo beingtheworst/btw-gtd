@@ -169,7 +169,7 @@ namespace Gtd.Client.Models
         }
     }
 
-    public static class Cm
+    public static class Dumb
     {
         public abstract class CliendModelEvent : Message
         {
@@ -181,13 +181,28 @@ namespace Gtd.Client.Models
 
         }
 
-        public sealed class ProjectDefined : CliendModelEvent
+        public sealed class ThoughtAdded : CliendModelEvent
+        {
+            public ThoughtId Id { get; private set; }
+            public string Subject { get; private set; }
+            public string UniqueKey { get; private set; }
+
+            public ThoughtAdded(ThoughtId id, string subject, string uniqueKey)
+            {
+                Id = id;
+                Subject = subject;
+                UniqueKey = uniqueKey;
+                
+            }
+        }
+
+        public sealed class ProjectAdded : CliendModelEvent
         {
             public readonly string UniqueKey;
             public readonly string ProjectOutcome;
             public readonly ProjectId ProjectId;
 
-            public ProjectDefined(string uniqueKey, string projectOutcome, ProjectId projectId)
+            public ProjectAdded(string uniqueKey, string projectOutcome, ProjectId projectId)
             {
                 UniqueKey = uniqueKey;
                 ProjectOutcome = projectOutcome;
