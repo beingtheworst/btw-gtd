@@ -45,110 +45,115 @@ namespace Gtd.Client.Models
 
         public void Handle(TrustedSystemCreated e)
         {
-            _current.Verify(e.Id);
-            _current.Create(e.Id);
+            _model.Verify(e.Id);
+            _model.Create(e.Id);
         }
 
         public void Handle(ThoughtCaptured e)
         {
-            _current.Verify(e.Id);
-            _current.ThoughtCaptured(e.ThoughtId, e.Thought, e.TimeUtc);
+            _model.Verify(e.Id);
+            _model.ThoughtCaptured(e.ThoughtId, e.Thought, e.TimeUtc);
         }
         public void Handle(ThoughtArchived e)
         {
-            _current.Verify(e.Id);
-            _current.ThoughtArchived(e.ThoughtId);
+            _model.Verify(e.Id);
+            _model.ThoughtArchived(e.ThoughtId);
         }
 
         public void Handle(ProjectDefined e)
         {
-            _current.Verify(e.Id);
-            _current.ProjectDefined(e.ProjectId, e.ProjectOutcome, e.Type);
+            _model.Verify(e.Id);
+            _model.ProjectDefined(e.ProjectId, e.ProjectOutcome, e.Type);
         }
         public void Handle(ActionDefined e)
         {
-            _current.Verify(e.Id);
-            _current.ActionDefined(e.ProjectId, e.ActionId, e.Outcome);
+            _model.Verify(e.Id);
+            _model.ActionDefined(e.ProjectId, e.ActionId, e.Outcome);
         }
         public void Handle(ActionCompleted e)
         {
-            _current.Verify(e.Id);
-            _current.ActionCompleted(e.ActionId);
+            _model.Verify(e.Id);
+            _model.ActionCompleted(e.ActionId);
         }
         public void Handle(ActionOutcomeChanged e)
         {
-            _current.Verify(e.Id);
-            _current.ActionOutcomeChanged(e.ActionId, e.ActionOutcome);
+            _model.Verify(e.Id);
+            _model.ActionOutcomeChanged(e.ActionId, e.ActionOutcome);
         }
 
         public void Handle(ProjectOutcomeChanged e)
         {
-            _current.Verify(e.Id);
-            _current.ProjectOutcomeChanged(e.ProjectId, e.ProjectOutcome);
+            _model.Verify(e.Id);
+            _model.ProjectOutcomeChanged(e.ProjectId, e.ProjectOutcome);
         }
 
         public void Handle(ThoughtSubjectChanged e)
         {
-            _current.Verify(e.Id);
-            _current.ThoughtSubjectChanged(e.ThoughtId, e.Subject);
+            _model.Verify(e.Id);
+            _model.ThoughtSubjectChanged(e.ThoughtId, e.Subject);
         }
         public void Handle(ActionArchived e)
         {
-            _current.Verify(e.Id);
-            _current.ActionArchived(e.ActionId);
+            _model.Verify(e.Id);
+            _model.ActionArchived(e.ActionId);
         }
         public void Handle(ProjectTypeChanged e)
         {
-            _current.Verify(e.Id);
-            _current.ProjectTypeChanged(e.ProjectId, e.Type);
+            _model.Verify(e.Id);
+            _model.ProjectTypeChanged(e.ProjectId, e.Type);
         }
         public void Handle(StartDateAssignedToAction e)
         {
-            _current.Verify(e.Id);
-            _current.StartDateAssigned(e.ActionId, e.NewStartDate);
+            _model.Verify(e.Id);
+            _model.StartDateAssigned(e.ActionId, e.NewStartDate);
         }
         public void Handle(DueDateAssignedToAction e)
         {
-            _current.Verify(e.Id);
-            _current.DueDateAssigned(e.ActionId, e.NewDueDate);
+            _model.Verify(e.Id);
+            _model.DueDateAssigned(e.ActionId, e.NewDueDate);
         }
         public void Handle(StartDateRemovedFromAction e)
         {
-            _current.Verify(e.Id);
-            _current.StartDateAssigned(e.ActionId, DateTime.MinValue);
+            _model.Verify(e.Id);
+            _model.StartDateAssigned(e.ActionId, DateTime.MinValue);
         }
         public void Handle(DueDateRemovedFromAction e)
         {
-            _current.Verify(e.Id);
-            _current.DueDateAssigned(e.ActionId, DateTime.MinValue);
+            _model.Verify(e.Id);
+            _model.DueDateAssigned(e.ActionId, DateTime.MinValue);
         }
         public void Handle(ActionStartDateMoved e)
         {
-            _current.Verify(e.Id);
-            _current.StartDateAssigned(e.ActionId, e.NewStartDate);
+            _model.Verify(e.Id);
+            _model.StartDateAssigned(e.ActionId, e.NewStartDate);
         }
         public void Handle(ActionDueDateMoved e)
         {
-            _current.Verify(e.Id);
-            _current.DueDateAssigned(e.ActionId, e.NewDueDate);
+            _model.Verify(e.Id);
+            _model.DueDateAssigned(e.ActionId, e.NewDueDate);
         }
 
-        ClientModel _current;
+        ClientModel _model;
 
         public void Handle(ProfileLoaded evt)
         {
-            if (_current != null && _current.Id == evt.SystemId)
+
+            if (_model != null && _model.Id == evt.SystemId)
             {
+                // we already have this model all loaded up
                 return;
             }
 
-            _current = new ClientModel();
+            // ok, create new model
+            _model = new ClientModel(_queue, evt.SystemId);
             
+            // replay all events, since we don't have a snapshot for now
             foreach (var e in _store.LoadEventStream(evt.SystemId.ToStreamId()).Events)
             {
                 ((dynamic) this).Handle((dynamic) e);
             }
-            _provider.SwitchToModel(_current);
+            // switch our provider to this new model
+            _provider.SwitchToModel(_model);
 
             _queue.Enqueue(new ClientModelLoaded());
         }
@@ -159,4 +164,14 @@ namespace Gtd.Client.Models
             _provider.SwitchToFilter(message.Criteria);
         }
     }
+
+    public static class Cm
+    {
+        public sealed class ProjectDefined : Message
+        {
+            
+        }
+        
+    }
+
 }

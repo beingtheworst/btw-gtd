@@ -118,13 +118,20 @@ namespace Gtd.Client.Models
     
     public sealed class ClientModel
     {
+        readonly IMessageQueue _queue;
         public List<ThoughtView> Thoughts = new List<ThoughtView>();
         public List<ProjectView> ProjectList = new List<ProjectView>();
         public Dictionary<ProjectId, ProjectView> ProjectDict = new Dictionary<ProjectId, ProjectView>();
         public Dictionary<ActionId, ActionView> ActionDict = new Dictionary<ActionId, ActionView>();
         public Dictionary<Guid, IItemView> DictOfAllItems = new Dictionary<Guid, IItemView>();
 
-        public TrustedSystemId Id { get; private set; }
+        public readonly TrustedSystemId Id;
+
+        public ClientModel(IMessageQueue queue, TrustedSystemId id)
+        {
+            _queue = queue;
+            Id = id;
+        }
 
         public void ThoughtCaptured(ThoughtId thoughtId, string thought, DateTime date)
         {
@@ -201,16 +208,17 @@ namespace Gtd.Client.Models
 
 
         
-        public void Create(TrustedSystemId id)
-        {
-            Id = id;
-        }
+        
 
         public void Verify(TrustedSystemId id)
         {
+            if (Id.Id != id.Id)
+                throw new InvalidOperationException();
+        }
 
-            //if (_currentId.Id != id.Id)
-            //    throw new InvalidOperationException();
+        public void Create(TrustedSystemId id)
+        {
+            
         }
     }
 
