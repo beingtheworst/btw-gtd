@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Gtd.Shell.Filters;
+using System.Linq;
 
 namespace Gtd.Client.Models
 {
@@ -33,7 +34,7 @@ namespace Gtd.Client.Models
             Subject = subject;
         }
 
-        public string UniqueKey { get { return "thought-" + Id.Id; } }
+        public string UIKey { get { return "thought-" + Id.Id; } }
 
         public ThoughtView(ThoughtId id, string subject, DateTime added)
         {
@@ -171,12 +172,19 @@ namespace Gtd.Client.Models
             var item = new ThoughtView(thoughtId, thought, date);
             Thoughts.Add(item);
             DictOfAllItems.Add(thoughtId.Id, item);
-            Publish(new Dumb.ThoughtAdded(item.Id, item.Subject, item.UniqueKey));
+            Publish(new Dumb.ThoughtAdded(item.Id, item.Subject, item.UIKey));
         }
 
         public void ThoughtArchived(ThoughtId thoughtId)
         {
-            Thoughts.RemoveAll(t => t.Id == thoughtId);
+
+             var thought = this.Thoughts.SingleOrDefault(t => t.Id == thoughtId);
+            if (null == thought)
+                return;
+
+            Thoughts.Remove(thought);
+
+            Publish(new Dumb.ThoughtRemoved(thoughtId,thought.UIKey));
         }
 
 

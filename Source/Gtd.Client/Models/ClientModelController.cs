@@ -196,6 +196,18 @@ namespace Gtd.Client.Models
             }
         }
 
+        public sealed class ThoughtRemoved : CliendModelEvent
+        {
+            public readonly ThoughtId Id;
+            public readonly string UiKey;
+
+            public ThoughtRemoved(ThoughtId id, string uiKey)
+            {
+                Id = id;
+                UiKey = uiKey;
+            }
+        }
+
         public sealed class ProjectAdded : CliendModelEvent
         {
             public readonly string UniqueKey;

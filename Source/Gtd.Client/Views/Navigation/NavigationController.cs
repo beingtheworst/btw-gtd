@@ -11,7 +11,7 @@ namespace Gtd.Client
         IHandle<AppInit>, 
         IHandle<Dumb.ClientModelLoaded>,
     IHandle<Dumb.ThoughtAdded>, 
-        IHandle<ThoughtArchived>,
+        IHandle<Dumb.ThoughtRemoved>,
         IHandle<Dumb.ProjectAdded>, IHandle<ActionDefined>, IHandle<UI.FilterChanged>
     {
         readonly NavigationView _tree;
@@ -36,7 +36,7 @@ namespace Gtd.Client
 
             bus.Subscribe<AppInit>(adapter);
             bus.Subscribe<Dumb.ThoughtAdded>(adapter);
-            bus.Subscribe<ThoughtArchived>(adapter);
+            bus.Subscribe<Dumb.ThoughtRemoved>(adapter);
             bus.Subscribe<Dumb.ProjectAdded>(adapter);
             bus.Subscribe<ActionDefined>(adapter);
             bus.Subscribe<Dumb.ClientModelLoaded>(adapter);
@@ -65,16 +65,11 @@ namespace Gtd.Client
 
         public void Handle(Dumb.ThoughtAdded message)
         {
-            if (!_loaded)
-                return;
-
             Sync(ReloadInboxNode);
         }
 
-        public void Handle(ThoughtArchived message)
+        public void Handle(Dumb.ThoughtRemoved message)
         {
-            if (!_loaded)
-                return;
             Sync(ReloadInboxNode);
         }
 
