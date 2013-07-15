@@ -40,12 +40,15 @@ namespace Gtd.Client.Models
         public ProjectId ProjectId { get; private set; }
         public string Outcome { get; private set; }
         public ProjectType Type { get; private set; }
+        public readonly string UniqueKey;
 
         public ProjectView(ProjectId projectId, string outcome, ProjectType type)
         {
             ProjectId = projectId;
             Outcome = outcome;
             Type = type;
+
+            UniqueKey = "project-" + projectId.Id;  
         }
 
 
@@ -133,6 +136,22 @@ namespace Gtd.Client.Models
             Id = id;
         }
 
+        bool _loadingCompleted;
+
+        public void LoadingCompleted()
+        {
+            _loadingCompleted = true;
+
+            Send(new Cm.ClientModelLoaded());
+        }
+
+        void Send(Cm.CliendModelEvent e)
+        {
+            if (!_loadingCompleted)
+                return;
+            _queue.Enqueue(e);
+        }
+
         public void ThoughtCaptured(ThoughtId thoughtId, string thought, DateTime date)
         {
             var item = new ThoughtView()
@@ -157,6 +176,8 @@ namespace Gtd.Client.Models
             ProjectList.Add(project);
             ProjectDict.Add(projectId, project);
             DictOfAllItems.Add(projectId.Id, project);
+
+            Send(new Cm.ProjectDefined(project.UniqueKey, projectOutcome, projectId));
         }
 
         public void ActionDefined(ProjectId projectId, ActionId actionId, string outcome)

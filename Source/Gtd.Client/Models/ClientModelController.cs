@@ -152,10 +152,14 @@ namespace Gtd.Client.Models
             {
                 ((dynamic) this).Handle((dynamic) e);
             }
+            // now enable sending new events when we update
+
+            _model.LoadingCompleted();
+
             // switch our provider to this new model
             _provider.SwitchToModel(_model);
 
-            _queue.Enqueue(new Cm.ClientModelLoaded());
+            
         }
 
 
@@ -167,15 +171,28 @@ namespace Gtd.Client.Models
 
     public static class Cm
     {
+        public abstract class CliendModelEvent : Message
+        {
+             
+        }
 
-        public sealed class ClientModelLoaded : Message
+        public sealed class ClientModelLoaded : CliendModelEvent
         {
 
         }
 
-        public sealed class ProjectDefined : Message
+        public sealed class ProjectDefined : CliendModelEvent
         {
-            
+            public readonly string UniqueKey;
+            public readonly string ProjectOutcome;
+            public readonly ProjectId ProjectId;
+
+            public ProjectDefined(string uniqueKey, string projectOutcome, ProjectId projectId)
+            {
+                UniqueKey = uniqueKey;
+                ProjectOutcome = projectOutcome;
+                ProjectId = projectId;
+            }
         }
         
     }

@@ -12,7 +12,7 @@ namespace Gtd.Client
         IHandle<Cm.ClientModelLoaded>,
     IHandle<ThoughtCaptured>, 
         IHandle<ThoughtArchived>,
-        IHandle<ProjectDefined>, IHandle<ActionDefined>, IHandle<Ui.FilterChanged>
+        IHandle<Cm.ProjectDefined>, IHandle<ActionDefined>, IHandle<Ui.FilterChanged>
     {
         readonly NavigationView _tree;
         readonly Region _region;
@@ -37,7 +37,7 @@ namespace Gtd.Client
             bus.Subscribe<AppInit>(adapter);
             bus.Subscribe<ThoughtCaptured>(adapter);
             bus.Subscribe<ThoughtArchived>(adapter);
-            bus.Subscribe<ProjectDefined>(adapter);
+            bus.Subscribe<Cm.ProjectDefined>(adapter);
             bus.Subscribe<ActionDefined>(adapter);
             bus.Subscribe<Cm.ClientModelLoaded>(adapter);
             bus.Subscribe<Ui.FilterChanged>(adapter);
@@ -93,19 +93,22 @@ namespace Gtd.Client
 
         
 
-        public void Handle(ProjectDefined message)
+        public void Handle(Cm.ProjectDefined message)
         {
             if (!_loaded)
                 return;
-            Sync(() => AddProjectNode(message.ProjectId, message.ProjectOutcome));
+            Sync(() => AddProjectNode(
+                message.ProjectId, 
+                message.ProjectOutcome,
+                message.UniqueKey));
         }
 
-        void AddProjectNode(ProjectId projectId, string outcome)
+        void AddProjectNode(ProjectId projectId, string outcome, string uniqueKey)
         {
-            var key = ToKey(projectId);
-            _tree.AddNode(key, outcome);
-            _projectNodes[projectId] = key;
-            _nodes[key] = projectId;
+            
+            _tree.AddNode(uniqueKey, outcome);
+            _projectNodes[projectId] = uniqueKey;
+            _nodes[uniqueKey] = projectId;
         }
 
         IDictionary<string,object> _nodes = new Dictionary<string, object>(); 
@@ -116,13 +119,6 @@ namespace Gtd.Client
             //    _v
             //    _projectNodes[message.ProjectId].Text);
         }
-
-        static string ToKey(ProjectId id)
-        {
-            return "project|" + id.Id;
-        }
-
-        
 
         public void Handle(Cm.ClientModelLoaded message)
         {
@@ -140,7 +136,7 @@ namespace Gtd.Client
             {
                 var actions = _view.CurrentFilter.FilterActions(project);
                 var count = _view.CurrentFilter.FormatActionCount(actions.Count());
-                AddProjectNode(project.ProjectId, string.Format("{0} ({1})", project.Outcome, count));
+                AddProjectNode(project.ProjectId, string.Format("{0} ({1})", project.Outcome, count), project.UniqueKey);
             }
         }
 

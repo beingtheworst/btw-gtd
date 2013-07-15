@@ -16,7 +16,7 @@
             // have our logger subscribe to the "main event loop"
             // of the application so it can see all Messages (Actions/Events, etc.)
             // the "bus" is part of our in-memory UI messaging architecture (SEDA) 
-            bus.Subscribe<Message>(adapter);
+            bus.Subscribe(adapter);
         }
 
 
@@ -27,7 +27,13 @@
 
         public void Handle(Message message)
         {
-            _control.Log(message.ToString());
+            var s = message.ToString();
+            var type = message.GetType();
+            if (s == type.ToString())
+            {
+                s = type.FullName.Remove(0, type.Namespace.Length + 1);
+            }
+            _control.Log(s);
         }
     }
 }
