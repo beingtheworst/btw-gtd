@@ -67,11 +67,23 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             Id = e.Id;
         }
 
+        public void When(StuffPutInInbox e)
+        {
+            var info = new StuffInfo(e.StuffId, e.Stuff);
+            Stuff.Add(e.StuffId, info);
+            InBasket.Add(e.StuffId);
+        }
+
         public void When(ThoughtCaptured e)
         {
             var info = new ThoughtInfo(e.ThoughtId, e.Thought);
             Thoughts.Add(e.ThoughtId, info);
             Inbox.Add(e.ThoughtId);
+        }
+
+        public void When(StuffTrashed e)
+        {
+            InBasket.Remove(e.StuffId);
         }
 
         public void When(ThoughtArchived e)
@@ -186,8 +198,14 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
 
         public readonly IDictionary<ActionId, ActionInfo> Actions = new Dictionary<ActionId, ActionInfo>(); 
         public readonly IDictionary<ProjectId, ProjectInfo> Projects = new Dictionary<ProjectId, ProjectInfo>();
+        public readonly IDictionary<StuffId, StuffInfo> Stuff = new Dictionary<StuffId, StuffInfo>();
         public readonly IDictionary<ThoughtId, ThoughtInfo> Thoughts = new Dictionary<ThoughtId, ThoughtInfo>();
         public readonly HashSet<ThoughtId> Inbox = new HashSet<ThoughtId>();
+
+        // TODO: If this spike goes as expected I think ThoughtId will be changed to StuffId in this context
+        // If so, then the line above will be changed.
+        // for now, to support BOTH ThoughtId and StuffId in current code, add a new "InBasket" HashSet for "Stuff"
+        public readonly HashSet<StuffId> InBasket = new HashSet<StuffId>();
         
     }
 
@@ -354,6 +372,20 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
         public void RemoveAction(ActionId action)
         {
             _actions.Remove(action);
+        }
+    }
+
+    public sealed class StuffInfo
+    {
+        public StuffId Id { get; private set; }
+        public string Subject { get; private set; }
+
+        public StuffInfo(StuffId id, string subject)
+        {
+            Enforce.NotEmpty(subject, "subject");
+
+            Id = id;
+            Subject = subject;
         }
     }
 

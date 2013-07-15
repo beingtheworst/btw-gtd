@@ -16,13 +16,23 @@ const requestId = RequestId RequestId
 
 // I think a "thought" is just one of the many forms of "stuff"
 // one could argue that all stuff that comes into the inbox is "stuff"
-// and it doesn't get a more conceret Id until a human says what it really is
+// and it doesn't get a more concrete Id until a human says what it really is
 // "project", "action", "thought".  Maybe UI can assume it is thought by context
-// but I think all stuff should be stuff intil it is transformed to what it really is.
+// but I think all stuff should be stuff until it is transformed to what it really is.
 // that way all "stuff generators" use stuffIds and the code to convert to Action/Project etc.
-// can assume it handles "stuffId" and not a "thoughtId" when the "stuff" is random email msg
-const stuffId = StuffId StuffId
+// can assume it handles "stuffId" and not a "thoughtId" when the "stuff" is a random email msg (not a thought)
 
+// Starting to think that a thought is nothing special to GTD...
+// "Thought" is capturing the communication system (brain) but HOW we GOT the stuff in Inbox
+// is less relevant to GTD...it is only after processing the "stuff" does the nature of WHAT it is
+// matters...Stuff either becomes becomes Trash, SomedayMaybe, Reference, or an Action/Project
+// "stuff" never becomes a "thought" in the GTD system.
+// Renaming ThoughtId and related things to "Stuff" because when we start capturing stuff ouside of out test clients
+// (that are NOT manual made up thoughts) the client calling us with an email msg, or mp3 note, or RFID tag if magazine
+// shoudl be asking our API to "capture stuff" because calling "CaptureThought" to have the inbox track an RFID tagged
+// magazine in our inbox doesn't make sense.
+
+const stuffId = StuffId StuffId
 const thoughtId = ThoughtId ThoughtId
 
 const projectId = ProjectId ProjectId
@@ -122,20 +132,21 @@ interface TrustedSystem(TrustedSystemId Id)
     // instead of "Collection Bucket" used in book.
     //PutStuffInCollectionBucket?(requestId, string stuff)
     //    StuffPutInCollectionBucket!(stuffId, string stuff, time)
+
     PutStuffInInbox?(requestId, string stuff)
         StuffPutInInbox!(stuffId, string stuff, time)
 
     TrashStuff?(stuffId)
         StuffTrashed!(stuffId, time)
 
-    PutStuffInSomedayMaybe?(stuffId, string stuff)
-        StuffPutInSomedayMaybe!(stuffId, string stuff, time)
+    // add these concepts later.
+    // Current code geared towards ACTIONABLE items only right now
+    //PutStuffInSomedayMaybe?(stuffId, string stuff)
+    //    StuffPutInSomedayMaybe!(stuffId, string stuff, time)
 
-    PutStuffInReferenceSystem?(stuffId, string stuff)
-        StuffPutInReferenceSystem!(stuffId, string stuff, time)
+    //PutStuffInReferenceSystem?(stuffId, string stuff)
+    //    StuffPutInReferenceSystem!(stuffId, string stuff, time)
     
-    
-
 }
 
 interface ClientProfile()

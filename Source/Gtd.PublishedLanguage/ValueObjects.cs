@@ -76,6 +76,49 @@ namespace Gtd
     }
 
     [DataContract(Namespace = "BTW2/GTD")]
+    public struct StuffId
+    {
+        [DataMember(Order = 1)]
+        public Guid Id { get; private set; }
+
+        public bool IsEmpty { get { return Id == Guid.Empty; } }
+
+        public static StuffId Empty = new StuffId(Guid.Empty);
+
+        public StuffId(Guid id)
+            : this()
+        {
+            Id = id;
+        }
+
+        public bool Equals(StuffId other)
+        {
+            return Id.Equals(other.Id);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            return obj is StuffId && Equals((StuffId)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
+
+        public static bool operator ==(StuffId left, StuffId right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(StuffId left, StuffId right)
+        {
+            return !left.Equals(right);
+        }
+    }
+
+    [DataContract(Namespace = "BTW2/GTD")]
     public struct ThoughtId
     {
         [DataMember(Order = 1)]

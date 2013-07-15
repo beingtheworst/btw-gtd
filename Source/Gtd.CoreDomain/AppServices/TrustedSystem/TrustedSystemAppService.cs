@@ -47,6 +47,16 @@ namespace Gtd.CoreDomain
 
         // When methods reacting to Executed Command to call corresponding Aggregate method
 
+        public void When(PutStuffInInbox cmd)
+        {
+            ChangeAgg(cmd.Id, agg => agg.PutStuffInInbox(cmd.RequestId, cmd.Stuff, _time));
+        }
+
+        public void When(TrashStuff cmd)
+        {
+            ChangeAgg(cmd.Id, agg => agg.TrashStuff(cmd.StuffId, _time));
+        }
+
         public void When(CaptureThought cmd)
         {
             ChangeAgg(cmd.Id, agg => agg.CaptureThought(cmd.RequestId, cmd.Thought, _time));

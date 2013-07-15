@@ -533,6 +533,66 @@ namespace Gtd
         }
     }
     [DataContract(Namespace = "BTW2/GTD")]
+    public partial class PutStuffInInbox : Command, ITrustedSystemCommand
+    {
+        [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
+        [DataMember(Order = 2)] public RequestId RequestId { get; private set; }
+        [DataMember(Order = 3)] public string Stuff { get; private set; }
+        
+        PutStuffInInbox () {}
+        public PutStuffInInbox (TrustedSystemId id, RequestId requestId, string stuff)
+        {
+            Id = id;
+            RequestId = requestId;
+            Stuff = stuff;
+        }
+    }
+    [DataContract(Namespace = "BTW2/GTD")]
+    public partial class StuffPutInInbox : Event, ITrustedSystemEvent
+    {
+        [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
+        [DataMember(Order = 2)] public StuffId StuffId { get; private set; }
+        [DataMember(Order = 3)] public string Stuff { get; private set; }
+        [DataMember(Order = 4)] public DateTime TimeUtc { get; private set; }
+        
+        StuffPutInInbox () {}
+        public StuffPutInInbox (TrustedSystemId id, StuffId stuffId, string stuff, DateTime timeUtc)
+        {
+            Id = id;
+            StuffId = stuffId;
+            Stuff = stuff;
+            TimeUtc = timeUtc;
+        }
+    }
+    [DataContract(Namespace = "BTW2/GTD")]
+    public partial class TrashStuff : Command, ITrustedSystemCommand
+    {
+        [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
+        [DataMember(Order = 2)] public StuffId StuffId { get; private set; }
+        
+        TrashStuff () {}
+        public TrashStuff (TrustedSystemId id, StuffId stuffId)
+        {
+            Id = id;
+            StuffId = stuffId;
+        }
+    }
+    [DataContract(Namespace = "BTW2/GTD")]
+    public partial class StuffTrashed : Event, ITrustedSystemEvent
+    {
+        [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
+        [DataMember(Order = 2)] public StuffId StuffId { get; private set; }
+        [DataMember(Order = 3)] public DateTime TimeUtc { get; private set; }
+        
+        StuffTrashed () {}
+        public StuffTrashed (TrustedSystemId id, StuffId stuffId, DateTime timeUtc)
+        {
+            Id = id;
+            StuffId = stuffId;
+            TimeUtc = timeUtc;
+        }
+    }
+    [DataContract(Namespace = "BTW2/GTD")]
     public partial class InitClientProfileIfNeeded : Command
     {
     }
@@ -573,6 +633,8 @@ namespace Gtd
         void When(ChangeThoughtSubject c);
         void When(ProvideStartDateForAction c);
         void When(ProvideDueDateForAction c);
+        void When(PutStuffInInbox c);
+        void When(TrashStuff c);
     }
     
     public interface ITrustedSystemState
@@ -597,6 +659,8 @@ namespace Gtd
         void When(DueDateAssignedToAction e);
         void When(ActionDueDateMoved e);
         void When(DueDateRemovedFromAction e);
+        void When(StuffPutInInbox e);
+        void When(StuffTrashed e);
     }
     #endregion
 }

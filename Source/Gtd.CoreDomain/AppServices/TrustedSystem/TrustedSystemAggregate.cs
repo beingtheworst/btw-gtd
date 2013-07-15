@@ -71,6 +71,12 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             Apply(new TrustedSystemCreated(id));
         }
 
+        public void PutStuffInInbox(RequestId requestId, string name, ITimeProvider provider)
+        {
+            var stuffId = new StuffId(NewGuidIfEmpty(requestId));
+            Apply(new StuffPutInInbox(_aggState.Id, stuffId, name, provider.GetUtcNow()));
+        }
+
         public void DefineProject(RequestId requestId, string name, ITimeProvider provider)
         {
             // filter request IDs
@@ -163,6 +169,14 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
 
             }
 
+        }
+
+        public void TrashStuff(StuffId stuffId, ITimeProvider provider)
+        {
+            if (!_aggState.InBasket.Contains(stuffId))
+                throw DomainError.Named("no stuff", "Stuff with Id {0} not found", stuffId);
+
+            Apply(new StuffTrashed(_aggState.Id, stuffId, provider.GetUtcNow()));
         }
 
         public void ArchiveThought(ThoughtId thoughtId, ITimeProvider provider)
