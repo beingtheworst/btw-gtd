@@ -227,6 +227,27 @@ namespace Gtd.Client.Models
             }
         }
 
+        public sealed class ActionUpdated : CliendModelEvent
+        {
+            public readonly ActionId ActionId;
+            public readonly string ActionUIKey;
+
+            public readonly ProjectId ProjectId;
+            public readonly string ProjectUIKey;
+            public readonly string Outcome;
+            public readonly bool Completed;
+
+            public ActionUpdated(ActionId actionId, string actionUIKey, ProjectId projectId, string projectUIKey, string outcome, bool completed)
+            {
+                ActionId = actionId;
+                ActionUIKey = actionUIKey;
+                ProjectId = projectId;
+                ProjectUIKey = projectUIKey;
+                Outcome = outcome;
+                Completed = completed;
+            }
+        }
+
         public sealed class ProjectAdded : CliendModelEvent
         {
             public readonly string UniqueKey;

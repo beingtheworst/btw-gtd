@@ -6,6 +6,7 @@ using Btw.Portable;
 using Gtd.Client.Models;
 using Gtd.Client.Views.Actions;
 using Gtd.Client.Views.CaptureThought;
+using Gtd.Client.Views.Navigation;
 
 namespace Gtd.Client
 {

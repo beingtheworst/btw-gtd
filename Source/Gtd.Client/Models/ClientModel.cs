@@ -91,7 +91,7 @@ namespace Gtd.Client.Models
         public string Outcome { get; private set; }
         public bool Completed { get; private set; }
         public bool Archived { get; private set; }
-        public ProjectId Project { get; private set; }
+        public ProjectId ProjectId { get; private set; }
         public DateTime StartDate { get; private set; }
         public DateTime DueDate { get; private set; }
 
@@ -103,7 +103,7 @@ namespace Gtd.Client.Models
             Outcome = outcome;
             Completed = false;
             Archived = false;
-            Project = project;
+            ProjectId = project;
         }
 
         public void MarkAsCompleted()
@@ -214,7 +214,10 @@ namespace Gtd.Client.Models
         }
         public void ActionCompleted(ActionId actionId)
         {
-            ActionDict[actionId].MarkAsCompleted();
+            var action = ActionDict[actionId];
+            var project = ProjectDict[action.ProjectId];
+            action.MarkAsCompleted();
+            Publish(new Dumb.ActionUpdated(actionId, action.UIKey, action.ProjectId, project.UIKey, action.Outcome, true));
         }
 
         public void ThoughtSubjectChanged(ThoughtId thoughtId, string subject)

@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
 using Gtd.Client.Models;
-using Gtd.Client.Views.Navigation;
 using System.Linq;
 
-namespace Gtd.Client
+namespace Gtd.Client.Views.Navigation
 {
     public sealed class NavigationController : 
         IHandle<AppInit>, 
         IHandle<Dumb.ClientModelLoaded>,
-    IHandle<Dumb.ThoughtAdded>, 
+        IHandle<Dumb.ThoughtAdded>, 
         IHandle<Dumb.ThoughtRemoved>,
-        IHandle<Dumb.ProjectAdded>, IHandle<Dumb.ActionAdded>, IHandle<UI.FilterChanged>
+        IHandle<Dumb.ProjectAdded>, 
+        IHandle<Dumb.ActionAdded>, 
+        IHandle<Dumb.ActionUpdated>,
+    IHandle<UI.FilterChanged>
     {
         readonly NavigationView _tree;
         readonly Region _region;
@@ -41,7 +42,7 @@ namespace Gtd.Client
             bus.Subscribe<Dumb.ActionAdded>(adapter);
             bus.Subscribe<Dumb.ClientModelLoaded>(adapter);
             bus.Subscribe<UI.FilterChanged>(adapter);
-
+            bus.Subscribe<Dumb.ActionUpdated>(adapter);
 
             return adapter ;
         }
@@ -50,8 +51,6 @@ namespace Gtd.Client
         {
             _region.RegisterDock(_tree, "nav-tree");
             _region.SwitchTo("nav-tree");
-
-            //_tree.Sync(() => _tree.AddNode("inbox","Inbox"));
         }
 
         
@@ -110,6 +109,11 @@ namespace Gtd.Client
             AddOrUpdateProject(_view.GetProjectOrNull(message.ProjectId));
         }
 
+        public void Handle(Dumb.ActionUpdated message)
+        {
+            AddOrUpdateProject(_view.GetProjectOrNull(message.ProjectId));
+        }
+
         void AddOrUpdateProject(ProjectView view)
         {
             var actions = _view.CurrentFilter.FilterActions(view);
@@ -131,7 +135,7 @@ namespace Gtd.Client
             }
         }
 
-        IDictionary<string,object> _nodes = new Dictionary<string, object>();
+        readonly IDictionary<string,object> _nodes = new Dictionary<string, object>();
 
         public void WhenNodeSelected(string tag)
         {
