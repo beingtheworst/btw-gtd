@@ -18,12 +18,12 @@ namespace Gtd.Client.Models
     }
 
 
-    public interface IItemView
+    public interface IItemModel
     {
         string GetTitle();
     }
 
-    public sealed class ThoughtView : IItemView
+    public sealed class ThoughtModel : IItemModel
     {
         public readonly ThoughtId Id;
         public string Subject { get; private set; }
@@ -36,7 +36,7 @@ namespace Gtd.Client.Models
 
         public string UIKey { get { return "thought-" + Id.Id; } }
 
-        public ThoughtView(ThoughtId id, string subject, DateTime added)
+        public ThoughtModel(ThoughtId id, string subject, DateTime added)
         {
             Id = id;
             Subject = subject;
@@ -50,14 +50,14 @@ namespace Gtd.Client.Models
 
     }
 
-    public sealed class ProjectView : IItemView
+    public sealed class ProjectModel : IItemModel
     {
         public ProjectId ProjectId { get; private set; }
         public string Outcome { get; private set; }
         public ProjectType Type { get; private set; }
         public readonly string UIKey;
 
-        public ProjectView(ProjectId projectId, string outcome, ProjectType type)
+        public ProjectModel(ProjectId projectId, string outcome, ProjectType type)
         {
             ProjectId = projectId;
             Outcome = outcome;
@@ -67,7 +67,7 @@ namespace Gtd.Client.Models
         }
 
 
-        public List<ActionView> Actions = new List<ActionView>();
+        public List<ActionModel> Actions = new List<ActionModel>();
 
         public void OutcomeChanged(string outcome)
         {
@@ -85,7 +85,7 @@ namespace Gtd.Client.Models
         }
     }
 
-    public sealed class ActionView : IItemView
+    public sealed class ActionModel : IItemModel
     {
         public ActionId Id { get; private set; }
         public string Outcome { get; private set; }
@@ -97,7 +97,7 @@ namespace Gtd.Client.Models
 
         public string UIKey { get { return "action-" + Id.Id; } }
 
-        public ActionView(ActionId action, string outcome, ProjectId project)
+        public ActionModel(ActionId action, string outcome, ProjectId project)
         {
             Id = action;
             Outcome = outcome;
@@ -140,11 +140,11 @@ namespace Gtd.Client.Models
     public sealed class ClientModel
     {
         readonly IMessageQueue _queue;
-        public List<ThoughtView> Thoughts = new List<ThoughtView>();
-        public List<ProjectView> ProjectList = new List<ProjectView>();
-        public Dictionary<ProjectId, ProjectView> ProjectDict = new Dictionary<ProjectId, ProjectView>();
-        public Dictionary<ActionId, ActionView> ActionDict = new Dictionary<ActionId, ActionView>();
-        public Dictionary<Guid, IItemView> DictOfAllItems = new Dictionary<Guid, IItemView>();
+        public List<ThoughtModel> Thoughts = new List<ThoughtModel>();
+        public List<ProjectModel> ProjectList = new List<ProjectModel>();
+        public Dictionary<ProjectId, ProjectModel> ProjectDict = new Dictionary<ProjectId, ProjectModel>();
+        public Dictionary<ActionId, ActionModel> ActionDict = new Dictionary<ActionId, ActionModel>();
+        public Dictionary<Guid, IItemModel> DictOfAllItems = new Dictionary<Guid, IItemModel>();
 
         public readonly TrustedSystemId Id;
 
@@ -172,7 +172,7 @@ namespace Gtd.Client.Models
 
         public void ThoughtCaptured(ThoughtId thoughtId, string thought, DateTime date)
         {
-            var item = new ThoughtView(thoughtId, thought, date);
+            var item = new ThoughtModel(thoughtId, thought, date);
             Thoughts.Add(item);
             DictOfAllItems.Add(thoughtId.Id, item);
             Publish(new Dumb.ThoughtAdded(item.Id, item.Subject, item.UIKey));
@@ -193,7 +193,7 @@ namespace Gtd.Client.Models
 
         public void ProjectDefined(ProjectId projectId, string projectOutcome, ProjectType type)
         {
-            var project = new ProjectView(projectId, projectOutcome, type);
+            var project = new ProjectModel(projectId, projectOutcome, type);
             ProjectList.Add(project);
             ProjectDict.Add(projectId, project);
             DictOfAllItems.Add(projectId.Id, project);
@@ -203,7 +203,7 @@ namespace Gtd.Client.Models
 
         public void ActionDefined(ProjectId projectId, ActionId actionId, string outcome)
         {
-            var action = new ActionView(actionId, outcome, projectId);
+            var action = new ActionModel(actionId, outcome, projectId);
 
             var project = ProjectDict[projectId];
             project.Actions.Add(action);
@@ -222,7 +222,7 @@ namespace Gtd.Client.Models
 
         public void ThoughtSubjectChanged(ThoughtId thoughtId, string subject)
         {
-            ((ThoughtView)DictOfAllItems[thoughtId.Id]).UpdateSubject(subject);
+            ((ThoughtModel)DictOfAllItems[thoughtId.Id]).UpdateSubject(subject);
         }
         public void ProjectOutcomeChanged(ProjectId projectId, string outcome)
         {

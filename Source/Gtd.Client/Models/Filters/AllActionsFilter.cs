@@ -5,9 +5,9 @@ namespace Gtd.Shell.Filters
 {
     public sealed class AllActionsFilter : IFilterCriteria
     {
-        public IEnumerable<ActionView> FilterActions(ProjectView view)
+        public IEnumerable<ActionModel> FilterActions(ProjectModel model)
         {
-            return view.Actions;
+            return model.Actions;
         }
 
         public string Title { get { return "All actions"; } }

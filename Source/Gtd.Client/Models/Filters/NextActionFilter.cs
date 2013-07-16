@@ -8,20 +8,20 @@ namespace Gtd.Shell.Filters
     public sealed class NextActionFilter : IFilterCriteria
     {
 
-        public IEnumerable<ActionView> FilterActions(ProjectView view)
+        public IEnumerable<ActionModel> FilterActions(ProjectModel model)
         {
-            if (view.Type == ProjectType.List)
+            if (model.Type == ProjectType.List)
             {
                 // in list, every available action is next
-                foreach (var actionView in GetAllAvailableActions(view))
+                foreach (var actionView in GetAllAvailableActions(model))
                 {
                     yield return actionView;
                 }
             }
-            else if (view.Type == ProjectType.Parallel)
+            else if (model.Type == ProjectType.Parallel)
             {
                 // in parallel, first available action is next
-                var filtered = GetAllAvailableActions(view).FirstOrDefault();
+                var filtered = GetAllAvailableActions(model).FirstOrDefault();
 
                 if (filtered != null)
                 {
@@ -31,7 +31,7 @@ namespace Gtd.Shell.Filters
             else
             {
                 // in sequential, first available action is next (unless it's blocked)
-                var filtered = view.Actions
+                var filtered = model.Actions
                                    .Where(v => !v.Completed)
                                    .Where(v => !v.Archived)
                                    .FirstOrDefault();
@@ -43,9 +43,9 @@ namespace Gtd.Shell.Filters
 
         }
 
-        static IEnumerable<ActionView> GetAllAvailableActions(ProjectView view)
+        static IEnumerable<ActionModel> GetAllAvailableActions(ProjectModel model)
         {
-            return view.Actions
+            return model.Actions
                        .Where(v => !v.Completed)
                        .Where(v => !v.Archived)
                        .Where(v => v.StartDate <= DateTime.Now);

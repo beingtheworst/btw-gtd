@@ -1,4 +1,4 @@
-﻿namespace Gtd.Client.Views.Actions
+﻿namespace Gtd.Client.Views.Project
 {
     partial class ProjectView
     {

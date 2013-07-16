@@ -19,12 +19,12 @@ namespace Gtd.Client.Models
         }
 
 
-        public IList<ProjectView> ListProjects()
+        public IList<ProjectModel> ListProjects()
         {
             return CurrentModel.ProjectList;
         }
 
-        public IList<ThoughtView> ListInbox()
+        public IList<ThoughtModel> ListInbox()
         {
             var thoughts = CurrentModel.Thoughts;
             
@@ -32,7 +32,7 @@ namespace Gtd.Client.Models
         }
 
 
-        public ProjectView GetProjectOrNull(ProjectId id)
+        public ProjectModel GetProjectOrNull(ProjectId id)
         {
             return CurrentModel.ProjectDict[id];
         }

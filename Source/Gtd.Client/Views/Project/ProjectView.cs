@@ -1,7 +1,7 @@
 ﻿using System.Windows.Forms;
 using Gtd.Client.Models;
 
-namespace Gtd.Client.Views.Actions
+namespace Gtd.Client.Views.Project
 {
     public partial class ProjectView : UserControl
     {
@@ -10,11 +10,11 @@ namespace Gtd.Client.Views.Actions
             InitializeComponent();
         }
 
-        public void DisplayProject(Models.ProjectView project)
+        public void DisplayProject(ProjectController.ProjectDisplayModel project)
         {
             _actionList.BeginUpdate();
 
-            _projectName.Text = project.GetTitle();
+            _projectName.Text = project.Outcome;
             try
             {
                 _actionList.Items.Clear();
@@ -31,16 +31,16 @@ namespace Gtd.Client.Views.Actions
 
         sealed class ActionDisplay
         {
-            public readonly ActionView View;
+            public readonly ProjectController.ActionDisplayModel Model;
 
-            public ActionDisplay(ActionView view)
+            public ActionDisplay(ProjectController.ActionDisplayModel model)
             {
-                View = view;
+                Model = model;
             }
 
             public override string ToString()
             {
-                return View.Outcome;
+                return Model.Outcome;
             }
         }
 
@@ -51,7 +51,7 @@ namespace Gtd.Client.Views.Actions
                     var display = (ActionDisplay) _actionList.Items[args.Index];
                     if (args.NewValue == CheckState.Checked)
                     {
-                        controller.RequestActionCheck(display.View.Id);
+                        controller.RequestActionCheck(display.Model.ActionId);
                     }
                     else
                     {

@@ -6,7 +6,7 @@ namespace Gtd.Shell.Filters
 {
     public interface IFilterCriteria
     {
-        IEnumerable<ActionView> FilterActions(ProjectView view); 
+        IEnumerable<ActionModel> FilterActions(ProjectModel model); 
 
         string Title { get; }
         string Description { get; }

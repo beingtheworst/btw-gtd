@@ -83,7 +83,7 @@ namespace Gtd.Client
             _queue.Publish(new UI.CaptureThoughtClicked());
         }
 
-        public IList<ProjectView> ListProjects()
+        public IList<ProjectModel> ListProjects()
         {
             return _view.ListProjects();
         }

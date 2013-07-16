@@ -114,14 +114,14 @@ namespace Gtd.Client.Views.Navigation
             AddOrUpdateProject(_view.GetProjectOrNull(message.ProjectId));
         }
 
-        void AddOrUpdateProject(ProjectView view)
+        void AddOrUpdateProject(ProjectModel model)
         {
-            var actions = _view.CurrentFilter.FilterActions(view);
+            var actions = _view.CurrentFilter.FilterActions(model);
             var count = _view.CurrentFilter.FormatActionCount(actions.Count());
 
-            var title = string.Format("{0} ({1})", view.Outcome, count);
-            _nodes[view.UIKey] = view.ProjectId;
-            Sync(() => _tree.AddOrUpdateNode(view.UIKey, title));
+            var title = string.Format("{0} ({1})", model.Outcome, count);
+            _nodes[model.UIKey] = model.ProjectId;
+            Sync(() => _tree.AddOrUpdateNode(model.UIKey, title));
         }
 
 

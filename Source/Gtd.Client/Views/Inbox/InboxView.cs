@@ -106,7 +106,7 @@ namespace Gtd.Client
             _controller.WhenCaptureThoughtClicked();
         }
 
-        public void LoadThoughts(IList<ThoughtView> listInbox)
+        public void LoadThoughts(IList<ThoughtModel> listInbox)
         {
             listBox1.BeginUpdate();
             try

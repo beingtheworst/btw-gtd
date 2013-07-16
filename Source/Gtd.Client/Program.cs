@@ -4,9 +4,9 @@ using System.IO;
 using System.Windows.Forms;
 using Btw.Portable;
 using Gtd.Client.Models;
-using Gtd.Client.Views.Actions;
 using Gtd.Client.Views.CaptureThought;
 using Gtd.Client.Views.Navigation;
+using Gtd.Client.Views.Project;
 
 namespace Gtd.Client
 {

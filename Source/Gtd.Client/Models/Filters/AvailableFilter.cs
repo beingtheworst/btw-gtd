@@ -21,11 +21,11 @@ namespace Gtd.Shell.Filters
     /// </summary>
     public sealed class AvailableFilter : IFilterCriteria
     {
-        public IEnumerable<ActionView> FilterActions(ProjectView view)
+        public IEnumerable<ActionModel> FilterActions(ProjectModel model)
         {
-            if (view.Type == ProjectType.Sequential)
+            if (model.Type == ProjectType.Sequential)
             {
-                var filtered = view.Actions
+                var filtered = model.Actions
                                    .Where(v => !v.Completed)
                                    .FirstOrDefault(v => !v.Archived);
 
@@ -34,7 +34,7 @@ namespace Gtd.Shell.Filters
             }
             else
             {
-                var availableActions = view.Actions
+                var availableActions = model.Actions
                     .Where(v => !v.Completed)
                     .Where(v => !v.Archived);
                 var filtered = availableActions

@@ -8,9 +8,9 @@ namespace Gtd.Shell.Filters
     /// </summary>
     public sealed class RemainingFilter : IFilterCriteria
     {
-        public IEnumerable<ActionView> FilterActions(ProjectView view)
+        public IEnumerable<ActionModel> FilterActions(ProjectModel model)
         {
-            foreach (var action in view.Actions)
+            foreach (var action in model.Actions)
             {
                 if (action.Archived)
                     continue;
