@@ -1,8 +1,19 @@
 ## TODO for GTD/BTW project
 
-#### Add Redis-backed Event Store adapter
+#### Add ability to add actions from within the project
 
-The simplest way to do first production deployment with one server and multiple clients (console) is to have remotely accessible event store. Redis seems to be the best choice (using StackOverflow's libraries)
+> Assigned: Rinat
+
+#### Clean up presenter model
+
+We want to make the model serializable (no internal object references) but
+return clean read-only snapshots which could be safely passed around the UI
+
+#### Add ability to mark actions as non-complete
+
+> Assigned: Kerry
+
+
 
 #### Import date/time parsing rules from OmniFocus
 
