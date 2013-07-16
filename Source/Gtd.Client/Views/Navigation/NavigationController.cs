@@ -12,7 +12,7 @@ namespace Gtd.Client
         IHandle<Dumb.ClientModelLoaded>,
     IHandle<Dumb.ThoughtAdded>, 
         IHandle<Dumb.ThoughtRemoved>,
-        IHandle<Dumb.ProjectAdded>, IHandle<ActionDefined>, IHandle<UI.FilterChanged>
+        IHandle<Dumb.ProjectAdded>, IHandle<Dumb.ActionAdded>, IHandle<UI.FilterChanged>
     {
         readonly NavigationView _tree;
         readonly Region _region;
@@ -38,7 +38,7 @@ namespace Gtd.Client
             bus.Subscribe<Dumb.ThoughtAdded>(adapter);
             bus.Subscribe<Dumb.ThoughtRemoved>(adapter);
             bus.Subscribe<Dumb.ProjectAdded>(adapter);
-            bus.Subscribe<ActionDefined>(adapter);
+            bus.Subscribe<Dumb.ActionAdded>(adapter);
             bus.Subscribe<Dumb.ClientModelLoaded>(adapter);
             bus.Subscribe<UI.FilterChanged>(adapter);
 
@@ -58,7 +58,7 @@ namespace Gtd.Client
 
         void ReloadInboxNode()
         {
-            _tree.UpdateNode("inbox",string.Format("Inbox ({0})", _view.ListInbox().Count));
+            _tree.AddOrUpdateNode("inbox",string.Format("Inbox ({0})", _view.ListInbox().Count));
         }
 
         
@@ -83,38 +83,6 @@ namespace Gtd.Client
             act();
         }
 
-
-        readonly IDictionary<ProjectId, string> _projectNodes = new Dictionary<ProjectId, string>(); 
-
-        
-
-        public void Handle(Dumb.ProjectAdded message)
-        {
-            if (!_loaded)
-                return;
-            Sync(() => AddProjectNode(
-                message.ProjectId, 
-                message.ProjectOutcome,
-                message.UniqueKey));
-        }
-
-        void AddProjectNode(ProjectId projectId, string outcome, string uniqueKey)
-        {
-            
-            _tree.AddNode(uniqueKey, outcome);
-            _projectNodes[projectId] = uniqueKey;
-            _nodes[uniqueKey] = projectId;
-        }
-
-        IDictionary<string,object> _nodes = new Dictionary<string, object>(); 
-
-        public void Handle(ActionDefined message)
-        {
-            //Sync(() => 
-            //    _v
-            //    _projectNodes[message.ProjectId].Text);
-        }
-
         public void Handle(Dumb.ClientModelLoaded message)
         {
             _loaded = true;
@@ -123,17 +91,47 @@ namespace Gtd.Client
 
         }
 
+        public void Handle(UI.FilterChanged message)
+        {
+            if (!_loaded) return;
+            Sync(LoadNavigation);
+        }
+
+        public void Handle(Dumb.ProjectAdded message)
+        {
+            if (!_loaded)
+                return;
+
+            AddOrUpdateProject(_view.GetProjectOrNull(message.ProjectId));
+        }
+
+        public void Handle(Dumb.ActionAdded message)
+        {
+            AddOrUpdateProject(_view.GetProjectOrNull(message.ProjectId));
+        }
+
+        void AddOrUpdateProject(ProjectView view)
+        {
+            var actions = _view.CurrentFilter.FilterActions(view);
+            var count = _view.CurrentFilter.FormatActionCount(actions.Count());
+
+            var title = string.Format("{0} ({1})", view.Outcome, count);
+            _nodes[view.UIKey] = view.ProjectId;
+            Sync(() => _tree.AddOrUpdateNode(view.UIKey, title));
+        }
+
+
         void LoadNavigation()
         {
             _tree.Clear();
-            _tree.AddNode("inbox", string.Format("Inbox ({0})", _view.ListInbox().Count));
+            _tree.AddOrUpdateNode("inbox", string.Format("Inbox ({0})", _view.ListInbox().Count));
             foreach (var project in _view.ListProjects())
             {
-                var actions = _view.CurrentFilter.FilterActions(project);
-                var count = _view.CurrentFilter.FormatActionCount(actions.Count());
-                AddProjectNode(project.ProjectId, string.Format("{0} ({1})", project.Outcome, count), project.UniqueKey);
+                AddOrUpdateProject(project);
             }
         }
+
+        IDictionary<string,object> _nodes = new Dictionary<string, object>();
 
         public void WhenNodeSelected(string tag)
         {
@@ -148,12 +146,6 @@ namespace Gtd.Client
             {
                 _queue.Publish(new UI.DisplayProject((ProjectId) node));
             }
-        }
-
-        public void Handle(UI.FilterChanged message)
-        {
-            if (!_loaded) return;
-            Sync(LoadNavigation);
         }
     }
 

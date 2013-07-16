@@ -24,24 +24,26 @@ namespace Gtd.Client.Views.Navigation
                 };
         }
 
-        IDictionary<string,TreeNode> _nodes = new Dictionary<string, TreeNode>(); 
+        readonly IDictionary<string,TreeNode> _nodes = new Dictionary<string, TreeNode>(); 
         public void Clear()
         {
             _nodes.Clear();
             treeView1.Nodes.Clear();
-            
         }
 
-        public void AddNode(string key, string text)
+        public void AddOrUpdateNode(string key, string text)
         {
-            var treeNode = treeView1.Nodes.Add(key, text);
-            treeNode.Tag = key;
-            _nodes[key] = treeNode;
-        }
-
-        public void UpdateNode(string key, string text)
-        {
-            _nodes[key].Text = text;
+            TreeNode node;
+            if (!_nodes.TryGetValue(key, out node))
+            {
+                node = new TreeNode(text) {Tag = key};
+                _nodes[key] = node;
+                treeView1.Nodes.Add(node);
+            }
+            else
+            {
+                node.Text = text;
+            }
         }
     }
 }

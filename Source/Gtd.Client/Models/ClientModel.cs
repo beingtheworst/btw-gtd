@@ -55,7 +55,7 @@ namespace Gtd.Client.Models
         public ProjectId ProjectId { get; private set; }
         public string Outcome { get; private set; }
         public ProjectType Type { get; private set; }
-        public readonly string UniqueKey;
+        public readonly string UIKey;
 
         public ProjectView(ProjectId projectId, string outcome, ProjectType type)
         {
@@ -63,7 +63,7 @@ namespace Gtd.Client.Models
             Outcome = outcome;
             Type = type;
 
-            UniqueKey = "project-" + projectId.Id;  
+            UIKey = "project-" + projectId.Id;  
         }
 
 
@@ -94,6 +94,9 @@ namespace Gtd.Client.Models
         public ProjectId Project { get; private set; }
         public DateTime StartDate { get; private set; }
         public DateTime DueDate { get; private set; }
+
+        public string UIKey { get { return "action-" + Id.Id; } }
+
         public ActionView(ActionId action, string outcome, ProjectId project)
         {
             Id = action;
@@ -195,16 +198,19 @@ namespace Gtd.Client.Models
             ProjectDict.Add(projectId, project);
             DictOfAllItems.Add(projectId.Id, project);
 
-            Publish(new Dumb.ProjectAdded(project.UniqueKey, projectOutcome, projectId));
+            Publish(new Dumb.ProjectAdded(project.UIKey, projectOutcome, projectId));
         }
 
         public void ActionDefined(ProjectId projectId, ActionId actionId, string outcome)
         {
             var action = new ActionView(actionId, outcome, projectId);
 
-            ProjectDict[projectId].Actions.Add(action);
+            var project = ProjectDict[projectId];
+            project.Actions.Add(action);
             ActionDict.Add(actionId, action);
             DictOfAllItems.Add(actionId.Id, action);
+
+            Publish(new Dumb.ActionAdded(actionId, action.UIKey, projectId, project.UIKey, outcome));
         }
         public void ActionCompleted(ActionId actionId)
         {
