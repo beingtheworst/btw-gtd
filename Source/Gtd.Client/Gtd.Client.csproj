@@ -63,6 +63,13 @@
     <Compile Include="Models\Filters\RemainingFilter.cs" />
     <Compile Include="Models\ClientModelController.cs" />
     <Compile Include="Models\ClientPerspective.cs" />
+    <Compile Include="Views\AddStuff\AddStuffController.cs" />
+    <Compile Include="Views\AddStuff\AddStuffForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\AddStuff\AddStuffForm.Designer.cs">
+      <DependentUpon>AddStuffForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\CaptureThought\CaptureThoughtForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -112,6 +119,9 @@
     <Compile Include="Views\Navigation\NavigationView.Designer.cs">
       <DependentUpon>NavigationView.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Views\AddStuff\AddStuffForm.resx">
+      <DependentUpon>AddStuffForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\CaptureThought\CaptureThoughtForm.resx">
       <DependentUpon>CaptureThoughtForm.cs</DependentUpon>
     </EmbeddedResource>

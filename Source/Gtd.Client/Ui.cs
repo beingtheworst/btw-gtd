@@ -68,10 +68,21 @@ namespace Gtd.Client
             }
         }
 
+        public sealed class AddStuffClicked : Message { }
         public sealed class CaptureThoughtClicked : Message {}
 
         public sealed class DefineProjectClicked : Message {}
 
+
+        public sealed class AddStuffWizardCompleted : Message
+        {
+            public readonly string Stuff;
+
+            public AddStuffWizardCompleted(string stuff)
+            {
+                Stuff = stuff;
+            }
+        }
 
         public sealed class CaptureThoughtWizardCompleted : Message
         {

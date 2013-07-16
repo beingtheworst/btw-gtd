@@ -3,11 +3,11 @@ using System.Windows.Forms;
 
 namespace Gtd.Client
 {
-    public partial class CaptureThoughtForm : Form
+    public partial class AddStuffForm : Form
     {
         readonly MainForm _parent;
 
-        public CaptureThoughtForm(MainForm parent)
+        public AddStuffForm(MainForm parent)
         {
             _parent = parent;
             InitializeComponent();
@@ -16,19 +16,19 @@ namespace Gtd.Client
 
         public void TryGetUserInput(Action<string> future)
         {
-            // Use the CaptureThoughtForm to try and get user input
+            // Use the AddStuffForm to try and get user input
             // on the same UI (Single Apartment) thread as the main parent form.
             // If it is able to, call back the Action that was passed in future above.
             _parent.Sync(() =>
-                {
-                    textBox1.Text = null;
-                    if (ShowDialog(_parent) != DialogResult.OK) return;
-                    var text = textBox1.Text;
-                    future(text);
-                });
+            {
+                textBox1.Text = null;
+                if (ShowDialog(_parent) != DialogResult.OK) return;
+                var text = textBox1.Text;
+                future(text);
+            });
         }
 
-        private void CaptureThoughtForm_Load(object sender, EventArgs e)
+        private void AddStuffForm_Load(object sender, EventArgs e)
         {
             textBox1.Focus();
         }
