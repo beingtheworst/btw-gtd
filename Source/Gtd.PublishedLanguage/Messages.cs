@@ -409,65 +409,65 @@ namespace Gtd
         }
     }
     [DataContract(Namespace = "BTW2/GTD")]
-    public partial class ProvideStartDateForAction : Command, ITrustedSystemCommand
+    public partial class DeferActionUntil : Command, ITrustedSystemCommand
     {
         [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
         [DataMember(Order = 2)] public ActionId ActionId { get; private set; }
-        [DataMember(Order = 3)] public DateTime NewStartDate { get; private set; }
+        [DataMember(Order = 3)] public DateTime DeferUntil { get; private set; }
         
-        ProvideStartDateForAction () {}
-        public ProvideStartDateForAction (TrustedSystemId id, ActionId actionId, DateTime newStartDate)
+        DeferActionUntil () {}
+        public DeferActionUntil (TrustedSystemId id, ActionId actionId, DateTime deferUntil)
         {
             Id = id;
             ActionId = actionId;
-            NewStartDate = newStartDate;
+            DeferUntil = deferUntil;
         }
     }
     [DataContract(Namespace = "BTW2/GTD")]
-    public partial class StartDateAssignedToAction : Event, ITrustedSystemEvent
+    public partial class ActionDeferredUntil : Event, ITrustedSystemEvent
     {
         [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
         [DataMember(Order = 2)] public ActionId ActionId { get; private set; }
-        [DataMember(Order = 3)] public DateTime NewStartDate { get; private set; }
+        [DataMember(Order = 3)] public DateTime DeferUntil { get; private set; }
         
-        StartDateAssignedToAction () {}
-        public StartDateAssignedToAction (TrustedSystemId id, ActionId actionId, DateTime newStartDate)
+        ActionDeferredUntil () {}
+        public ActionDeferredUntil (TrustedSystemId id, ActionId actionId, DateTime deferUntil)
         {
             Id = id;
             ActionId = actionId;
-            NewStartDate = newStartDate;
+            DeferUntil = deferUntil;
         }
     }
     [DataContract(Namespace = "BTW2/GTD")]
-    public partial class ActionStartDateMoved : Event, ITrustedSystemEvent
+    public partial class ActionDeferDateShifted : Event, ITrustedSystemEvent
     {
         [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
         [DataMember(Order = 2)] public ActionId ActionId { get; private set; }
-        [DataMember(Order = 3)] public DateTime OldstartDate { get; private set; }
-        [DataMember(Order = 4)] public DateTime NewStartDate { get; private set; }
+        [DataMember(Order = 3)] public DateTime OldDeferDate { get; private set; }
+        [DataMember(Order = 4)] public DateTime NewDeferDate { get; private set; }
         
-        ActionStartDateMoved () {}
-        public ActionStartDateMoved (TrustedSystemId id, ActionId actionId, DateTime oldstartDate, DateTime newStartDate)
+        ActionDeferDateShifted () {}
+        public ActionDeferDateShifted (TrustedSystemId id, ActionId actionId, DateTime oldDeferDate, DateTime newDeferDate)
         {
             Id = id;
             ActionId = actionId;
-            OldstartDate = oldstartDate;
-            NewStartDate = newStartDate;
+            OldDeferDate = oldDeferDate;
+            NewDeferDate = newDeferDate;
         }
     }
     [DataContract(Namespace = "BTW2/GTD")]
-    public partial class StartDateRemovedFromAction : Event, ITrustedSystemEvent
+    public partial class ActionIsNoLongerDeferred : Event, ITrustedSystemEvent
     {
         [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
         [DataMember(Order = 2)] public ActionId ActionId { get; private set; }
-        [DataMember(Order = 3)] public DateTime OldStartDate { get; private set; }
+        [DataMember(Order = 3)] public DateTime OldDeferDate { get; private set; }
         
-        StartDateRemovedFromAction () {}
-        public StartDateRemovedFromAction (TrustedSystemId id, ActionId actionId, DateTime oldStartDate)
+        ActionIsNoLongerDeferred () {}
+        public ActionIsNoLongerDeferred (TrustedSystemId id, ActionId actionId, DateTime oldDeferDate)
         {
             Id = id;
             ActionId = actionId;
-            OldStartDate = oldStartDate;
+            OldDeferDate = oldDeferDate;
         }
     }
     [DataContract(Namespace = "BTW2/GTD")]
@@ -571,7 +571,7 @@ namespace Gtd
         void When(ChangeActionOutcome c);
         void When(ChangeProjectOutcome c);
         void When(ChangeThoughtSubject c);
-        void When(ProvideStartDateForAction c);
+        void When(DeferActionUntil c);
         void When(ProvideDueDateForAction c);
     }
     
@@ -591,9 +591,9 @@ namespace Gtd
         void When(ActionOutcomeChanged e);
         void When(ProjectOutcomeChanged e);
         void When(ThoughtSubjectChanged e);
-        void When(StartDateAssignedToAction e);
-        void When(ActionStartDateMoved e);
-        void When(StartDateRemovedFromAction e);
+        void When(ActionDeferredUntil e);
+        void When(ActionDeferDateShifted e);
+        void When(ActionIsNoLongerDeferred e);
         void When(DueDateAssignedToAction e);
         void When(ActionDueDateMoved e);
         void When(DueDateRemovedFromAction e);

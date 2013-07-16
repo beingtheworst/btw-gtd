@@ -102,9 +102,9 @@ namespace Gtd.CoreDomain
             ChangeAggregate(cmd.Id, agg => agg.ChangeThoughtSubject(cmd.ThoughtId, cmd.Subject, _time));
         }
 
-        public void When(ProvideStartDateForAction cmd)
+        public void When(DeferActionUntil cmd)
         {
-            ChangeAggregate(cmd.Id, agg => agg.ProvideStartDateForAction(cmd.ActionId, cmd.NewStartDate));
+            ChangeAggregate(cmd.Id, agg => agg.DeferActionUntil(cmd.ActionId, cmd.DeferUntil));
         }
 
         public void When(ProvideDueDateForAction cmd)

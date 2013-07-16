@@ -144,19 +144,19 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             Thoughts[e.ThoughtId].ChangeSubject(e.Subject);
         }
 
-        public void When(StartDateAssignedToAction e)
+        public void When(ActionDeferredUntil e)
         {
-            Actions[e.ActionId].StartDateAssigned(e.NewStartDate);
+            Actions[e.ActionId].DeferredUntil(e.DeferUntil);
         }
 
-        public void When(ActionStartDateMoved e)
+        public void When(ActionDeferDateShifted e)
         {
-            Actions[e.ActionId].StartDateMoved(e.OldstartDate, e.NewStartDate);
+            Actions[e.ActionId].DeferDateShifted(e.OldDeferDate, e.NewDeferDate);
         }
 
-        public void When(StartDateRemovedFromAction e)
+        public void When(ActionIsNoLongerDeferred e)
         {
-            Actions[e.ActionId].StartDateRemoved(e.OldStartDate);
+            Actions[e.ActionId].NoLongerDeferred(e.OldDeferDate);
         }
 
         public void When(DueDateAssignedToAction e)
@@ -212,7 +212,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
         public string Outcome { get; private set; }
         public ProjectId Project { get; private set; }
 
-        public DateTime StartDate { get; private set; }
+        public DateTime DeferUntil { get; private set; }
 
         public DateTime DueDate { get; private set; }
 
@@ -274,25 +274,25 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
                 throw new InvalidOperationException("Can't remove action that is still assigned to project");
         }
 
-        public void StartDateMoved(DateTime oldTime, DateTime newTime)
+        public void DeferDateShifted(DateTime oldTime, DateTime newTime)
         {
-            if (StartDate != oldTime)
+            if (DeferUntil != oldTime)
                 throw new ArgumentException("Expected old time matching to actual date");
-            StartDate = newTime;
+            DeferUntil = newTime;
         }
 
-        public void StartDateAssigned(DateTime startDate)
+        public void DeferredUntil(DateTime deferDate)
         {
-            if (StartDate != DateTime.MinValue)
+            if (DeferUntil != DateTime.MinValue)
                 throw new ArgumentException("Expected null date");
-            StartDate = startDate;
+            DeferUntil = deferDate;
         }
 
-        public void StartDateRemoved(DateTime startDate)
+        public void NoLongerDeferred(DateTime startDate)
         {
-            if (StartDate != startDate)
+            if (DeferUntil != startDate)
                 throw new ArgumentException("Expected old time matching to actual date");
-            StartDate = DateTime.MinValue;
+            DeferUntil = DateTime.MinValue;
         }
 
         public void DueDateRemoved(DateTime dueDate)

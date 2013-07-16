@@ -254,7 +254,7 @@ namespace Gtd.Client.Models
             ProjectDict[projectId].TypeChanged(type);
         }
 
-        public void StartDateAssigned(ActionId actionId, DateTime newStartDate)
+        public void DeferredUtil(ActionId actionId, DateTime newStartDate)
         {
             ActionDict[actionId].StartDateAssigned(newStartDate);
         }

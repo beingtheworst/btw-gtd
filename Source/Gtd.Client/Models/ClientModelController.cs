@@ -102,30 +102,30 @@ namespace Gtd.Client.Models
             _model.Verify(e.Id);
             _model.ProjectTypeChanged(e.ProjectId, e.Type);
         }
-        public void Handle(StartDateAssignedToAction e)
+        public void Handle(ActionDeferredUntil e)
         {
             _model.Verify(e.Id);
-            _model.StartDateAssigned(e.ActionId, e.NewStartDate);
+            _model.DeferredUtil(e.ActionId, e.DeferUntil);
         }
         public void Handle(DueDateAssignedToAction e)
         {
             _model.Verify(e.Id);
             _model.DueDateAssigned(e.ActionId, e.NewDueDate);
         }
-        public void Handle(StartDateRemovedFromAction e)
+        public void Handle(ActionIsNoLongerDeferred e)
         {
             _model.Verify(e.Id);
-            _model.StartDateAssigned(e.ActionId, DateTime.MinValue);
+            _model.DeferredUtil(e.ActionId, DateTime.MinValue);
         }
         public void Handle(DueDateRemovedFromAction e)
         {
             _model.Verify(e.Id);
             _model.DueDateAssigned(e.ActionId, DateTime.MinValue);
         }
-        public void Handle(ActionStartDateMoved e)
+        public void Handle(ActionDeferDateShifted e)
         {
             _model.Verify(e.Id);
-            _model.StartDateAssigned(e.ActionId, e.NewStartDate);
+            _model.DeferredUtil(e.ActionId, e.NewDeferDate);
         }
         public void Handle(ActionDueDateMoved e)
         {

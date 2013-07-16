@@ -253,29 +253,29 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             }
         }
 
-        public void ProvideStartDateForAction(ActionId actionId, DateTime newStartDate)
+        public void DeferActionUntil(ActionId actionId, DateTime newStartDate)
         {
             var action = GetActionOrThrow(actionId);
-            if (newStartDate == action.StartDate)
+            if (newStartDate == action.DeferUntil)
                 return;
             if (newStartDate == DateTime.MinValue)
             {
-                Apply(new StartDateRemovedFromAction(_aggState.Id, actionId, action.StartDate));
+                Apply(new ActionIsNoLongerDeferred(_aggState.Id, actionId, action.DeferUntil));
                 return;
             }
 
             if (action.DueDate != DateTime.MinValue && newStartDate > action.DueDate)
             {
-                throw DomainError.Named("", "New start date is later than due date");
+                throw DomainError.Named("", "New defer date is later than due date");
             }
 
 
-            if (action.StartDate == DateTime.MinValue)
+            if (action.DeferUntil == DateTime.MinValue)
             {
-                Apply(new StartDateAssignedToAction(_aggState.Id, actionId, newStartDate));
+                Apply(new ActionDeferredUntil(_aggState.Id, actionId, newStartDate));
                 return;
             }
-            Apply(new ActionStartDateMoved(_aggState.Id, actionId, action.StartDate, newStartDate));
+            Apply(new ActionDeferDateShifted(_aggState.Id, actionId, action.DeferUntil, newStartDate));
         }
 
         public void ProvideDueDateForAction(ActionId actionId, DateTime newDueDate)
@@ -289,7 +289,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
                 return;
             }
 
-            if (action.StartDate != DateTime.MinValue && newDueDate < action.StartDate)
+            if (action.DeferUntil != DateTime.MinValue && newDueDate < action.DeferUntil)
             {
                 throw DomainError.Named("", "New due date is earlier than start date");
             }
