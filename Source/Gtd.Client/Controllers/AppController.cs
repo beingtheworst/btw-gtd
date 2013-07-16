@@ -51,7 +51,8 @@ namespace Gtd.Client
         {
             return new FsmBuilder<AppState>()
                 .InAllStates()
-
+                    .When<Ui.AddStuffWizardCompleted>().Do(AddStuff)
+                    .When<Ui.TrashStuffClicked>().Do(TrashStuff)
                     .When<Ui.CaptureThoughtWizardCompleted>().Do(CaptureThought)
                     .When<Ui.ArchiveThoughtClicked>().Do(ArchiveThought)
                     .When<Ui.DefineNewProjectWizardCompleted>().Do(DefineProject)
@@ -104,6 +105,20 @@ namespace Gtd.Client
         {
             _uiBus.Publish(r);
             UpdateDomain(a => a.MoveThoughtsToProject(r.Thoughts, r.Project, new RealTimeProvider()));
+        }
+
+
+        void AddStuff(Ui.AddStuffWizardCompleted c)
+        {
+            _uiBus.Publish(c);
+            UpdateDomain(agg => agg.PutStuffInInbox(new RequestId(), c.Stuff, new RealTimeProvider()));
+        }
+
+        void TrashStuff(Ui.TrashStuffClicked r)
+        {
+            // do something
+            _uiBus.Publish(r);
+            UpdateDomain(agg => agg.TrashStuff(r.Id, new RealTimeProvider()));
         }
 
         void ArchiveThought(Ui.ArchiveThoughtClicked r)

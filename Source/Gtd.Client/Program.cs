@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using Btw.Portable;
 using Gtd.Client.Models;
 using Gtd.Client.Views.Actions;
+using Gtd.Client.Views.AddStuff;
 using Gtd.Client.Views.CaptureThought;
 
 namespace Gtd.Client
@@ -126,6 +127,7 @@ namespace Gtd.Client
             #endregion
 
             MainFormController.Wire(form, mainQueue, uiBus, filterService);
+            AddStuffController.Wire(new AddStuffForm(form), uiBus, mainQueue);
             CaptureThoughtController.Wire(new CaptureThoughtForm(form), uiBus, mainQueue);
             DefineProjectController.Wire(new DefineProjectForm(form), uiBus, mainQueue);
             InboxController.Wire(form.MainRegion, mainQueue, uiBus, provider);

@@ -69,10 +69,10 @@ namespace Gtd.Client
         }
 
         public sealed class AddStuffClicked : Message { }
+
         public sealed class CaptureThoughtClicked : Message {}
 
         public sealed class DefineProjectClicked : Message {}
-
 
         public sealed class AddStuffWizardCompleted : Message
         {
@@ -103,6 +103,16 @@ namespace Gtd.Client
             {
                 Thoughts = thoughts;
                 Project = project;
+            }
+        }
+
+        public sealed class TrashStuffClicked : Message
+        {
+            public readonly StuffId Id;
+
+            public TrashStuffClicked(StuffId id)
+            {
+                Id = id;
             }
         }
 
