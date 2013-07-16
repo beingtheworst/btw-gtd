@@ -106,15 +106,15 @@ namespace Gtd.Client
             _controller.WhenCaptureThoughtClicked();
         }
 
-        public void LoadThoughts(IList<ThoughtModel> listInbox)
+        public void LoadInbox(ImmutableInbox inbox)
         {
             listBox1.BeginUpdate();
             try
             {
-                foreach (var view in listInbox)
+                foreach (var view in inbox.Thoughts)
                 {
-                    var t = new Thought(view.Subject, view.Id);
-                    _thoughts.Add(view.Id, t);
+                    var t = new Thought(view.Subject, view.ThoughtId);
+                    _thoughts.Add(view.ThoughtId, t);
                     listBox1.Items.Add(t);
                 }
                 listBox1.Visible = listBox1.Items.Count > 0;

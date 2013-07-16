@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Gtd.Shell.Filters;
 
 namespace Gtd.Client.Models
@@ -24,11 +25,16 @@ namespace Gtd.Client.Models
             return CurrentModel.ProjectList;
         }
 
-        public IList<ThoughtModel> ListInbox()
+        public ImmutableInbox GetInbox()
         {
-            var thoughts = CurrentModel.Thoughts;
-            
-            return thoughts.ToArray();
+            // TODO: adjust by filters
+            return CurrentModel.GetInbox();
+        }
+
+        public int GetNumberOfThoughtsInInbox()
+        {
+            // TODO: adjust by filters
+            return CurrentModel.GetNumberOfThoughtsInInbox();
         }
 
 
@@ -40,6 +46,30 @@ namespace Gtd.Client.Models
         public void SwitchToFilter(IFilterCriteria criteria)
         {
             this.CurrentFilter = criteria;
+        }
+    }
+
+    public sealed class ImmutableInbox
+    {
+        public readonly ReadOnlyCollection<ImmutableThought> Thoughts;
+
+        public ImmutableInbox(ReadOnlyCollection<ImmutableThought> thoughts)
+        {
+            Thoughts = thoughts;
+        }
+    }
+
+    public sealed class ImmutableThought
+    {
+        public readonly ThoughtId ThoughtId;
+        public readonly string Subject;
+        public readonly string UIKey;
+
+        public ImmutableThought(ThoughtId thoughtId, string subject, string uiKey)
+        {
+            ThoughtId = thoughtId;
+            Subject = subject;
+            UIKey = uiKey;
         }
     }
 }

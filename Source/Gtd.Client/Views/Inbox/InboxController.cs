@@ -47,7 +47,8 @@ namespace Gtd.Client
         {
             if (!_shown)
             {
-                _control.Sync(() => _control.LoadThoughts(_view.ListInbox()));
+                var inbox = _view.GetInbox();
+                _control.Sync(() => _control.LoadInbox(inbox));
                 _shown = true;
             }
 

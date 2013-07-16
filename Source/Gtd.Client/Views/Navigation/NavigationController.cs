@@ -57,7 +57,7 @@ namespace Gtd.Client.Views.Navigation
 
         void ReloadInboxNode()
         {
-            _tree.AddOrUpdateNode("inbox",string.Format("Inbox ({0})", _view.ListInbox().Count));
+            _tree.AddOrUpdateNode("inbox",string.Format("Inbox ({0})", _view.GetNumberOfThoughtsInInbox()));
         }
 
         
@@ -128,7 +128,7 @@ namespace Gtd.Client.Views.Navigation
         void LoadNavigation()
         {
             _tree.Clear();
-            _tree.AddOrUpdateNode("inbox", string.Format("Inbox ({0})", _view.ListInbox().Count));
+            _tree.AddOrUpdateNode("inbox", string.Format("Inbox ({0})",_view.GetNumberOfThoughtsInInbox()));
             foreach (var project in _view.ListProjects())
             {
                 AddOrUpdateProject(project);
