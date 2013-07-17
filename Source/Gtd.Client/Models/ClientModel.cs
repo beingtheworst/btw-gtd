@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Gtd.Shell.Filters;
 using System.Linq;
 
 namespace Gtd.Client.Models
@@ -13,7 +12,6 @@ namespace Gtd.Client.Models
         readonly Dictionary<ProjectId, MutableProject> _projectDict = new Dictionary<ProjectId, MutableProject>();
         readonly Dictionary<ActionId, MutableAction> _actionDict = new Dictionary<ActionId, MutableAction>();
         readonly Dictionary<ThoughtId, MutableThought> _thoughtDict = new Dictionary<ThoughtId, MutableThought>();
-
 
 
         static ImmutableProject Immute(MutableProject m)
@@ -140,7 +138,10 @@ namespace Gtd.Client.Models
         }
         public void ActionOutcomeChanged(ActionId actionId, string outcome)
         {
-            _actionDict[actionId].OutcomeChanged(outcome);
+            var action = _actionDict[actionId];
+            var project = _projectDict[action.ProjectId];
+            action.OutcomeChanged(outcome);
+            Publish(new Dumb.ActionUpdated(actionId, action.UIKey, action.ProjectId, project.UIKey, action.Outcome, action.Completed));
         }
 
         public void ActionArchived(ActionId id)

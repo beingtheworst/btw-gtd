@@ -57,6 +57,7 @@ namespace Gtd.Client
                     .When<UI.DefineNewProjectWizardCompleted>().Do(DefineProject)
                     .When<UI.MoveThoughtsToProjectClicked>().Do(MoveThoughtsToProject)
                     .When<UI.CompleteActionClicked>().Do(CompleteAction)
+                    .When<UI.ChangeActionOutcome>().Do(ChangeOutcome)
                     
 
                 .InState(AppState.Loading)
@@ -98,6 +99,11 @@ namespace Gtd.Client
         void CompleteAction(UI.CompleteActionClicked r)
         {
             UpdateDomain(a => a.CompleteAction(r.Id, new RealTimeProvider()));
+        }
+
+        void ChangeOutcome(UI.ChangeActionOutcome r)
+        {
+            UpdateDomain(a => a.ChangeActionOutcome(r.ActionId,r.Outcome, new RealTimeProvider()));
         }
 
         void MoveThoughtsToProject(UI.MoveThoughtsToProjectClicked r)

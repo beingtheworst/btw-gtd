@@ -59,6 +59,18 @@ namespace Gtd.Client
             }
         }
 
+        public class ChangeActionOutcome : Message
+        {
+            public readonly ActionId ActionId;
+            public readonly string Outcome;
+
+            public ChangeActionOutcome(ActionId actionId, string outcome)
+            {
+                ActionId = actionId;
+                Outcome = outcome;
+            }
+        }
+
         public sealed class DefineNewProjectWizardCompleted : Message
         {
             public readonly string Outcome;
