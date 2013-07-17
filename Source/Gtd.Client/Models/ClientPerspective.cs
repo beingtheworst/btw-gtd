@@ -79,13 +79,13 @@ namespace Gtd.Client.Models
 
     public sealed class ImmutableAction
     {
-        public ActionId Id { get; private set; }
-        public string Outcome { get; private set; }
-        public bool Completed { get; private set; }
-        public bool Archived { get; private set; }
-        public ProjectId ProjectId { get; private set; }
-        public DateTime StartDate { get; private set; }
-        public DateTime DueDate { get; private set; }
+        public readonly ActionId Id;
+        public readonly string Outcome;
+        public readonly bool Completed;
+        public readonly bool Archived;
+        public readonly ProjectId ProjectId;
+        public readonly DateTime StartDate;
+        public readonly DateTime DueDate;
         public readonly string UIKey;
 
         public ImmutableAction(string uiKey, ActionId id, string outcome, bool completed, bool archived, ProjectId projectId, DateTime startDate, DateTime dueDate)
@@ -103,9 +103,9 @@ namespace Gtd.Client.Models
 
     public sealed class ImmutableProject
     {
-        public ProjectId ProjectId { get; private set; }
-        public string Outcome { get; private set; }
-        public ProjectType Type { get; private set; }
+        public readonly ProjectId ProjectId;
+        public readonly string Outcome;
+        public readonly ProjectType Type;
         public readonly string UIKey;
         public readonly ReadOnlyCollection<ImmutableAction> Actions; 
 
