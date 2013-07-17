@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Gtd.Client.Models;
-using System.Linq;
 
 namespace Gtd.Client.Views.Navigation
 {
@@ -101,17 +100,22 @@ namespace Gtd.Client.Views.Navigation
             if (!_loaded)
                 return;
 
-            AddOrUpdateProject(_perspective.Model.GetProjectOrNull(message.ProjectId));
+            ReloadProjectNode(message.ProjectId);
+        }
+
+        void ReloadProjectNode(ProjectId projectId)
+        {
+            AddOrUpdateProject(_perspective.Model.GetProjectOrNull(projectId));
         }
 
         public void Handle(Dumb.ActionAdded message)
         {
-            AddOrUpdateProject(_perspective.Model.GetProjectOrNull(message.ProjectId));
+            ReloadProjectNode(message.ProjectId); ;
         }
 
         public void Handle(Dumb.ActionUpdated message)
         {
-            AddOrUpdateProject(_perspective.Model.GetProjectOrNull(message.ProjectId));
+            ReloadProjectNode(message.ProjectId); 
         }
 
         void AddOrUpdateProject(ImmutableProject model)

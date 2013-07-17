@@ -34,7 +34,7 @@ namespace Gtd.Client.Models
                 mutable.Completed,
                 mutable.Archived,
                 mutable.ProjectId,
-                mutable.StartDate,
+                mutable.DeferUntil,
                 mutable.DueDate);
         }
 
@@ -158,20 +158,14 @@ namespace Gtd.Client.Models
             _projectDict[projectId].TypeChanged(type);
         }
 
-        public void DeferredUtil(ActionId actionId, DateTime newStartDate)
+        public void DeferredUtil(ActionId actionId, DateTime deferUntil)
         {
-            _actionDict[actionId].StartDateAssigned(newStartDate);
+            _actionDict[actionId].DeferUntilDate(deferUntil);
         }
         public void DueDateAssigned(ActionId actionId, DateTime newDueDate)
         {
             _actionDict[actionId].DueDateAssigned(newDueDate);
         }
-
-
-
-
-        
-        
 
         public void Verify(TrustedSystemId id)
         {
@@ -256,7 +250,7 @@ namespace Gtd.Client.Models
             public bool Completed { get; private set; }
             public bool Archived { get; private set; }
             public ProjectId ProjectId { get; private set; }
-            public DateTime StartDate { get; private set; }
+            public DateTime DeferUntil { get; private set; }
             public DateTime DueDate { get; private set; }
 
             public string UIKey { get { return "action-" + Id.Id; } }
@@ -290,9 +284,9 @@ namespace Gtd.Client.Models
 
             }
 
-            public void StartDateAssigned(DateTime newStartDate)
+            public void DeferUntilDate(DateTime newStartDate)
             {
-                StartDate = newStartDate;
+                DeferUntil = newStartDate;
             }
             public void DueDateAssigned(DateTime newDueDate)
             {
