@@ -84,7 +84,7 @@ namespace Gtd.Client
             _queue.Publish(new UI.CaptureThoughtClicked());
         }
 
-        public IList<ProjectModel> ListProjects()
+        public IList<ImmutableProject> ListProjects()
         {
             return _view.ListProjects();
         }

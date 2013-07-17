@@ -5,7 +5,7 @@ namespace Gtd.Shell.Filters
 {
     public sealed class AllActionsFilter : IFilterCriteria
     {
-        public IEnumerable<ActionModel> FilterActions(ProjectModel model)
+        public IEnumerable<ImmutableAction> FilterActions(ImmutableProject model)
         {
             return model.Actions;
         }

@@ -23,41 +23,15 @@ namespace Gtd.Client.Models
         string GetTitle();
     }
 
-    public sealed class ThoughtModel : IItemModel
-    {
-        public readonly ThoughtId Id;
-        public string Subject { get; private set; }
-        public readonly DateTime Added;
 
-        public void UpdateSubject(string subject)
-        {
-            Subject = subject;
-        }
-
-        public string UIKey { get { return "thought-" + Id.Id; } }
-
-        public ThoughtModel(ThoughtId id, string subject, DateTime added)
-        {
-            Id = id;
-            Subject = subject;
-            Added = added;
-        }
-
-        public string GetTitle()
-        {
-            return string.Format("Thought '{0}'", Subject);
-        }
-
-    }
-
-    public sealed class ProjectModel : IItemModel
+    public sealed class MutableProject : IItemModel
     {
         public ProjectId ProjectId { get; private set; }
         public string Outcome { get; private set; }
         public ProjectType Type { get; private set; }
         public readonly string UIKey;
 
-        public ProjectModel(ProjectId projectId, string outcome, ProjectType type)
+        public MutableProject(ProjectId projectId, string outcome, ProjectType type)
         {
             ProjectId = projectId;
             Outcome = outcome;
@@ -67,7 +41,7 @@ namespace Gtd.Client.Models
         }
 
 
-        public List<ActionModel> Actions = new List<ActionModel>();
+        public List<MutableAction> Actions = new List<MutableAction>();
 
         public void OutcomeChanged(string outcome)
         {
@@ -85,7 +59,7 @@ namespace Gtd.Client.Models
         }
     }
 
-    public sealed class ActionModel : IItemModel
+    public sealed class MutableAction : IItemModel
     {
         public ActionId Id { get; private set; }
         public string Outcome { get; private set; }
@@ -97,7 +71,7 @@ namespace Gtd.Client.Models
 
         public string UIKey { get { return "action-" + Id.Id; } }
 
-        public ActionModel(ActionId action, string outcome, ProjectId project)
+        public MutableAction(ActionId action, string outcome, ProjectId project)
         {
             Id = action;
             Outcome = outcome;
@@ -141,9 +115,9 @@ namespace Gtd.Client.Models
     {
         readonly IMessageQueue _queue;
         readonly List<MutableThought> _thoughts = new List<MutableThought>();
-        public List<ProjectModel> ProjectList = new List<ProjectModel>();
-        public Dictionary<ProjectId, ProjectModel> ProjectDict = new Dictionary<ProjectId, ProjectModel>();
-        public Dictionary<ActionId, ActionModel> ActionDict = new Dictionary<ActionId, ActionModel>();
+        public List<MutableProject> ProjectList = new List<MutableProject>();
+        public Dictionary<ProjectId, MutableProject> ProjectDict = new Dictionary<ProjectId, MutableProject>();
+        public Dictionary<ActionId, MutableAction> ActionDict = new Dictionary<ActionId, MutableAction>();
         public Dictionary<Guid, IItemModel> DictOfAllItems = new Dictionary<Guid, IItemModel>();
 
 
@@ -204,7 +178,7 @@ namespace Gtd.Client.Models
 
         public void ProjectDefined(ProjectId projectId, string projectOutcome, ProjectType type)
         {
-            var project = new ProjectModel(projectId, projectOutcome, type);
+            var project = new MutableProject(projectId, projectOutcome, type);
             ProjectList.Add(project);
             ProjectDict.Add(projectId, project);
             DictOfAllItems.Add(projectId.Id, project);
@@ -214,7 +188,7 @@ namespace Gtd.Client.Models
 
         public void ActionDefined(ProjectId projectId, ActionId actionId, string outcome)
         {
-            var action = new ActionModel(actionId, outcome, projectId);
+            var action = new MutableAction(actionId, outcome, projectId);
 
             var project = ProjectDict[projectId];
             project.Actions.Add(action);

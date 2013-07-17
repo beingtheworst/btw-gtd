@@ -21,7 +21,7 @@ namespace Gtd.Shell.Filters
     /// </summary>
     public sealed class AvailableFilter : IFilterCriteria
     {
-        public IEnumerable<ActionModel> FilterActions(ProjectModel model)
+        public IEnumerable<ImmutableAction> FilterActions(ImmutableProject model)
         {
             if (model.Type == ProjectType.Sequential)
             {

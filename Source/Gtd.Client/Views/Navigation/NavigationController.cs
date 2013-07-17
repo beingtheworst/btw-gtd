@@ -114,7 +114,7 @@ namespace Gtd.Client.Views.Navigation
             AddOrUpdateProject(_view.GetProjectOrNull(message.ProjectId));
         }
 
-        void AddOrUpdateProject(ProjectModel model)
+        void AddOrUpdateProject(ImmutableProject model)
         {
             var actions = _view.CurrentFilter.FilterActions(model);
             var count = _view.CurrentFilter.FormatActionCount(actions.Count());

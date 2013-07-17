@@ -8,7 +8,7 @@ namespace Gtd.Shell.Filters
     /// </summary>
     public sealed class RemainingFilter : IFilterCriteria
     {
-        public IEnumerable<ActionModel> FilterActions(ProjectModel model)
+        public IEnumerable<ImmutableAction> FilterActions(ImmutableProject model)
         {
             foreach (var action in model.Actions)
             {

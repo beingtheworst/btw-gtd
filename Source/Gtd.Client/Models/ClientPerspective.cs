@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Gtd.Shell.Filters;
+using System.Linq;
 
 namespace Gtd.Client.Models
 {
@@ -20,9 +22,9 @@ namespace Gtd.Client.Models
         }
 
 
-        public IList<ProjectModel> ListProjects()
+        public IList<ImmutableProject> ListProjects()
         {
-            return CurrentModel.ProjectList;
+            return CurrentModel.ProjectList.Select(Immute).ToList().AsReadOnly();
         }
 
         public ImmutableInbox GetInbox()
@@ -38,9 +40,28 @@ namespace Gtd.Client.Models
         }
 
 
-        public ProjectModel GetProjectOrNull(ProjectId id)
+        public ImmutableProject GetProjectOrNull(ProjectId id)
         {
-            return CurrentModel.ProjectDict[id];
+            var m = CurrentModel.ProjectDict[id];
+            return Immute(m);
+        }
+
+        static ImmutableProject Immute(MutableProject m)
+        {
+            var ma = m.Actions.Select(Immute).ToList().AsReadOnly();
+            return new ImmutableProject(m.UIKey, m.ProjectId, m.Outcome, m.Type, ma);
+        }
+
+        static ImmutableAction Immute(MutableAction mutable)
+        {
+            return new ImmutableAction(mutable.UIKey, 
+                mutable.Id, 
+                mutable.Outcome, 
+                mutable.Completed,
+                mutable.Archived,
+                mutable.ProjectId,
+                mutable.StartDate,
+                mutable.DueDate);
         }
 
         public void SwitchToFilter(IFilterCriteria criteria)
@@ -72,4 +93,47 @@ namespace Gtd.Client.Models
             UIKey = uiKey;
         }
     }
+
+    public sealed class ImmutableAction
+    {
+        public ActionId Id { get; private set; }
+        public string Outcome { get; private set; }
+        public bool Completed { get; private set; }
+        public bool Archived { get; private set; }
+        public ProjectId ProjectId { get; private set; }
+        public DateTime StartDate { get; private set; }
+        public DateTime DueDate { get; private set; }
+        public readonly string UIKey;
+
+        public ImmutableAction(string uiKey, ActionId id, string outcome, bool completed, bool archived, ProjectId projectId, DateTime startDate, DateTime dueDate)
+        {
+            UIKey = uiKey;
+            Id = id;
+            Outcome = outcome;
+            Completed = completed;
+            Archived = archived;
+            ProjectId = projectId;
+            StartDate = startDate;
+            DueDate = dueDate;
+        }
+    }
+
+    public sealed class ImmutableProject
+    {
+        public ProjectId ProjectId { get; private set; }
+        public string Outcome { get; private set; }
+        public ProjectType Type { get; private set; }
+        public readonly string UIKey;
+        public readonly ReadOnlyCollection<ImmutableAction> Actions; 
+
+        public ImmutableProject(string uiKey, ProjectId projectId, string outcome, ProjectType type, ReadOnlyCollection<ImmutableAction> actions)
+        {
+            UIKey = uiKey;
+            ProjectId = projectId;
+            Outcome = outcome;
+            Type = type;
+            Actions = actions;
+        }
+    }
+
 }

@@ -8,7 +8,7 @@ namespace Gtd.Shell.Filters
     public sealed class NextActionFilter : IFilterCriteria
     {
 
-        public IEnumerable<ActionModel> FilterActions(ProjectModel model)
+        public IEnumerable<ImmutableAction> FilterActions(ImmutableProject model)
         {
             if (model.Type == ProjectType.List)
             {
@@ -43,7 +43,7 @@ namespace Gtd.Shell.Filters
 
         }
 
-        static IEnumerable<ActionModel> GetAllAvailableActions(ProjectModel model)
+        static IEnumerable<ImmutableAction> GetAllAvailableActions(ImmutableProject model)
         {
             return model.Actions
                        .Where(v => !v.Completed)
