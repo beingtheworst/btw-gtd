@@ -121,6 +121,37 @@ namespace Gtd.Client.Models
         public Dictionary<Guid, IItemModel> DictOfAllItems = new Dictionary<Guid, IItemModel>();
 
 
+        static ImmutableProject Immute(MutableProject m)
+        {
+            var ma = m.Actions.Select(Immute).ToList().AsReadOnly();
+            return new ImmutableProject(m.UIKey, m.ProjectId, m.Outcome, m.Type, ma);
+        }
+
+        static ImmutableAction Immute(MutableAction mutable)
+        {
+            return new ImmutableAction(mutable.UIKey,
+                mutable.Id,
+                mutable.Outcome,
+                mutable.Completed,
+                mutable.Archived,
+                mutable.ProjectId,
+                mutable.StartDate,
+                mutable.DueDate);
+        }
+
+        public IList<ImmutableProject> ListProjects()
+        {
+            return ProjectList.Select(Immute).ToList().AsReadOnly();
+        } 
+
+        public ImmutableProject GetProjectOrNull(ProjectId id)
+        {
+            MutableProject value;
+            if (ProjectDict.TryGetValue(id, out value))
+                return Immute(value);
+            return null;
+        }
+
         public ImmutableInbox GetInbox()
         {
             var thoughts = _thoughts.Select(t => new ImmutableThought(t.Id, t.Subject, t.UIKey)).ToList().AsReadOnly();

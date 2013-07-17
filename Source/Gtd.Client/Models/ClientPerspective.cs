@@ -24,7 +24,7 @@ namespace Gtd.Client.Models
 
         public IList<ImmutableProject> ListProjects()
         {
-            return CurrentModel.ProjectList.Select(Immute).ToList().AsReadOnly();
+            return CurrentModel.ListProjects();
         }
 
         public ImmutableInbox GetInbox()
@@ -42,27 +42,10 @@ namespace Gtd.Client.Models
 
         public ImmutableProject GetProjectOrNull(ProjectId id)
         {
-            var m = CurrentModel.ProjectDict[id];
-            return Immute(m);
+
+            return CurrentModel.GetProjectOrNull(id);
         }
 
-        static ImmutableProject Immute(MutableProject m)
-        {
-            var ma = m.Actions.Select(Immute).ToList().AsReadOnly();
-            return new ImmutableProject(m.UIKey, m.ProjectId, m.Outcome, m.Type, ma);
-        }
-
-        static ImmutableAction Immute(MutableAction mutable)
-        {
-            return new ImmutableAction(mutable.UIKey, 
-                mutable.Id, 
-                mutable.Outcome, 
-                mutable.Completed,
-                mutable.Archived,
-                mutable.ProjectId,
-                mutable.StartDate,
-                mutable.DueDate);
-        }
 
         public void SwitchToFilter(IFilterCriteria criteria)
         {
