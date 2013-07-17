@@ -14,7 +14,7 @@ namespace Gtd.Client.Views.Project
         {
             _actionList.BeginUpdate();
 
-            _projectName.Text = project.Outcome;
+            _projectName.Text = string.Format("{0} ({1})", project.Outcome, project.ActionCount);
             try
             {
                 _actionList.Items.Clear();
