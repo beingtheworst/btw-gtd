@@ -8,7 +8,7 @@ namespace Gtd.Client.Models
 {
     public sealed class ClientPerspective 
     {
-        public ClientModel CurrentModel { get; private set; }
+        public ClientModel Model { get; private set; }
         public IFilterCriteria CurrentFilter { get; private set; }
 
         public ClientPerspective()
@@ -18,36 +18,23 @@ namespace Gtd.Client.Models
 
         public void SwitchToModel(ClientModel model)
         {
-            CurrentModel = model;
+            Model = model;
         }
 
 
         public IList<ImmutableProject> ListProjects()
         {
-            return CurrentModel.ListProjects();
+            return Model.ListProjects();
         }
 
-        public ImmutableInbox GetInbox()
-        {
-            // TODO: adjust by filters
-            return CurrentModel.GetInbox();
-        }
-
-        public int GetNumberOfThoughtsInInbox()
-        {
-            // TODO: adjust by filters
-            return CurrentModel.GetNumberOfThoughtsInInbox();
-        }
+       
 
 
-        public ImmutableProject GetProjectOrNull(ProjectId id)
-        {
-            return CurrentModel.GetProjectOrNull(id);
-        }
+        
 
         public FilteredProject GetProject(ProjectId id)
         {
-            var pid = CurrentModel.GetProjectOrNull(id);
+            var pid = Model.GetProjectOrNull(id);
 
             var actions = CurrentFilter.FilterActions(pid).ToList().AsReadOnly();
             var count = CurrentFilter.FormatActionCount(actions.Count);

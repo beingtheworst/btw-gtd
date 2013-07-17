@@ -57,7 +57,7 @@ namespace Gtd.Client.Views.Navigation
 
         void ReloadInboxNode()
         {
-            _tree.AddOrUpdateNode("inbox",string.Format("Inbox ({0})", _perspective.GetNumberOfThoughtsInInbox()));
+            _tree.AddOrUpdateNode("inbox",string.Format("Inbox ({0})", _perspective.Model.GetNumberOfThoughtsInInbox()));
         }
 
         
@@ -101,36 +101,30 @@ namespace Gtd.Client.Views.Navigation
             if (!_loaded)
                 return;
 
-            AddOrUpdateProject(_perspective.GetProjectOrNull(message.ProjectId));
+            AddOrUpdateProject(_perspective.Model.GetProjectOrNull(message.ProjectId));
         }
 
         public void Handle(Dumb.ActionAdded message)
         {
-            AddOrUpdateProject(_perspective.GetProjectOrNull(message.ProjectId));
+            AddOrUpdateProject(_perspective.Model.GetProjectOrNull(message.ProjectId));
         }
 
         public void Handle(Dumb.ActionUpdated message)
         {
-            AddOrUpdateProject(_perspective.GetProjectOrNull(message.ProjectId));
+            AddOrUpdateProject(_perspective.Model.GetProjectOrNull(message.ProjectId));
         }
 
         void AddOrUpdateProject(ImmutableProject model)
         {
-            var actions = _perspective.CurrentFilter.FilterActions(model);
-            var count = _perspective.CurrentFilter.FormatActionCount(actions.Count());
-
-            
-
-            var title = string.Format("{0} ({1})", model.Outcome, count);
             _nodes[model.UIKey] = model.ProjectId;
-            Sync(() => _tree.AddOrUpdateNode(model.UIKey, title));
+            Sync(() => _tree.AddOrUpdateNode(model.UIKey, model.Outcome));
         }
 
 
         void LoadNavigation()
         {
             _tree.Clear();
-            _tree.AddOrUpdateNode("inbox", string.Format("Inbox ({0})",_perspective.GetNumberOfThoughtsInInbox()));
+            _tree.AddOrUpdateNode("inbox", string.Format("Inbox ({0})",_perspective.Model.GetNumberOfThoughtsInInbox()));
             foreach (var project in _perspective.ListProjects())
             {
                 AddOrUpdateProject(project);

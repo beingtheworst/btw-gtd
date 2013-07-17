@@ -11,15 +11,15 @@ namespace Gtd.Client
     {
         readonly Region _dock;
         readonly IPublisher _queue;
-        readonly ClientPerspective _view;
+        readonly ClientPerspective _perspective;
 
         readonly InboxView _control;
 
-        InboxController(Region dock, IPublisher queue, ClientPerspective view)
+        InboxController(Region dock, IPublisher queue, ClientPerspective perspective)
         {
             _dock = dock;
             _queue = queue;
-            _view = view;
+            _perspective = perspective;
             _control = new InboxView(this);
         }
 
@@ -47,7 +47,7 @@ namespace Gtd.Client
         {
             if (!_shown)
             {
-                var inbox = _view.GetInbox();
+                var inbox = _perspective.Model.GetInbox();
                 _control.Sync(() => _control.LoadInbox(inbox));
                 _shown = true;
             }
@@ -86,7 +86,7 @@ namespace Gtd.Client
 
         public IList<ImmutableProject> ListProjects()
         {
-            return _view.ListProjects();
+            return _perspective.ListProjects();
         }
 
         public void Handle(FormLoaded message)
