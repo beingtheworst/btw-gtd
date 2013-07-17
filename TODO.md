@@ -4,13 +4,9 @@
 
 > Assigned: Rinat
 
-#### Clean up presenter model
+#### Edit actions from within a project
 
-We want to make the model serializable (no internal object references) but
-return clean read-only snapshots which could be safely passed around the UI
-
-This is done by internalizing mutable objects of client model and returning
-only immutable values (with object graphs, if needed)
+> Assigned: Rinat
 
 #### Add ability to mark actions as non-complete
 
