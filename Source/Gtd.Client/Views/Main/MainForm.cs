@@ -66,7 +66,7 @@ namespace Gtd.Client
             }
             public override string ToString()
             {
-                return "(not yet): " + Criteria.Title;
+                return Criteria.Title;
             }
         }
 
