@@ -12,13 +12,9 @@ namespace Gtd.Client.Models
         readonly List<MutableProject> _projectList = new List<MutableProject>();
         readonly Dictionary<ProjectId, MutableProject> _projectDict = new Dictionary<ProjectId, MutableProject>();
         readonly Dictionary<ActionId, MutableAction> _actionDict = new Dictionary<ActionId, MutableAction>();
-        readonly Dictionary<Guid, IItemModel> _dictOfAllItems = new Dictionary<Guid, IItemModel>();
+        readonly Dictionary<ThoughtId, MutableThought> _thoughtDict = new Dictionary<ThoughtId, MutableThought>();
 
 
-        interface IItemModel
-        {
-            string GetTitle();
-        }
 
         static ImmutableProject Immute(MutableProject m)
         {
@@ -89,7 +85,7 @@ namespace Gtd.Client.Models
         {
             var item = new MutableThought(thoughtId, thought, date);
             _thoughts.Add(item);
-            _dictOfAllItems.Add(thoughtId.Id, item);
+            _thoughtDict.Add(thoughtId, item);
             Publish(new Dumb.ThoughtAdded(item.Id, item.Subject, item.UIKey));
         }
 
@@ -111,7 +107,7 @@ namespace Gtd.Client.Models
             var project = new MutableProject(projectId, projectOutcome, type);
             _projectList.Add(project);
             _projectDict.Add(projectId, project);
-            _dictOfAllItems.Add(projectId.Id, project);
+            
 
             Publish(new Dumb.ProjectAdded(project.UIKey, projectOutcome, projectId));
         }
@@ -123,7 +119,6 @@ namespace Gtd.Client.Models
             var project = _projectDict[projectId];
             project.Actions.Add(action);
             _actionDict.Add(actionId, action);
-            _dictOfAllItems.Add(actionId.Id, action);
 
             Publish(new Dumb.ActionAdded(actionId, action.UIKey, projectId, project.UIKey, outcome));
         }
@@ -137,7 +132,7 @@ namespace Gtd.Client.Models
 
         public void ThoughtSubjectChanged(ThoughtId thoughtId, string subject)
         {
-            ((MutableThought)_dictOfAllItems[thoughtId.Id]).UpdateSubject(subject);
+            _thoughtDict[thoughtId].UpdateSubject(subject);
         }
         public void ProjectOutcomeChanged(ProjectId projectId, string outcome)
         {
@@ -178,10 +173,7 @@ namespace Gtd.Client.Models
             
         }
 
-
-
-
-        sealed class MutableThought : IItemModel
+        sealed class MutableThought 
         {
             public readonly ThoughtId Id;
             public string Subject { get; private set; }
@@ -208,7 +200,7 @@ namespace Gtd.Client.Models
 
         }
 
-         sealed class MutableProject : IItemModel
+         sealed class MutableProject 
         {
             public ProjectId ProjectId { get; private set; }
             public string Outcome { get; private set; }
@@ -243,7 +235,7 @@ namespace Gtd.Client.Models
             }
         }
 
-        sealed class MutableAction : IItemModel
+        sealed class MutableAction 
         {
             public ActionId Id { get; private set; }
             public string Outcome { get; private set; }
