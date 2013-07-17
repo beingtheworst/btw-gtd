@@ -5,23 +5,6 @@ using System.Linq;
 
 namespace Gtd.Client.Models
 {
-    
-
-    public sealed class FilterService
-    {
-        public readonly List<IFilterCriteria> Filters = new List<IFilterCriteria>(); 
-        public FilterService()
-        {
-            Filters.AddRange(FilterCriteria.LoadAllFilters());
-
-        }
-    }
-
-
-    
-
-
-    
     public sealed class ClientModel
     {
         readonly IMessageQueue _queue;

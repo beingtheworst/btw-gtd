@@ -74,7 +74,7 @@ namespace Gtd.Client
 
             var form = new MainForm();
 
-            var filterService = new FilterService();
+            
 
             LogController.Wire(form, uiBus);
 
@@ -126,7 +126,7 @@ namespace Gtd.Client
             // and the target queue that they can use tell the rest of the world about events they generate.
             #endregion
 
-            MainFormController.Wire(form, mainQueue, uiBus, filterService);
+            MainFormController.Wire(form, mainQueue, uiBus);
             CaptureThoughtController.Wire(new CaptureThoughtForm(form), uiBus, mainQueue);
             DefineProjectController.Wire(new DefineProjectForm(form), uiBus, mainQueue);
             InboxController.Wire(form.MainRegion, mainQueue, uiBus, provider);

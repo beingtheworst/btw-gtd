@@ -1,5 +1,7 @@
 ﻿using System;
 using Gtd.Client.Models;
+using Gtd.Shell.Filters;
+using System.Linq;
 
 namespace Gtd.Client
 {
@@ -10,18 +12,16 @@ namespace Gtd.Client
     {
         readonly MainForm _mainForm;
         readonly IPublisher _queue;
-        readonly FilterService _service;
-
-        public MainFormController(MainForm mainForm, IPublisher queue, FilterService service)
+        
+        public MainFormController(MainForm mainForm, IPublisher queue)
         {
             _mainForm = mainForm;
             _queue = queue;
-            _service = service;
         }
 
-        public static MainFormController Wire(MainForm form, IPublisher queue, ISubscriber bus, FilterService service)
+        public static MainFormController Wire(MainForm form, IPublisher queue, ISubscriber bus)
         {
-            var adapter = new MainFormController(form, queue, service);
+            var adapter = new MainFormController(form, queue);
 
             bus.Subscribe<AppInit>(adapter);
             bus.Subscribe<UI.InboxDisplayed>(adapter);
@@ -47,7 +47,7 @@ namespace Gtd.Client
 
         public void Handle(AppInit message)
         {
-            _mainForm.DisplayFilters(_service.Filters);
+            _mainForm.DisplayFilters(FilterCriteria.LoadAllFilters().ToList());
         }
 
         public void Handle(UI.InboxDisplayed message)
