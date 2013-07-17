@@ -10,7 +10,7 @@ namespace Gtd.Client.Views.Project
             InitializeComponent();
         }
 
-        public void DisplayProject(ProjectController.ProjectDisplayModel project)
+        public void DisplayProject(FilteredProject project)
         {
             _actionList.BeginUpdate();
 
@@ -18,7 +18,7 @@ namespace Gtd.Client.Views.Project
             try
             {
                 _actionList.Items.Clear();
-                foreach (var action in project.Actions)
+                foreach (var action in project.FilteredActions)
                 {
                     _actionList.Items.Add(new ActionDisplay(action), action.Completed);
                 }
@@ -31,9 +31,9 @@ namespace Gtd.Client.Views.Project
 
         sealed class ActionDisplay
         {
-            public readonly ProjectController.ActionDisplayModel Model;
+            public readonly ImmutableAction Model;
 
-            public ActionDisplay(ProjectController.ActionDisplayModel model)
+            public ActionDisplay(ImmutableAction model)
             {
                 Model = model;
             }

@@ -42,8 +42,16 @@ namespace Gtd.Client.Models
 
         public ImmutableProject GetProjectOrNull(ProjectId id)
         {
-
             return CurrentModel.GetProjectOrNull(id);
+        }
+
+        public FilteredProject GetProject(ProjectId id)
+        {
+            var pid = CurrentModel.GetProjectOrNull(id);
+
+            var actions = CurrentFilter.FilterActions(pid).ToList().AsReadOnly();
+            var count = CurrentFilter.FormatActionCount(actions.Count);
+            return new FilteredProject(pid.ProjectId, pid.Outcome, pid.Type, pid.UIKey, actions, count);
         }
 
 
@@ -79,7 +87,7 @@ namespace Gtd.Client.Models
 
     public sealed class ImmutableAction
     {
-        public readonly ActionId Id;
+        public readonly ActionId ActionId;
         public readonly string Outcome;
         public readonly bool Completed;
         public readonly bool Archived;
@@ -88,10 +96,10 @@ namespace Gtd.Client.Models
         public readonly DateTime DueDate;
         public readonly string UIKey;
 
-        public ImmutableAction(string uiKey, ActionId id, string outcome, bool completed, bool archived, ProjectId projectId, DateTime startDate, DateTime dueDate)
+        public ImmutableAction(string uiKey, ActionId actionId, string outcome, bool completed, bool archived, ProjectId projectId, DateTime startDate, DateTime dueDate)
         {
             UIKey = uiKey;
-            Id = id;
+            ActionId = actionId;
             Outcome = outcome;
             Completed = completed;
             Archived = archived;
@@ -119,4 +127,23 @@ namespace Gtd.Client.Models
         }
     }
 
+    public sealed class FilteredProject
+    {
+        public readonly ProjectId ProjectId;
+        public readonly string Outcome;
+        public readonly ProjectType Type;
+        public readonly string UIKey;
+        public readonly ReadOnlyCollection<ImmutableAction> FilteredActions;
+        public readonly string ActionCount;
+
+        public FilteredProject(ProjectId projectId, string outcome, ProjectType type, string uiKey, ReadOnlyCollection<ImmutableAction> filteredActions, string actionCount)
+        {
+            ProjectId = projectId;
+            Outcome = outcome;
+            Type = type;
+            UIKey = uiKey;
+            FilteredActions = filteredActions;
+            ActionCount = actionCount;
+        }
+    }
 }

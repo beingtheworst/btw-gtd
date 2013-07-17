@@ -18,17 +18,17 @@ namespace Gtd.Client.Views.Navigation
         readonly NavigationView _tree;
         readonly Region _region;
         readonly IPublisher _queue;
-        readonly ClientPerspective _view;
+        readonly ClientPerspective _perspective;
         
 
         bool _loaded;
 
-        NavigationController(Region region, IPublisher queue, ClientPerspective view)
+        NavigationController(Region region, IPublisher queue, ClientPerspective perspective)
         {
             _tree = new NavigationView(this);
             _region = region;
             _queue = queue;
-            _view = view;
+            _perspective = perspective;
         }
 
         public static NavigationController Wire(Region control, IPublisher queue, ISubscriber bus, ClientPerspective view)
@@ -57,7 +57,7 @@ namespace Gtd.Client.Views.Navigation
 
         void ReloadInboxNode()
         {
-            _tree.AddOrUpdateNode("inbox",string.Format("Inbox ({0})", _view.GetNumberOfThoughtsInInbox()));
+            _tree.AddOrUpdateNode("inbox",string.Format("Inbox ({0})", _perspective.GetNumberOfThoughtsInInbox()));
         }
 
         
@@ -101,23 +101,25 @@ namespace Gtd.Client.Views.Navigation
             if (!_loaded)
                 return;
 
-            AddOrUpdateProject(_view.GetProjectOrNull(message.ProjectId));
+            AddOrUpdateProject(_perspective.GetProjectOrNull(message.ProjectId));
         }
 
         public void Handle(Dumb.ActionAdded message)
         {
-            AddOrUpdateProject(_view.GetProjectOrNull(message.ProjectId));
+            AddOrUpdateProject(_perspective.GetProjectOrNull(message.ProjectId));
         }
 
         public void Handle(Dumb.ActionUpdated message)
         {
-            AddOrUpdateProject(_view.GetProjectOrNull(message.ProjectId));
+            AddOrUpdateProject(_perspective.GetProjectOrNull(message.ProjectId));
         }
 
         void AddOrUpdateProject(ImmutableProject model)
         {
-            var actions = _view.CurrentFilter.FilterActions(model);
-            var count = _view.CurrentFilter.FormatActionCount(actions.Count());
+            var actions = _perspective.CurrentFilter.FilterActions(model);
+            var count = _perspective.CurrentFilter.FormatActionCount(actions.Count());
+
+            
 
             var title = string.Format("{0} ({1})", model.Outcome, count);
             _nodes[model.UIKey] = model.ProjectId;
@@ -128,8 +130,8 @@ namespace Gtd.Client.Views.Navigation
         void LoadNavigation()
         {
             _tree.Clear();
-            _tree.AddOrUpdateNode("inbox", string.Format("Inbox ({0})",_view.GetNumberOfThoughtsInInbox()));
-            foreach (var project in _view.ListProjects())
+            _tree.AddOrUpdateNode("inbox", string.Format("Inbox ({0})",_perspective.GetNumberOfThoughtsInInbox()));
+            foreach (var project in _perspective.ListProjects())
             {
                 AddOrUpdateProject(project);
             }
