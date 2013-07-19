@@ -64,6 +64,11 @@ namespace Gtd.Client.Models
         public readonly string Subject;
         public readonly string UIKey;
 
+        public ImmutableThought WithSubject(string subject)
+        {
+            return new ImmutableThought(ThoughtId, subject, UIKey);
+        }
+
         public ImmutableThought(ThoughtId thoughtId, string subject, string uiKey)
         {
             ThoughtId = thoughtId;

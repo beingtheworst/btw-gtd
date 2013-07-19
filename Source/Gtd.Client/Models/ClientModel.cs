@@ -7,11 +7,11 @@ namespace Gtd.Client.Models
     public sealed class ClientModel
     {
         readonly IMessageQueue _queue;
-        readonly List<MutableThought> _thoughts = new List<MutableThought>();
+        readonly List<ImmutableThought> _thoughts = new List<ImmutableThought>();
         readonly List<MutableProject> _projectList = new List<MutableProject>();
         readonly Dictionary<ProjectId, MutableProject> _projectDict = new Dictionary<ProjectId, MutableProject>();
         readonly Dictionary<ActionId, MutableAction> _actionDict = new Dictionary<ActionId, MutableAction>();
-        readonly Dictionary<ThoughtId, MutableThought> _thoughtDict = new Dictionary<ThoughtId, MutableThought>();
+        readonly Dictionary<ThoughtId, ImmutableThought> _thoughtDict = new Dictionary<ThoughtId, ImmutableThought>();
 
 
         static ImmutableProject Immute(MutableProject m)
@@ -47,7 +47,7 @@ namespace Gtd.Client.Models
 
         public ImmutableInbox GetInbox()
         {
-            var thoughts = _thoughts.Select(t => new ImmutableThought(t.Id, t.Subject, t.UIKey)).ToList().AsReadOnly();
+            var thoughts = _thoughts.ToList().AsReadOnly();
             return new ImmutableInbox(thoughts);
         }
         public int GetNumberOfThoughtsInInbox()
@@ -81,16 +81,17 @@ namespace Gtd.Client.Models
 
         public void ThoughtCaptured(ThoughtId thoughtId, string thought, DateTime date)
         {
-            var item = new MutableThought(thoughtId, thought, date);
+            var key = "thought-" + Id.Id;
+            var item = new ImmutableThought(thoughtId, thought, key);
             _thoughts.Add(item);
             _thoughtDict.Add(thoughtId, item);
-            Publish(new Dumb.ThoughtAdded(item.Id, item.Subject, item.UIKey));
+            Publish(new Dumb.ThoughtAdded(item.ThoughtId, item.Subject, item.UIKey));
         }
 
         public void ThoughtArchived(ThoughtId thoughtId)
         {
 
-             var thought = this._thoughts.SingleOrDefault(t => t.Id == thoughtId);
+             var thought = _thoughts.SingleOrDefault(t => t.ThoughtId == thoughtId);
             if (null == thought)
                 return;
 
@@ -130,8 +131,10 @@ namespace Gtd.Client.Models
 
         public void ThoughtSubjectChanged(ThoughtId thoughtId, string subject)
         {
-            _thoughtDict[thoughtId].UpdateSubject(subject);
+            var immutableThought = _thoughtDict[thoughtId];
+            _thoughtDict[thoughtId] = immutableThought.WithSubject(subject);
         }
+
         public void ProjectOutcomeChanged(ProjectId projectId, string outcome)
         {
             _projectDict[projectId].OutcomeChanged(outcome);
@@ -174,32 +177,6 @@ namespace Gtd.Client.Models
             
         }
 
-        sealed class MutableThought 
-        {
-            public readonly ThoughtId Id;
-            public string Subject { get; private set; }
-            public readonly DateTime Added;
-
-            public void UpdateSubject(string subject)
-            {
-                Subject = subject;
-            }
-
-            public string UIKey { get { return "thought-" + Id.Id; } }
-
-            public MutableThought(ThoughtId id, string subject, DateTime added)
-            {
-                Id = id;
-                Subject = subject;
-                Added = added;
-            }
-
-            public string GetTitle()
-            {
-                return string.Format("Thought '{0}'", Subject);
-            }
-
-        }
 
          sealed class MutableProject 
         {
