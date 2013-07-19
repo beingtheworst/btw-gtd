@@ -229,11 +229,6 @@ namespace Gtd.Client.Models
             {
                 Type = type;
             }
-
-            public string GetTitle()
-            {
-                return string.Format("Project '{0}'", Outcome);
-            }
         }
 
         sealed class MutableAction 
@@ -264,11 +259,6 @@ namespace Gtd.Client.Models
             public void OutcomeChanged(string outcome)
             {
                 Outcome = outcome;
-            }
-
-            public string GetTitle()
-            {
-                return string.Format("Action: '{0}'", Outcome);
             }
 
             public void MarkAsArchived()
