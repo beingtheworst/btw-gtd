@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 
 namespace Gtd.Client.Models
@@ -7,7 +8,7 @@ namespace Gtd.Client.Models
     public sealed class ClientModel
     {
         readonly IMessageQueue _queue;
-        readonly List<ImmutableThought> _thoughts = new List<ImmutableThought>();
+        ImmutableList<ImmutableThought> _thoughts = ImmutableList.Create<ImmutableThought>();
         readonly List<MutableProject> _projectList = new List<MutableProject>();
         readonly Dictionary<ProjectId, MutableProject> _projectDict = new Dictionary<ProjectId, MutableProject>();
         readonly Dictionary<ActionId, MutableAction> _actionDict = new Dictionary<ActionId, MutableAction>();
@@ -47,8 +48,7 @@ namespace Gtd.Client.Models
 
         public ImmutableInbox GetInbox()
         {
-            var thoughts = _thoughts.ToList().AsReadOnly();
-            return new ImmutableInbox(thoughts);
+            return new ImmutableInbox(_thoughts);
         }
         public int GetNumberOfThoughtsInInbox()
         {
@@ -83,21 +83,21 @@ namespace Gtd.Client.Models
         {
             var key = "thought-" + Id.Id;
             var item = new ImmutableThought(thoughtId, thought, key);
-            _thoughts.Add(item);
+
+            _thoughts = _thoughts.Add(item);
             _thoughtDict.Add(thoughtId, item);
-            Publish(new Dumb.ThoughtAdded(item.ThoughtId, item.Subject, item.UIKey));
+            Publish(new Dumb.ThoughtAdded(item, _thoughts));
         }
 
         public void ThoughtArchived(ThoughtId thoughtId)
         {
-
-             var thought = _thoughts.SingleOrDefault(t => t.ThoughtId == thoughtId);
-            if (null == thought)
+            ImmutableThought value;
+            if (!_thoughtDict.TryGetValue(thoughtId,out value))
                 return;
 
-            _thoughts.Remove(thought);
+            _thoughts = _thoughts.Remove(value);
 
-            Publish(new Dumb.ThoughtRemoved(thoughtId,thought.UIKey));
+            Publish(new Dumb.ThoughtRemoved(value, _thoughts));
         }
 
 

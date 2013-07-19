@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using Gtd.Client.Models;
 
 namespace Gtd.Client.Views.Navigation
@@ -54,21 +55,22 @@ namespace Gtd.Client.Views.Navigation
 
         
 
-        void ReloadInboxNode()
+        void ReloadInboxNode(int count)
         {
-            _tree.AddOrUpdateNode("inbox",string.Format("Inbox ({0})", _perspective.Model.GetNumberOfThoughtsInInbox()));
+            _tree.AddOrUpdateNode("inbox",string.Format("Inbox ({0})", count));
         }
 
         
 
         public void Handle(Dumb.ThoughtAdded message)
         {
-            Sync(ReloadInboxNode);
+            
+            Sync(() => ReloadInboxNode(message.Inbox.Count));
         }
 
         public void Handle(Dumb.ThoughtRemoved message)
         {
-            Sync(ReloadInboxNode);
+            Sync(() => ReloadInboxNode(message.Inbox.Count));
         }
 
         void Sync(Action act)

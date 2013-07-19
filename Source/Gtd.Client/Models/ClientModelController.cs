@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Immutable;
 using Gtd.CoreDomain;
 
 namespace Gtd.Client.Models
@@ -185,28 +186,23 @@ namespace Gtd.Client.Models
 
         public sealed class ThoughtAdded : CliendModelEvent
         {
-            public ThoughtId Id { get; private set; }
-            public string Subject { get; private set; }
-            public string UniqueKey { get; private set; }
-
-            public ThoughtAdded(ThoughtId id, string subject, string uniqueKey)
+            public readonly ImmutableThought Thought;
+            public readonly ImmutableList<ImmutableThought> Inbox; 
+            public ThoughtAdded(ImmutableThought thought, ImmutableList<ImmutableThought> inbox)
             {
-                Id = id;
-                Subject = subject;
-                UniqueKey = uniqueKey;
-                
+                Thought = thought;
+                Inbox = inbox;
             }
         }
 
         public sealed class ThoughtRemoved : CliendModelEvent
         {
-            public readonly ThoughtId Id;
-            public readonly string UiKey;
-
-            public ThoughtRemoved(ThoughtId id, string uiKey)
+            public readonly ImmutableThought Thought;
+            public readonly ImmutableList<ImmutableThought> Inbox; 
+            public ThoughtRemoved(ImmutableThought thought, ImmutableList<ImmutableThought> inbox)
             {
-                Id = id;
-                UiKey = uiKey;
+                Thought = thought;
+                Inbox = inbox;
             }
         }
 

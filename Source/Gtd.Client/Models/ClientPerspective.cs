@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using Gtd.Shell.Filters;
 using System.Linq;
@@ -50,9 +51,9 @@ namespace Gtd.Client.Models
 
     public sealed class ImmutableInbox
     {
-        public readonly ReadOnlyCollection<ImmutableThought> Thoughts;
+        public readonly ImmutableList<ImmutableThought> Thoughts;
 
-        public ImmutableInbox(ReadOnlyCollection<ImmutableThought> thoughts)
+        public ImmutableInbox(ImmutableList<ImmutableThought> thoughts)
         {
             Thoughts = thoughts;
         }
