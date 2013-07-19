@@ -59,6 +59,18 @@ namespace Gtd.Client.Models
         }
     }
 
+    public sealed class ImmutableClientModel
+    {
+        public readonly ImmutableList<ImmutableThought> Inbox;
+        public readonly ImmutableList<ImmutableProject> Projects;
+
+        public ImmutableClientModel(ImmutableList<ImmutableThought> inbox, ImmutableList<ImmutableProject> projects)
+        {
+            Inbox = inbox;
+            Projects = projects;
+        }
+    }
+
     public sealed class ImmutableThought
     {
         public readonly ThoughtId ThoughtId;

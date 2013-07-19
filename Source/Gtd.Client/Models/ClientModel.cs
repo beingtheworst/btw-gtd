@@ -9,10 +9,12 @@ namespace Gtd.Client.Models
     {
         readonly IMessageQueue _queue;
         List<ImmutableThought> _thoughts = new List<ImmutableThought>();
+        readonly Dictionary<ThoughtId, ImmutableThought> _thoughtDict = new Dictionary<ThoughtId, ImmutableThought>();
+
         readonly List<MutableProject> _projectList = new List<MutableProject>();
         readonly Dictionary<ProjectId, MutableProject> _projectDict = new Dictionary<ProjectId, MutableProject>();
         readonly Dictionary<ActionId, MutableAction> _actionDict = new Dictionary<ActionId, MutableAction>();
-        readonly Dictionary<ThoughtId, ImmutableThought> _thoughtDict = new Dictionary<ThoughtId, ImmutableThought>();
+        
 
 
         static ImmutableProject Immute(MutableProject m)
@@ -69,7 +71,11 @@ namespace Gtd.Client.Models
         {
             _loadingCompleted = true;
 
-            Publish(new Dumb.ClientModelLoaded());
+            var model = new ImmutableClientModel(
+                ImmutableList.Create(_thoughts.ToArray()),
+                ImmutableList.Create(_projectList.Select(Immute).ToArray()));
+
+            Publish(new Dumb.ClientModelLoaded(model));
         }
 
         void Publish(Dumb.CliendModelEvent e)

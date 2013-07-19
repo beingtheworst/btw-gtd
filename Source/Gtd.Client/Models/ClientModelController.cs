@@ -181,7 +181,12 @@ namespace Gtd.Client.Models
 
         public sealed class ClientModelLoaded : CliendModelEvent
         {
+            public readonly ImmutableClientModel Model;
 
+            public ClientModelLoaded(ImmutableClientModel model)
+            {
+                Model = model;
+            }
         }
 
         public sealed class ThoughtAdded : CliendModelEvent
