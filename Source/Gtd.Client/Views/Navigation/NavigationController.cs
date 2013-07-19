@@ -65,12 +65,12 @@ namespace Gtd.Client.Views.Navigation
         public void Handle(Dumb.ThoughtAdded message)
         {
             
-            Sync(() => ReloadInboxNode(message.Inbox.Count));
+            Sync(() => ReloadInboxNode(message.InboxCount));
         }
 
         public void Handle(Dumb.ThoughtRemoved message)
         {
-            Sync(() => ReloadInboxNode(message.Inbox.Count));
+            Sync(() => ReloadInboxNode(message.InboxCount));
         }
 
         void Sync(Action act)

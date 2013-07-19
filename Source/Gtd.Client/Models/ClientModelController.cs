@@ -187,22 +187,22 @@ namespace Gtd.Client.Models
         public sealed class ThoughtAdded : CliendModelEvent
         {
             public readonly ImmutableThought Thought;
-            public readonly ImmutableList<ImmutableThought> Inbox; 
-            public ThoughtAdded(ImmutableThought thought, ImmutableList<ImmutableThought> inbox)
+            public readonly int InboxCount;
+            public ThoughtAdded(ImmutableThought thought, int inboxCount)
             {
                 Thought = thought;
-                Inbox = inbox;
+                InboxCount = inboxCount;
             }
         }
 
         public sealed class ThoughtRemoved : CliendModelEvent
         {
             public readonly ImmutableThought Thought;
-            public readonly ImmutableList<ImmutableThought> Inbox; 
-            public ThoughtRemoved(ImmutableThought thought, ImmutableList<ImmutableThought> inbox)
+            public readonly int InboxCount;
+            public ThoughtRemoved(ImmutableThought thought, int inboxCount)
             {
                 Thought = thought;
-                Inbox = inbox;
+                InboxCount = inboxCount;
             }
         }
 

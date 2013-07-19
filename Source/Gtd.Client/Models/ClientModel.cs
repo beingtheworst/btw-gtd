@@ -8,7 +8,7 @@ namespace Gtd.Client.Models
     public sealed class ClientModel
     {
         readonly IMessageQueue _queue;
-        ImmutableList<ImmutableThought> _thoughts = ImmutableList.Create<ImmutableThought>();
+        List<ImmutableThought> _thoughts = new List<ImmutableThought>();
         readonly List<MutableProject> _projectList = new List<MutableProject>();
         readonly Dictionary<ProjectId, MutableProject> _projectDict = new Dictionary<ProjectId, MutableProject>();
         readonly Dictionary<ActionId, MutableAction> _actionDict = new Dictionary<ActionId, MutableAction>();
@@ -48,7 +48,7 @@ namespace Gtd.Client.Models
 
         public ImmutableInbox GetInbox()
         {
-            return new ImmutableInbox(_thoughts);
+            return new ImmutableInbox(ImmutableList.Create(_thoughts.ToArray()));
         }
         public int GetNumberOfThoughtsInInbox()
         {
@@ -84,9 +84,9 @@ namespace Gtd.Client.Models
             var key = "thought-" + Id.Id;
             var item = new ImmutableThought(thoughtId, thought, key);
 
-            _thoughts = _thoughts.Add(item);
+            _thoughts.Add(item);
             _thoughtDict.Add(thoughtId, item);
-            Publish(new Dumb.ThoughtAdded(item, _thoughts));
+            Publish(new Dumb.ThoughtAdded(item, _thoughts.Count));
         }
 
         public void ThoughtArchived(ThoughtId thoughtId)
@@ -95,9 +95,9 @@ namespace Gtd.Client.Models
             if (!_thoughtDict.TryGetValue(thoughtId,out value))
                 return;
 
-            _thoughts = _thoughts.Remove(value);
+            _thoughts.Remove(value);
 
-            Publish(new Dumb.ThoughtRemoved(value, _thoughts));
+            Publish(new Dumb.ThoughtRemoved(value, _thoughts.Count));
         }
 
 
