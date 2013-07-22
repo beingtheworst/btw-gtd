@@ -47,14 +47,14 @@ namespace Gtd.CoreDomain
 
         // When methods reacting to Executed Command to call corresponding Aggregate method
 
-        public void When(CaptureThought cmd)
+        public void When(CaptureInnoxStuff cmd)
         {
             ChangeAggregate(cmd.Id, agg => agg.CaptureThought(cmd.RequestId, cmd.Thought, _time));
         }
 
-        public void When(ArchiveThought cmd)
+        public void When(ArchiveInboxStuff cmd)
         {
-            ChangeAggregate(cmd.Id, agg => agg.ArchiveThought(cmd.ThoughtId, _time));
+            ChangeAggregate(cmd.Id, agg => agg.ArchiveThought(cmd.InboxStuffId, _time));
         }
 
         public void When(DefineAction cmd)
@@ -69,7 +69,7 @@ namespace Gtd.CoreDomain
 
         public void When(DefineSingleActionProject cmd)
         {
-            ChangeAggregate(cmd.Id, agg => agg.DefineSingleActionProject(cmd.RequestId, cmd.ThoughtId, _time));
+            ChangeAggregate(cmd.Id, agg => agg.DefineSingleActionProject(cmd.RequestId, cmd.InboxStuffId, _time));
         }
 
         public void When(ChangeProjectType cmd)
@@ -97,9 +97,9 @@ namespace Gtd.CoreDomain
             ChangeAggregate(cmd.Id, agg => agg.ChangeProjectOutcome(cmd.ProjectId, cmd.Outcome, _time));
         }
 
-        public void When(ChangeThoughtSubject cmd)
+        public void When(ChangeSubjectOfInboxStuff cmd)
         {
-            ChangeAggregate(cmd.Id, agg => agg.ChangeThoughtSubject(cmd.ThoughtId, cmd.Subject, _time));
+            ChangeAggregate(cmd.Id, agg => agg.ChangeThoughtSubject(cmd.InboxStuffId, cmd.Subject, _time));
         }
 
         public void When(DeferActionUntil cmd)

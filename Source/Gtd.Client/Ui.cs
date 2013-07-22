@@ -98,21 +98,21 @@ namespace Gtd.Client
 
         public sealed class MoveThoughtsToProjectClicked : Message
         {
-            public readonly ThoughtId[] Thoughts;
+            public readonly InboxStuffId[] InboxStuffs;
             public readonly ProjectId Project;
 
-            public MoveThoughtsToProjectClicked(ThoughtId[] thoughts, ProjectId project)
+            public MoveThoughtsToProjectClicked(InboxStuffId[] inboxStuffs, ProjectId project)
             {
-                Thoughts = thoughts;
+                InboxStuffs = inboxStuffs;
                 Project = project;
             }
         }
 
         public sealed class ArchiveThoughtClicked : Message
         {
-            public readonly ThoughtId Id;
+            public readonly InboxStuffId Id;
 
-            public ArchiveThoughtClicked(ThoughtId id)
+            public ArchiveThoughtClicked(InboxStuffId id)
             {
                 Id = id;
             }

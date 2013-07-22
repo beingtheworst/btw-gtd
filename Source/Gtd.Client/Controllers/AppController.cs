@@ -109,7 +109,7 @@ namespace Gtd.Client
         void MoveThoughtsToProject(UI.MoveThoughtsToProjectClicked r)
         {
             _uiBus.Publish(r);
-            UpdateDomain(a => a.MoveThoughtsToProject(r.Thoughts, r.Project, new RealTimeProvider()));
+            UpdateDomain(a => a.MoveThoughtsToProject(r.InboxStuffs, r.Project, new RealTimeProvider()));
         }
 
         void ArchiveThought(UI.ArchiveThoughtClicked r)

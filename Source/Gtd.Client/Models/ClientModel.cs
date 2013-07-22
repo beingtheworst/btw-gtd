@@ -8,8 +8,8 @@ namespace Gtd.Client.Models
     public sealed class ClientModel
     {
         readonly IMessageQueue _queue;
-        List<MutableThought> _thoughts = new List<MutableThought>();
-        readonly Dictionary<ThoughtId, MutableThought> _thoughtDict = new Dictionary<ThoughtId, MutableThought>();
+        List<MutableInboxStuff> _thoughts = new List<MutableInboxStuff>();
+        readonly Dictionary<InboxStuffId, MutableInboxStuff> _thoughtDict = new Dictionary<InboxStuffId, MutableInboxStuff>();
 
         readonly List<MutableProject> _projectList = new List<MutableProject>();
         readonly Dictionary<ProjectId, MutableProject> _projectDict = new Dictionary<ProjectId, MutableProject>();
@@ -87,20 +87,20 @@ namespace Gtd.Client.Models
             _queue.Enqueue(e);
         }
 
-        public void ThoughtCaptured(ThoughtId thoughtId, string thought, DateTime date)
+        public void ThoughtCaptured(InboxStuffId inboxStuffId, string thought, DateTime date)
         {
             var key = "thought-" + Id.Id;
-            var item = new MutableThought(thoughtId, thought, key);
+            var item = new MutableInboxStuff(inboxStuffId, thought, key);
 
             _thoughts.Add(item);
-            _thoughtDict.Add(thoughtId, item);
+            _thoughtDict.Add(inboxStuffId, item);
             Publish(new Dumb.ThoughtAdded(item.Freeze(), _thoughts.Count));
         }
 
-        public void ThoughtArchived(ThoughtId thoughtId)
+        public void ThoughtArchived(InboxStuffId inboxStuffId)
         {
-            MutableThought value;
-            if (!_thoughtDict.TryGetValue(thoughtId,out value))
+            MutableInboxStuff value;
+            if (!_thoughtDict.TryGetValue(inboxStuffId,out value))
                 return;
 
             _thoughts.Remove(value);
@@ -137,9 +137,9 @@ namespace Gtd.Client.Models
             Publish(new Dumb.ActionUpdated(actionId, action.UIKey, action.ProjectId, project.UIKey, action.Outcome, true));
         }
 
-        public void ThoughtSubjectChanged(ThoughtId thoughtId, string subject)
+        public void ThoughtSubjectChanged(InboxStuffId inboxStuffId, string subject)
         {
-            _thoughtDict[thoughtId].UpdateSubject(subject);
+            _thoughtDict[inboxStuffId].UpdateSubject(subject);
         }
 
         public void ProjectOutcomeChanged(ProjectId projectId, string outcome)
@@ -184,15 +184,15 @@ namespace Gtd.Client.Models
             
         }
 
-        sealed class MutableThought
+        sealed class MutableInboxStuff
         {
-            public ThoughtId ThoughtId { get; private set; }
+            public InboxStuffId InboxStuffId { get; private set; }
             public string Subject { get; private set; }
             public  string UIKey { get; private set; }
 
-            public MutableThought(ThoughtId thoughtId, string subject, string uiKey)
+            public MutableInboxStuff(InboxStuffId inboxStuffId, string subject, string uiKey)
             {
-                ThoughtId = thoughtId;
+                InboxStuffId = inboxStuffId;
                 Subject = subject;
                 UIKey = uiKey;
             }
@@ -203,9 +203,9 @@ namespace Gtd.Client.Models
                 Subject = newSubject;
             }
 
-            public ImmutableThought Freeze()
+            public ImmutableInboxStuff Freeze()
             {
-                return new ImmutableThought(ThoughtId, Subject, UIKey);
+                return new ImmutableInboxStuff(InboxStuffId, Subject, UIKey);
             }
         }
 

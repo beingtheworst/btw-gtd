@@ -6,8 +6,8 @@ namespace Gtd.Client.Models
 {
     public sealed class ClientModelController :
         IHandle<TrustedSystemCreated>,
-        IHandle<ThoughtCaptured>,
-        IHandle<ThoughtArchived>,
+        IHandle<InboxStuffCaptured>,
+        IHandle<InboxStuffArchived>,
         IHandle<ProjectDefined>,
         IHandle<ActionDefined>,
         IHandle<ActionCompleted>,
@@ -35,8 +35,8 @@ namespace Gtd.Client.Models
         public void SubscribeTo(ISubscriber bus)
         {
             bus.Subscribe<TrustedSystemCreated>(this);
-            bus.Subscribe<ThoughtCaptured>(this);
-            bus.Subscribe<ThoughtArchived>(this);
+            bus.Subscribe<InboxStuffCaptured>(this);
+            bus.Subscribe<InboxStuffArchived>(this);
             bus.Subscribe<ProjectDefined>(this);
             bus.Subscribe<ActionDefined>(this);
             bus.Subscribe<ActionCompleted>(this);
@@ -52,15 +52,15 @@ namespace Gtd.Client.Models
             _model.Create(e.Id);
         }
 
-        public void Handle(ThoughtCaptured e)
+        public void Handle(InboxStuffCaptured e)
         {
             _model.Verify(e.Id);
-            _model.ThoughtCaptured(e.ThoughtId, e.Thought, e.TimeUtc);
+            _model.ThoughtCaptured(e.InboxStuffId, e.Thought, e.TimeUtc);
         }
-        public void Handle(ThoughtArchived e)
+        public void Handle(InboxStuffArchived e)
         {
             _model.Verify(e.Id);
-            _model.ThoughtArchived(e.ThoughtId);
+            _model.ThoughtArchived(e.InboxStuffId);
         }
 
         public void Handle(ProjectDefined e)
@@ -90,10 +90,10 @@ namespace Gtd.Client.Models
             _model.ProjectOutcomeChanged(e.ProjectId, e.ProjectOutcome);
         }
 
-        public void Handle(ThoughtSubjectChanged e)
+        public void Handle(NameOfInboxStuffChanged e)
         {
             _model.Verify(e.Id);
-            _model.ThoughtSubjectChanged(e.ThoughtId, e.Subject);
+            _model.ThoughtSubjectChanged(e.InboxStuffId, e.Subject);
         }
         public void Handle(ActionArchived e)
         {
@@ -191,22 +191,22 @@ namespace Gtd.Client.Models
 
         public sealed class ThoughtAdded : CliendModelEvent
         {
-            public readonly ImmutableThought Thought;
+            public readonly ImmutableInboxStuff InboxStuff;
             public readonly int InboxCount;
-            public ThoughtAdded(ImmutableThought thought, int inboxCount)
+            public ThoughtAdded(ImmutableInboxStuff inboxStuff, int inboxCount)
             {
-                Thought = thought;
+                InboxStuff = inboxStuff;
                 InboxCount = inboxCount;
             }
         }
 
         public sealed class ThoughtRemoved : CliendModelEvent
         {
-            public readonly ImmutableThought Thought;
+            public readonly ImmutableInboxStuff InboxStuff;
             public readonly int InboxCount;
-            public ThoughtRemoved(ImmutableThought thought, int inboxCount)
+            public ThoughtRemoved(ImmutableInboxStuff inboxStuff, int inboxCount)
             {
-                Thought = thought;
+                InboxStuff = inboxStuff;
                 InboxCount = inboxCount;
             }
         }

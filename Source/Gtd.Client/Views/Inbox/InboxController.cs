@@ -6,8 +6,8 @@ namespace Gtd.Client
     public class InboxController : 
         IHandle<AppInit>,
         IHandle<UI.DisplayInbox>,
-        IHandle<ThoughtCaptured>,  
-        IHandle<ThoughtArchived>, IHandle<FormLoaded>
+        IHandle<InboxStuffCaptured>,  
+        IHandle<InboxStuffArchived>, IHandle<FormLoaded>
     {
         readonly Region _dock;
         readonly IPublisher _queue;
@@ -29,8 +29,8 @@ namespace Gtd.Client
 
             bus.Subscribe<AppInit>(adapter);
             bus.Subscribe<UI.DisplayInbox>(adapter);
-            bus.Subscribe<ThoughtCaptured>(adapter);
-            bus.Subscribe<ThoughtArchived>(adapter);
+            bus.Subscribe<InboxStuffCaptured>(adapter);
+            bus.Subscribe<InboxStuffArchived>(adapter);
             bus.Subscribe<FormLoaded>(adapter);
 
             return adapter;
@@ -56,17 +56,17 @@ namespace Gtd.Client
             _queue.Publish(new UI.InboxDisplayed());
         }
 
-        public void Handle(ThoughtCaptured message)
+        public void Handle(InboxStuffCaptured message)
         {
-            _control.Sync(() => _control.AddThought(message.Thought, message.ThoughtId));
+            _control.Sync(() => _control.AddThought(message.Thought, message.InboxStuffId));
             
         }
-        public void Handle(ThoughtArchived message)
+        public void Handle(InboxStuffArchived message)
         {
-            _control.Sync(() => _control.RemoveThought(message.ThoughtId));
+            _control.Sync(() => _control.RemoveThought(message.InboxStuffId));
         }
 
-        public void WhenRequestedThoughtsArchival(IEnumerable<ThoughtId> thoughtIds)
+        public void WhenRequestedThoughtsArchival(IEnumerable<InboxStuffId> thoughtIds)
         {
             foreach (var id in thoughtIds)
             {
@@ -74,9 +74,9 @@ namespace Gtd.Client
             }
         }
 
-        public void WhenRequestedMoveThoughtsToProject(ProjectId id, ThoughtId[] thoughtIds)
+        public void WhenRequestedMoveThoughtsToProject(ProjectId id, InboxStuffId[] inboxStuffIds)
         {
-            _queue.Publish(new UI.MoveThoughtsToProjectClicked(thoughtIds, id));
+            _queue.Publish(new UI.MoveThoughtsToProjectClicked(inboxStuffIds, id));
         }
 
         public void WhenCaptureThoughtClicked()

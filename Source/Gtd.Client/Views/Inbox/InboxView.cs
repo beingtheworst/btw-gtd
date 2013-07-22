@@ -22,8 +22,8 @@ namespace Gtd.Client
         {
             
             public readonly string Name;
-            public readonly ThoughtId Id;
-            public Thought(string name, ThoughtId id)
+            public readonly InboxStuffId Id;
+            public Thought(string name, InboxStuffId id)
             {
                 Name = name;
                 Id = id;
@@ -35,20 +35,20 @@ namespace Gtd.Client
             }
         }
 
-        readonly IDictionary<ThoughtId, Thought> _thoughts = new Dictionary<ThoughtId, Thought>(); 
+        readonly IDictionary<InboxStuffId, Thought> _thoughts = new Dictionary<InboxStuffId, Thought>(); 
 
-        public void AddThought(string thought, ThoughtId thoughtId)
+        public void AddThought(string thought, InboxStuffId inboxStuffId)
         {
-            var t = new Thought(thought, thoughtId);
-            _thoughts.Add(thoughtId, t);
+            var t = new Thought(thought, inboxStuffId);
+            _thoughts.Add(inboxStuffId, t);
             listBox1.Items.Add(t);
             listBox1.Visible = listBox1.Items.Count > 0;
         }
 
-        public void RemoveThought(ThoughtId thought)
+        public void RemoveThought(InboxStuffId inboxStuff)
         {
             Thought t;
-            if (_thoughts.TryGetValue(thought, out t))
+            if (_thoughts.TryGetValue(inboxStuff, out t))
             {
                 listBox1.Items.Remove(t);
                 _thoughts.Remove(t.Id);
@@ -61,7 +61,7 @@ namespace Gtd.Client
             _controller.WhenRequestedThoughtsArchival(GetSelectedThoughtIds());
         }
 
-        ThoughtId[] GetSelectedThoughtIds()
+        InboxStuffId[] GetSelectedThoughtIds()
         {
             return listBox1.SelectedItems.Cast<Thought>().Select(t => t.Id).ToArray();
         }
@@ -113,8 +113,8 @@ namespace Gtd.Client
             {
                 foreach (var view in inbox.Thoughts)
                 {
-                    var t = new Thought(view.Subject, view.ThoughtId);
-                    _thoughts.Add(view.ThoughtId, t);
+                    var t = new Thought(view.Subject, view.InboxStuffId);
+                    _thoughts.Add(view.InboxStuffId, t);
                     listBox1.Items.Add(t);
                 }
                 listBox1.Visible = listBox1.Items.Count > 0;

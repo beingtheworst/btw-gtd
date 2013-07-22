@@ -51,9 +51,9 @@ namespace Gtd.Client.Models
 
     public sealed class ImmutableInbox
     {
-        public readonly ImmutableList<ImmutableThought> Thoughts;
+        public readonly ImmutableList<ImmutableInboxStuff> Thoughts;
 
-        public ImmutableInbox(ImmutableList<ImmutableThought> thoughts)
+        public ImmutableInbox(ImmutableList<ImmutableInboxStuff> thoughts)
         {
             Thoughts = thoughts;
         }
@@ -61,30 +61,30 @@ namespace Gtd.Client.Models
 
     public sealed class ImmutableClientModel
     {
-        public readonly ImmutableList<ImmutableThought> Inbox;
+        public readonly ImmutableList<ImmutableInboxStuff> Inbox;
         public readonly ImmutableList<ImmutableProject> Projects;
 
-        public ImmutableClientModel(ImmutableList<ImmutableThought> inbox, ImmutableList<ImmutableProject> projects)
+        public ImmutableClientModel(ImmutableList<ImmutableInboxStuff> inbox, ImmutableList<ImmutableProject> projects)
         {
             Inbox = inbox;
             Projects = projects;
         }
     }
 
-    public sealed class ImmutableThought
+    public sealed class ImmutableInboxStuff
     {
-        public readonly ThoughtId ThoughtId;
+        public readonly InboxStuffId InboxStuffId;
         public readonly string Subject;
         public readonly string UIKey;
 
-        public ImmutableThought WithSubject(string subject)
+        public ImmutableInboxStuff WithSubject(string subject)
         {
-            return new ImmutableThought(ThoughtId, subject, UIKey);
+            return new ImmutableInboxStuff(InboxStuffId, subject, UIKey);
         }
 
-        public ImmutableThought(ThoughtId thoughtId, string subject, string uiKey)
+        public ImmutableInboxStuff(InboxStuffId inboxStuffId, string subject, string uiKey)
         {
-            ThoughtId = thoughtId;
+            InboxStuffId = inboxStuffId;
             Subject = subject;
             UIKey = uiKey;
         }

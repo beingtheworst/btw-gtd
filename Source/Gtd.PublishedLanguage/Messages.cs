@@ -18,63 +18,63 @@ namespace Gtd
             Id = id;
         }
     }
-    [DataContract(Namespace = "BTW2/GTD")]
-    public partial class CaptureThought : Command, ITrustedSystemCommand
+    [DataContract(Namespace = "BTW2/GTD", Name = "CaptureThought")]
+    public partial class CaptureInnoxStuff : Command, ITrustedSystemCommand
     {
         [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
         [DataMember(Order = 2)] public RequestId RequestId { get; private set; }
         [DataMember(Order = 3)] public string Thought { get; private set; }
         
-        CaptureThought () {}
-        public CaptureThought (TrustedSystemId id, RequestId requestId, string thought)
+        CaptureInnoxStuff () {}
+        public CaptureInnoxStuff (TrustedSystemId id, RequestId requestId, string thought)
         {
             Id = id;
             RequestId = requestId;
             Thought = thought;
         }
     }
-    [DataContract(Namespace = "BTW2/GTD")]
-    public partial class ThoughtCaptured : Event, ITrustedSystemEvent
+    [DataContract(Namespace = "BTW2/GTD", Name = "ThoughtCaptured")]
+    public partial class InboxStuffCaptured : Event, ITrustedSystemEvent
     {
         [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
-        [DataMember(Order = 2)] public ThoughtId ThoughtId { get; private set; }
+        [DataMember(Order = 2)] public InboxStuffId InboxStuffId { get; private set; }
         [DataMember(Order = 3)] public string Thought { get; private set; }
         [DataMember(Order = 4)] public DateTime TimeUtc { get; private set; }
         
-        ThoughtCaptured () {}
-        public ThoughtCaptured (TrustedSystemId id, ThoughtId thoughtId, string thought, DateTime timeUtc)
+        InboxStuffCaptured () {}
+        public InboxStuffCaptured (TrustedSystemId id, InboxStuffId inboxStuffId, string thought, DateTime timeUtc)
         {
             Id = id;
-            ThoughtId = thoughtId;
+            InboxStuffId = inboxStuffId;
             Thought = thought;
             TimeUtc = timeUtc;
         }
     }
-    [DataContract(Namespace = "BTW2/GTD")]
-    public partial class ArchiveThought : Command, ITrustedSystemCommand
+    [DataContract(Namespace = "BTW2/GTD", Name = "ArchiveThought")]
+    public partial class ArchiveInboxStuff : Command, ITrustedSystemCommand
     {
         [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
-        [DataMember(Order = 2)] public ThoughtId ThoughtId { get; private set; }
+        [DataMember(Order = 2)] public InboxStuffId InboxStuffId { get; private set; }
         
-        ArchiveThought () {}
-        public ArchiveThought (TrustedSystemId id, ThoughtId thoughtId)
+        ArchiveInboxStuff () {}
+        public ArchiveInboxStuff (TrustedSystemId id, InboxStuffId inboxStuffId)
         {
             Id = id;
-            ThoughtId = thoughtId;
+            InboxStuffId = inboxStuffId;
         }
     }
-    [DataContract(Namespace = "BTW2/GTD")]
-    public partial class ThoughtArchived : Event, ITrustedSystemEvent
+    [DataContract(Namespace = "BTW2/GTD", Name = "ThoughtArchived")]
+    public partial class InboxStuffArchived : Event, ITrustedSystemEvent
     {
         [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
-        [DataMember(Order = 2)] public ThoughtId ThoughtId { get; private set; }
+        [DataMember(Order = 2)] public InboxStuffId InboxStuffId { get; private set; }
         [DataMember(Order = 3)] public DateTime TimeUtc { get; private set; }
         
-        ThoughtArchived () {}
-        public ThoughtArchived (TrustedSystemId id, ThoughtId thoughtId, DateTime timeUtc)
+        InboxStuffArchived () {}
+        public InboxStuffArchived (TrustedSystemId id, InboxStuffId inboxStuffId, DateTime timeUtc)
         {
             Id = id;
-            ThoughtId = thoughtId;
+            InboxStuffId = inboxStuffId;
             TimeUtc = timeUtc;
         }
     }
@@ -153,14 +153,14 @@ namespace Gtd
     {
         [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
         [DataMember(Order = 2)] public RequestId RequestId { get; private set; }
-        [DataMember(Order = 3)] public ThoughtId ThoughtId { get; private set; }
+        [DataMember(Order = 3)] public InboxStuffId InboxStuffId { get; private set; }
         
         DefineSingleActionProject () {}
-        public DefineSingleActionProject (TrustedSystemId id, RequestId requestId, ThoughtId thoughtId)
+        public DefineSingleActionProject (TrustedSystemId id, RequestId requestId, InboxStuffId inboxStuffId)
         {
             Id = id;
             RequestId = requestId;
-            ThoughtId = thoughtId;
+            InboxStuffId = inboxStuffId;
         }
     }
     [DataContract(Namespace = "BTW2/GTD")]
@@ -376,34 +376,34 @@ namespace Gtd
             TimeUtc = timeUtc;
         }
     }
-    [DataContract(Namespace = "BTW2/GTD")]
-    public partial class ChangeThoughtSubject : Command, ITrustedSystemCommand
+    [DataContract(Namespace = "BTW2/GTD", Name = "ChangeThoughtSubject")]
+    public partial class ChangeSubjectOfInboxStuff : Command, ITrustedSystemCommand
     {
         [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
-        [DataMember(Order = 2)] public ThoughtId ThoughtId { get; private set; }
+        [DataMember(Order = 2)] public InboxStuffId InboxStuffId { get; private set; }
         [DataMember(Order = 3)] public string Subject { get; private set; }
         
-        ChangeThoughtSubject () {}
-        public ChangeThoughtSubject (TrustedSystemId id, ThoughtId thoughtId, string subject)
+        ChangeSubjectOfInboxStuff () {}
+        public ChangeSubjectOfInboxStuff (TrustedSystemId id, InboxStuffId inboxStuffId, string subject)
         {
             Id = id;
-            ThoughtId = thoughtId;
+            InboxStuffId = inboxStuffId;
             Subject = subject;
         }
     }
-    [DataContract(Namespace = "BTW2/GTD")]
-    public partial class ThoughtSubjectChanged : Event, ITrustedSystemEvent
+    [DataContract(Namespace = "BTW2/GTD", Name = "ThoughtSubjectChanged")]
+    public partial class NameOfInboxStuffChanged : Event, ITrustedSystemEvent
     {
         [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
-        [DataMember(Order = 2)] public ThoughtId ThoughtId { get; private set; }
+        [DataMember(Order = 2)] public InboxStuffId InboxStuffId { get; private set; }
         [DataMember(Order = 3)] public string Subject { get; private set; }
         [DataMember(Order = 4)] public DateTime TimeUtc { get; private set; }
         
-        ThoughtSubjectChanged () {}
-        public ThoughtSubjectChanged (TrustedSystemId id, ThoughtId thoughtId, string subject, DateTime timeUtc)
+        NameOfInboxStuffChanged () {}
+        public NameOfInboxStuffChanged (TrustedSystemId id, InboxStuffId inboxStuffId, string subject, DateTime timeUtc)
         {
             Id = id;
-            ThoughtId = thoughtId;
+            InboxStuffId = inboxStuffId;
             Subject = subject;
             TimeUtc = timeUtc;
         }
@@ -560,8 +560,8 @@ namespace Gtd
     
     public interface ITrustedSystemApplicationService
     {
-        void When(CaptureThought c);
-        void When(ArchiveThought c);
+        void When(CaptureInnoxStuff c);
+        void When(ArchiveInboxStuff c);
         void When(DefineAction c);
         void When(DefineProject c);
         void When(DefineSingleActionProject c);
@@ -570,7 +570,7 @@ namespace Gtd
         void When(CompleteAction c);
         void When(ChangeActionOutcome c);
         void When(ChangeProjectOutcome c);
-        void When(ChangeThoughtSubject c);
+        void When(ChangeSubjectOfInboxStuff c);
         void When(DeferActionUntil c);
         void When(ProvideDueDateForAction c);
     }
@@ -578,8 +578,8 @@ namespace Gtd
     public interface ITrustedSystemState
     {
         void When(TrustedSystemCreated e);
-        void When(ThoughtCaptured e);
-        void When(ThoughtArchived e);
+        void When(InboxStuffCaptured e);
+        void When(InboxStuffArchived e);
         void When(ActionDefined e);
         void When(ProjectDefined e);
         void When(ProjectTypeChanged e);
@@ -590,7 +590,7 @@ namespace Gtd
         void When(ActionCompleted e);
         void When(ActionOutcomeChanged e);
         void When(ProjectOutcomeChanged e);
-        void When(ThoughtSubjectChanged e);
+        void When(NameOfInboxStuffChanged e);
         void When(ActionDeferredUntil e);
         void When(ActionDeferDateShifted e);
         void When(ActionIsNoLongerDeferred e);

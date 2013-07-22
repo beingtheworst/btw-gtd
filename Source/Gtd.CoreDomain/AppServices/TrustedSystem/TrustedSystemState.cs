@@ -67,16 +67,16 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             Id = e.Id;
         }
 
-        public void When(ThoughtCaptured e)
+        public void When(InboxStuffCaptured e)
         {
-            var info = new ThoughtInfo(e.ThoughtId, e.Thought);
-            Thoughts.Add(e.ThoughtId, info);
-            Inbox.Add(e.ThoughtId);
+            var info = new ThoughtInfo(e.InboxStuffId, e.Thought);
+            Thoughts.Add(e.InboxStuffId, info);
+            Inbox.Add(e.InboxStuffId);
         }
 
-        public void When(ThoughtArchived e)
+        public void When(InboxStuffArchived e)
         {
-            Inbox.Remove(e.ThoughtId);
+            Inbox.Remove(e.InboxStuffId);
         }
 
         public void When(ActionDefined e)
@@ -139,9 +139,9 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             Projects[e.ProjectId].ChangeOutcome(e.ProjectOutcome);
         }
 
-        public void When(ThoughtSubjectChanged e)
+        public void When(NameOfInboxStuffChanged e)
         {
-            Thoughts[e.ThoughtId].ChangeSubject(e.Subject);
+            Thoughts[e.InboxStuffId].ChangeSubject(e.Subject);
         }
 
         public void When(ActionDeferredUntil e)
@@ -186,8 +186,8 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
 
         public readonly IDictionary<ActionId, ActionInfo> Actions = new Dictionary<ActionId, ActionInfo>(); 
         public readonly IDictionary<ProjectId, ProjectInfo> Projects = new Dictionary<ProjectId, ProjectInfo>();
-        public readonly IDictionary<ThoughtId, ThoughtInfo> Thoughts = new Dictionary<ThoughtId, ThoughtInfo>();
-        public readonly HashSet<ThoughtId> Inbox = new HashSet<ThoughtId>();
+        public readonly IDictionary<InboxStuffId, ThoughtInfo> Thoughts = new Dictionary<InboxStuffId, ThoughtInfo>();
+        public readonly HashSet<InboxStuffId> Inbox = new HashSet<InboxStuffId>();
         
     }
 
@@ -359,10 +359,10 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
 
     public sealed class ThoughtInfo
     {
-        public ThoughtId Id { get; private set; }
+        public InboxStuffId Id { get; private set; }
         public string Subject { get; private set; }
 
-        public ThoughtInfo(ThoughtId id, string subject)
+        public ThoughtInfo(InboxStuffId id, string subject)
         {
             Enforce.NotEmpty(subject, "subject");
 
