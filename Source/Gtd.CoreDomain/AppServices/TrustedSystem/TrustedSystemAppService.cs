@@ -49,12 +49,12 @@ namespace Gtd.CoreDomain
 
         public void When(CaptureInnoxStuff cmd)
         {
-            ChangeAggregate(cmd.Id, agg => agg.CaptureThought(cmd.RequestId, cmd.Subject, _time));
+            ChangeAggregate(cmd.Id, agg => agg.CaptureInboxStuff(cmd.RequestId, cmd.Subject, _time));
         }
 
         public void When(ArchiveInboxStuff cmd)
         {
-            ChangeAggregate(cmd.Id, agg => agg.ArchiveThought(cmd.InboxStuffId, _time));
+            ChangeAggregate(cmd.Id, agg => agg.ArchiveInboxStuff(cmd.InboxStuffId, _time));
         }
 
         public void When(DefineAction cmd)
@@ -99,7 +99,7 @@ namespace Gtd.CoreDomain
 
         public void When(ChangeSubjectOfInboxStuff cmd)
         {
-            ChangeAggregate(cmd.Id, agg => agg.ChangeThoughtSubject(cmd.InboxStuffId, cmd.Subject, _time));
+            ChangeAggregate(cmd.Id, agg => agg.ChangeSubjectOfInboxStuff(cmd.InboxStuffId, cmd.Subject, _time));
         }
 
         public void When(DeferActionUntil cmd)

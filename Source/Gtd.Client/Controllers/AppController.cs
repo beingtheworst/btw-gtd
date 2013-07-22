@@ -116,14 +116,14 @@ namespace Gtd.Client
         {
             // do something
             _uiBus.Publish(r);
-            UpdateDomain(a => a.ArchiveThought(r.Id,new RealTimeProvider()));
+            UpdateDomain(a => a.ArchiveInboxStuff(r.Id,new RealTimeProvider()));
         }
 
         void CaptureThought(UI.CaptureInboxStuffWizardCompleted c)
         {
             _uiBus.Publish(c);
 
-            UpdateDomain(aggregate => aggregate.CaptureThought(new RequestId(), c.Thought, new RealTimeProvider() ));
+            UpdateDomain(aggregate => aggregate.CaptureInboxStuff(new RequestId(), c.Thought, new RealTimeProvider() ));
         }
 
         void PassThroughEvent(Event e)

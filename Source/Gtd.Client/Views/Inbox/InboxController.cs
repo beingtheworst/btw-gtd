@@ -81,7 +81,7 @@ namespace Gtd.Client
 
         public void WhenCaptureThoughtClicked()
         {
-            _queue.Publish(new UI.CaptureThoughtClicked());
+            _queue.Publish(new UI.CaptureInboxStuffClicked());
         }
 
         public IList<ImmutableProject> ListProjects()

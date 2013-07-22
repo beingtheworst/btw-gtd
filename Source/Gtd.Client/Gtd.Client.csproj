@@ -66,11 +66,11 @@
     <Compile Include="Models\Filters\RemainingFilter.cs" />
     <Compile Include="Models\ClientModelController.cs" />
     <Compile Include="Models\ClientPerspective.cs" />
-    <Compile Include="Views\CaptureThought\CaptureThoughtForm.cs">
+    <Compile Include="Views\CaptureInboxStuff\CaptureInboxStuffForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\CaptureThought\CaptureThoughtForm.Designer.cs">
-      <DependentUpon>CaptureThoughtForm.cs</DependentUpon>
+    <Compile Include="Views\CaptureInboxStuff\CaptureInboxStuffForm.Designer.cs">
+      <DependentUpon>CaptureInboxStuffForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\DefineProject\DefineProjectController.cs" />
     <Compile Include="Views\DefineProject\DefineProjectForm.cs">
@@ -81,7 +81,7 @@
     </Compile>
     <Compile Include="Views\Main\LogController.cs" />
     <Compile Include="UI.cs" />
-    <Compile Include="Views\CaptureThought\CaptureThoughtController.cs" />
+    <Compile Include="Views\CaptureInboxStuff\CaptureInboxStuffController.cs" />
     <Compile Include="Views\Project\ProjectController.cs" />
     <Compile Include="Views\Project\ProjectView.cs">
       <SubType>UserControl</SubType>
@@ -115,8 +115,8 @@
     <Compile Include="Views\Navigation\NavigationView.Designer.cs">
       <DependentUpon>NavigationView.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Views\CaptureThought\CaptureThoughtForm.resx">
-      <DependentUpon>CaptureThoughtForm.cs</DependentUpon>
+    <EmbeddedResource Include="Views\CaptureInboxStuff\CaptureInboxStuffForm.resx">
+      <DependentUpon>CaptureInboxStuffForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\DefineProject\DefineProjectForm.resx">
       <DependentUpon>DefineProjectForm.cs</DependentUpon>

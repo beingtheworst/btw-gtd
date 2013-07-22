@@ -114,7 +114,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             Apply(new InboxStuffArchived(_aggState.Id, inboxStuffId, time));
         }
 
-        public void CaptureThought(RequestId requestId, string name, ITimeProvider provider)
+        public void CaptureInboxStuff(RequestId requestId, string name, ITimeProvider provider)
         {
             // filter request IDs
             //var time = provider.GetUtcNow();
@@ -165,7 +165,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
 
         }
 
-        public void ArchiveThought(InboxStuffId inboxStuffId, ITimeProvider provider)
+        public void ArchiveInboxStuff(InboxStuffId inboxStuffId, ITimeProvider provider)
         {
             if (!_aggState.Inbox.Contains(inboxStuffId))
                 throw DomainError.Named("no thought", "Thought {0} not found", inboxStuffId);
@@ -218,7 +218,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             }
         }
 
-        public void ChangeThoughtSubject(InboxStuffId inboxStuffId, string subject, ITimeProvider time)
+        public void ChangeSubjectOfInboxStuff(InboxStuffId inboxStuffId, string subject, ITimeProvider time)
         {
             InboxStuffInfo info;
             if (!_aggState.InboxDict.TryGetValue(inboxStuffId, out info))

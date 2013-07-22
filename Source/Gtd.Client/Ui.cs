@@ -81,7 +81,7 @@ namespace Gtd.Client
             }
         }
 
-        public sealed class CaptureThoughtClicked : Message {}
+        public sealed class CaptureInboxStuffClicked : Message {}
 
         public sealed class DefineProjectClicked : Message {}
 
