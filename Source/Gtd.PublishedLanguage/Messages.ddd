@@ -22,7 +22,7 @@ const requestId = RequestId RequestId
 // That way all "stuff generators" use stuffIds and the code to convert to Action/Project etc.
 // can assume it handles "stuffId" and not a "thoughtId" when the "stuff" is random email msg, etc.
 const stuffId = StuffId StuffId
-const thoughtId = ThoughtId ThoughtId
+//const thoughtId = ThoughtId ThoughtId
 
 const projectId = ProjectId ProjectId
 const actionId = ActionId ActionId
@@ -38,13 +38,39 @@ interface TrustedSystem(TrustedSystemId Id)
     // a creation/initialization/preparation Event like this is what all Aggregates tend to have
     // TODO: This method is not implemented yet because in E22 we are not writing executable code yet.
     TrustedSystemCreated!()
+
+    // [kstreet]:  7.22.2013
+    // Playing around with some GTD language from the book.
+    // Want to see what it feels like to use the UI when I conform very closely
+    // to the English language that is used in the GTD book.
+    // example - various "stuff generators" exist - not just thoughts in my head
+    // I may use mutiple clients to get stuff into my trusted system
+    // email inboxes, OneNote/Evernote, Phone audio, text messages, etc.
+    // All is just "Stuff" in GTD lingo until it is processed into something more meaningful.
+    // For now, use the existing "Inbox" concept to mean "the place all STUFF goes"
+    // instead of "Collection Bucket" or "In-basket" used in book.
+    //PutStuffInCollectionBucket?(requestId, string stuff)
+    //    StuffPutInCollectionBucket!(stuffId, string stuff, time)
+
+    PutStuffInInbox?(requestId, string stuffDescription)
+        StuffPutInInbox!(stuffId, string stuffDescription, time)
+
+    TrashStuff?(stuffId)
+        StuffTrashed!(stuffId, time)
+
+    // add these concepts later.
+    // Current code is geared towards ACTIONABLE items only right now
+    //PutStuffInSomedayMaybe?(stuffId, string stuff)
+    //    StuffPutInSomedayMaybe!(stuffId, string stuff, time)
+    //PutStuffInReferenceSystem?(stuffId, string stuff)
+    //    StuffPutInReferenceSystem!(stuffId, string stuff, time)
      
     // Captures an entry inside the inbox
-    CaptureThought?(requestId, string thought)
-        ThoughtCaptured!(thoughtId, string thought, time)
+    //CaptureThought?(requestId, string thought)
+    //    ThoughtCaptured!(thoughtId, string thought, time)
 
-    ArchiveThought?(thoughtId)
-        ThoughtArchived!(thoughtId, time)
+    //ArchiveThought?(thoughtId)
+    //    ThoughtArchived!(thoughtId, time)
     
     DefineAction?(requestId, projectId, string outcome)
         ActionDefined!(actionId, projectId, string outcome, time)
@@ -52,7 +78,7 @@ interface TrustedSystem(TrustedSystemId Id)
     DefineProject?(requestId, string projectOutcome)
         ProjectDefined!(projectId, string projectOutcome, ProjectType type, time)
 
-    DefineSingleActionProject?(requestId, thoughtId)
+    DefineSingleActionProject?(requestId, stuffId)
         //TODO: for now I think it may be best to reuse the two events above instead of creating a new one
         // SingleActionProjectDefined!(projectId, string projectOutcome, ProjectType type, actionId, string actionOutcome, time)
 
@@ -75,8 +101,8 @@ interface TrustedSystem(TrustedSystemId Id)
     ChangeProjectOutcome?(projectId, string outcome)
         ProjectOutcomeChanged!(projectId, string projectOutcome, time)
 
-    ChangeThoughtSubject?(thoughtId, string subject)
-        ThoughtSubjectChanged!(thoughtId, string subject, time)
+    ChangeStuffDescription?(stuffId, string newDescriptionOfStuff)
+        StuffDescriptionChanged!(stuffId, string newDescriptionOfStuff, time)
 
     
     // optional Date when project or action becomes available and relevant for us. 
@@ -106,33 +132,6 @@ interface TrustedSystem(TrustedSystemId Id)
 
 
     // [abdullin]: We will add contexts later
-
-    // [kstreet]:  7.22.2013
-    // Playing around with some GTD language from the book.
-    // Want to see what it feels like to use the UI when I conform very closely
-    // to the English language that is used in the GTD book.
-    // example - various "stuff generators" exist - not just thoughts in my head
-    // I may use mutiple clients to get stuff into my trusted system
-    // email inboxes, OneNote/Evernote, Phone audio, text messages, etc.
-    // All is just "Stuff" in GTD lingo until it is processed into something more meaningful.
-    // For now, use the existing "Inbox" concept to mean "the place all STUFF goes"
-    // instead of "Collection Bucket" or "In-basket" used in book.
-    //PutStuffInCollectionBucket?(requestId, string stuff)
-    //    StuffPutInCollectionBucket!(stuffId, string stuff, time)
-
-    PutStuffInInbox?(requestId, string stuff)
-        StuffPutInInbox!(stuffId, string stuff, time)
-
-    TrashStuff?(stuffId)
-        StuffTrashed!(stuffId, time)
-
-    // add these concepts later.
-    // Current code is geared towards ACTIONABLE items only right now
-    //PutStuffInSomedayMaybe?(stuffId, string stuff)
-    //    StuffPutInSomedayMaybe!(stuffId, string stuff, time)
-    //PutStuffInReferenceSystem?(stuffId, string stuff)
-    //    StuffPutInReferenceSystem!(stuffId, string stuff, time)
-
 }
 
 interface ClientProfile()
