@@ -80,7 +80,7 @@ namespace Gtd.Client
             UpdateProfile(profile =>
                 {
                     profile.InitIfNeeded();
-                    _currentSystem = profile.GetCurrentSustemId();
+                    _currentSystem = profile.GetCurrentSystemId();
                 });
             UpdateDomain(system => system.InitIfNeeded(_currentSystem));
 

@@ -39,7 +39,7 @@ namespace Gtd.CoreDomain.AppServices.ClientProfile
 
         }
 
-        public TrustedSystemId GetCurrentSustemId()
+        public TrustedSystemId GetCurrentSystemId()
         {
             return _state.CurrentSystem;
         }
