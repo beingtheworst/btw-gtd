@@ -139,7 +139,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             Apply(new ActionDefined(_aggState.Id, actionId, projectId, outcome , time));
         }
 
-        public void MoveThoughtsToProject(InboxStuffId[] inboxStuffs, ProjectId projectId,
+        public void MoveInboxStuffToProject(InboxStuffId[] inboxStuffs, ProjectId projectId,
             ITimeProvider provider)
         {
             ProjectInfo p;

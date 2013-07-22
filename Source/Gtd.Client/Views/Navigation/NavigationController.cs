@@ -8,8 +8,8 @@ namespace Gtd.Client.Views.Navigation
     public sealed class NavigationController : 
         IHandle<AppInit>, 
         IHandle<Dumb.ClientModelLoaded>,
-        IHandle<Dumb.ThoughtAdded>, 
-        IHandle<Dumb.ThoughtRemoved>,
+        IHandle<Dumb.InboxStuffAdded>, 
+        IHandle<Dumb.InboxStuffRemoved>,
         IHandle<Dumb.ProjectAdded>, 
         IHandle<Dumb.ActionAdded>, 
         IHandle<Dumb.ActionUpdated>,
@@ -36,8 +36,8 @@ namespace Gtd.Client.Views.Navigation
             var adapter  = new NavigationController(control, queue, view);
 
             bus.Subscribe<AppInit>(adapter);
-            bus.Subscribe<Dumb.ThoughtAdded>(adapter);
-            bus.Subscribe<Dumb.ThoughtRemoved>(adapter);
+            bus.Subscribe<Dumb.InboxStuffAdded>(adapter);
+            bus.Subscribe<Dumb.InboxStuffRemoved>(adapter);
             bus.Subscribe<Dumb.ProjectAdded>(adapter);
             bus.Subscribe<Dumb.ActionAdded>(adapter);
             bus.Subscribe<Dumb.ClientModelLoaded>(adapter);
@@ -62,13 +62,13 @@ namespace Gtd.Client.Views.Navigation
 
         
 
-        public void Handle(Dumb.ThoughtAdded message)
+        public void Handle(Dumb.InboxStuffAdded message)
         {
             
             Sync(() => ReloadInboxNode(message.InboxCount));
         }
 
-        public void Handle(Dumb.ThoughtRemoved message)
+        public void Handle(Dumb.InboxStuffRemoved message)
         {
             Sync(() => ReloadInboxNode(message.InboxCount));
         }

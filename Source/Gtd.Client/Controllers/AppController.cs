@@ -52,10 +52,10 @@ namespace Gtd.Client
             return new FsmBuilder<AppState>()
                 .InAllStates()
 
-                    .When<UI.CaptureInboxStuffWizardCompleted>().Do(CaptureThought)
-                    .When<UI.ArchiveInboxStuffClicked>().Do(ArchiveThought)
+                    .When<UI.CaptureInboxStuffWizardCompleted>().Do(CaptureInboxStuff)
+                    .When<UI.ArchiveInboxStuffClicked>().Do(ArchiveInboxStuff)
                     .When<UI.DefineNewProjectWizardCompleted>().Do(DefineProject)
-                    .When<UI.MoveInboxStuffToProjectClicked>().Do(MoveThoughtsToProject)
+                    .When<UI.MoveInboxStuffToProjectClicked>().Do(MoveInboxStuffToProject)
                     .When<UI.CompleteActionClicked>().Do(CompleteAction)
                     .When<UI.ChangeActionOutcome>().Do(ChangeOutcome)
                     
@@ -106,20 +106,20 @@ namespace Gtd.Client
             UpdateDomain(a => a.ChangeActionOutcome(r.ActionId,r.Outcome, new RealTimeProvider()));
         }
 
-        void MoveThoughtsToProject(UI.MoveInboxStuffToProjectClicked r)
+        void MoveInboxStuffToProject(UI.MoveInboxStuffToProjectClicked r)
         {
             _uiBus.Publish(r);
-            UpdateDomain(a => a.MoveThoughtsToProject(r.InboxStuffs, r.Project, new RealTimeProvider()));
+            UpdateDomain(a => a.MoveInboxStuffToProject(r.InboxStuffs, r.Project, new RealTimeProvider()));
         }
 
-        void ArchiveThought(UI.ArchiveInboxStuffClicked r)
+        void ArchiveInboxStuff(UI.ArchiveInboxStuffClicked r)
         {
             // do something
             _uiBus.Publish(r);
             UpdateDomain(a => a.ArchiveInboxStuff(r.Id,new RealTimeProvider()));
         }
 
-        void CaptureThought(UI.CaptureInboxStuffWizardCompleted c)
+        void CaptureInboxStuff(UI.CaptureInboxStuffWizardCompleted c)
         {
             _uiBus.Publish(c);
 

@@ -189,22 +189,22 @@ namespace Gtd.Client.Models
             }
         }
 
-        public sealed class ThoughtAdded : CliendModelEvent
+        public sealed class InboxStuffAdded : CliendModelEvent
         {
             public readonly ImmutableInboxStuff InboxStuff;
             public readonly int InboxCount;
-            public ThoughtAdded(ImmutableInboxStuff inboxStuff, int inboxCount)
+            public InboxStuffAdded(ImmutableInboxStuff inboxStuff, int inboxCount)
             {
                 InboxStuff = inboxStuff;
                 InboxCount = inboxCount;
             }
         }
 
-        public sealed class ThoughtRemoved : CliendModelEvent
+        public sealed class InboxStuffRemoved : CliendModelEvent
         {
             public readonly ImmutableInboxStuff InboxStuff;
             public readonly int InboxCount;
-            public ThoughtRemoved(ImmutableInboxStuff inboxStuff, int inboxCount)
+            public InboxStuffRemoved(ImmutableInboxStuff inboxStuff, int inboxCount)
             {
                 InboxStuff = inboxStuff;
                 InboxCount = inboxCount;

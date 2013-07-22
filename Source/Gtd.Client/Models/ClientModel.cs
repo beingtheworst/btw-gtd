@@ -94,7 +94,7 @@ namespace Gtd.Client.Models
 
             _thoughts.Add(item);
             _thoughtDict.Add(inboxStuffId, item);
-            Publish(new Dumb.ThoughtAdded(item.Freeze(), _thoughts.Count));
+            Publish(new Dumb.InboxStuffAdded(item.Freeze(), _thoughts.Count));
         }
 
         public void ThoughtArchived(InboxStuffId inboxStuffId)
@@ -105,7 +105,7 @@ namespace Gtd.Client.Models
 
             _thoughts.Remove(value);
 
-            Publish(new Dumb.ThoughtRemoved(value.Freeze(), _thoughts.Count));
+            Publish(new Dumb.InboxStuffRemoved(value.Freeze(), _thoughts.Count));
         }
 
 
