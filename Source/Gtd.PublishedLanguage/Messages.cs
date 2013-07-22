@@ -23,14 +23,14 @@ namespace Gtd
     {
         [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
         [DataMember(Order = 2)] public RequestId RequestId { get; private set; }
-        [DataMember(Order = 3)] public string Thought { get; private set; }
+        [DataMember(Order = 3)] public string Subject { get; private set; }
         
         CaptureInnoxStuff () {}
-        public CaptureInnoxStuff (TrustedSystemId id, RequestId requestId, string thought)
+        public CaptureInnoxStuff (TrustedSystemId id, RequestId requestId, string subject)
         {
             Id = id;
             RequestId = requestId;
-            Thought = thought;
+            Subject = subject;
         }
     }
     [DataContract(Namespace = "BTW2/GTD", Name = "ThoughtCaptured")]
@@ -38,15 +38,15 @@ namespace Gtd
     {
         [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
         [DataMember(Order = 2)] public InboxStuffId InboxStuffId { get; private set; }
-        [DataMember(Order = 3)] public string Thought { get; private set; }
+        [DataMember(Order = 3)] public string Subject { get; private set; }
         [DataMember(Order = 4)] public DateTime TimeUtc { get; private set; }
         
         InboxStuffCaptured () {}
-        public InboxStuffCaptured (TrustedSystemId id, InboxStuffId inboxStuffId, string thought, DateTime timeUtc)
+        public InboxStuffCaptured (TrustedSystemId id, InboxStuffId inboxStuffId, string subject, DateTime timeUtc)
         {
             Id = id;
             InboxStuffId = inboxStuffId;
-            Thought = thought;
+            Subject = subject;
             TimeUtc = timeUtc;
         }
     }

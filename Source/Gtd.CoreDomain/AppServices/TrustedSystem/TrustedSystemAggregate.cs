@@ -91,8 +91,8 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             var actionId = new ActionId(Guid.NewGuid());
 
             // make sure thought exists
-            ThoughtInfo info;
-            if (!_aggState.Thoughts.TryGetValue(inboxStuffId, out info))
+            InboxStuffInfo info;
+            if (!_aggState.InboxDict.TryGetValue(inboxStuffId, out info))
             {
                 throw DomainError.Named("unknown thought", "Unknown thought {0}", inboxStuffId);
             }
@@ -150,8 +150,8 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             var dateTime = provider.GetUtcNow();
             foreach (var t in inboxStuffs)
             {
-                ThoughtInfo info;
-                if (!_aggState.Thoughts.TryGetValue(t, out info))
+                InboxStuffInfo info;
+                if (!_aggState.InboxDict.TryGetValue(t, out info))
                 {
                     throw DomainError.Named("unknown-thought", "Unknown thought {0}", t);
                 }
@@ -220,8 +220,8 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
 
         public void ChangeThoughtSubject(InboxStuffId inboxStuffId, string subject, ITimeProvider time)
         {
-            ThoughtInfo info;
-            if (!_aggState.Thoughts.TryGetValue(inboxStuffId, out info))
+            InboxStuffInfo info;
+            if (!_aggState.InboxDict.TryGetValue(inboxStuffId, out info))
             {
                 throw DomainError.Named("unknown thought", "Unknown thought {0}", inboxStuffId);
             }

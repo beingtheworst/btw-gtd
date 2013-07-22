@@ -55,7 +55,7 @@ namespace Gtd.Client.Models
         public void Handle(InboxStuffCaptured e)
         {
             _model.Verify(e.Id);
-            _model.ThoughtCaptured(e.InboxStuffId, e.Thought, e.TimeUtc);
+            _model.ThoughtCaptured(e.InboxStuffId, e.Subject, e.TimeUtc);
         }
         public void Handle(InboxStuffArchived e)
         {

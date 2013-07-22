@@ -58,7 +58,7 @@ namespace Gtd.Client
 
         public void Handle(InboxStuffCaptured message)
         {
-            _control.Sync(() => _control.AddThought(message.Thought, message.InboxStuffId));
+            _control.Sync(() => _control.AddThought(message.Subject, message.InboxStuffId));
             
         }
         public void Handle(InboxStuffArchived message)
@@ -70,13 +70,13 @@ namespace Gtd.Client
         {
             foreach (var id in thoughtIds)
             {
-                _queue.Publish(new UI.ArchiveThoughtClicked(id));
+                _queue.Publish(new UI.ArchiveInboxStuffClicked(id));
             }
         }
 
         public void WhenRequestedMoveThoughtsToProject(ProjectId id, InboxStuffId[] inboxStuffIds)
         {
-            _queue.Publish(new UI.MoveThoughtsToProjectClicked(inboxStuffIds, id));
+            _queue.Publish(new UI.MoveInboxStuffToProjectClicked(inboxStuffIds, id));
         }
 
         public void WhenCaptureThoughtClicked()

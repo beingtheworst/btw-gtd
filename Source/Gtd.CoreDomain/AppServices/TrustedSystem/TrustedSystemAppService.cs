@@ -49,7 +49,7 @@ namespace Gtd.CoreDomain
 
         public void When(CaptureInnoxStuff cmd)
         {
-            ChangeAggregate(cmd.Id, agg => agg.CaptureThought(cmd.RequestId, cmd.Thought, _time));
+            ChangeAggregate(cmd.Id, agg => agg.CaptureThought(cmd.RequestId, cmd.Subject, _time));
         }
 
         public void When(ArchiveInboxStuff cmd)

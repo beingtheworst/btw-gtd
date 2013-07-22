@@ -86,33 +86,33 @@ namespace Gtd.Client
         public sealed class DefineProjectClicked : Message {}
 
 
-        public sealed class CaptureThoughtWizardCompleted : Message
+        public sealed class CaptureInboxStuffWizardCompleted : Message
         {
             public readonly string Thought;
 
-            public CaptureThoughtWizardCompleted(string thought)
+            public CaptureInboxStuffWizardCompleted(string thought)
             {
                 Thought = thought;
             }
         }
 
-        public sealed class MoveThoughtsToProjectClicked : Message
+        public sealed class MoveInboxStuffToProjectClicked : Message
         {
             public readonly InboxStuffId[] InboxStuffs;
             public readonly ProjectId Project;
 
-            public MoveThoughtsToProjectClicked(InboxStuffId[] inboxStuffs, ProjectId project)
+            public MoveInboxStuffToProjectClicked(InboxStuffId[] inboxStuffs, ProjectId project)
             {
                 InboxStuffs = inboxStuffs;
                 Project = project;
             }
         }
 
-        public sealed class ArchiveThoughtClicked : Message
+        public sealed class ArchiveInboxStuffClicked : Message
         {
             public readonly InboxStuffId Id;
 
-            public ArchiveThoughtClicked(InboxStuffId id)
+            public ArchiveInboxStuffClicked(InboxStuffId id)
             {
                 Id = id;
             }

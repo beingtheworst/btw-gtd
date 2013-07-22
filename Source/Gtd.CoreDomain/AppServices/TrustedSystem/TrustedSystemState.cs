@@ -69,8 +69,8 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
 
         public void When(InboxStuffCaptured e)
         {
-            var info = new ThoughtInfo(e.InboxStuffId, e.Thought);
-            Thoughts.Add(e.InboxStuffId, info);
+            var info = new InboxStuffInfo(e.InboxStuffId, e.Subject);
+            InboxDict.Add(e.InboxStuffId, info);
             Inbox.Add(e.InboxStuffId);
         }
 
@@ -141,7 +141,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
 
         public void When(NameOfInboxStuffChanged e)
         {
-            Thoughts[e.InboxStuffId].ChangeSubject(e.Subject);
+            InboxDict[e.InboxStuffId].ChangeSubject(e.Subject);
         }
 
         public void When(ActionDeferredUntil e)
@@ -186,7 +186,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
 
         public readonly IDictionary<ActionId, ActionInfo> Actions = new Dictionary<ActionId, ActionInfo>(); 
         public readonly IDictionary<ProjectId, ProjectInfo> Projects = new Dictionary<ProjectId, ProjectInfo>();
-        public readonly IDictionary<InboxStuffId, ThoughtInfo> Thoughts = new Dictionary<InboxStuffId, ThoughtInfo>();
+        public readonly IDictionary<InboxStuffId, InboxStuffInfo> InboxDict = new Dictionary<InboxStuffId, InboxStuffInfo>();
         public readonly HashSet<InboxStuffId> Inbox = new HashSet<InboxStuffId>();
         
     }
@@ -357,12 +357,12 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
         }
     }
 
-    public sealed class ThoughtInfo
+    public sealed class InboxStuffInfo
     {
         public InboxStuffId Id { get; private set; }
         public string Subject { get; private set; }
 
-        public ThoughtInfo(InboxStuffId id, string subject)
+        public InboxStuffInfo(InboxStuffId id, string subject)
         {
             Enforce.NotEmpty(subject, "subject");
 
