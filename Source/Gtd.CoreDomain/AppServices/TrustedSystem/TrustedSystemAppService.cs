@@ -16,24 +16,24 @@ namespace Gtd.CoreDomain
 
         // lifetime change management
         // atomic consistency boundary of an Aggregate & its contents
-        void ChangeAggregate(TrustedSystemId aggregateIdOf, Action<TrustedSystemAggregate> usingThisMethod)
+        void ChangeAgg(TrustedSystemId withAggIdOf, Action<TrustedSystemAggregate> usingThisMethod)
         {
-            var eventStreamId = aggregateIdOf.Id.ToString();
+            var eventStreamId = withAggIdOf.Id.ToString();
             var eventStream = _eventStore.LoadEventStream(eventStreamId);
 
             var aggStateBeforeChanges = TrustedSystemState.BuildStateFromEventHistory(eventStream.Events);
 
-            var aggregateToChange = new TrustedSystemAggregate(aggStateBeforeChanges);
+            var aggToChange = new TrustedSystemAggregate(aggStateBeforeChanges);
 
             // HACK
             if (eventStream.Events.Count == 0)
             {
-                aggregateToChange.Create(aggregateIdOf);
+                aggToChange.Create(withAggIdOf);
             }
 
-            usingThisMethod(aggregateToChange);
+            usingThisMethod(aggToChange);
 
-            _eventStore.AppendEventsToStream(eventStreamId, eventStream.StreamVersion, aggregateToChange.EventsThatCausedChange);
+            _eventStore.AppendEventsToStream(eventStreamId, eventStream.StreamVersion, aggToChange.EventsCausingChanges);
         }
 
 
@@ -49,67 +49,67 @@ namespace Gtd.CoreDomain
 
         public void When(CaptureInnoxStuff cmd)
         {
-            ChangeAggregate(cmd.Id, agg => agg.CaptureInboxStuff(cmd.RequestId, cmd.Subject, _time));
+            ChangeAgg(cmd.Id, agg => agg.CaptureInboxStuff(cmd.RequestId, cmd.Subject, _time));
         }
 
         public void When(ArchiveInboxStuff cmd)
         {
-            ChangeAggregate(cmd.Id, agg => agg.ArchiveInboxStuff(cmd.InboxStuffId, _time));
+            ChangeAgg(cmd.Id, agg => agg.ArchiveInboxStuff(cmd.InboxStuffId, _time));
         }
 
         public void When(DefineAction cmd)
         {
-            ChangeAggregate(cmd.Id, agg => agg.DefineAction(cmd.RequestId, cmd.ProjectId, cmd.Outcome, _time));
+            ChangeAgg(cmd.Id, agg => agg.DefineAction(cmd.RequestId, cmd.ProjectId, cmd.Outcome, _time));
         }
 
         public void When(DefineProject cmd)
         {
-            ChangeAggregate(cmd.Id, agg => agg.DefineProject(cmd.RequestId, cmd.ProjectOutcome, _time));
+            ChangeAgg(cmd.Id, agg => agg.DefineProject(cmd.RequestId, cmd.ProjectOutcome, _time));
         }
 
         public void When(DefineSingleActionProject cmd)
         {
-            ChangeAggregate(cmd.Id, agg => agg.DefineSingleActionProject(cmd.RequestId, cmd.InboxStuffId, _time));
+            ChangeAgg(cmd.Id, agg => agg.DefineSingleActionProject(cmd.RequestId, cmd.InboxStuffId, _time));
         }
 
         public void When(ChangeProjectType cmd)
         {
-            ChangeAggregate(cmd.Id, agg => agg.ChangeProjectType(cmd.ProjectId, cmd.Type, _time));
+            ChangeAgg(cmd.Id, agg => agg.ChangeProjectType(cmd.ProjectId, cmd.Type, _time));
         }
 
         public void When(ArchiveAction cmd)
         {
-            ChangeAggregate(cmd.Id, agg => agg.ArchiveAction(cmd.ActionId, _time));
+            ChangeAgg(cmd.Id, agg => agg.ArchiveAction(cmd.ActionId, _time));
         }
 
         public void When(CompleteAction cmd)
         {
-            ChangeAggregate(cmd.Id, agg => agg.CompleteAction(cmd.ActionId, _time));
+            ChangeAgg(cmd.Id, agg => agg.CompleteAction(cmd.ActionId, _time));
         }
 
         public void When(ChangeActionOutcome cmd)
         {
-            ChangeAggregate(cmd.Id, agg => agg.ChangeActionOutcome(cmd.ActionId, cmd.Outcome, _time));
+            ChangeAgg(cmd.Id, agg => agg.ChangeActionOutcome(cmd.ActionId, cmd.Outcome, _time));
         }
 
         public void When(ChangeProjectOutcome cmd)
         {
-            ChangeAggregate(cmd.Id, agg => agg.ChangeProjectOutcome(cmd.ProjectId, cmd.Outcome, _time));
+            ChangeAgg(cmd.Id, agg => agg.ChangeProjectOutcome(cmd.ProjectId, cmd.Outcome, _time));
         }
 
         public void When(ChangeSubjectOfInboxStuff cmd)
         {
-            ChangeAggregate(cmd.Id, agg => agg.ChangeSubjectOfInboxStuff(cmd.InboxStuffId, cmd.Subject, _time));
+            ChangeAgg(cmd.Id, agg => agg.ChangeSubjectOfInboxStuff(cmd.InboxStuffId, cmd.Subject, _time));
         }
 
         public void When(DeferActionUntil cmd)
         {
-            ChangeAggregate(cmd.Id, agg => agg.DeferActionUntil(cmd.ActionId, cmd.DeferUntil));
+            ChangeAgg(cmd.Id, agg => agg.DeferActionUntil(cmd.ActionId, cmd.DeferUntil));
         }
 
         public void When(ProvideDueDateForAction cmd)
         {
-            ChangeAggregate(cmd.Id, agg => agg.ProvideDueDateForAction(cmd.ActionId, cmd.NewDueDate));
+            ChangeAgg(cmd.Id, agg => agg.ProvideDueDateForAction(cmd.ActionId, cmd.NewDueDate));
         }
 
     }

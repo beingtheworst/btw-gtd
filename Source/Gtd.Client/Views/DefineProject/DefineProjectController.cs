@@ -19,7 +19,7 @@ namespace Gtd.Client.Views.CaptureThought
 
         public void Handle(UI.DefineProjectClicked message)
         {
-            _form.TryGetUserInput(s => _queue.Enqueue(new UI.DefineNewProjectWizardCompleted(s)));
+            _form.TryGetUserInput(input => _queue.Enqueue(new UI.DefineNewProjectWizardCompleted(input)));
         }
     }
 }

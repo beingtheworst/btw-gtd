@@ -24,26 +24,26 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
     {
         readonly TrustedSystemState _aggState;
 
-        public List<Event> EventsThatCausedChange = new List<Event>();
+        public List<Event> EventsCausingChanges = new List<Event>();
 
-        public TrustedSystemAggregate(TrustedSystemState aggregateStateBeforeChanges)
+        public TrustedSystemAggregate(TrustedSystemState aggStateBeforeChanges)
         {
-            _aggState = aggregateStateBeforeChanges;
+            _aggState = aggStateBeforeChanges;
         }
 
         /// <summary> Make Aggregate realize the event happened 
         /// by applying it to the state and adding to 
         /// the list of uncommitted events</summary>
-        /// <param name="newEventThatHappened"></param>
-        void Apply(ITrustedSystemEvent newEventThatHappened)
+        /// <param name="eventThatHappened"></param>
+        void Apply(ITrustedSystemEvent eventThatHappened)
         {
             // update Agg's in-memory state so if a behavior (method) has 
             // multiple steps, each subsequent step has up-to-date state to operate on
-            _aggState.MakeStateRealize(newEventThatHappened);
+            _aggState.MakeStateRealize(eventThatHappened);
 
             // update Agg's public collection of change causing Events so the 
             // AppService can use it to persist AggState as appended Events to this Agg's Event Stream
-            EventsThatCausedChange.Add((Event)newEventThatHappened);
+            EventsCausingChanges.Add((Event)eventThatHappened);
         }
 
 
