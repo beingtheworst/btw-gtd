@@ -45,94 +45,105 @@ namespace Gtd.Client.Models
             bus.Subscribe<UI.FilterChanged>(this);
         }
 
+        TrustedSystemId _loadedSystem;
+
+        bool CanHandle(TrustedSystemId system)
+        {
+            if (_loadedSystem == null)
+                return false;
+            if (system.Id != _loadedSystem.Id)
+                return false;
+            return true;
+        }
+
 
         public void Handle(TrustedSystemCreated e)
         {
-            _model.Verify(e.Id);
+            if (CanHandle(e.Id))
             _model.Create(e.Id);
         }
 
         public void Handle(StuffPutInInbox e)
         {
-            _model.Verify(e.Id);
+            if (CanHandle(e.Id))
             _model.StuffPutInInbox(e.StuffId, e.StuffDescription, e.TimeUtc);
         }
         public void Handle(StuffTrashed e)
         {
-            _model.Verify(e.Id);
+            if (CanHandle(e.Id))
             _model.StuffTrashed(e.StuffId);
         }
 
         public void Handle(ProjectDefined e)
         {
-            _model.Verify(e.Id);
+            if (CanHandle(e.Id))
             _model.ProjectDefined(e.ProjectId, e.ProjectOutcome, e.Type);
         }
         public void Handle(ActionDefined e)
         {
-            _model.Verify(e.Id);
+            if (CanHandle(e.Id))
             _model.ActionDefined(e.ProjectId, e.ActionId, e.Outcome);
         }
         public void Handle(ActionCompleted e)
         {
-            _model.Verify(e.Id);
+            if (CanHandle(e.Id))
             _model.ActionCompleted(e.ActionId);
         }
         public void Handle(ActionOutcomeChanged e)
         {
-            _model.Verify(e.Id);
+            if (CanHandle(e.Id))
             _model.ActionOutcomeChanged(e.ActionId, e.ActionOutcome);
         }
 
         public void Handle(ProjectOutcomeChanged e)
         {
-            _model.Verify(e.Id);
+            if (CanHandle(e.Id))
             _model.ProjectOutcomeChanged(e.ProjectId, e.ProjectOutcome);
         }
 
         public void Handle(StuffDescriptionChanged e)
         {
-            _model.Verify(e.Id);
+            if (CanHandle(e.Id))
             _model.DescriptionOfStuffChanged(e.StuffId, e.NewDescriptionOfStuff);
         }
         public void Handle(ActionArchived e)
         {
-            _model.Verify(e.Id);
+            if (CanHandle(e.Id))
             _model.ActionArchived(e.ActionId);
         }
         public void Handle(ProjectTypeChanged e)
         {
-            _model.Verify(e.Id);
+            if (CanHandle(e.Id))
             _model.ProjectTypeChanged(e.ProjectId, e.Type);
         }
         public void Handle(ActionDeferredUntil e)
         {
-            _model.Verify(e.Id);
+            if (CanHandle(e.Id))
             _model.DeferredUtil(e.ActionId, e.DeferUntil);
         }
         public void Handle(DueDateAssignedToAction e)
         {
-            _model.Verify(e.Id);
+            if (CanHandle(e.Id))
             _model.DueDateAssigned(e.ActionId, e.NewDueDate);
         }
         public void Handle(ActionIsNoLongerDeferred e)
         {
-            _model.Verify(e.Id);
+            if (CanHandle(e.Id))
             _model.DeferredUtil(e.ActionId, DateTime.MinValue);
         }
         public void Handle(DueDateRemovedFromAction e)
         {
-            _model.Verify(e.Id);
+            if (CanHandle(e.Id))
             _model.DueDateAssigned(e.ActionId, DateTime.MinValue);
         }
         public void Handle(ActionDeferDateShifted e)
         {
-            _model.Verify(e.Id);
+            if (CanHandle(e.Id))
             _model.DeferredUtil(e.ActionId, e.NewDeferDate);
         }
         public void Handle(ActionDueDateMoved e)
         {
-            _model.Verify(e.Id);
+            if (CanHandle(e.Id))
             _model.DueDateAssigned(e.ActionId, e.NewDueDate);
         }
 
@@ -140,7 +151,6 @@ namespace Gtd.Client.Models
 
         public void Handle(ProfileLoaded evt)
         {
-
             if (_model != null && _model.Id == evt.SystemId)
             {
                 // we already have this model all loaded up
@@ -161,8 +171,6 @@ namespace Gtd.Client.Models
 
             // switch our provider to this new model
             _provider.SwitchToModel(_model);
-
-            
         }
 
         public void Handle(UI.FilterChanged message)

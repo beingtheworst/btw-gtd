@@ -178,8 +178,7 @@ namespace Gtd.Client.Models
 
         public void Verify(TrustedSystemId id)
         {
-            if (Id.Id != id.Id)
-                throw new InvalidOperationException();
+            
         }
 
         public void Create(TrustedSystemId id)
