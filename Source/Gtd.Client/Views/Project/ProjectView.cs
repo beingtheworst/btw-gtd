@@ -12,10 +12,12 @@ namespace Gtd.Client.Views.Project
         }
 
         readonly BindingSource _source = new BindingSource();
-        
 
+
+        ProjectId _project;
         public void DisplayProject(FilteredProject project)
         {
+            _project = project.ProjectId;
             _projectName.Text = string.Format("{0} ({1})", project.Outcome, project.ActionCount);
 
             // TODO: smarter update for the case when we remove item
@@ -73,6 +75,8 @@ namespace Gtd.Client.Views.Project
         public void AttachTo(ProjectController controller)
         {
             _controller = controller;
+
+            _addAction.Click += (sender, args) => _controller.RequestAddAction(_project);
         }
     }
 }

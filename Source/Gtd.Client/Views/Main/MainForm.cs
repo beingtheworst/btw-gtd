@@ -93,6 +93,7 @@ namespace Gtd.Client
                     _menuCaptureThought.Visible = true;
                     _menuGoToInbox.Visible = true;
                     _menuDefineProject.Visible = true;
+
                 });
         }
 

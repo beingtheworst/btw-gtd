@@ -1,6 +1,4 @@
-﻿using System;
-using Gtd.Client.Models;
-using Gtd.Shell.Filters;
+﻿using Gtd.Shell.Filters;
 using System.Linq;
 
 namespace Gtd.Client

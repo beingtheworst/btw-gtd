@@ -84,6 +84,16 @@ namespace Gtd.Client
 
         public sealed class AddStuffClicked : Message {}
 
+        public sealed class AddActionClicked : Message
+        {
+            public readonly ProjectId ProjectId;
+
+            public AddActionClicked(ProjectId projectId)
+            {
+                ProjectId = projectId;
+            }
+        }
+
         public sealed class DefineProjectClicked : Message {}
 
 
@@ -118,6 +128,8 @@ namespace Gtd.Client
                 Id = id;
             }
         }
+
+
 
         public sealed class FilterChanged : Message
         {

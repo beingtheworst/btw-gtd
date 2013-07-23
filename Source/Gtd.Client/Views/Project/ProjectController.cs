@@ -73,6 +73,11 @@ namespace Gtd.Client.Views.Project
             _bus.Publish(new UI.CompleteActionClicked(id));
         }
 
+        public void RequestAddAction(ProjectId id)
+        {
+            _bus.Publish(new UI.AddActionClicked(id));
+        }
+
         public void RequestOutcomeChange(ActionId id, string outcome)
         {
             _bus.Publish(new UI.ChangeActionOutcome(id, outcome));
