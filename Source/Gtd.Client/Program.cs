@@ -25,7 +25,7 @@ namespace Gtd.Client
             Application.SetCompatibleTextRenderingDefault(false);
 
             var form = new MainForm();
-            LogManager.Init(s => new LogAdapter(form), () => { });
+            
 
             #region This WinForms host uses its own in-memory message bus to manage the UI...
             // It uses this in-memory bus to wire user-interface "UI" elements ("controls") to the
