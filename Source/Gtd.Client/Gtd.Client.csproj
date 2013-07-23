@@ -66,6 +66,13 @@
     <Compile Include="Models\Filters\RemainingFilter.cs" />
     <Compile Include="Models\ClientModelController.cs" />
     <Compile Include="Models\ClientPerspective.cs" />
+    <Compile Include="Views\AddActionToProject\AddActionToProjectForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\AddActionToProject\AddActionToProjectForm.Designer.cs">
+      <DependentUpon>AddActionToProjectForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\AddActionToProject\AddActionToProjectController.cs" />
     <Compile Include="Views\AddStuffToInbox\AddStuffToInboxForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -115,6 +122,9 @@
     <Compile Include="Views\Navigation\NavigationView.Designer.cs">
       <DependentUpon>NavigationView.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Views\AddActionToProject\AddActionToProjectForm.resx">
+      <DependentUpon>AddActionToProjectForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\AddStuffToInbox\AddStuffToInboxForm.resx">
       <DependentUpon>AddStuffToInboxForm.cs</DependentUpon>
     </EmbeddedResource>

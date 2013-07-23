@@ -107,6 +107,18 @@ namespace Gtd.Client
             }
         }
 
+        public sealed class AddActionWizardCompleted : Message
+        {
+            public readonly ProjectId ProjectId;
+            public readonly string Outcome;
+
+            public AddActionWizardCompleted(ProjectId projectId, string outcome)
+            {
+                ProjectId = projectId;
+                Outcome = outcome;
+            }
+        }
+
         public sealed class MoveStuffToProjectClicked : Message
         {
             public readonly StuffId[] StuffToMove;
