@@ -80,9 +80,6 @@ namespace Gtd.Shell
 
 
 
-
-
-
         public static void Init(Func<string, ILogger> logger, Action dispose)
         {
             //Ensure.NotNull(componentName, "componentName");

@@ -1,4 +1,7 @@
-﻿namespace Gtd.Client
+﻿using System;
+using Gtd.Shell;
+
+namespace Gtd.Client
 {
     public interface ILogControl
     {
@@ -34,6 +37,98 @@
                 s = type.FullName.Remove(0, type.Namespace.Length + 1);
             }
             _control.Log(s);
+        }
+    }
+
+    sealed class LogAdapter : ILogger
+    {
+        ILogControl _control;
+        public LogAdapter(ILogControl control)
+        {
+            _control = control;
+        }
+
+        public void Fatal(string text)
+        {
+                
+        }
+
+        public void Error(string text)
+        {
+        }
+
+        public void Info(string text)
+        {
+        }
+
+        public void Debug(string text)
+        {
+        }
+
+        public void Trace(string text)
+        {
+        }
+
+        public void Fatal(string format, params object[] args)
+        {
+        }
+
+        public void Error(string format, params object[] args)
+        {
+        }
+
+        public void Info(string format, params object[] args)
+        {
+        }
+
+        public void Debug(string format, params object[] args)
+        {
+        }
+
+        public void Trace(string format, params object[] args)
+        {
+        }
+
+        public void FatalException(Exception exc, string text)
+        {
+        }
+
+        public void ErrorException(Exception exc, string text)
+        {
+        }
+
+        public void InfoException(Exception exc, string text)
+        {
+        }
+
+        public void DebugException(Exception exc, string text)
+        {
+        }
+
+        public void TraceException(Exception exc, string text)
+        {
+        }
+
+        public void FatalException(Exception exc, string format, params object[] args)
+        {
+        }
+
+        public void ErrorException(Exception exc, string format, params object[] args)
+        {
+            _control.Log(String.Format(format, args));
+            _control.Log(exc.ToString());
+        }
+
+        public void InfoException(Exception exc, string format, params object[] args)
+        {
+        }
+
+        public void DebugException(Exception exc, string format, params object[] args)
+        {
+        }
+
+        public void TraceException(Exception exc, string format, params object[] args)
+        {
         }
     }
 }

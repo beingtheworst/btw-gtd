@@ -8,6 +8,7 @@ using Gtd.Client.Views.AddStuffToInbox;
 using Gtd.Client.Views.CaptureThought;
 using Gtd.Client.Views.Navigation;
 using Gtd.Client.Views.Project;
+using Gtd.Shell;
 
 namespace Gtd.Client
 {
@@ -22,6 +23,9 @@ namespace Gtd.Client
             // this Client App uses a standard "Windows Forms" application as its host
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+            var form = new MainForm();
+            LogManager.Init(s => new LogAdapter(form), () => { });
 
             #region This WinForms host uses its own in-memory message bus to manage the UI...
             // It uses this in-memory bus to wire user-interface "UI" elements ("controls") to the
@@ -73,10 +77,7 @@ namespace Gtd.Client
             // we wire all controls together in a native way.
             // then we add adapters on top of that
 
-            var form = new MainForm();
-
             
-
             LogController.Wire(form, uiBus);
 
             #region View Controllers - Decoupling (UI) Views from their Controllers...
