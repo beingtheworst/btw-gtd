@@ -223,6 +223,16 @@ namespace Gtd.Client.Models
             }
         }
 
+        public sealed class StuffUpdated : CliendModelEvent
+        {
+            public readonly ImmutableStuff Stuff;
+
+            public StuffUpdated(ImmutableStuff stuff)
+            {
+                Stuff = stuff;
+            }
+        }
+
         public sealed class StuffRemovedFromInbox : CliendModelEvent
         {
             public readonly ImmutableStuff Stuff;
@@ -238,8 +248,16 @@ namespace Gtd.Client.Models
         {
             public readonly ImmutableAction Action;
 
-
             public ActionAdded(ImmutableAction action)
+            {
+                Action = action;
+            }
+        }
+
+        public sealed class ActionRemoved : CliendModelEvent
+        {
+            public readonly ImmutableAction Action;
+            public ActionRemoved(ImmutableAction action)
             {
                 Action = action;
             }
@@ -248,16 +266,14 @@ namespace Gtd.Client.Models
         public sealed class ActionUpdated : CliendModelEvent
         {
 
-            public readonly ProjectId ProjectId;
+            
             public readonly string ProjectUIKey;
             public readonly ImmutableAction Action;
             public ActionUpdated(
-                ImmutableAction action,
-                ProjectId projectId, string projectUIKey)
+                ImmutableAction action,string projectUIKey)
             {
 
                 Action = action;
-                ProjectId = projectId;
                 ProjectUIKey = projectUIKey;
             }
         }

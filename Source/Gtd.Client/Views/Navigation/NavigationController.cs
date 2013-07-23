@@ -117,7 +117,7 @@ namespace Gtd.Client.Views.Navigation
 
         public void Handle(Dumb.ActionUpdated message)
         {
-            ReloadProjectNode(message.ProjectId); 
+            ReloadProjectNode(message.Action.ProjectId); 
         }
 
         void AddOrUpdateProject(ImmutableProject model)

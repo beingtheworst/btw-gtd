@@ -127,12 +127,15 @@ namespace Gtd.Client.Models
             var project = _projects[action.ProjectId];
             action.MarkAsCompleted();
             
-            Publish(new Dumb.ActionUpdated(action.Freeze(),action.ProjectId, project.UIKey));
+            Publish(new Dumb.ActionUpdated(action.Freeze(), project.UIKey));
         }
 
         public void DescriptionOfStuffChanged(StuffId stuffId, string newDescriptionOfStuff)
         {
-            _stuffInInbox[stuffId].UpdateDescription(newDescriptionOfStuff);
+            var stuff = _stuffInInbox[stuffId];
+            stuff.UpdateDescription(newDescriptionOfStuff);
+
+            Publish(new Dumb.StuffUpdated(stuff.Freeze()));
         }
 
         public void ProjectOutcomeChanged(ProjectId projectId, string outcome)
@@ -146,12 +149,15 @@ namespace Gtd.Client.Models
             var project = _projects[action.ProjectId];
             action.OutcomeChanged(outcome);
             var immutable = action.Freeze();
-            Publish(new Dumb.ActionUpdated(immutable,action.ProjectId, project.UIKey));
+            Publish(new Dumb.ActionUpdated(immutable, project.UIKey));
         }
 
         public void ActionArchived(ActionId id)
         {
-            _actions[id].MarkAsArchived();
+            var action = _actions[id];
+            action.MarkAsArchived();
+
+            Publish(new Dumb.ActionAdded(action.Freeze()));
         }
 
         public void ProjectTypeChanged(ProjectId projectId, ProjectType type)
@@ -161,7 +167,8 @@ namespace Gtd.Client.Models
 
         public void DeferredUtil(ActionId actionId, DateTime deferUntil)
         {
-            _actions[actionId].DeferUntilDate(deferUntil);
+            var action = _actions[actionId];
+            action.DeferUntilDate(deferUntil);
         }
 
         public void DueDateAssigned(ActionId actionId, DateTime newDueDate)

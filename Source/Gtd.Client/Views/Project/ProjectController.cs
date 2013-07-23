@@ -64,7 +64,7 @@ namespace Gtd.Client.Views.Project
 
         public void Handle(Dumb.ActionUpdated message)
         {
-            if (message.ProjectId.Id == _currentProject.Id)
+            if (message.Action.ProjectId.Id == _currentProject.Id)
                 ReloadView(_currentProject);
         }
 
