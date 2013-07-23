@@ -25,12 +25,16 @@ namespace Gtd.Client.Views.Navigation
             treeView1.Nodes.Clear();
         }
 
-        public void AddOrUpdateNode(string key, string text)
+        public void AddOrUpdateNode(string key, string text, NodeType type)
         {
             TreeNode node;
             if (!_nodes.TryGetValue(key, out node))
             {
-                node = new TreeNode(text) {Tag = key};
+                var s = type.ToString().ToLowerInvariant();
+                node = new TreeNode(text) {Tag = key,
+                    ImageKey = s,
+                    SelectedImageKey = s
+                };
                 _nodes[key] = node;
                 treeView1.Nodes.Add(node);
             }
@@ -39,5 +43,13 @@ namespace Gtd.Client.Views.Navigation
                 node.Text = text;
             }
         }
+
+
+    }
+
+    public enum NodeType
+    {
+        Inbox,
+        Project
     }
 }

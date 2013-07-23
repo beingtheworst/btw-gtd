@@ -57,7 +57,7 @@ namespace Gtd.Client.Views.Navigation
 
         void ReloadInboxNode(int count)
         {
-            _tree.AddOrUpdateNode("inbox",string.Format("Inbox ({0})", count));
+            _tree.AddOrUpdateNode("inbox",string.Format("Inbox ({0})", count), NodeType.Inbox);
         }
 
         
@@ -123,14 +123,15 @@ namespace Gtd.Client.Views.Navigation
         void AddOrUpdateProject(ImmutableProject model)
         {
             _nodes[model.UIKey] = model.ProjectId;
-            Sync(() => _tree.AddOrUpdateNode(model.UIKey, model.Outcome));
+            Sync(() => _tree.AddOrUpdateNode(model.UIKey, model.Outcome, NodeType.Project));
         }
 
 
         void LoadNavigation()
         {
             _tree.Clear();
-            _tree.AddOrUpdateNode("inbox", string.Format("Inbox ({0})",_perspective.Model.GetTheNumberOfItemsOfStuffInInbox()));
+            var format = string.Format("Inbox ({0})", _perspective.Model.GetTheNumberOfItemsOfStuffInInbox());
+            _tree.AddOrUpdateNode("inbox", format, NodeType.Inbox);
             foreach (var project in _perspective.ListProjects())
             {
                 AddOrUpdateProject(project);
