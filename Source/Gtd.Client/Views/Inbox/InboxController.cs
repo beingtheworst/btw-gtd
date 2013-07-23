@@ -66,7 +66,7 @@ namespace Gtd.Client
             _control.Sync(() => _control.RemoveThought(message.InboxStuffId));
         }
 
-        public void WhenRequestedThoughtsArchival(IEnumerable<InboxStuffId> thoughtIds)
+        public void WhenRequestedThoughtsArchival(IEnumerable<StuffId> thoughtIds)
         {
             foreach (var id in thoughtIds)
             {
@@ -74,9 +74,9 @@ namespace Gtd.Client
             }
         }
 
-        public void WhenRequestedMoveThoughtsToProject(ProjectId id, InboxStuffId[] inboxStuffIds)
+        public void WhenRequestedMoveThoughtsToProject(ProjectId id, StuffId[] stuffIds)
         {
-            _queue.Publish(new UI.MoveInboxStuffToProjectClicked(inboxStuffIds, id));
+            _queue.Publish(new UI.MoveInboxStuffToProjectClicked(stuffIds, id));
         }
 
         public void WhenCaptureThoughtClicked()

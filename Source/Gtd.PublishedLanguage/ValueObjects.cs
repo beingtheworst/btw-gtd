@@ -76,22 +76,22 @@ namespace Gtd
     }
 
     [DataContract(Namespace = "BTW2/GTD")]
-    public struct InboxStuffId
+    public struct StuffId
     {
         [DataMember(Order = 1)]
         public Guid Id { get; private set; }
 
         public bool IsEmpty { get { return Id == Guid.Empty; } }
 
-        public static InboxStuffId Empty = new InboxStuffId(Guid.Empty);
+        public static StuffId Empty = new StuffId(Guid.Empty);
 
-        public InboxStuffId(Guid id)
+        public StuffId(Guid id)
             : this()
         {
             Id = id;
         }
 
-        public bool Equals(InboxStuffId other)
+        public bool Equals(StuffId other)
         {
             return Id.Equals(other.Id);
         }
@@ -99,7 +99,7 @@ namespace Gtd
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
-            return obj is InboxStuffId && Equals((InboxStuffId)obj);
+            return obj is StuffId && Equals((StuffId)obj);
         }
 
         public override int GetHashCode()
@@ -107,12 +107,12 @@ namespace Gtd
             return Id.GetHashCode();
         }
 
-        public static bool operator ==(InboxStuffId left, InboxStuffId right)
+        public static bool operator ==(StuffId left, StuffId right)
         {
             return left.Equals(right);
         }
 
-        public static bool operator !=(InboxStuffId left, InboxStuffId right)
+        public static bool operator !=(StuffId left, StuffId right)
         {
             return !left.Equals(right);
         }

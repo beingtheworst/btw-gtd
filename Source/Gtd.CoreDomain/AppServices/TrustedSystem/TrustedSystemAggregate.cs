@@ -81,7 +81,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             Apply(new ProjectDefined(_aggState.Id, projectId, name, defaultProjectType, time));
         }
 
-        public void DefineSingleActionProject(RequestId requestId, InboxStuffId inboxStuffId, ITimeProvider provider)
+        public void DefineSingleActionProject(RequestId requestId, StuffId stuffId, ITimeProvider provider)
         {
             // filter request IDs
             var time = provider.GetUtcNow();
@@ -92,9 +92,9 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
 
             // make sure thought exists
             InboxStuffInfo info;
-            if (!_aggState.InboxDict.TryGetValue(inboxStuffId, out info))
+            if (!_aggState.InboxDict.TryGetValue(stuffId, out info))
             {
-                throw DomainError.Named("unknown thought", "Unknown thought {0}", inboxStuffId);
+                throw DomainError.Named("unknown thought", "Unknown thought {0}", stuffId);
             }
             // TODO: May be able to use this to change the thought subject and then let that cascade down
             // as both the Project AND Action Outcome in case you wanted to use a different name from original thought
@@ -111,7 +111,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             //Apply(new SingleActionProjectDefined(_aggState.Id, projectId, info.Subject, ProjectType.SingleActions, actionId, info.Subject, time));
 
             // Maybe Archive the thought from the inbox too?
-            Apply(new InboxStuffArchived(_aggState.Id, inboxStuffId, time));
+            Apply(new InboxStuffArchived(_aggState.Id, stuffId, time));
         }
 
         public void CaptureInboxStuff(RequestId requestId, string name, ITimeProvider provider)
@@ -119,7 +119,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             // filter request IDs
             //var time = provider.GetUtcNow();
             //var id = new ActionId(NewGuidIfEmpty(requestId));
-            var id = new InboxStuffId(NewGuidIfEmpty(requestId));
+            var id = new StuffId(NewGuidIfEmpty(requestId));
 
             Apply(new InboxStuffCaptured(_aggState.Id, id, name, provider.GetUtcNow()));
         }
@@ -139,7 +139,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             Apply(new ActionDefined(_aggState.Id, actionId, projectId, outcome , time));
         }
 
-        public void MoveInboxStuffToProject(InboxStuffId[] inboxStuffs, ProjectId projectId,
+        public void MoveInboxStuffToProject(StuffId[] stuff, ProjectId projectId,
             ITimeProvider provider)
         {
             ProjectInfo p;
@@ -148,7 +148,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
                 throw DomainError.Named("unknown-project", "Unknown project {0}", projectId);
             }
             var dateTime = provider.GetUtcNow();
-            foreach (var t in inboxStuffs)
+            foreach (var t in stuff)
             {
                 InboxStuffInfo info;
                 if (!_aggState.InboxDict.TryGetValue(t, out info))
@@ -165,12 +165,12 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
 
         }
 
-        public void ArchiveInboxStuff(InboxStuffId inboxStuffId, ITimeProvider provider)
+        public void ArchiveInboxStuff(StuffId stuffId, ITimeProvider provider)
         {
-            if (!_aggState.Inbox.Contains(inboxStuffId))
-                throw DomainError.Named("no thought", "Thought {0} not found", inboxStuffId);
+            if (!_aggState.Inbox.Contains(stuffId))
+                throw DomainError.Named("no thought", "Thought {0} not found", stuffId);
 
-            Apply(new InboxStuffArchived(_aggState.Id, inboxStuffId, provider.GetUtcNow()));
+            Apply(new InboxStuffArchived(_aggState.Id, stuffId, provider.GetUtcNow()));
         }
 
         public void CompleteAction(ActionId actionId, ITimeProvider provider)
@@ -218,16 +218,16 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             }
         }
 
-        public void ChangeSubjectOfInboxStuff(InboxStuffId inboxStuffId, string subject, ITimeProvider time)
+        public void ChangeSubjectOfInboxStuff(StuffId stuffId, string subject, ITimeProvider time)
         {
             InboxStuffInfo info;
-            if (!_aggState.InboxDict.TryGetValue(inboxStuffId, out info))
+            if (!_aggState.InboxDict.TryGetValue(stuffId, out info))
             {
-                throw DomainError.Named("unknown thought", "Unknown thought {0}", inboxStuffId);
+                throw DomainError.Named("unknown thought", "Unknown thought {0}", stuffId);
             }
             if (info.Subject != subject)
             {
-                Apply(new NameOfInboxStuffChanged(_aggState.Id, inboxStuffId, subject, time.GetUtcNow()));
+                Apply(new NameOfInboxStuffChanged(_aggState.Id, stuffId, subject, time.GetUtcNow()));
             }
         }
 

@@ -73,18 +73,18 @@ namespace Gtd.Client.Models
 
     public sealed class ImmutableInboxStuff
     {
-        public readonly InboxStuffId InboxStuffId;
+        public readonly StuffId StuffId;
         public readonly string Subject;
         public readonly string UIKey;
 
         public ImmutableInboxStuff WithSubject(string subject)
         {
-            return new ImmutableInboxStuff(InboxStuffId, subject, UIKey);
+            return new ImmutableInboxStuff(StuffId, subject, UIKey);
         }
 
-        public ImmutableInboxStuff(InboxStuffId inboxStuffId, string subject, string uiKey)
+        public ImmutableInboxStuff(StuffId stuffId, string subject, string uiKey)
         {
-            InboxStuffId = inboxStuffId;
+            StuffId = stuffId;
             Subject = subject;
             UIKey = uiKey;
         }
