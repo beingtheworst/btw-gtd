@@ -5,7 +5,8 @@ namespace Gtd.Client.Views.Project
     public sealed class ProjectController : 
         IHandle<UI.DisplayProject>,
         IHandle<UI.FilterChanged>,
-        IHandle<Dumb.ActionUpdated>
+        IHandle<Dumb.ActionUpdated>,
+        IHandle<Dumb.ActionAdded>
     {
         readonly ProjectView _control;
         readonly ClientPerspective _perspective;
@@ -36,6 +37,7 @@ namespace Gtd.Client.Views.Project
             bus.Subscribe<UI.FilterChanged>(adapter);
             bus.Subscribe<UI.DisplayProject>(adapter);
             bus.Subscribe<Dumb.ActionUpdated>(adapter);
+            bus.Subscribe<Dumb.ActionAdded>(adapter);
         }
 
         ProjectId _currentProject = ProjectId.Empty;
@@ -64,8 +66,15 @@ namespace Gtd.Client.Views.Project
 
         public void Handle(Dumb.ActionUpdated message)
         {
-            if (message.Action.ProjectId.Id == _currentProject.Id)
-                ReloadView(_currentProject);
+            if (message.Action.ProjectId.Id != _currentProject.Id) return;
+            ReloadView(_currentProject);
+        }
+
+        public void Handle(Dumb.ActionAdded message)
+        {
+            if (message.Action.ProjectId.Id != _currentProject.Id) return;
+
+            ReloadView(_currentProject);
         }
 
         public void RequestActionCheck(ActionId id)
