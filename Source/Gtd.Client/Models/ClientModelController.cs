@@ -236,20 +236,12 @@ namespace Gtd.Client.Models
 
         public sealed class ActionAdded : CliendModelEvent
         {
-            public readonly ActionId ActionId;
-            public readonly string ActionUIKey;
+            public readonly ImmutableAction Action;
 
-            public readonly ProjectId ProjectId;
-            public readonly string ProjectUIKey;
-            public readonly string Outcome;
 
-            public ActionAdded(ActionId actionId, string actionUIKey, ProjectId projectId, string projectUIKey, string outcome)
+            public ActionAdded(ImmutableAction action)
             {
-                ActionId = actionId;
-                ActionUIKey = actionUIKey;
-                ProjectId = projectId;
-                ProjectUIKey = projectUIKey;
-                Outcome = outcome;
+                Action = action;
             }
         }
 

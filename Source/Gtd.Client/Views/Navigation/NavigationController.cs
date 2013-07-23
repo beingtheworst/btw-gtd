@@ -112,7 +112,7 @@ namespace Gtd.Client.Views.Navigation
 
         public void Handle(Dumb.ActionAdded message)
         {
-            ReloadProjectNode(message.ProjectId); ;
+            ReloadProjectNode(message.Action.ProjectId);
         }
 
         public void Handle(Dumb.ActionUpdated message)

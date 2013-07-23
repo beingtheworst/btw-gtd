@@ -139,7 +139,7 @@ namespace Gtd.Client.Models
             project.Actions.Add(action);
             _actions.Add(actionId, action);
 
-            Publish(new Dumb.ActionAdded(actionId, action.UIKey, projectId, project.UIKey, outcome));
+            Publish(new Dumb.ActionAdded(Immute(action)));
         }
 
         public void ActionCompleted(ActionId actionId)
