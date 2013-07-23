@@ -107,12 +107,12 @@ namespace Gtd.Client
             }
         }
 
-        public sealed class AddActionWizardCompleted : Message
+        public sealed class DefineActionWizardCompleted : Message
         {
             public readonly ProjectId ProjectId;
             public readonly string Outcome;
 
-            public AddActionWizardCompleted(ProjectId projectId, string outcome)
+            public DefineActionWizardCompleted(ProjectId projectId, string outcome)
             {
                 ProjectId = projectId;
                 Outcome = outcome;

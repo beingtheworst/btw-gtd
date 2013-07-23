@@ -38,7 +38,7 @@
         {
             // tell the CaptureThoughtForm I control to use its TryGetUserInput method and
             // if it is able to get input, call me back with this method I provide =>
-            _form.TryGetUserInput(s => _queue.Enqueue(new UI.AddActionWizardCompleted(message.ProjectId,s)));
+            _form.TryGetUserInput(s => _queue.Enqueue(new UI.DefineActionWizardCompleted(message.ProjectId,s)));
         }
     }
 }

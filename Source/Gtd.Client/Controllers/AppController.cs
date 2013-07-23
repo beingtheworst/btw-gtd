@@ -53,6 +53,7 @@ namespace Gtd.Client
                 .InAllStates()
 
                     .When<UI.AddStuffWizardCompleted>().Do(PutStuffInInbox)
+                    .When<UI.DefineActionWizardCompleted>().Do(AddActionToProject)
                     .When<UI.TrashStuffClicked>().Do(TrashStuff)
                     .When<UI.DefineNewProjectWizardCompleted>().Do(DefineProject)
                     .When<UI.MoveStuffToProjectClicked>().Do(MoveStuffToProject)
@@ -69,6 +70,13 @@ namespace Gtd.Client
                     
                 .WhenOther().Do(_uiBus.Publish)
                 .Build(() => (int) _appState);
+        }
+
+        void AddActionToProject(UI.DefineActionWizardCompleted e)
+        {
+            _uiBus.Publish(e);
+            var newGuid = Guid.NewGuid();
+            UpdateDomain(agg => agg.DefineAction(new RequestId(newGuid), e.ProjectId, e.Outcome, new RealTimeProvider()));
         }
 
         TrustedSystemId _currentSystem;
