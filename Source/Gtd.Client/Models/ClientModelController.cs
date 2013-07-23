@@ -39,6 +39,7 @@ namespace Gtd.Client.Models
             bus.Subscribe<TrustedSystemCreated>(this);
             bus.Subscribe<StuffPutInInbox>(this);
             bus.Subscribe<StuffTrashed>(this);
+            bus.Subscribe<StuffArchived>(this);
             bus.Subscribe<ProjectDefined>(this);
             bus.Subscribe<ActionDefined>(this);
             bus.Subscribe<ActionCompleted>(this);
