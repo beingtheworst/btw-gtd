@@ -8,45 +8,24 @@ namespace Gtd.Client.Models
     public sealed class ClientModel
     {
         readonly IMessageQueue _queue;
-        List<MutableStuff> _listOfGtdStuff = new List<MutableStuff>();
+        readonly List<MutableStuff> _listOfGtdStuff = new List<MutableStuff>();
         readonly Dictionary<StuffId, MutableStuff> _stuffInInbox = new Dictionary<StuffId, MutableStuff>();
 
         readonly List<MutableProject> _projectList = new List<MutableProject>();
         readonly Dictionary<ProjectId, MutableProject> _projects = new Dictionary<ProjectId, MutableProject>();
         readonly Dictionary<ActionId, MutableAction> _actions = new Dictionary<ActionId, MutableAction>();
-        
-
-
-        static ImmutableProject Immute(MutableProject m)
-        {
-            var ma = m.Actions.Select(Immute).ToList().AsReadOnly();
-            return new ImmutableProject(m.UIKey, m.ProjectId, m.Outcome, m.Type, ma);
-        }
-
-        static ImmutableAction Immute(MutableAction mutable)
-        {
-            return new ImmutableAction(mutable.UIKey,
-                mutable.Id,
-                mutable.Outcome,
-                mutable.Completed,
-                mutable.Archived,
-                mutable.ProjectId,
-                mutable.DeferUntil,
-                mutable.DueDate);
-        }
-
 
 
         public IList<ImmutableProject> ListProjects()
         {
-            return _projectList.Select(Immute).ToList().AsReadOnly();
+            return _projectList.Select(m => m.Freeze()).ToList().AsReadOnly();
         } 
 
         public ImmutableProject GetProjectOrNull(ProjectId projectId)
         {
             MutableProject value;
             if (_projects.TryGetValue(projectId, out value))
-                return Immute(value);
+                return value.Freeze();
             return null;
         }
 
@@ -76,7 +55,7 @@ namespace Gtd.Client.Models
 
             var model = new ImmutableClientModel(
                 ImmutableList.Create(_listOfGtdStuff.Select(f => f.Freeze()).ToArray()),
-                ImmutableList.Create(_projectList.Select(Immute).ToArray()));
+                ImmutableList.Create(_projectList.Select(m => m.Freeze()).ToArray()));
 
             Publish(new Dumb.ClientModelLoaded(model));
         }
@@ -139,7 +118,7 @@ namespace Gtd.Client.Models
             project.Actions.Add(action);
             _actions.Add(actionId, action);
 
-            Publish(new Dumb.ActionAdded(Immute(action)));
+            Publish(new Dumb.ActionAdded(action.Freeze()));
         }
 
         public void ActionCompleted(ActionId actionId)
@@ -148,7 +127,7 @@ namespace Gtd.Client.Models
             var project = _projects[action.ProjectId];
             action.MarkAsCompleted();
             
-            Publish(new Dumb.ActionUpdated(Immute(action),action.ProjectId, project.UIKey));
+            Publish(new Dumb.ActionUpdated(action.Freeze(),action.ProjectId, project.UIKey));
         }
 
         public void DescriptionOfStuffChanged(StuffId stuffId, string newDescriptionOfStuff)
@@ -166,7 +145,7 @@ namespace Gtd.Client.Models
             var action = _actions[actionId];
             var project = _projects[action.ProjectId];
             action.OutcomeChanged(outcome);
-            var immutable = Immute(action);
+            var immutable = action.Freeze();
             Publish(new Dumb.ActionUpdated(immutable,action.ProjectId, project.UIKey));
         }
 
@@ -241,6 +220,13 @@ namespace Gtd.Client.Models
                 UIKey = "project-" + projectId.Id;
             }
 
+            public ImmutableProject Freeze()
+            {
+                var ma = Actions.Select(mutable => mutable.Freeze()).ToList().AsReadOnly();
+                return new ImmutableProject(UIKey, ProjectId, Outcome, Type, ma);
+
+            }
+
 
             public readonly List<MutableAction> Actions = new List<MutableAction>();
 
@@ -288,7 +274,18 @@ namespace Gtd.Client.Models
             public void MarkAsArchived()
             {
                 Archived = true;
+            }
 
+            public ImmutableAction Freeze()
+            {
+                return new ImmutableAction(UIKey,
+                    Id,
+                    Outcome,
+                    Completed,
+                    Archived,
+                    ProjectId,
+                    DeferUntil,
+                    DueDate);
             }
 
             public void DeferUntilDate(DateTime newStartDate)
