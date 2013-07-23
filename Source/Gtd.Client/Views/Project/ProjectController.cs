@@ -1,6 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using Gtd.Client.Models;
-using System.Linq;
+﻿using Gtd.Client.Models;
 
 namespace Gtd.Client.Views.Project
 {

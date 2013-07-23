@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Immutable;
 using Gtd.CoreDomain;
 using Microsoft.CSharp.RuntimeBinder;
 
@@ -256,22 +255,18 @@ namespace Gtd.Client.Models
 
         public sealed class ActionUpdated : CliendModelEvent
         {
-            public readonly ActionId ActionId;
-            public readonly string ActionUIKey;
 
             public readonly ProjectId ProjectId;
             public readonly string ProjectUIKey;
-            public readonly string Outcome;
-            public readonly bool Completed;
-
-            public ActionUpdated(ActionId actionId, string actionUIKey, ProjectId projectId, string projectUIKey, string outcome, bool completed)
+            public readonly ImmutableAction Action;
+            public ActionUpdated(
+                ImmutableAction action,
+                ProjectId projectId, string projectUIKey)
             {
-                ActionId = actionId;
-                ActionUIKey = actionUIKey;
+
+                Action = action;
                 ProjectId = projectId;
                 ProjectUIKey = projectUIKey;
-                Outcome = outcome;
-                Completed = completed;
             }
         }
 

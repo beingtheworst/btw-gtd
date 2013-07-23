@@ -147,7 +147,8 @@ namespace Gtd.Client.Models
             var action = _actions[actionId];
             var project = _projects[action.ProjectId];
             action.MarkAsCompleted();
-            Publish(new Dumb.ActionUpdated(actionId, action.UIKey, action.ProjectId, project.UIKey, action.Outcome, true));
+            
+            Publish(new Dumb.ActionUpdated(Immute(action),action.ProjectId, project.UIKey));
         }
 
         public void DescriptionOfStuffChanged(StuffId stuffId, string newDescriptionOfStuff)
@@ -165,7 +166,8 @@ namespace Gtd.Client.Models
             var action = _actions[actionId];
             var project = _projects[action.ProjectId];
             action.OutcomeChanged(outcome);
-            Publish(new Dumb.ActionUpdated(actionId, action.UIKey, action.ProjectId, project.UIKey, action.Outcome, action.Completed));
+            var immutable = Immute(action);
+            Publish(new Dumb.ActionUpdated(immutable,action.ProjectId, project.UIKey));
         }
 
         public void ActionArchived(ActionId id)
