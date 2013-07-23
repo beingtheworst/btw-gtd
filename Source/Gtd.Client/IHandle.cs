@@ -396,7 +396,7 @@ namespace Gtd.Client
                             
                             _consumer.GetType().Name,
                             result.GetType().Name,
-                            _name));
+                            _name), ex);
                         Log.ErrorException(ex, "Error while processing message {0} in queued handler '{1}'.", result, _name);
                     }
                 }

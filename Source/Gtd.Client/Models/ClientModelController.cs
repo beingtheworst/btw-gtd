@@ -10,12 +10,12 @@ namespace Gtd.Client.Models
         IHandle<StuffPutInInbox>,
         IHandle<StuffTrashed>,
         IHandle<StuffArchived>,
-    IHandle<ProjectDefined>,
+        IHandle<ProjectDefined>,
         IHandle<ActionDefined>,
         IHandle<ActionCompleted>,
         IHandle<ProfileLoaded>, 
         IHandle<ActionOutcomeChanged>,
-    IHandle<UI.FilterChanged>
+        IHandle<UI.FilterChanged>
     {
         readonly IEventStore _eventStore;
         readonly ClientPerspective _provider;

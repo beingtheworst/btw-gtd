@@ -6,8 +6,9 @@ namespace Gtd.Client
     public class InboxController : 
         IHandle<AppInit>,
         IHandle<UI.DisplayInbox>,
-        IHandle<StuffPutInInbox>,  
-        IHandle<StuffTrashed>, IHandle<FormLoaded>
+        IHandle<Dumb.StuffAddedToInbox>,  
+        IHandle<Dumb.StuffRemovedFromInbox>, 
+        IHandle<FormLoaded>
     {
         readonly Region _dock;
         readonly IPublisher _queue;
@@ -29,8 +30,9 @@ namespace Gtd.Client
 
             bus.Subscribe<AppInit>(adapter);
             bus.Subscribe<UI.DisplayInbox>(adapter);
-            bus.Subscribe<StuffPutInInbox>(adapter);
-            bus.Subscribe<StuffTrashed>(adapter);
+            bus.Subscribe<Dumb.StuffAddedToInbox>(adapter);
+            bus.Subscribe<Dumb.StuffRemovedFromInbox>(adapter);
+            
             bus.Subscribe<FormLoaded>(adapter);
 
             return adapter;
@@ -56,14 +58,14 @@ namespace Gtd.Client
             _queue.Publish(new UI.InboxDisplayed());
         }
 
-        public void Handle(StuffPutInInbox message)
+        public void Handle(Dumb.StuffAddedToInbox message)
         {
-            _control.Sync(() => _control.AddStuff(message.StuffDescription, message.StuffId));
+            _control.Sync(() => _control.AddStuff(message.Stuff));
             
         }
-        public void Handle(StuffTrashed message)
+        public void Handle(Dumb.StuffRemovedFromInbox message)
         {
-            _control.Sync(() => _control.TrashStuff(message.StuffId));
+            _control.Sync(() => _control.TrashStuff(message.Stuff.StuffId));
         }
 
         public void WhenRequestedToTrashStuff(IEnumerable<StuffId> stuffIds)

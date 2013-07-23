@@ -20,31 +20,24 @@ namespace Gtd.Client
 
         sealed class StuffInfo
         {
+            readonly ImmutableStuff _stuff;
+            public StuffId Id { get { return _stuff.StuffId; } }
             
-            public readonly string Description;
-            public readonly StuffId Id;
-            public StuffInfo(string description, StuffId id)
+            public StuffInfo(ImmutableStuff stuff)
             {
-                Description = description;
-                Id = id;
+                _stuff = stuff;
+            
             }
 
             public override string ToString()
             {
-                return Description;
+                return _stuff.Description;
             }
         }
 
         readonly IDictionary<StuffId, StuffInfo> _stuffInInbox = new Dictionary<StuffId, StuffInfo>(); 
 
-        public void AddStuff(string stuffDescription, StuffId stuffId)
-        {
-            var stuffInfo = new StuffInfo(stuffDescription, stuffId);
-            _stuffInInbox.Add(stuffId, stuffInfo);
-            listBox1.Items.Add(stuffInfo);
-            listBox1.Visible = listBox1.Items.Count > 0;
-        }
-
+      
         public void TrashStuff(StuffId stuffId)
         {
             StuffInfo stuffInfo;
@@ -113,7 +106,7 @@ namespace Gtd.Client
             {
                 foreach (var view in inbox.Stuff)
                 {
-                    var stuffInfo = new StuffInfo(view.Description, view.StuffId);
+                    var stuffInfo = new StuffInfo(view);
                     _stuffInInbox.Add(view.StuffId, stuffInfo);
                     listBox1.Items.Add(stuffInfo);
                 }
@@ -126,6 +119,15 @@ namespace Gtd.Client
             {
                 listBox1.EndUpdate();
             }
+        }
+
+        public void AddStuff(ImmutableStuff stuff)
+        {
+            
+            var stuffInfo = new StuffInfo(stuff);
+            _stuffInInbox.Add(stuff.StuffId, stuffInfo);
+            listBox1.Items.Add(stuffInfo);
+            listBox1.Visible = listBox1.Items.Count > 0;
         }
     }
 
