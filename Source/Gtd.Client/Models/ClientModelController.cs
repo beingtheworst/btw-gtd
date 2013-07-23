@@ -45,13 +45,13 @@ namespace Gtd.Client.Models
             bus.Subscribe<UI.FilterChanged>(this);
         }
 
-        TrustedSystemId _loadedSystem;
+        
 
         bool CanHandle(TrustedSystemId system)
         {
-            if (_loadedSystem == null)
+            if (_model == null)
                 return false;
-            if (system.Id != _loadedSystem.Id)
+            if (system.Id != _model.Id.Id)
                 return false;
             return true;
         }
@@ -161,7 +161,8 @@ namespace Gtd.Client.Models
             _model = new ClientModel(_queue, evt.SystemId);
             
             // replay all events, since we don't have a snapshot for now
-            foreach (var e in _eventStore.LoadEventStream(evt.SystemId.ToStreamId()).Events)
+            var stream = _eventStore.LoadEventStream(evt.SystemId.ToStreamId());
+            foreach (var e in stream.Events)
             {
                 ((dynamic) this).Handle((dynamic) e);
             }
