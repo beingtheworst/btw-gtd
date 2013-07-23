@@ -529,9 +529,16 @@ namespace Btw.Portable
                     for (int i = 0; i < msgCount; i++)
                     {
                         var name = bin.ReadString();
-                        var type = _contractToType[name];
-                        var len = bin.ReadInt32();
-                        objects[i] = RuntimeTypeModel.Default.Deserialize(bin.BaseStream, null, type, len);
+                        try
+                        {
+                            var type = _contractToType[name];
+                            var len = bin.ReadInt32();
+                            objects[i] = RuntimeTypeModel.Default.Deserialize(bin.BaseStream, null, type, len);
+                        }
+                        catch (KeyNotFoundException ex)
+                        {
+                            throw new KeyNotFoundException("Failed to find contract for " + name, ex);
+                        }
                     }
                     yield return new StreamRecord(record.StreamVersion, key, objects);
                 }
