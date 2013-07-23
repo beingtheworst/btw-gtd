@@ -16,24 +16,30 @@ namespace Gtd.Client.Views.Project
         }
 
         BindingSource source = new BindingSource();
+        
 
         public void DisplayProject(FilteredProject project)
         {
-            
-            
-            
-
             _projectName.Text = string.Format("{0} ({1})", project.Outcome, project.ActionCount);
+
+            // TODO: smarter update for the case when we remove item
+            if (source.Count == project.FilteredActions.Count)
+            {
+                for (int i = 0; i < project.FilteredActions.Count; i++)
+                {
+                    source[i] = new ActionDisplay(project.FilteredActions[i],_controller);
+                }
+                return;
+            }
 
             source.Clear();
             foreach (var action in project.FilteredActions)
             {
                 source.Add(new ActionDisplay(action,_controller));
             }
-            
-            
+
             //_grid.DataSource = list;
-            
+
         }
 
         public sealed class ActionDisplay

@@ -48,6 +48,7 @@ namespace Gtd.Client.Views.Project
 
         void ReloadView(ProjectId projectId)
         {
+            // TODO: smart update
             var project = _perspective.GetProject(projectId);
 
             _control.Sync(() => _control.DisplayProject(project));

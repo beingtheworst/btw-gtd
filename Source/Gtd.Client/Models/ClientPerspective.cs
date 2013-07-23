@@ -141,6 +141,7 @@ namespace Gtd.Client.Models
         public readonly ReadOnlyCollection<ImmutableAction> FilteredActions;
         public readonly string ActionCount;
 
+
         public FilteredProject(ProjectId projectId, string outcome, ProjectType type, string uiKey, ReadOnlyCollection<ImmutableAction> filteredActions, string actionCount)
         {
             ProjectId = projectId;
