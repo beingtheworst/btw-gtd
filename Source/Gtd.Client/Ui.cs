@@ -16,6 +16,7 @@ namespace Gtd.Client
     #region This is the language of the UI expressed as Command and Event Messages...
     // These are the "words" the "UI component services"/controllers use to communicate.
     // These are UI events specific to the CONTEXT of this client application.
+    // This Ui.cs is Similar to Messages.cs in our Gtd.PublishedLanguage project.
     // We are talking about "Inbox Displayed" and "DefineNewProject"
     // instead of just Windows Forms events like "Button Clicked, Text changed" etc.
     // We start to see the possibility of having a common UI event language 
@@ -81,38 +82,38 @@ namespace Gtd.Client
             }
         }
 
-        public sealed class CaptureInboxStuffClicked : Message {}
+        public sealed class AddStuffClicked : Message {}
 
         public sealed class DefineProjectClicked : Message {}
 
 
-        public sealed class CaptureInboxStuffWizardCompleted : Message
+        public sealed class AddStuffWizardCompleted : Message
         {
-            public readonly string Thought;
+            public readonly string StuffDescription;
 
-            public CaptureInboxStuffWizardCompleted(string thought)
+            public AddStuffWizardCompleted(string descriptionOfStuff)
             {
-                Thought = thought;
+                StuffDescription = descriptionOfStuff;
             }
         }
 
-        public sealed class MoveInboxStuffToProjectClicked : Message
+        public sealed class MoveStuffToProjectClicked : Message
         {
-            public readonly StuffId[] Stuff;
+            public readonly StuffId[] StuffToMove;
             public readonly ProjectId Project;
 
-            public MoveInboxStuffToProjectClicked(StuffId[] stuff, ProjectId project)
+            public MoveStuffToProjectClicked(StuffId[] stuffToMove, ProjectId project)
             {
-                Stuff = stuff;
+                StuffToMove = stuffToMove;
                 Project = project;
             }
         }
 
-        public sealed class ArchiveInboxStuffClicked : Message
+        public sealed class TrashStuffClicked : Message
         {
             public readonly StuffId Id;
 
-            public ArchiveInboxStuffClicked(StuffId id)
+            public TrashStuffClicked(StuffId id)
             {
                 Id = id;
             }

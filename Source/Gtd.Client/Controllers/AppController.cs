@@ -27,20 +27,20 @@ namespace Gtd.Client
         readonly IEventStore _eventStore;
         QueuedHandler _queue;
 
-        readonly FiniteStateMachine<AppState> _fsm;
+        readonly FiniteStateMachine<AppState> _finiteStateMachine;
 
         public AppController(IPublisher uiBus, IEventStore eventStore)
         {
             _uiBus = uiBus;
             _eventStore = eventStore;
 
-            _fsm = CreateStateMachine();
+            _finiteStateMachine = CreateStateMachine();
         }
 
         // default Fsm's intial state to "Loading"
         AppState _appState = AppState.Loading;
 
-        #region Whats a Finite State Machine (Fsm)...
+        #region What's a Finite State Machine (Fsm)?
         // It's just a clean way to express logic in the form of
         // "When we are in this state, and something happens, do this set of stuff. 
         // If in this other state and something happens, then do this other set of stuff."
@@ -52,10 +52,10 @@ namespace Gtd.Client
             return new FsmBuilder<AppState>()
                 .InAllStates()
 
-                    .When<UI.CaptureInboxStuffWizardCompleted>().Do(CaptureInboxStuff)
-                    .When<UI.ArchiveInboxStuffClicked>().Do(ArchiveInboxStuff)
+                    .When<UI.AddStuffWizardCompleted>().Do(PutStuffInInbox)
+                    .When<UI.TrashStuffClicked>().Do(TrashStuff)
                     .When<UI.DefineNewProjectWizardCompleted>().Do(DefineProject)
-                    .When<UI.MoveInboxStuffToProjectClicked>().Do(MoveInboxStuffToProject)
+                    .When<UI.MoveStuffToProjectClicked>().Do(MoveStuffToProject)
                     .When<UI.CompleteActionClicked>().Do(CompleteAction)
                     .When<UI.ChangeActionOutcome>().Do(ChangeOutcome)
                     
@@ -88,6 +88,19 @@ namespace Gtd.Client
             
         }
 
+        void PutStuffInInbox(UI.AddStuffWizardCompleted e)
+        {
+            _uiBus.Publish(e);
+            UpdateDomain(agg => agg.PutStuffInInbox(new RequestId(), e.StuffDescription, new RealTimeProvider()));
+        }
+
+        void TrashStuff(UI.TrashStuffClicked e)
+        {
+            // do something
+            _uiBus.Publish(e);
+            UpdateDomain(agg => agg.TrashStuff(e.Id, new RealTimeProvider()));
+        }
+
         void DefineProject(UI.DefineNewProjectWizardCompleted r)
         {
             _uiBus.Publish(r);
@@ -106,24 +119,10 @@ namespace Gtd.Client
             UpdateDomain(a => a.ChangeActionOutcome(r.ActionId,r.Outcome, new RealTimeProvider()));
         }
 
-        void MoveInboxStuffToProject(UI.MoveInboxStuffToProjectClicked r)
+        void MoveStuffToProject(UI.MoveStuffToProjectClicked e)
         {
-            _uiBus.Publish(r);
-            UpdateDomain(a => a.MoveStuffToProject(r.Stuff, r.Project, new RealTimeProvider()));
-        }
-
-        void ArchiveInboxStuff(UI.ArchiveInboxStuffClicked r)
-        {
-            // do something
-            _uiBus.Publish(r);
-            UpdateDomain(a => a.ArchiveInboxStuff(r.Id,new RealTimeProvider()));
-        }
-
-        void CaptureInboxStuff(UI.CaptureInboxStuffWizardCompleted c)
-        {
-            _uiBus.Publish(c);
-
-            UpdateDomain(aggregate => aggregate.CaptureInboxStuff(new RequestId(), c.Thought, new RealTimeProvider() ));
+            _uiBus.Publish(e);
+            UpdateDomain(agg => agg.MoveStuffToProject(e.StuffToMove, e.Project, new RealTimeProvider()));
         }
 
         void PassThroughEvent(Event e)
@@ -183,7 +182,7 @@ namespace Gtd.Client
         public void Handle(Message message)
         {
             Trace.WriteLine("Handle: " + message.ToString());
-            _fsm.Handle(message);
+            _finiteStateMachine.Handle(message);
         }
     }
 }

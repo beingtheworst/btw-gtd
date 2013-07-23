@@ -6,8 +6,8 @@ namespace Gtd.Client.Models
 {
     public sealed class ClientModelController :
         IHandle<TrustedSystemCreated>,
-        IHandle<InboxStuffCaptured>,
-        IHandle<InboxStuffArchived>,
+        IHandle<StuffPutInInbox>,
+        IHandle<StuffTrashed>,
         IHandle<ProjectDefined>,
         IHandle<ActionDefined>,
         IHandle<ActionCompleted>,
@@ -15,28 +15,28 @@ namespace Gtd.Client.Models
         IHandle<ActionOutcomeChanged>,
     IHandle<UI.FilterChanged>
     {
-        readonly IEventStore _store;
+        readonly IEventStore _eventStore;
         readonly ClientPerspective _provider;
         readonly IMessageQueue _queue;
 
-        ClientModelController(IEventStore store, ClientPerspective provider, IMessageQueue queue)
+        ClientModelController(IEventStore eventStore, ClientPerspective provider, IMessageQueue queue)
         {
-            _store = store;
+            _eventStore = eventStore;
             _provider = provider;
             _queue = queue;
         }
 
-        public static void WireTo(IEventStore store, ClientPerspective provider, ISubscriber subscriber, IMessageQueue queue)
+        public static void WireTo(IEventStore eventStore, ClientPerspective provider, ISubscriber subscriber, IMessageQueue queue)
         {
-            var controller = new ClientModelController(store, provider, queue);
+            var controller = new ClientModelController(eventStore, provider, queue);
             controller.SubscribeTo(subscriber);
         }
 
         public void SubscribeTo(ISubscriber bus)
         {
             bus.Subscribe<TrustedSystemCreated>(this);
-            bus.Subscribe<InboxStuffCaptured>(this);
-            bus.Subscribe<InboxStuffArchived>(this);
+            bus.Subscribe<StuffPutInInbox>(this);
+            bus.Subscribe<StuffTrashed>(this);
             bus.Subscribe<ProjectDefined>(this);
             bus.Subscribe<ActionDefined>(this);
             bus.Subscribe<ActionCompleted>(this);
@@ -52,15 +52,15 @@ namespace Gtd.Client.Models
             _model.Create(e.Id);
         }
 
-        public void Handle(InboxStuffCaptured e)
+        public void Handle(StuffPutInInbox e)
         {
             _model.Verify(e.Id);
-            _model.ThoughtCaptured(e.InboxStuffId, e.Subject, e.TimeUtc);
+            _model.StuffPutInInbox(e.StuffId, e.StuffDescription, e.TimeUtc);
         }
-        public void Handle(InboxStuffArchived e)
+        public void Handle(StuffTrashed e)
         {
             _model.Verify(e.Id);
-            _model.ThoughtArchived(e.InboxStuffId);
+            _model.StuffTrashed(e.StuffId);
         }
 
         public void Handle(ProjectDefined e)
@@ -90,10 +90,10 @@ namespace Gtd.Client.Models
             _model.ProjectOutcomeChanged(e.ProjectId, e.ProjectOutcome);
         }
 
-        public void Handle(NameOfInboxStuffChanged e)
+        public void Handle(StuffDescriptionChanged e)
         {
             _model.Verify(e.Id);
-            _model.ThoughtSubjectChanged(e.InboxStuffId, e.Subject);
+            _model.DescriptionOfStuffChanged(e.StuffId, e.NewDescriptionOfStuff);
         }
         public void Handle(ActionArchived e)
         {
@@ -151,7 +151,7 @@ namespace Gtd.Client.Models
             _model = new ClientModel(_queue, evt.SystemId);
             
             // replay all events, since we don't have a snapshot for now
-            foreach (var e in _store.LoadEventStream(evt.SystemId.ToStreamId()).Events)
+            foreach (var e in _eventStore.LoadEventStream(evt.SystemId.ToStreamId()).Events)
             {
                 ((dynamic) this).Handle((dynamic) e);
             }
@@ -164,7 +164,6 @@ namespace Gtd.Client.Models
 
             
         }
-
 
         public void Handle(UI.FilterChanged message)
         {
@@ -189,24 +188,24 @@ namespace Gtd.Client.Models
             }
         }
 
-        public sealed class InboxStuffAdded : CliendModelEvent
+        public sealed class StuffAddedToInbox : CliendModelEvent
         {
-            public readonly ImmutableInboxStuff InboxStuff;
+            public readonly ImmutableStuff Stuff;
             public readonly int InboxCount;
-            public InboxStuffAdded(ImmutableInboxStuff inboxStuff, int inboxCount)
+            public StuffAddedToInbox(ImmutableStuff stuffThatWasAdded, int inboxCount)
             {
-                InboxStuff = inboxStuff;
+                Stuff = stuffThatWasAdded;
                 InboxCount = inboxCount;
             }
         }
 
-        public sealed class InboxStuffRemoved : CliendModelEvent
+        public sealed class StuffRemovedFromInbox : CliendModelEvent
         {
-            public readonly ImmutableInboxStuff InboxStuff;
+            public readonly ImmutableStuff Stuff;
             public readonly int InboxCount;
-            public InboxStuffRemoved(ImmutableInboxStuff inboxStuff, int inboxCount)
+            public StuffRemovedFromInbox(ImmutableStuff stuffThatWasRemoved, int inboxCount)
             {
-                InboxStuff = inboxStuff;
+                Stuff = stuffThatWasRemoved;
                 InboxCount = inboxCount;
             }
         }

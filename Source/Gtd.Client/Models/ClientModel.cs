@@ -8,12 +8,12 @@ namespace Gtd.Client.Models
     public sealed class ClientModel
     {
         readonly IMessageQueue _queue;
-        List<MutableInboxStuff> _thoughts = new List<MutableInboxStuff>();
-        readonly Dictionary<StuffId, MutableInboxStuff> _thoughtDict = new Dictionary<StuffId, MutableInboxStuff>();
+        List<MutableStuff> _listOfGtdStuff = new List<MutableStuff>();
+        readonly Dictionary<StuffId, MutableStuff> _stuffInInbox = new Dictionary<StuffId, MutableStuff>();
 
         readonly List<MutableProject> _projectList = new List<MutableProject>();
-        readonly Dictionary<ProjectId, MutableProject> _projectDict = new Dictionary<ProjectId, MutableProject>();
-        readonly Dictionary<ActionId, MutableAction> _actionDict = new Dictionary<ActionId, MutableAction>();
+        readonly Dictionary<ProjectId, MutableProject> _projects = new Dictionary<ProjectId, MutableProject>();
+        readonly Dictionary<ActionId, MutableAction> _actions = new Dictionary<ActionId, MutableAction>();
         
 
 
@@ -42,21 +42,22 @@ namespace Gtd.Client.Models
             return _projectList.Select(Immute).ToList().AsReadOnly();
         } 
 
-        public ImmutableProject GetProjectOrNull(ProjectId id)
+        public ImmutableProject GetProjectOrNull(ProjectId projectId)
         {
             MutableProject value;
-            if (_projectDict.TryGetValue(id, out value))
+            if (_projects.TryGetValue(projectId, out value))
                 return Immute(value);
             return null;
         }
 
         public ImmutableInbox GetInbox()
         {
-            return new ImmutableInbox(ImmutableList.Create(_thoughts.Select(f => f.Freeze()).ToArray()));
+            return new ImmutableInbox(ImmutableList.Create(_listOfGtdStuff.Select(f => f.Freeze()).ToArray()));
         }
-        public int GetNumberOfThoughtsInInbox()
+
+        public int GetTheNumberOfItemsOfStuffInInbox()
         {
-            return _thoughts.Count;
+            return _listOfGtdStuff.Count;
         }
 
         public readonly TrustedSystemId Id;
@@ -74,7 +75,7 @@ namespace Gtd.Client.Models
             _loadingCompleted = true;
 
             var model = new ImmutableClientModel(
-                ImmutableList.Create(_thoughts.Select(f => f.Freeze()).ToArray()),
+                ImmutableList.Create(_listOfGtdStuff.Select(f => f.Freeze()).ToArray()),
                 ImmutableList.Create(_projectList.Select(Immute).ToArray()));
 
             Publish(new Dumb.ClientModelLoaded(model));
@@ -87,25 +88,25 @@ namespace Gtd.Client.Models
             _queue.Enqueue(e);
         }
 
-        public void ThoughtCaptured(StuffId stuffId, string thought, DateTime date)
+        public void StuffPutInInbox(StuffId stuffId, string descriptionOfStuff, DateTime date)
         {
-            var key = "thought-" + Id.Id;
-            var item = new MutableInboxStuff(stuffId, thought, key);
+            var key = "stuff-" + Id.Id;
+            var item = new MutableStuff(stuffId, descriptionOfStuff, key);
 
-            _thoughts.Add(item);
-            _thoughtDict.Add(stuffId, item);
-            Publish(new Dumb.InboxStuffAdded(item.Freeze(), _thoughts.Count));
+            _listOfGtdStuff.Add(item);
+            _stuffInInbox.Add(stuffId, item);
+            Publish(new Dumb.StuffAddedToInbox(item.Freeze(), _listOfGtdStuff.Count));
         }
 
-        public void ThoughtArchived(StuffId stuffId)
+        public void StuffTrashed(StuffId stuffId)
         {
-            MutableInboxStuff value;
-            if (!_thoughtDict.TryGetValue(stuffId,out value))
+            MutableStuff value;
+            if (!_stuffInInbox.TryGetValue(stuffId, out value))
                 return;
 
-            _thoughts.Remove(value);
+            _listOfGtdStuff.Remove(value);
 
-            Publish(new Dumb.InboxStuffRemoved(value.Freeze(), _thoughts.Count));
+            Publish(new Dumb.StuffRemovedFromInbox(value.Freeze(), _listOfGtdStuff.Count));
         }
 
 
@@ -113,7 +114,7 @@ namespace Gtd.Client.Models
         {
             var project = new MutableProject(projectId, projectOutcome, type);
             _projectList.Add(project);
-            _projectDict.Add(projectId, project);
+            _projects.Add(projectId, project);
             
 
             Publish(new Dumb.ProjectAdded(project.UIKey, projectOutcome, projectId));
@@ -123,54 +124,56 @@ namespace Gtd.Client.Models
         {
             var action = new MutableAction(actionId, outcome, projectId);
 
-            var project = _projectDict[projectId];
+            var project = _projects[projectId];
             project.Actions.Add(action);
-            _actionDict.Add(actionId, action);
+            _actions.Add(actionId, action);
 
             Publish(new Dumb.ActionAdded(actionId, action.UIKey, projectId, project.UIKey, outcome));
         }
+
         public void ActionCompleted(ActionId actionId)
         {
-            var action = _actionDict[actionId];
-            var project = _projectDict[action.ProjectId];
+            var action = _actions[actionId];
+            var project = _projects[action.ProjectId];
             action.MarkAsCompleted();
             Publish(new Dumb.ActionUpdated(actionId, action.UIKey, action.ProjectId, project.UIKey, action.Outcome, true));
         }
 
-        public void ThoughtSubjectChanged(StuffId stuffId, string subject)
+        public void DescriptionOfStuffChanged(StuffId stuffId, string newDescriptionOfStuff)
         {
-            _thoughtDict[stuffId].UpdateSubject(subject);
+            _stuffInInbox[stuffId].UpdateDescription(newDescriptionOfStuff);
         }
 
         public void ProjectOutcomeChanged(ProjectId projectId, string outcome)
         {
-            _projectDict[projectId].OutcomeChanged(outcome);
+            _projects[projectId].OutcomeChanged(outcome);
         }
+
         public void ActionOutcomeChanged(ActionId actionId, string outcome)
         {
-            var action = _actionDict[actionId];
-            var project = _projectDict[action.ProjectId];
+            var action = _actions[actionId];
+            var project = _projects[action.ProjectId];
             action.OutcomeChanged(outcome);
             Publish(new Dumb.ActionUpdated(actionId, action.UIKey, action.ProjectId, project.UIKey, action.Outcome, action.Completed));
         }
 
         public void ActionArchived(ActionId id)
         {
-            _actionDict[id].MarkAsArchived();
+            _actions[id].MarkAsArchived();
         }
 
         public void ProjectTypeChanged(ProjectId projectId, ProjectType type)
         {
-            _projectDict[projectId].TypeChanged(type);
+            _projects[projectId].TypeChanged(type);
         }
 
         public void DeferredUtil(ActionId actionId, DateTime deferUntil)
         {
-            _actionDict[actionId].DeferUntilDate(deferUntil);
+            _actions[actionId].DeferUntilDate(deferUntil);
         }
         public void DueDateAssigned(ActionId actionId, DateTime newDueDate)
         {
-            _actionDict[actionId].DueDateAssigned(newDueDate);
+            _actions[actionId].DueDateAssigned(newDueDate);
         }
 
         public void Verify(TrustedSystemId id)
@@ -184,28 +187,28 @@ namespace Gtd.Client.Models
             
         }
 
-        sealed class MutableInboxStuff
+        sealed class MutableStuff
         {
             public StuffId StuffId { get; private set; }
-            public string Subject { get; private set; }
+            public string Description { get; private set; }
             public  string UIKey { get; private set; }
 
-            public MutableInboxStuff(StuffId stuffId, string subject, string uiKey)
+            public MutableStuff(StuffId stuffId, string description, string uiKey)
             {
                 StuffId = stuffId;
-                Subject = subject;
+                Description = description;
                 UIKey = uiKey;
             }
 
 
-            public void UpdateSubject(string newSubject)
+            public void UpdateDescription(string newDescriptionOfStuff)
             {
-                Subject = newSubject;
+                Description = newDescriptionOfStuff;
             }
 
-            public ImmutableInboxStuff Freeze()
+            public ImmutableStuff Freeze()
             {
-                return new ImmutableInboxStuff(StuffId, Subject, UIKey);
+                return new ImmutableStuff(StuffId, Description, UIKey);
             }
         }
 
@@ -284,10 +287,5 @@ namespace Gtd.Client.Models
                 DueDate = newDueDate;
             }
         }
-
-
     }
-
-    
-
 }

@@ -6,8 +6,8 @@ namespace Gtd.Client
     public class InboxController : 
         IHandle<AppInit>,
         IHandle<UI.DisplayInbox>,
-        IHandle<InboxStuffCaptured>,  
-        IHandle<InboxStuffArchived>, IHandle<FormLoaded>
+        IHandle<StuffPutInInbox>,  
+        IHandle<StuffTrashed>, IHandle<FormLoaded>
     {
         readonly Region _dock;
         readonly IPublisher _queue;
@@ -29,8 +29,8 @@ namespace Gtd.Client
 
             bus.Subscribe<AppInit>(adapter);
             bus.Subscribe<UI.DisplayInbox>(adapter);
-            bus.Subscribe<InboxStuffCaptured>(adapter);
-            bus.Subscribe<InboxStuffArchived>(adapter);
+            bus.Subscribe<StuffPutInInbox>(adapter);
+            bus.Subscribe<StuffTrashed>(adapter);
             bus.Subscribe<FormLoaded>(adapter);
 
             return adapter;
@@ -56,32 +56,32 @@ namespace Gtd.Client
             _queue.Publish(new UI.InboxDisplayed());
         }
 
-        public void Handle(InboxStuffCaptured message)
+        public void Handle(StuffPutInInbox message)
         {
-            _control.Sync(() => _control.AddThought(message.Subject, message.InboxStuffId));
+            _control.Sync(() => _control.AddStuff(message.StuffDescription, message.StuffId));
             
         }
-        public void Handle(InboxStuffArchived message)
+        public void Handle(StuffTrashed message)
         {
-            _control.Sync(() => _control.RemoveThought(message.InboxStuffId));
+            _control.Sync(() => _control.TrashStuff(message.StuffId));
         }
 
-        public void WhenRequestedThoughtsArchival(IEnumerable<StuffId> thoughtIds)
+        public void WhenRequestedToTrashStuff(IEnumerable<StuffId> stuffIds)
         {
-            foreach (var id in thoughtIds)
+            foreach (var id in stuffIds)
             {
-                _queue.Publish(new UI.ArchiveInboxStuffClicked(id));
+                _queue.Publish(new UI.TrashStuffClicked(id));
             }
         }
 
-        public void WhenRequestedMoveThoughtsToProject(ProjectId id, StuffId[] stuffIds)
+        public void WhenRequestedToMoveStuffToProject(ProjectId projectId, StuffId[] stuffIdsToMove)
         {
-            _queue.Publish(new UI.MoveInboxStuffToProjectClicked(stuffIds, id));
+            _queue.Publish(new UI.MoveStuffToProjectClicked(stuffIdsToMove, projectId));
         }
 
-        public void WhenCaptureThoughtClicked()
+        public void WhenAddStuffClicked()
         {
-            _queue.Publish(new UI.CaptureInboxStuffClicked());
+            _queue.Publish(new UI.AddStuffClicked());
         }
 
         public IList<ImmutableProject> ListProjects()

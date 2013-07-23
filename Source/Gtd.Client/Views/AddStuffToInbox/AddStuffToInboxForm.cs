@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace Gtd.Client.Views.CaptureInboxStuff
+namespace Gtd.Client.Views.AddStuffToInbox
 {
-    public partial class CaptureInboxStuffForm : Form
+    public partial class AddStuffToInboxForm : Form
     {
         readonly MainForm _parent;
 
-        public CaptureInboxStuffForm(MainForm parent)
+        public AddStuffToInboxForm(MainForm parent)
         {
             _parent = parent;
             InitializeComponent();
@@ -28,7 +28,7 @@ namespace Gtd.Client.Views.CaptureInboxStuff
                 });
         }
 
-        private void CaptureThoughtForm_Load(object sender, EventArgs e)
+        private void AddStuffToInboxForm_Load(object sender, EventArgs e)
         {
             textBox1.Focus();
         }
@@ -37,6 +37,5 @@ namespace Gtd.Client.Views.CaptureInboxStuff
         {
             _ok.Enabled = !string.IsNullOrWhiteSpace(textBox1.Text);
         }
-
     }
 }

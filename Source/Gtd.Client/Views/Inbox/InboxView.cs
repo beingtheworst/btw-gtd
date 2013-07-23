@@ -18,52 +18,52 @@ namespace Gtd.Client
             _toProject.Enabled = false;
         }
 
-        sealed class Thought
+        sealed class StuffInfo
         {
             
-            public readonly string Name;
+            public readonly string Description;
             public readonly StuffId Id;
-            public Thought(string name, StuffId id)
+            public StuffInfo(string description, StuffId id)
             {
-                Name = name;
+                Description = description;
                 Id = id;
             }
 
             public override string ToString()
             {
-                return Name;
+                return Description;
             }
         }
 
-        readonly IDictionary<StuffId, Thought> _thoughts = new Dictionary<StuffId, Thought>(); 
+        readonly IDictionary<StuffId, StuffInfo> _stuffInInbox = new Dictionary<StuffId, StuffInfo>(); 
 
-        public void AddThought(string thought, StuffId stuffId)
+        public void AddStuff(string stuffDescription, StuffId stuffId)
         {
-            var t = new Thought(thought, stuffId);
-            _thoughts.Add(stuffId, t);
-            listBox1.Items.Add(t);
+            var stuffInfo = new StuffInfo(stuffDescription, stuffId);
+            _stuffInInbox.Add(stuffId, stuffInfo);
+            listBox1.Items.Add(stuffInfo);
             listBox1.Visible = listBox1.Items.Count > 0;
         }
 
-        public void RemoveThought(StuffId stuff)
+        public void TrashStuff(StuffId stuffId)
         {
-            Thought t;
-            if (_thoughts.TryGetValue(stuff, out t))
+            StuffInfo stuffInfo;
+            if (_stuffInInbox.TryGetValue(stuffId, out stuffInfo))
             {
-                listBox1.Items.Remove(t);
-                _thoughts.Remove(t.Id);
+                listBox1.Items.Remove(stuffInfo);
+                _stuffInInbox.Remove(stuffInfo.Id);
             }
             listBox1.Visible = listBox1.Items.Count > 0;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            _controller.WhenRequestedThoughtsArchival(GetSelectedThoughtIds());
+            _controller.WhenRequestedToTrashStuff(GetSelectedStuffIds());
         }
 
-        StuffId[] GetSelectedThoughtIds()
+        StuffId[] GetSelectedStuffIds()
         {
-            return listBox1.SelectedItems.Cast<Thought>().Select(t => t.Id).ToArray();
+            return listBox1.SelectedItems.Cast<StuffInfo>().Select(stuffItem => stuffItem.Id).ToArray();
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -97,13 +97,13 @@ namespace Gtd.Client
 
         private void _toProject_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            var id = ((ProjectId)(((Display)_toProject.SelectedItem).Value));
-            _controller.WhenRequestedMoveThoughtsToProject(id, GetSelectedThoughtIds());
+            var projectId = ((ProjectId)(((Display)_toProject.SelectedItem).Value));
+            _controller.WhenRequestedToMoveStuffToProject(projectId, GetSelectedStuffIds());
         }
 
         private void _capture_Click(object sender, EventArgs e)
         {
-            _controller.WhenCaptureThoughtClicked();
+            _controller.WhenAddStuffClicked();
         }
 
         public void LoadInbox(ImmutableInbox inbox)
@@ -111,11 +111,11 @@ namespace Gtd.Client
             listBox1.BeginUpdate();
             try
             {
-                foreach (var view in inbox.Thoughts)
+                foreach (var view in inbox.Stuff)
                 {
-                    var t = new Thought(view.Subject, view.StuffId);
-                    _thoughts.Add(view.StuffId, t);
-                    listBox1.Items.Add(t);
+                    var stuffInfo = new StuffInfo(view.Description, view.StuffId);
+                    _stuffInInbox.Add(view.StuffId, stuffInfo);
+                    listBox1.Items.Add(stuffInfo);
                 }
                 listBox1.Visible = listBox1.Items.Count > 0;
 
@@ -145,9 +145,4 @@ namespace Gtd.Client
             return Text;
         }
     }
-
-
-
-    
-
 }

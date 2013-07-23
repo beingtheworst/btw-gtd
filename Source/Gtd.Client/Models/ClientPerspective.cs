@@ -51,41 +51,41 @@ namespace Gtd.Client.Models
 
     public sealed class ImmutableInbox
     {
-        public readonly ImmutableList<ImmutableInboxStuff> Thoughts;
+        public readonly ImmutableList<ImmutableStuff> Stuff;
 
-        public ImmutableInbox(ImmutableList<ImmutableInboxStuff> thoughts)
+        public ImmutableInbox(ImmutableList<ImmutableStuff> stuff)
         {
-            Thoughts = thoughts;
+            Stuff = stuff;
         }
     }
 
     public sealed class ImmutableClientModel
     {
-        public readonly ImmutableList<ImmutableInboxStuff> Inbox;
+        public readonly ImmutableList<ImmutableStuff> Inbox;
         public readonly ImmutableList<ImmutableProject> Projects;
 
-        public ImmutableClientModel(ImmutableList<ImmutableInboxStuff> inbox, ImmutableList<ImmutableProject> projects)
+        public ImmutableClientModel(ImmutableList<ImmutableStuff> inbox, ImmutableList<ImmutableProject> projects)
         {
             Inbox = inbox;
             Projects = projects;
         }
     }
 
-    public sealed class ImmutableInboxStuff
+    public sealed class ImmutableStuff
     {
         public readonly StuffId StuffId;
-        public readonly string Subject;
+        public readonly string Description;
         public readonly string UIKey;
 
-        public ImmutableInboxStuff WithSubject(string subject)
+        public ImmutableStuff WithDescription(string descriptionOfStuff)
         {
-            return new ImmutableInboxStuff(StuffId, subject, UIKey);
+            return new ImmutableStuff(StuffId, descriptionOfStuff, UIKey);
         }
 
-        public ImmutableInboxStuff(StuffId stuffId, string subject, string uiKey)
+        public ImmutableStuff(StuffId stuffId, string descriptionOfStuff, string uiKey)
         {
             StuffId = stuffId;
-            Subject = subject;
+            Description = descriptionOfStuff;
             UIKey = uiKey;
         }
     }

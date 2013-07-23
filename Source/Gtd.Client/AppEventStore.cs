@@ -8,17 +8,17 @@ namespace Gtd.Client
 {
     public sealed class AppEventStore : IEventStore
     {
-        readonly MessageStore _store;
-        IHandle<Message> _handler;
+        readonly MessageStore _msgStore;
+        IHandle<Message> _msgHandler;
 
-        public AppEventStore(MessageStore store)
+        public AppEventStore(MessageStore msgStore)
         {
-            _store = store;
+            _msgStore = msgStore;
         }
 
         public void SetDispatcher(IHandle<Message> dispatcher)
         {
-            _handler = dispatcher;
+            _msgHandler = dispatcher;
         }
 
         public void AppendEventsToStream(string name, long streamVersion, ICollection<Event> events)
@@ -28,7 +28,7 @@ namespace Gtd.Client
 
             try
             {
-                _store.AppendToStore(name, streamVersion, events.Cast<object>().ToArray());
+                _msgStore.AppendToStore(name, streamVersion, events.Cast<object>().ToArray());
             }
             catch (AppendOnlyStoreConcurrencyException e)
             {
@@ -40,14 +40,14 @@ namespace Gtd.Client
             // sync handling. Normally we would push this to async
             foreach (var @event in events)
             {
-                _handler.Handle(@event);
+                _msgHandler.Handle(@event);
             }
         }
         public EventStream LoadEventStream(string name)
         {
             var list = new List<Event>();
             var streamVersion = 0L;
-            foreach (var record in _store.EnumerateMessages(name, 0, int.MaxValue))
+            foreach (var record in _msgStore.EnumerateMessages(name, 0, int.MaxValue))
             {
                 list.AddRange(record.Items.Cast<Event>());
                 streamVersion = record.StreamVersion;

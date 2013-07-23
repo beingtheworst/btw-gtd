@@ -8,8 +8,8 @@ namespace Gtd.Client.Views.Navigation
     public sealed class NavigationController : 
         IHandle<AppInit>, 
         IHandle<Dumb.ClientModelLoaded>,
-        IHandle<Dumb.InboxStuffAdded>, 
-        IHandle<Dumb.InboxStuffRemoved>,
+        IHandle<Dumb.StuffAddedToInbox>, 
+        IHandle<Dumb.StuffRemovedFromInbox>,
         IHandle<Dumb.ProjectAdded>, 
         IHandle<Dumb.ActionAdded>, 
         IHandle<Dumb.ActionUpdated>,
@@ -36,8 +36,8 @@ namespace Gtd.Client.Views.Navigation
             var adapter  = new NavigationController(control, queue, view);
 
             bus.Subscribe<AppInit>(adapter);
-            bus.Subscribe<Dumb.InboxStuffAdded>(adapter);
-            bus.Subscribe<Dumb.InboxStuffRemoved>(adapter);
+            bus.Subscribe<Dumb.StuffAddedToInbox>(adapter);
+            bus.Subscribe<Dumb.StuffRemovedFromInbox>(adapter);
             bus.Subscribe<Dumb.ProjectAdded>(adapter);
             bus.Subscribe<Dumb.ActionAdded>(adapter);
             bus.Subscribe<Dumb.ClientModelLoaded>(adapter);
@@ -62,13 +62,13 @@ namespace Gtd.Client.Views.Navigation
 
         
 
-        public void Handle(Dumb.InboxStuffAdded message)
+        public void Handle(Dumb.StuffAddedToInbox message)
         {
             
             Sync(() => ReloadInboxNode(message.InboxCount));
         }
 
-        public void Handle(Dumb.InboxStuffRemoved message)
+        public void Handle(Dumb.StuffRemovedFromInbox message)
         {
             Sync(() => ReloadInboxNode(message.InboxCount));
         }
@@ -130,7 +130,7 @@ namespace Gtd.Client.Views.Navigation
         void LoadNavigation()
         {
             _tree.Clear();
-            _tree.AddOrUpdateNode("inbox", string.Format("Inbox ({0})",_perspective.Model.GetNumberOfThoughtsInInbox()));
+            _tree.AddOrUpdateNode("inbox", string.Format("Inbox ({0})",_perspective.Model.GetTheNumberOfItemsOfStuffInInbox()));
             foreach (var project in _perspective.ListProjects())
             {
                 AddOrUpdateProject(project);

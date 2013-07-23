@@ -34,7 +34,7 @@ namespace Gtd.Client
 
             Load += (sender, args) => _controller.Publish(new FormLoading());
 
-            _menuCaptureThought.Click += (sender, args) => _controller.Publish(new UI.CaptureInboxStuffClicked());
+            _menuCaptureThought.Click += (sender, args) => _controller.Publish(new UI.AddStuffClicked());
             _menuDefineProject.Click += (sender, args) => _controller.Publish(new UI.DefineProjectClicked());
             _menuGoToInbox.Click += (sender, args) => _controller.Publish(new UI.DisplayInbox());
 
