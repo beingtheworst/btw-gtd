@@ -110,6 +110,17 @@ namespace Gtd.Client.Models
         }
 
 
+        public void StuffArchived(StuffId stuffId)
+        {
+            MutableStuff value;
+            if (!_stuffInInbox.TryGetValue(stuffId, out value))
+                return;
+
+            _listOfGtdStuff.Remove(value);
+
+            Publish(new Dumb.StuffRemovedFromInbox(value.Freeze(), _listOfGtdStuff.Count));
+        }
+
         public void ProjectDefined(ProjectId projectId, string projectOutcome, ProjectType type)
         {
             var project = new MutableProject(projectId, projectOutcome, type);
@@ -171,6 +182,7 @@ namespace Gtd.Client.Models
         {
             _actions[actionId].DeferUntilDate(deferUntil);
         }
+
         public void DueDateAssigned(ActionId actionId, DateTime newDueDate)
         {
             _actions[actionId].DueDateAssigned(newDueDate);
@@ -211,7 +223,7 @@ namespace Gtd.Client.Models
             }
         }
 
-         sealed class MutableProject 
+        sealed class MutableProject 
         {
             public ProjectId ProjectId { get; private set; }
             public string Outcome { get; private set; }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Immutable;
 using Gtd.CoreDomain;
+using Microsoft.CSharp.RuntimeBinder;
 
 namespace Gtd.Client.Models
 {
@@ -8,7 +9,8 @@ namespace Gtd.Client.Models
         IHandle<TrustedSystemCreated>,
         IHandle<StuffPutInInbox>,
         IHandle<StuffTrashed>,
-        IHandle<ProjectDefined>,
+        IHandle<StuffArchived>,
+    IHandle<ProjectDefined>,
         IHandle<ActionDefined>,
         IHandle<ActionCompleted>,
         IHandle<ProfileLoaded>, 
@@ -164,7 +166,14 @@ namespace Gtd.Client.Models
             var stream = _eventStore.LoadEventStream(evt.SystemId.ToStreamId());
             foreach (var e in stream.Events)
             {
-                ((dynamic) this).Handle((dynamic) e);
+                try
+                {
+                    ((dynamic) this).Handle((dynamic) e);
+                }
+                catch (RuntimeBinderException ex)
+                {
+                    throw new InvalidOperationException("Failed to exec " + e.GetType().Name, ex);
+                }
             }
             // now enable sending new events when we update
 
@@ -177,6 +186,12 @@ namespace Gtd.Client.Models
         public void Handle(UI.FilterChanged message)
         {
             _provider.SwitchToFilter(message.Criteria);
+        }
+
+        public void Handle(StuffArchived e)
+        {
+            if (CanHandle(e.Id))
+                _model.StuffArchived(e.StuffId);
         }
     }
 

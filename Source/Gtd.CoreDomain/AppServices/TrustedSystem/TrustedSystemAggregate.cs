@@ -101,7 +101,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
         public void TrashStuff(StuffId stuffId, ITimeProvider provider)
         {
             if (!_aggState.Inbox.Contains(stuffId))
-                throw DomainError.Named("no stuff", "Stuff with Id {0} not found", stuffId);
+                throw DomainError.Named("no stuff", "Stuff with Id {0} not found", stuffId.Id);
 
             Apply(new StuffTrashed(_aggState.Id, stuffId, provider.GetUtcNow()));
         }
