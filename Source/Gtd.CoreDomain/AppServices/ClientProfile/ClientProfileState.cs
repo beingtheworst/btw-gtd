@@ -5,10 +5,7 @@ namespace Gtd.CoreDomain.AppServices.ClientProfile
     public sealed class ClientProfileState : IClientProfileState
     {
 
-
         public TrustedSystemId CurrentSystem { get; private set; }
-
-
 
         public void When(ClientProfileSwitchedToTrustedSystem e)
         {

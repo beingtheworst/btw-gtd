@@ -109,7 +109,7 @@ namespace Gtd.Client
         void MoveInboxStuffToProject(UI.MoveInboxStuffToProjectClicked r)
         {
             _uiBus.Publish(r);
-            UpdateDomain(a => a.MoveInboxStuffToProject(r.Stuff, r.Project, new RealTimeProvider()));
+            UpdateDomain(a => a.MoveStuffToProject(r.Stuff, r.Project, new RealTimeProvider()));
         }
 
         void ArchiveInboxStuff(UI.ArchiveInboxStuffClicked r)

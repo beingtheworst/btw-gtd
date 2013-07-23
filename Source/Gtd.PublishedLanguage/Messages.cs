@@ -79,6 +79,21 @@ namespace Gtd
         }
     }
     [DataContract(Namespace = "BTW2/GTD")]
+    public partial class StuffArchived : Event, ITrustedSystemEvent
+    {
+        [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
+        [DataMember(Order = 2)] public StuffId StuffId { get; private set; }
+        [DataMember(Order = 3)] public DateTime TimeUtc { get; private set; }
+        
+        StuffArchived () {}
+        public StuffArchived (TrustedSystemId id, StuffId stuffId, DateTime timeUtc)
+        {
+            Id = id;
+            StuffId = stuffId;
+            TimeUtc = timeUtc;
+        }
+    }
+    [DataContract(Namespace = "BTW2/GTD")]
     public partial class DefineAction : Command, ITrustedSystemCommand
     {
         [DataMember(Order = 1)] public TrustedSystemId Id { get; private set; }
@@ -580,6 +595,7 @@ namespace Gtd
         void When(TrustedSystemCreated e);
         void When(StuffPutInInbox e);
         void When(StuffTrashed e);
+        void When(StuffArchived e);
         void When(ActionDefined e);
         void When(ProjectDefined e);
         void When(ProjectTypeChanged e);

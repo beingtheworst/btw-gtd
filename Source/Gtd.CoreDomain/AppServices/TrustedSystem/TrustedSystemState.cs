@@ -67,21 +67,32 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             Id = e.Id;
         }
 
-        public void When(InboxStuffCaptured e)
+        public void When(StuffPutInInbox e)
         {
-            var info = new InboxStuffInfo(e.InboxStuffId, e.Subject);
-            InboxDict.Add(e.InboxStuffId, info);
-            Inbox.Add(e.InboxStuffId);
+            var info = new StuffInfo(e.StuffId, e.StuffDescription);
+
+            // Store the details of this stuff in this dictionary
+            StuffInInbox.Add(e.StuffId, info);
+            
+            // Now Add StuffId to our Inbox HashSet for easy lookup of our "Stuff"
+            Inbox.Add(e.StuffId);
         }
 
-        public void When(InboxStuffArchived e)
+        public void When(StuffDescriptionChanged e)
         {
-            Inbox.Remove(e.InboxStuffId);
+            StuffInInbox[e.StuffId].ChangeDescription(e.NewDescriptionOfStuff);
         }
 
-        public void When(ActionDefined e)
+        public void When(StuffTrashed e)
         {
-            Actions.Add(e.ActionId, new ActionInfo(e.ActionId, e.Outcome));
+            // Stop tracking this Stuff from our Inbox HashSet
+            Inbox.Remove(e.StuffId);
+        }
+
+        public void When(StuffArchived e)
+        {
+            // Stop tracking this Stuff from our Inbox HashSet
+            Inbox.Remove(e.StuffId);
         }
 
         public void When(ProjectDefined e)
@@ -89,9 +100,19 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             Projects.Add(e.ProjectId, new ProjectInfo(e.ProjectId, e.ProjectOutcome, e.Type));
         }
 
+        public void When(ProjectOutcomeChanged e)
+        {
+            Projects[e.ProjectId].ChangeOutcome(e.ProjectOutcome);
+        }
+
         public void When(ProjectTypeChanged e)
         {
             Projects[e.ProjectId].ChangeType(e.Type);
+        }
+
+        public void When(ActionDefined e)
+        {
+            Actions.Add(e.ActionId, new ActionInfo(e.ActionId, e.Outcome));
         }
 
         // TODO: Nothing generates this Event yet
@@ -134,16 +155,6 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             Actions[e.ActionId].ChangeOutcome(e.ActionOutcome);
         }
 
-        public void When(ProjectOutcomeChanged e)
-        {
-            Projects[e.ProjectId].ChangeOutcome(e.ProjectOutcome);
-        }
-
-        public void When(NameOfInboxStuffChanged e)
-        {
-            InboxDict[e.InboxStuffId].ChangeSubject(e.Subject);
-        }
-
         public void When(ActionDeferredUntil e)
         {
             Actions[e.ActionId].DeferredUntil(e.DeferUntil);
@@ -184,19 +195,13 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
         // Entities (things that have Ids we care about).
         // We see some of these Ids acting as keys to the Dictionaries below.
 
-        public readonly IDictionary<ActionId, ActionInfo> Actions = new Dictionary<ActionId, ActionInfo>(); 
-        public readonly IDictionary<ProjectId, ProjectInfo> Projects = new Dictionary<ProjectId, ProjectInfo>();
-        public readonly IDictionary<StuffId, InboxStuffInfo> InboxDict = new Dictionary<StuffId, InboxStuffInfo>();
         public readonly HashSet<StuffId> Inbox = new HashSet<StuffId>();
-        
-    }
+        public readonly IDictionary<StuffId, StuffInfo> StuffInInbox = new Dictionary<StuffId, StuffInfo>();
+        public readonly IDictionary<ProjectId, ProjectInfo> Projects = new Dictionary<ProjectId, ProjectInfo>();
+        public readonly IDictionary<ActionId, ActionInfo> Actions = new Dictionary<ActionId, ActionInfo>();
 
-    // ActionInfo is an example of an Entity class that represents a GTD Action
-    // that only exists within this transient state class for brief moments at a time.
-    // It is one of the multiple possible representations of a GTD Action in the system.
-    // (another may be a View of a GTD Action that only exists in the console)
-    // ActionInfo is implemented using the CQS pattern. ActionInfo and the other
-    // "Info" classes below have no publically settable properties.
+    }   // end TrustedSystemState
+
 
     /// <summary> These "Info" objects maintain only invariants within themselves.
     /// Invariants between entities are maintained by the state. This helps to achieve
@@ -205,7 +210,74 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
     /// and they will not be broken by outside or new parties/developers to the code.
     /// (ex: if Action is Archived then its current Completion state must never change)
     /// </summary>
-    
+    public sealed class StuffInfo
+    {
+        public StuffId Id { get; private set; }
+        public string Description { get; private set; }
+
+        public StuffInfo(StuffId id, string stuffDescription)
+        {
+            Enforce.NotEmpty(stuffDescription, "stuffDescription");
+
+            Id = id;
+            Description = stuffDescription;
+        }
+
+        public void ChangeDescription(string newDescriptionOfStuff)
+        {
+            Enforce.NotEmpty(newDescriptionOfStuff, "newDescriptionOfStuff");
+
+            Description = newDescriptionOfStuff;
+        }
+    }
+
+    public sealed class ProjectInfo
+    {
+        public ProjectId Id { get; private set; }
+        public string Outcome { get; private set; }
+        public ProjectType Type { get; private set; }
+
+
+        readonly List<ActionId> _actions = new List<ActionId>();
+
+
+        public ProjectInfo(ProjectId id, string name, ProjectType type)
+        {
+            Enforce.NotEmpty(name, "name");
+
+            Id = id;
+            Outcome = name;
+            Type = type;
+        }
+
+        public void ChangeType(ProjectType type)
+        {
+            Type = type;
+        }
+
+        public void ChangeOutcome(string newName)
+        {
+            Outcome = newName;
+        }
+
+        public void AddAction(ActionId action)
+        {
+            _actions.Add(action);
+        }
+
+        public void RemoveAction(ActionId action)
+        {
+            _actions.Remove(action);
+        }
+    }
+
+    #region ActionInfo is an example of an Entity class that represents a GTD Action...
+    // that only exists within this transient state class for brief moments at a time.
+    // It is one of the multiple possible representations of a GTD Action in the system.
+    // (another may be a View of a GTD Action that only exists in the console)
+    // ActionInfo is implemented using the CQS pattern. ActionInfo and the other
+    // "Info" classes below have no publically settable properties.
+    #endregion
     public sealed class ActionInfo
     {
         public ActionId Id { get; private set; }
@@ -242,7 +314,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
 
         public void MarkAsCompleted()
         {
-            if (Completed == true)
+            if (Completed)
                 throw new InvalidOperationException("Action is already completed");
             Completed = true;
         }
@@ -314,67 +386,6 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             if (DueDate != DateTime.MinValue)
                 throw new ArgumentException("Expected null date");
             DueDate = dueDate;
-        }
-    }
-
-    public sealed class ProjectInfo
-    {
-        public ProjectId Id { get; private set; }
-        public string Outcome { get; private set; }
-        public ProjectType Type { get; private set; }
-
-
-        readonly List<ActionId> _actions = new List<ActionId>();
-         
-
-        public ProjectInfo(ProjectId id, string name, ProjectType type)
-        {
-            Enforce.NotEmpty(name,"name");
-
-            Id = id;
-            Outcome = name;
-            Type = type;
-        }
-
-        public void ChangeType(ProjectType type)
-        {
-            Type = type;
-        }
-
-        public void ChangeOutcome(string newName)
-        {
-            Outcome = newName;
-        }
-
-        public void AddAction(ActionId action)
-        {
-            _actions.Add(action);
-        }
-
-        public void RemoveAction(ActionId action)
-        {
-            _actions.Remove(action);
-        }
-    }
-
-    public sealed class InboxStuffInfo
-    {
-        public StuffId Id { get; private set; }
-        public string Subject { get; private set; }
-
-        public InboxStuffInfo(StuffId id, string subject)
-        {
-            Enforce.NotEmpty(subject, "subject");
-
-            Id = id;
-            Subject = subject;
-        }
-
-        public void ChangeSubject(string subject)
-        {
-            Enforce.NotEmpty(subject, "subject");
-
-            Subject = subject;
         }
     }
 }

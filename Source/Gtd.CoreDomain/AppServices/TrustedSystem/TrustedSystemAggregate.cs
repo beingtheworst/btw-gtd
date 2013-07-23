@@ -55,15 +55,12 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
 
         // Aggregate-Specific Behaviors (Methods) Below
 
-        ActionInfo GetActionOrThrow(ActionId id)
+        public void InitIfNeeded(TrustedSystemId id)
         {
-            ActionInfo info;
-            if (!_aggState.Actions.TryGetValue(id, out info))
+            if (_aggState.Id == null)
             {
-                throw DomainError.Named("unknown action", "Unknown action {0}", id);
+                Create(id);
             }
-            return info;
-
         }
 
         public void Create(TrustedSystemId id)
@@ -71,13 +68,63 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             Apply(new TrustedSystemCreated(id));
         }
 
+        public void PutStuffInInbox(RequestId requestId, string stuffDescription, ITimeProvider provider)
+        {
+            var stuffId = new StuffId(NewGuidIfEmpty(requestId));
+            Apply(new StuffPutInInbox(_aggState.Id, stuffId, stuffDescription, provider.GetUtcNow()));
+        }
+
+        public void ChangeDescriptionOfStuff(StuffId stuffId, string newDescriptionOfStuff, ITimeProvider time)
+        {
+            StuffInfo stuffInfo;
+            if (!_aggState.StuffInInbox.TryGetValue(stuffId, out stuffInfo))
+            {
+                throw DomainError.Named("unknown stuff", "Unknown stuff {0}", stuffId);
+            }
+            if (stuffInfo.Description != newDescriptionOfStuff)
+            {
+                Apply(new StuffDescriptionChanged(_aggState.Id, stuffId, newDescriptionOfStuff, time.GetUtcNow()));
+            }
+        }
+
+        // Trash vs. Archives
+        // Archiving is an internal housekeeping process.
+        // It is an event that happens within the system as a result of another user command.
+        // A user doesn't "Archive" something, the system does.
+        // A user Trashes stuff, puts stuff in their ReferenceSystem, Puts stuff In SomedayMaybe, MovesToProject, etc.
+        // If a user Moves Stuff from the Inbox to a Project, then StuffArchived from Inbox, not StuffTrashed.
+        // If a user wants to "View Archives" then things that were Archived by the system appear in that View.
+        // However, if a user expressed their intent to TRASH an item, it is NOT in the "Archived Views".
+        // The trashed stuff is still in the Event Stream, but from the user's perspective, it is GONE/TRASHED/Not visible!
+
+        // This Event happens when Stuff is intentionally "trashed" by the user because they want it "out" of the system
+        public void TrashStuff(StuffId stuffId, ITimeProvider provider)
+        {
+            if (!_aggState.Inbox.Contains(stuffId))
+                throw DomainError.Named("no stuff", "Stuff with Id {0} not found", stuffId);
+
+            Apply(new StuffTrashed(_aggState.Id, stuffId, provider.GetUtcNow()));
+        }
+
+        
+        // This Event happens when Stuff is moved from the Inbox to another part of the system
+        // TODO: Not sure if I need a method for a Command to call because StuffArchived Event is system generated.
+        //public void ArchiveStuff(StuffId stuffId, ITimeProvider provider)
+        //{
+        //    if (!_aggState.Inbox.Contains(stuffId))
+        //        throw DomainError.Named("no stuff", "Stuff with Id {0} not found", stuffId);
+
+        //    Apply(new StuffArchived(_aggState.Id, stuffId, provider.GetUtcNow()));
+        //}
+
+
         public void DefineProject(RequestId requestId, string name, ITimeProvider provider)
         {
             // filter request IDs
             var time = provider.GetUtcNow();
             var projectId = new ProjectId(NewGuidIfEmpty(requestId));
 
-            var defaultProjectType = ProjectType.List;
+            const ProjectType defaultProjectType = ProjectType.List;
             Apply(new ProjectDefined(_aggState.Id, projectId, name, defaultProjectType, time));
         }
 
@@ -90,38 +137,29 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             // generate actionId
             var actionId = new ActionId(Guid.NewGuid());
 
-            // make sure thought exists
-            InboxStuffInfo info;
-            if (!_aggState.InboxDict.TryGetValue(stuffId, out info))
+            // make sure Stuff exists in the Inbox
+            StuffInfo stuffInfo;
+            if (!_aggState.StuffInInbox.TryGetValue(stuffId, out stuffInfo))
             {
-                throw DomainError.Named("unknown thought", "Unknown thought {0}", stuffId);
+                throw DomainError.Named("unknown stuff", "Unknown stuff {0}", stuffId);
             }
-            // TODO: May be able to use this to change the thought subject and then let that cascade down
-            // as both the Project AND Action Outcome in case you wanted to use a different name from original thought
+            // TODO: May be able to use this to change the stuff description and then let that cascade down
+            // as both the Project AND Action Outcome in case you wanted to use a different name than from original desc
             // With current design it may be better to kick off a "RENAME" command or Apply Renamed event for that purpose though.
-            //if (info.Subject != subject)
+            //if (stuffInfo.Description != stuffDescription)
             //{
-            //    Apply(new ThoughtSubjectChanged(_aggState.Id, thoughtId, subject, time.GetUtcNow()));
+            //    Apply(new StuffDescriptionChanged(_aggState.Id, stuffId, newDescriptionOfStuff, time.GetUtcNow()));
             //}
 
             // TODO: Not sure if it best to just reuse existing Events and projections (probably)
-            // or if I shoudl create a new composite event for this new command msg.  Thinking the former, not latter is way to go.
-            Apply(new ProjectDefined(_aggState.Id, projectId, info.Subject, ProjectType.List, time));
-            Apply(new ActionDefined(_aggState.Id, actionId, projectId, info.Subject, time));
-            //Apply(new SingleActionProjectDefined(_aggState.Id, projectId, info.Subject, ProjectType.SingleActions, actionId, info.Subject, time));
+            // or if I should create a new composite event for this new command msg.
+            // Thinking the former, not latter is way to go.
+            Apply(new ProjectDefined(_aggState.Id, projectId, stuffInfo.Description, ProjectType.List, time));
+            Apply(new ActionDefined(_aggState.Id, actionId, projectId, stuffInfo.Description, time));
+            //Apply(new SingleActionProjectDefined(_aggState.Id, etc.)
 
-            // Maybe Archive the thought from the inbox too?
-            Apply(new InboxStuffArchived(_aggState.Id, stuffId, time));
-        }
-
-        public void CaptureInboxStuff(RequestId requestId, string name, ITimeProvider provider)
-        {
-            // filter request IDs
-            //var time = provider.GetUtcNow();
-            //var id = new ActionId(NewGuidIfEmpty(requestId));
-            var id = new StuffId(NewGuidIfEmpty(requestId));
-
-            Apply(new InboxStuffCaptured(_aggState.Id, id, name, provider.GetUtcNow()));
+            // Archive the Stuff from the Inbox now that is has transitioned from "Stuff" to a defined "Action"
+            Apply(new StuffArchived(_aggState.Id, stuffId, time));
         }
 
         public void DefineAction(RequestId requestId, ProjectId projectId, string outcome, ITimeProvider provider)
@@ -129,8 +167,8 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             // filter request IDs
             var time = provider.GetUtcNow();
 
-            ProjectInfo info;
-            if (!_aggState.Projects.TryGetValue(projectId, out info))
+            ProjectInfo projectInfo;
+            if (!_aggState.Projects.TryGetValue(projectId, out projectInfo))
             {
                 throw DomainError.Named("unknown-project", "Unknown project {0}", projectId);
             }
@@ -139,106 +177,91 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             Apply(new ActionDefined(_aggState.Id, actionId, projectId, outcome , time));
         }
 
-        public void MoveInboxStuffToProject(StuffId[] stuff, ProjectId projectId,
-            ITimeProvider provider)
+        ActionInfo GetActionOrThrow(ActionId id)
         {
-            ProjectInfo p;
-            if (!_aggState.Projects.TryGetValue(projectId, out p))
+            ActionInfo actionInfo;
+            if (!_aggState.Actions.TryGetValue(id, out actionInfo))
+            {
+                throw DomainError.Named("unknown action", "Unknown action {0}", id);
+            }
+            return actionInfo;
+
+        }
+
+        public void MoveStuffToProject(StuffId[] stuffToMove, ProjectId projectId, ITimeProvider provider)
+        {
+            ProjectInfo projectInfo;
+            if (!_aggState.Projects.TryGetValue(projectId, out projectInfo))
             {
                 throw DomainError.Named("unknown-project", "Unknown project {0}", projectId);
             }
             var dateTime = provider.GetUtcNow();
-            foreach (var t in stuff)
+            foreach (var stuffId in stuffToMove)
             {
-                InboxStuffInfo info;
-                if (!_aggState.InboxDict.TryGetValue(t, out info))
+                StuffInfo stuffInfo;
+                if (!_aggState.StuffInInbox.TryGetValue(stuffId, out stuffInfo))
                 {
-                    throw DomainError.Named("unknown-thought", "Unknown thought {0}", t);
+                    throw DomainError.Named("unknown-stuff", "Unknown stuff {0}", stuffId);
                 }
 
-                
-                Apply(new InboxStuffArchived(_aggState.Id, t, dateTime));
-                Apply(new ActionDefined(_aggState.Id,new ActionId(Guid.NewGuid()),projectId, info.Subject,dateTime ));
-
-
+                Apply(new StuffArchived(_aggState.Id, stuffId, dateTime));
+                Apply(new ActionDefined(_aggState.Id,new ActionId(Guid.NewGuid()), projectId, stuffInfo.Description, dateTime));
             }
-
-        }
-
-        public void ArchiveInboxStuff(StuffId stuffId, ITimeProvider provider)
-        {
-            if (!_aggState.Inbox.Contains(stuffId))
-                throw DomainError.Named("no thought", "Thought {0} not found", stuffId);
-
-            Apply(new InboxStuffArchived(_aggState.Id, stuffId, provider.GetUtcNow()));
         }
 
         public void CompleteAction(ActionId actionId, ITimeProvider provider)
         {
-            ActionInfo info;
-            if (!_aggState.Actions.TryGetValue(actionId, out info))
+            ActionInfo actionInfo;
+            if (!_aggState.Actions.TryGetValue(actionId, out actionInfo))
             {
                 throw DomainError.Named("unknown action", "Unknown action {0}", actionId);
             }
-            if (info.Completed)
+            if (actionInfo.Completed)
                 return;// idempotency
 
             Apply(new ActionCompleted(_aggState.Id, 
                 actionId, 
-                info.Project, 
-                info.Outcome, 
+                actionInfo.Project, 
+                actionInfo.Outcome, 
                 provider.GetUtcNow()));
 
         }
 
         public void ChangeActionOutcome(ActionId actionId, string outcome, ITimeProvider time)
         {
-            ActionInfo info;
-            if (!_aggState.Actions.TryGetValue(actionId, out info))
+            ActionInfo actionInfo;
+            if (!_aggState.Actions.TryGetValue(actionId, out actionInfo))
             {
                 throw DomainError.Named("unknown action", "Unknown action {0}", actionId);
             }
-            if (info.Outcome != outcome)
+            if (actionInfo.Outcome != outcome)
             {
-                Apply(new ActionOutcomeChanged(_aggState.Id, actionId, info.Project, outcome, time.GetUtcNow()));
+                Apply(new ActionOutcomeChanged(_aggState.Id, actionId, actionInfo.Project, outcome, time.GetUtcNow()));
             }
                 
         }
 
         public void ChangeProjectOutcome(ProjectId projectId, string outcome, ITimeProvider time)
         {
-            ProjectInfo info;
-            if (!_aggState.Projects.TryGetValue(projectId, out info))
+            ProjectInfo projectInfo;
+            if (!_aggState.Projects.TryGetValue(projectId, out projectInfo))
             {
                 throw DomainError.Named("unknown project", "Unknown project {0}", projectId);
             }
-            if (info.Outcome != outcome)
+            if (projectInfo.Outcome != outcome)
             {
                 Apply(new ProjectOutcomeChanged(_aggState.Id, projectId, outcome, time.GetUtcNow()));
             }
         }
 
-        public void ChangeSubjectOfInboxStuff(StuffId stuffId, string subject, ITimeProvider time)
-        {
-            InboxStuffInfo info;
-            if (!_aggState.InboxDict.TryGetValue(stuffId, out info))
-            {
-                throw DomainError.Named("unknown thought", "Unknown thought {0}", stuffId);
-            }
-            if (info.Subject != subject)
-            {
-                Apply(new NameOfInboxStuffChanged(_aggState.Id, stuffId, subject, time.GetUtcNow()));
-            }
-        }
-
         public void ChangeProjectType(ProjectId projectId, ProjectType type, ITimeProvider time)
         {
-            ProjectInfo info;
-            if (!_aggState.Projects.TryGetValue(projectId, out info))
+            ProjectInfo projectInfo;
+            if (!_aggState.Projects.TryGetValue(projectId, out projectInfo))
             {
                 throw DomainError.Named("unknown project", "Unknown project {0}", projectId);
             }
-            if (info.Type != type)
+            if (projectInfo.Type != type)
             {
                 Apply(new ProjectTypeChanged(_aggState.Id, projectId, type, time.GetUtcNow()));
             }
@@ -256,8 +279,10 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
         public void DeferActionUntil(ActionId actionId, DateTime newStartDate)
         {
             var action = GetActionOrThrow(actionId);
+
             if (newStartDate == action.DeferUntil)
                 return;
+
             if (newStartDate == DateTime.MinValue)
             {
                 Apply(new ActionIsNoLongerDeferred(_aggState.Id, actionId, action.DeferUntil));
@@ -269,20 +294,22 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
                 throw DomainError.Named("", "New defer date is later than due date");
             }
 
-
             if (action.DeferUntil == DateTime.MinValue)
             {
                 Apply(new ActionDeferredUntil(_aggState.Id, actionId, newStartDate));
                 return;
             }
+
             Apply(new ActionDeferDateShifted(_aggState.Id, actionId, action.DeferUntil, newStartDate));
         }
 
         public void ProvideDueDateForAction(ActionId actionId, DateTime newDueDate)
         {
             var action = GetActionOrThrow(actionId);
+
             if (newDueDate == action.DueDate)
                 return;
+
             if (newDueDate == DateTime.MinValue)
             {
                 Apply(new DueDateRemovedFromAction(_aggState.Id, actionId, action.DueDate));
@@ -294,21 +321,13 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
                 throw DomainError.Named("", "New due date is earlier than start date");
             }
 
-
             if (action.DueDate == DateTime.MinValue)
             {
                 Apply(new DueDateAssignedToAction(_aggState.Id, actionId, newDueDate));
                 return;
             }
-            Apply(new ActionDueDateMoved(_aggState.Id, actionId, action.DueDate, newDueDate));
-        }
 
-        public void InitIfNeeded(TrustedSystemId id)
-        {
-            if (_aggState.Id == null)
-            {
-                Create(id);
-            }
+            Apply(new ActionDueDateMoved(_aggState.Id, actionId, action.DueDate, newDueDate));
         }
     }
 }

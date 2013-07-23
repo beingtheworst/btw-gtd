@@ -33,7 +33,7 @@ namespace Gtd.CoreDomain.AppServices.ClientProfile
         {
             if (_aggState.CurrentSystem == null)
             {
-                // TODO: generate proper ID somehow
+                // TODO: generate proper ID somehow - still hard-coded to 1 for now!
                 Apply(new ClientProfileSwitchedToTrustedSystem(new TrustedSystemId(1)));
             }
 

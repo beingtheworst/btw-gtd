@@ -47,19 +47,14 @@ namespace Gtd.CoreDomain
 
         // When methods reacting to Executed Command to call corresponding Aggregate method
 
-        public void When(CaptureInnoxStuff cmd)
+        public void When(PutStuffInInbox cmd)
         {
-            ChangeAgg(cmd.Id, agg => agg.CaptureInboxStuff(cmd.RequestId, cmd.Subject, _time));
+            ChangeAgg(cmd.Id, agg => agg.PutStuffInInbox(cmd.RequestId, cmd.StuffDescription, _time));
         }
 
-        public void When(ArchiveInboxStuff cmd)
+        public void When(TrashStuff cmd)
         {
-            ChangeAgg(cmd.Id, agg => agg.ArchiveInboxStuff(cmd.InboxStuffId, _time));
-        }
-
-        public void When(DefineAction cmd)
-        {
-            ChangeAgg(cmd.Id, agg => agg.DefineAction(cmd.RequestId, cmd.ProjectId, cmd.Outcome, _time));
+            ChangeAgg(cmd.Id, agg => agg.TrashStuff(cmd.StuffId, _time));
         }
 
         public void When(DefineProject cmd)
@@ -69,12 +64,17 @@ namespace Gtd.CoreDomain
 
         public void When(DefineSingleActionProject cmd)
         {
-            ChangeAgg(cmd.Id, agg => agg.DefineSingleActionProject(cmd.RequestId, cmd.InboxStuffId, _time));
+            ChangeAgg(cmd.Id, agg => agg.DefineSingleActionProject(cmd.RequestId, cmd.StuffId, _time));
         }
 
         public void When(ChangeProjectType cmd)
         {
             ChangeAgg(cmd.Id, agg => agg.ChangeProjectType(cmd.ProjectId, cmd.Type, _time));
+        }
+
+        public void When(DefineAction cmd)
+        {
+            ChangeAgg(cmd.Id, agg => agg.DefineAction(cmd.RequestId, cmd.ProjectId, cmd.Outcome, _time));
         }
 
         public void When(ArchiveAction cmd)
@@ -97,9 +97,9 @@ namespace Gtd.CoreDomain
             ChangeAgg(cmd.Id, agg => agg.ChangeProjectOutcome(cmd.ProjectId, cmd.Outcome, _time));
         }
 
-        public void When(ChangeSubjectOfInboxStuff cmd)
+        public void When(ChangeStuffDescription cmd)
         {
-            ChangeAgg(cmd.Id, agg => agg.ChangeSubjectOfInboxStuff(cmd.InboxStuffId, cmd.Subject, _time));
+            ChangeAgg(cmd.Id, agg => agg.ChangeDescriptionOfStuff(cmd.StuffId, cmd.NewDescriptionOfStuff, _time));
         }
 
         public void When(DeferActionUntil cmd)

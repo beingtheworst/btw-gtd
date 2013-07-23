@@ -58,6 +58,9 @@ interface TrustedSystem(TrustedSystemId Id)
     TrashStuff?(stuffId)
         StuffTrashed!(stuffId, time)
 
+    //ArchiveStuff?(stuffId)
+        StuffArchived!(stuffId, time)
+
     // add these concepts later.
     // Current code is geared towards ACTIONABLE items only right now
     //PutStuffInSomedayMaybe?(stuffId, string stuff)
