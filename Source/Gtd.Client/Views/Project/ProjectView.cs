@@ -1,7 +1,5 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using Gtd.Client.Models;
-using System.Linq;
 
 namespace Gtd.Client.Views.Project
 {
@@ -10,12 +8,10 @@ namespace Gtd.Client.Views.Project
         public ProjectView()
         {
             InitializeComponent();
-
-            _grid.DataSource = source;
-
+            _grid.DataSource = _source;
         }
 
-        BindingSource source = new BindingSource();
+        readonly BindingSource _source = new BindingSource();
         
 
         public void DisplayProject(FilteredProject project)
@@ -23,23 +19,20 @@ namespace Gtd.Client.Views.Project
             _projectName.Text = string.Format("{0} ({1})", project.Outcome, project.ActionCount);
 
             // TODO: smarter update for the case when we remove item
-            if (source.Count == project.FilteredActions.Count)
+            if (_source.Count == project.FilteredActions.Count)
             {
                 for (int i = 0; i < project.FilteredActions.Count; i++)
                 {
-                    source[i] = new ActionDisplay(project.FilteredActions[i],_controller);
+                    _source[i] = new ActionDisplay(project.FilteredActions[i],_controller);
                 }
                 return;
             }
 
-            source.Clear();
+            _source.Clear();
             foreach (var action in project.FilteredActions)
             {
-                source.Add(new ActionDisplay(action,_controller));
+                _source.Add(new ActionDisplay(action,_controller));
             }
-
-            //_grid.DataSource = list;
-
         }
 
         public sealed class ActionDisplay
@@ -80,20 +73,6 @@ namespace Gtd.Client.Views.Project
         public void AttachTo(ProjectController controller)
         {
             _controller = controller;
-            //_actionList.ItemCheck += (sender, args) =>
-            //    {
-            //        var display = (ActionDisplay) _actionList.Items[args.Index];
-            //        if (args.NewValue == CheckState.Checked)
-            //        {
-            //            controller.RequestActionCheck(display.Model.ActionId);
-            //        }
-            //        else
-            //        {
-            //            // we don't support unchecks for now
-            //            _actionList.SetItemChecked(args.Index,true);
-            //            //adapter.RequestActionUncheck(display.View.Id);
-            //        }
-            //    };
         }
     }
 }
