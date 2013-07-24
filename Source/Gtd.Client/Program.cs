@@ -25,7 +25,7 @@ namespace Gtd.Client
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            var form = new MainForm();
+            
             
 
             #region This WinForms host uses its own in-memory message bus to manage the UI...
@@ -77,7 +77,11 @@ namespace Gtd.Client
 
             // we wire all controls together in a native way.
             // then we add adapters on top of that
+            var form = new MainForm();
 
+            var navigation = new NavigationView();
+            form.NavigationRegion.RegisterDock(navigation, "nav");
+            form.NavigationRegion.SwitchTo("nav");
             
             LogController.Wire(form, uiBus);
 

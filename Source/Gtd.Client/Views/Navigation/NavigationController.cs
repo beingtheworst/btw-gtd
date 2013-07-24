@@ -19,7 +19,6 @@ namespace Gtd.Client.Views.Navigation
     }
 
     public sealed class NavigationController : 
-        IHandle<AppInit>, 
         IHandle<Dumb.ClientModelLoaded>,
         IHandle<Dumb.StuffAddedToInbox>, 
         IHandle<Dumb.StuffRemovedFromInbox>,
@@ -28,50 +27,51 @@ namespace Gtd.Client.Views.Navigation
         IHandle<UI.InboxDisplayed>
 
     {
-        readonly NavigationView _tree;
-        readonly Region _region;
+        readonly INavigationView _tree;
+        
         readonly IPublisher _queue;
         readonly ClientPerspective _perspective;
         
 
         bool _loaded;
+        string _currentNode;
 
-        NavigationController(Region region, IPublisher queue, ClientPerspective perspective)
+
+        NavigationController(INavigationView view, IPublisher queue, ClientPerspective perspective)
         {
-            _tree = new NavigationView();
+            _tree.WhenInboxSelected(HandleInboxSelected);
+            _tree.WhenProjectSelected(HandleProjectSelected);
 
-            _tree.WhenInboxSelected(() =>
-                {
-                    if ("inbox" == _currentNode)
-                        return;
-                    _currentNode = "inbox";
-
-                    
-                    _queue.Publish(new UI.DisplayInbox());
-                });
-            _tree.WhenProjectSelected(id =>
-                {
-                    if (id == _currentNode)
-                        return;
-                    _currentNode = id;
-
-                    _queue.Publish(new UI.DisplayProject(_projectKeys[id]));
-                });
-
-            
-
-            _region = region;
+            _tree = view;
             _queue = queue;
             _perspective = perspective;
         }
 
-        IDictionary<string,ProjectId> _projectKeys = new Dictionary<string, ProjectId>(); 
-
-        public static NavigationController Wire(Region control, IPublisher queue, ISubscriber bus, ClientPerspective view)
+        void HandleProjectSelected(string id)
         {
-            var adapter  = new NavigationController(control, queue, view);
+            if (id == _currentNode)
+                return;
+            _currentNode = id;
 
-            bus.Subscribe<AppInit>(adapter);
+            _queue.Publish(new UI.DisplayProject(_projectKeys[id]));
+        }
+
+        void HandleInboxSelected()
+        {
+            if ("inbox" == _currentNode)
+                return;
+            _currentNode = "inbox";
+
+
+            _queue.Publish(new UI.DisplayInbox());
+        }
+
+        readonly IDictionary<string,ProjectId> _projectKeys = new Dictionary<string, ProjectId>(); 
+
+        public static NavigationController Wire(INavigationView view, IPublisher queue, ISubscriber bus, ClientPerspective model)
+        {
+            var adapter  = new NavigationController(view, queue, model);
+            
             bus.Subscribe<Dumb.StuffAddedToInbox>(adapter);
             bus.Subscribe<Dumb.StuffRemovedFromInbox>(adapter);
             bus.Subscribe<Dumb.ProjectAdded>(adapter);
@@ -81,17 +81,8 @@ namespace Gtd.Client.Views.Navigation
             bus.Subscribe<UI.InboxDisplayed>(adapter);
             bus.Subscribe<UI.ProjectDisplayed>(adapter);
 
-
-
             return adapter ;
         }
-
-        public void Handle(AppInit message)
-        {
-            _region.RegisterDock(_tree, "nav-tree");
-            _region.SwitchTo("nav-tree");
-        }
-
 
         public void Handle(Dumb.StuffAddedToInbox message)
         {
@@ -130,7 +121,6 @@ namespace Gtd.Client.Views.Navigation
             _tree.ReloadProjectList(_perspective.Model.ListProjects().Select(p => p.Info).ToList());
         }
 
-        string _currentNode;
 
         public void Handle(UI.ProjectDisplayed message)
         {
