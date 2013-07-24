@@ -39,10 +39,9 @@ namespace Gtd.Client.Views.Navigation
 
         NavigationController(INavigationView view, IMessageQueue queue, ClientPerspective perspective)
         {
+            _tree = view;
             _tree.WhenInboxSelected(HandleInboxSelected);
             _tree.WhenProjectSelected(HandleProjectSelected);
-
-            _tree = view;
             _queue = queue;
             _perspective = perspective;
         }
