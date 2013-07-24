@@ -13,7 +13,10 @@ namespace Gtd.Client.Views.Navigation
         IHandle<Dumb.ProjectAdded>, 
         IHandle<Dumb.ActionAdded>, 
         IHandle<Dumb.ActionUpdated>,
-    IHandle<UI.FilterChanged>
+    IHandle<UI.FilterChanged>,
+        IHandle<UI.ProjectDisplayed>,
+        IHandle<UI.InboxDisplayed>
+
     {
         readonly NavigationView _tree;
         readonly Region _region;
@@ -43,6 +46,9 @@ namespace Gtd.Client.Views.Navigation
             bus.Subscribe<Dumb.ClientModelLoaded>(adapter);
             bus.Subscribe<UI.FilterChanged>(adapter);
             bus.Subscribe<Dumb.ActionUpdated>(adapter);
+
+            bus.Subscribe<UI.InboxDisplayed>(adapter);
+            bus.Subscribe<UI.ProjectDisplayed>(adapter);
 
             return adapter ;
         }
@@ -122,8 +128,8 @@ namespace Gtd.Client.Views.Navigation
 
         void AddOrUpdateProject(ImmutableProject model)
         {
-            _nodes[model.UIKey] = model.ProjectId;
-            Sync(() => _tree.AddOrUpdateNode(model.UIKey, model.Outcome, NodeType.Project));
+            _nodes[model.Info.UIKey] = model.Info.ProjectId;
+            Sync(() => _tree.AddOrUpdateNode(model.Info.UIKey, model.Info.Outcome, NodeType.Project));
         }
 
 
@@ -153,6 +159,16 @@ namespace Gtd.Client.Views.Navigation
             {
                 _queue.Publish(new UI.DisplayProject((ProjectId) node));
             }
+        }
+
+        public void Handle(UI.ProjectDisplayed message)
+        {
+            Sync(() => _tree.UpdateSelectionIfNeeded(message.Project.UIKey));
+        }
+
+        public void Handle(UI.InboxDisplayed message)
+        {
+            Sync(() => _tree.UpdateSelectionIfNeeded("inbox"));
         }
     }
 

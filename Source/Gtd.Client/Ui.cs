@@ -9,6 +9,7 @@
 
 #endregion
 
+using Gtd.Client.Models;
 using Gtd.Shell.Filters;
 
 namespace Gtd.Client
@@ -49,11 +50,12 @@ namespace Gtd.Client
 
         public class ProjectDisplayed : Message
         {
-            public readonly ProjectId Id;
+            public readonly ImmutableProjectInfo Project;
 
-            public ProjectDisplayed(ProjectId id)
+
+            public ProjectDisplayed(ImmutableProjectInfo project)
             {
-                Id = id;
+                this.Project = project;
             }
         }
 

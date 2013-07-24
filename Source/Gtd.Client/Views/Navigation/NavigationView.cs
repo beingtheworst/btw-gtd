@@ -45,6 +45,12 @@ namespace Gtd.Client.Views.Navigation
         }
 
 
+        public void UpdateSelectionIfNeeded(string uiKey)
+        {
+            var node = _nodes[uiKey];
+            if (!node.IsSelected)
+                this.treeView1.SelectedNode = node;
+        }
     }
 
     public enum NodeType

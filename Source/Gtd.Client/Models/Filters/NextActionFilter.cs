@@ -10,7 +10,7 @@ namespace Gtd.Shell.Filters
 
         public IEnumerable<ImmutableAction> FilterActions(ImmutableProject model)
         {
-            if (model.Type == ProjectType.List)
+            if (model.Info.Type == ProjectType.List)
             {
                 // in list, every available action is next
                 foreach (var actionView in GetAllAvailableActions(model))
@@ -18,7 +18,7 @@ namespace Gtd.Shell.Filters
                     yield return actionView;
                 }
             }
-            else if (model.Type == ProjectType.Parallel)
+            else if (model.Info.Type == ProjectType.Parallel)
             {
                 // in parallel, first available action is next
                 var filtered = GetAllAvailableActions(model).FirstOrDefault();

@@ -17,8 +17,8 @@ namespace Gtd.Client.Views.Project
         ProjectId _project;
         public void DisplayProject(FilteredProject project)
         {
-            _project = project.ProjectId;
-            _projectName.Text = string.Format("{0} ({1})", project.Outcome, project.ActionCount);
+            _project = project.Info.ProjectId;
+            _projectName.Text = string.Format("{0} ({1})", project.Info.Outcome, project.ActionCount);
 
             // TODO: smarter update for the case when we remove item
             if (_source.Count == project.FilteredActions.Count)

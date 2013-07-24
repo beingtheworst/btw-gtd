@@ -56,7 +56,7 @@ namespace Gtd.Client
 
         public void Handle(UI.ProjectDisplayed message)
         {
-            _mainForm.ShowProjectMenu(message.Id);
+            _mainForm.ShowProjectMenu(message.Project.ProjectId);
         }
     }
 }

@@ -230,7 +230,8 @@ namespace Gtd.Client.Models
             public ImmutableProject Freeze()
             {
                 var ma = Actions.Select(mutable => mutable.Freeze()).ToList().AsReadOnly();
-                return new ImmutableProject(UIKey, ProjectId, Outcome, Type, ma);
+                var info = new ImmutableProjectInfo(ProjectId, Outcome, Type, UIKey);
+                return new ImmutableProject(info, ma);
 
             }
 

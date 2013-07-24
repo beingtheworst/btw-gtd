@@ -79,7 +79,7 @@ namespace Gtd.Client
                 _toProject.Items.Clear();
                 foreach (var info in _controller.ListProjects())
                 {
-                    _toProject.Items.Add(new Display(info.ProjectId, info.Outcome));
+                    _toProject.Items.Add(new Display(info.Info.ProjectId, info.Info.Outcome));
                 }
             }
             finally

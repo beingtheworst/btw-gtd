@@ -55,7 +55,7 @@ namespace Gtd.Client.Views.Project
 
             _control.Sync(() => _control.DisplayProject(project));
             _mainRegion.SwitchTo("project");
-            _bus.Publish(new UI.ProjectDisplayed(projectId));
+            _bus.Publish(new UI.ProjectDisplayed(project.Info));
         }
         
         public void Handle(UI.FilterChanged message)

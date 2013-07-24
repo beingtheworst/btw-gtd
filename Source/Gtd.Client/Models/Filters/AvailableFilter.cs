@@ -23,7 +23,7 @@ namespace Gtd.Shell.Filters
     {
         public IEnumerable<ImmutableAction> FilterActions(ImmutableProject model)
         {
-            if (model.Type == ProjectType.Sequential)
+            if (model.Info.Type == ProjectType.Sequential)
             {
                 var filtered = model.Actions
                                    .Where(v => !v.Completed)

@@ -39,7 +39,7 @@ namespace Gtd.Client.Models
 
             var actions = CurrentFilter.FilterActions(pid).ToList().AsReadOnly();
             var count = CurrentFilter.FormatActionCount(actions.Count);
-            return new FilteredProject(pid.ProjectId, pid.Outcome, pid.Type, pid.UIKey, actions, count);
+            return new FilteredProject(pid.Info, actions, count);
         }
 
 
@@ -116,38 +116,41 @@ namespace Gtd.Client.Models
 
     public sealed class ImmutableProject
     {
-        public readonly ProjectId ProjectId;
-        public readonly string Outcome;
-        public readonly ProjectType Type;
-        public readonly string UIKey;
-        public readonly ReadOnlyCollection<ImmutableAction> Actions; 
+        public readonly ImmutableProjectInfo Info;
+        public readonly ReadOnlyCollection<ImmutableAction> Actions;
 
-        public ImmutableProject(string uiKey, ProjectId projectId, string outcome, ProjectType type, ReadOnlyCollection<ImmutableAction> actions)
+        public ImmutableProject(ImmutableProjectInfo info, ReadOnlyCollection<ImmutableAction> actions)
         {
-            UIKey = uiKey;
-            ProjectId = projectId;
-            Outcome = outcome;
-            Type = type;
+            Info = info;
             Actions = actions;
         }
     }
 
-    public sealed class FilteredProject
+    public sealed class ImmutableProjectInfo
     {
         public readonly ProjectId ProjectId;
         public readonly string Outcome;
         public readonly ProjectType Type;
         public readonly string UIKey;
-        public readonly ReadOnlyCollection<ImmutableAction> FilteredActions;
-        public readonly string ActionCount;
 
-
-        public FilteredProject(ProjectId projectId, string outcome, ProjectType type, string uiKey, ReadOnlyCollection<ImmutableAction> filteredActions, string actionCount)
+        public ImmutableProjectInfo(ProjectId projectId, string outcome, ProjectType type, string uiKey)
         {
             ProjectId = projectId;
             Outcome = outcome;
             Type = type;
             UIKey = uiKey;
+        }
+    }
+
+    public sealed class FilteredProject
+    {
+        public readonly ImmutableProjectInfo Info;
+        public readonly ReadOnlyCollection<ImmutableAction> FilteredActions;
+        public readonly string ActionCount;
+
+        public FilteredProject(ImmutableProjectInfo info, ReadOnlyCollection<ImmutableAction> filteredActions, string actionCount)
+        {
+            Info = info;
             FilteredActions = filteredActions;
             ActionCount = actionCount;
         }
