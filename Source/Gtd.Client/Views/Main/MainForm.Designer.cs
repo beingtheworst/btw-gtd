@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this._menuGoBack = new System.Windows.Forms.ToolStripMenuItem();
             this._menuGoToInbox = new System.Windows.Forms.ToolStripMenuItem();
             this._menuCaptureThought = new System.Windows.Forms.ToolStripMenuItem();
             this._menuDefineProject = new System.Windows.Forms.ToolStripMenuItem();
@@ -36,7 +37,6 @@
             this._log = new System.Windows.Forms.RichTextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this._menuGoBack = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -56,6 +56,12 @@
             this.menuStrip1.Size = new System.Drawing.Size(693, 27);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
+            // 
+            // _menuGoBack
+            // 
+            this._menuGoBack.Name = "_menuGoBack";
+            this._menuGoBack.Size = new System.Drawing.Size(62, 23);
+            this._menuGoBack.Text = "Go Back";
             // 
             // _menuGoToInbox
             // 
@@ -115,12 +121,6 @@
             this.splitContainer1.SplitterDistance = 231;
             this.splitContainer1.TabIndex = 4;
             // 
-            // goBackToolStripMenuItem
-            // 
-            this._menuGoBack.Name = "goBackToolStripMenuItem";
-            this._menuGoBack.Size = new System.Drawing.Size(62, 23);
-            this._menuGoBack.Text = "Go Back";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -131,7 +131,7 @@
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
-            this.Text = "Form1";
+            this.Text = "BeingTheWorst.com";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.panel1.ResumeLayout(false);
