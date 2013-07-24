@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="AppEventStore.cs" />
     <Compile Include="Controllers\AppController.cs" />
+    <Compile Include="Controllers\BackForwardController.cs" />
     <Compile Include="IAppendOnlyStore.cs" />
     <Compile Include="Models\Filters\AllActionsFilter.cs" />
     <Compile Include="Models\Filters\AvailableFilter.cs" />

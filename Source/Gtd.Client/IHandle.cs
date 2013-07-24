@@ -42,7 +42,7 @@ namespace Gtd.Client
     /// Marks the class with the capability to handle message <typeparamref name="T"/>
     /// </summary>
     /// <typeparam name="TMessage">type of the message this class can handle</typeparam>
-    public interface IHandle<TMessage> where TMessage : Message
+    public interface IHandle<TMessage>
     {
         void Handle(TMessage message);
     }

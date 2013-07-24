@@ -26,11 +26,18 @@ namespace Gtd.Client
     
     public static class UI
     {
-        public class DisplayInbox : Message {}
+        public abstract class NavigateCommand : Message{}
+
+        public class DisplayInbox : NavigateCommand
+        {
+            
+        }
 
         public class InboxDisplayed : Message {}
 
-        public class DisplayProject : Message
+        public class NavigateBackClicked : Message{}
+
+        public class DisplayProject : NavigateCommand
         {
             public readonly ProjectId Id;
 

@@ -136,6 +136,8 @@ namespace Gtd.Client
             NavigationController.Wire(form.NavigationRegion, mainQueue, uiBus, provider);
             ProjectController.Wire(form.MainRegion, mainQueue, uiBus, provider);
 
+            BackForwardController.Wire(uiBus, mainQueue, form);
+
             mainQueue.Enqueue(new AppInit());
             mainQueue.Start();
             

@@ -36,6 +36,7 @@
             this._log = new System.Windows.Forms.RichTextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this._menuGoBack = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -45,6 +46,7 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._menuGoBack,
             this._menuGoToInbox,
             this._menuCaptureThought,
             this._menuDefineProject,
@@ -113,6 +115,12 @@
             this.splitContainer1.SplitterDistance = 231;
             this.splitContainer1.TabIndex = 4;
             // 
+            // goBackToolStripMenuItem
+            // 
+            this._menuGoBack.Name = "goBackToolStripMenuItem";
+            this._menuGoBack.Size = new System.Drawing.Size(62, 23);
+            this._menuGoBack.Text = "Go Back";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -144,6 +152,7 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.ToolStripMenuItem _menuGoToInbox;
         private System.Windows.Forms.ToolStripComboBox _filter;
+        private System.Windows.Forms.ToolStripMenuItem _menuGoBack;
     }
 }
 
