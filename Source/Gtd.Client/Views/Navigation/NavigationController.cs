@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using Gtd.Client.Models;
 
 namespace Gtd.Client.Views.Navigation
@@ -13,7 +12,7 @@ namespace Gtd.Client.Views.Navigation
         IHandle<Dumb.ProjectAdded>, 
         IHandle<Dumb.ActionAdded>, 
         IHandle<Dumb.ActionUpdated>,
-    IHandle<UI.FilterChanged>,
+        IHandle<UI.FilterChanged>,
         IHandle<UI.ProjectDisplayed>,
         IHandle<UI.InboxDisplayed>
 

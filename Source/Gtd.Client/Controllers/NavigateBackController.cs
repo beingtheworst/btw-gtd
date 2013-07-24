@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Gtd.Client
 {
 
-    public interface INavigationMenu
+    public interface INavigateBackView
     {
         void ToggleNavigateBackButton(bool enabled);
         void SubscribeToNavigateBack(Action handler);
@@ -13,19 +13,19 @@ namespace Gtd.Client
     public sealed class NavigateBackController : 
         IHandle<UI.NavigateCommand>
     {
-        readonly INavigationMenu _menu;
+        readonly INavigateBackView _menu;
         readonly IMessageQueue _output;
 
         readonly Stack<UI.NavigateCommand> _stack = new Stack<UI.NavigateCommand>();
        
 
-        NavigateBackController(INavigationMenu menu, IMessageQueue output)
+        NavigateBackController(INavigateBackView menu, IMessageQueue output)
         {
             _menu = menu;
             _output = output;
         }
 
-        public static void Wire(ISubscriber input, IMessageQueue output, INavigationMenu menu)
+        public static void Wire(ISubscriber input, IMessageQueue output, INavigateBackView menu)
         {
             var adapter = new NavigateBackController(menu, output);
             input.Subscribe<UI.NavigateCommand>(adapter);

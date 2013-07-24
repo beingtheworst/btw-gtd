@@ -5,7 +5,7 @@ using Gtd.Shell.Filters;
 
 namespace Gtd.Client
 {
-    public partial class MainForm : Form, ILogControl, INavigationMenu
+    public partial class MainForm : Form, ILogControl, INavigateBackView
     {
         MainFormController _controller;
         public readonly Region MainRegion;
