@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Gtd.Client
+namespace Gtd.Client.Controllers
 {
 
     public interface INavigateBackView
     {
-        void ToggleNavigateBackButton(bool enabled);
+        void EnableNavigateBackButton(bool enabled);
         void SubscribeToNavigateBack(Action handler);
     }
 
@@ -29,17 +29,17 @@ namespace Gtd.Client
         {
             var adapter = new NavigateBackController(menu, output);
             input.Subscribe<UI.NavigateCommand>(adapter);
-            //input.Subscribe<UI.NavigateBackClicked>(adapter);
-            menu.ToggleNavigateBackButton(false);
+
+            menu.EnableNavigateBackButton(false);
             menu.SubscribeToNavigateBack(adapter.GoBack);
         }
 
         public  void GoBack()
         {
-
-            var prev = _stack.Pop();
+            // we discard current view and go to the history
+            _stack.Pop();
             _output.Enqueue(_stack.Pop());
-            _menu.ToggleNavigateBackButton(_stack.Count > 1);
+            _menu.EnableNavigateBackButton(_stack.Count > 1);
         }
 
         public void Handle(UI.NavigateCommand message)
@@ -50,7 +50,7 @@ namespace Gtd.Client
 
             _stack.Push(message);
 
-            _menu.ToggleNavigateBackButton(_stack.Count>1);
+            _menu.EnableNavigateBackButton(_stack.Count>1);
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using Btw.Portable;
+using Gtd.Client.Controllers;
 using Gtd.Client.Models;
 using Gtd.Client.Views.AddStuffToInbox;
 using Gtd.Client.Views.CaptureThought;

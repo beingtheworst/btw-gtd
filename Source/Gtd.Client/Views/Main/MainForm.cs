@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using Gtd.Client.Controllers;
 using Gtd.Shell.Filters;
 
 namespace Gtd.Client
@@ -121,7 +122,7 @@ namespace Gtd.Client
 
         }
 
-        public void ToggleNavigateBackButton(bool enabled)
+        public void EnableNavigateBackButton(bool enabled)
         {
             this.Sync(() => _menuGoBack.Enabled = enabled);
         }
