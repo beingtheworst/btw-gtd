@@ -9,6 +9,7 @@
 
 #endregion
 
+using System;
 using Gtd.Client.Models;
 using Gtd.Shell.Filters;
 
@@ -66,6 +67,18 @@ namespace Gtd.Client
             public CompleteActionClicked(ActionId id)
             {
                 Id = id;
+            }
+        }
+
+        public class DragAction : Message
+        {
+            public readonly Guid RequestId;
+            public readonly ImmutableAction Action;
+
+            public DragAction(Guid requestId, ImmutableAction action)
+            {
+                RequestId = requestId;
+                Action = action;
             }
         }
 

@@ -80,6 +80,8 @@
             this._grid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this._grid.Size = new System.Drawing.Size(479, 282);
             this._grid.TabIndex = 2;
+            this._grid.MouseDown += new System.Windows.Forms.MouseEventHandler(this._grid_MouseDown);
+            this._grid.MouseMove += new System.Windows.Forms.MouseEventHandler(this._grid_MouseMove);
             // 
             // _addAction
             // 

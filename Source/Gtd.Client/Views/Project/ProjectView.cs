@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using Gtd.Client.Models;
 
 namespace Gtd.Client.Views.Project
@@ -77,6 +78,32 @@ namespace Gtd.Client.Views.Project
             _controller = controller;
 
             _addAction.Click += (sender, args) => _controller.RequestAddAction(_project);
+        }
+
+        private void _grid_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Left)
+                return;
+
+            var index = _grid.HitTest(e.X, e.Y);
+            if (index.RowIndex < 0)
+                return;
+
+            var item = (ActionDisplay) _grid.Rows[index.RowIndex].DataBoundItem;
+
+
+            var guid = Guid.NewGuid();
+
+            DoDragDrop(guid.ToString(), DragDropEffects.Move);
+            _controller.Publish(new UI.DragAction(guid, item.Model));
+
+
+
+        }
+
+        private void _grid_MouseMove(object sender, MouseEventArgs e)
+        {
+
         }
     }
 }

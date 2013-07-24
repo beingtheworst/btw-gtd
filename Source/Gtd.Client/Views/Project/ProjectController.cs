@@ -82,6 +82,11 @@ namespace Gtd.Client.Views.Project
             _bus.Publish(new UI.CompleteActionClicked(id));
         }
 
+        public void Publish(Message message)
+        {
+            _bus.Publish(message);
+        }
+
         public void RequestAddAction(ProjectId id)
         {
             _bus.Publish(new UI.AddActionClicked(id));
