@@ -146,8 +146,14 @@ namespace Gtd.Client.Views.Navigation
 
         readonly IDictionary<string,object> _nodes = new Dictionary<string, object>();
 
+
+        string _currentNode;
         public void WhenNodeSelected(string tag)
         {
+            if (_currentNode == tag)
+                return;
+
+            _currentNode = tag;
             if (tag == "inbox")
             {
                 _queue.Publish(new UI.DisplayInbox());
@@ -163,11 +169,19 @@ namespace Gtd.Client.Views.Navigation
 
         public void Handle(UI.ProjectDisplayed message)
         {
+            if (_currentNode == message.Project.UIKey)
+                return;
+
+            _currentNode = message.Project.UIKey;
             Sync(() => _tree.UpdateSelectionIfNeeded(message.Project.UIKey));
         }
 
         public void Handle(UI.InboxDisplayed message)
         {
+            if (_currentNode == "inbox")
+                return;
+
+            _currentNode = "inbox";
             Sync(() => _tree.UpdateSelectionIfNeeded("inbox"));
         }
     }

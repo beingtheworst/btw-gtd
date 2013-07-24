@@ -31,12 +31,12 @@ namespace Gtd.Client
 
         public class DisplayInbox : NavigateCommand
         {
-            
+            public DisplayInbox() {}
         }
 
         public class InboxDisplayed : Message {}
 
-        public class NavigateBackClicked : Message{}
+        
 
         public class DisplayProject : NavigateCommand
         {

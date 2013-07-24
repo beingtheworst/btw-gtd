@@ -37,7 +37,7 @@ namespace Gtd.Client
             _menuCaptureThought.Click += (sender, args) => _controller.Publish(new UI.AddStuffClicked());
             _menuDefineProject.Click += (sender, args) => _controller.Publish(new UI.DefineProjectClicked());
             _menuGoToInbox.Click += (sender, args) => _controller.Publish(new UI.DisplayInbox());
-            _menuGoBack.Click += (sender, args) => _controller.Publish(new UI.NavigateBackClicked());
+            
 
             _filter.SelectedIndexChanged += (sender, args) =>
                 {
@@ -55,6 +55,11 @@ namespace Gtd.Client
                     _menuCaptureThought.Visible = true;
                     _menuDefineProject.Visible = true;
                 });
+        }
+
+        public void SubscribeToNavigateBack(Action handler)
+        {
+            _menuGoBack.Click += (sender, args) => handler();
         }
 
         sealed class FilterDisplay
@@ -116,7 +121,7 @@ namespace Gtd.Client
 
         }
 
-        public void ToggleBackButton(bool enabled)
+        public void ToggleNavigateBackButton(bool enabled)
         {
             this.Sync(() => _menuGoBack.Enabled = enabled);
         }
