@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace Gtd.Client.Views.Navigation
@@ -50,6 +51,35 @@ namespace Gtd.Client.Views.Navigation
             var node = _nodes[uiKey];
             if (!node.IsSelected)
                 this.treeView1.SelectedNode = node;
+        }
+
+        private void treeView1_ItemDrag(object sender, ItemDragEventArgs e)
+        {
+        
+        }
+
+        private void treeView1_DragEnter(object sender, DragEventArgs e)
+        {
+            //e.Effect = DragDropEffects.Move;
+        }
+
+        private void treeView1_DragOver(object sender, DragEventArgs e)
+        {
+
+            var client = treeView1.PointToClient(new Point(e.X, e.Y));
+            var node = treeView1.HitTest(client.X, client.Y);
+
+
+            
+
+            if (null == node.Node)
+            {
+                e.Effect = DragDropEffects.None;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.Move;
+            }
         }
     }
 
