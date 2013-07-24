@@ -64,6 +64,7 @@
             // 
             // _grid
             // 
+            this._grid.AllowUserToAddRows = false;
             this._grid.AllowUserToDeleteRows = false;
             this._grid.AllowUserToOrderColumns = true;
             this._grid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
