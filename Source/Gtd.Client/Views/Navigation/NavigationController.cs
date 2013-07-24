@@ -29,7 +29,7 @@ namespace Gtd.Client.Views.Navigation
     {
         readonly INavigationView _tree;
         
-        readonly IPublisher _queue;
+        readonly IMessageQueue _queue;
         readonly ClientPerspective _perspective;
         
 
@@ -37,7 +37,7 @@ namespace Gtd.Client.Views.Navigation
         string _currentNode;
 
 
-        NavigationController(INavigationView view, IPublisher queue, ClientPerspective perspective)
+        NavigationController(INavigationView view, IMessageQueue queue, ClientPerspective perspective)
         {
             _tree.WhenInboxSelected(HandleInboxSelected);
             _tree.WhenProjectSelected(HandleProjectSelected);
@@ -53,7 +53,7 @@ namespace Gtd.Client.Views.Navigation
                 return;
             _currentNode = id;
 
-            _queue.Publish(new UI.DisplayProject(_projectKeys[id]));
+            _queue.Enqueue(new UI.DisplayProject(_projectKeys[id]));
         }
 
         void HandleInboxSelected()
@@ -63,12 +63,12 @@ namespace Gtd.Client.Views.Navigation
             _currentNode = "inbox";
 
 
-            _queue.Publish(new UI.DisplayInbox());
+            _queue.Enqueue(new UI.DisplayInbox());
         }
 
         readonly IDictionary<string,ProjectId> _projectKeys = new Dictionary<string, ProjectId>(); 
 
-        public static NavigationController Wire(INavigationView view, IPublisher queue, ISubscriber bus, ClientPerspective model)
+        public static NavigationController Wire(INavigationView view, IMessageQueue queue, ISubscriber bus, ClientPerspective model)
         {
             var adapter  = new NavigationController(view, queue, model);
             

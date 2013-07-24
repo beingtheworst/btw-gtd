@@ -138,7 +138,7 @@ namespace Gtd.Client
             AddActionToProjectController.Wire(new AddActionToProjectForm(form),uiBus, mainQueue );
             DefineProjectController.Wire(new DefineProjectForm(form), uiBus, mainQueue);
             InboxController.Wire(form.MainRegion, mainQueue, uiBus, provider);
-            NavigationController.Wire(form.NavigationRegion, mainQueue, uiBus, provider);
+            NavigationController.Wire(navigation, mainQueue, uiBus, provider);
             ProjectController.Wire(form.MainRegion, mainQueue, uiBus, provider);
 
             NavigateBackController.Wire(uiBus, mainQueue, form);
