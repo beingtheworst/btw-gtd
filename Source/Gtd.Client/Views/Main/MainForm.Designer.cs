@@ -47,8 +47,8 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this._menuGoBack,
-            this._menuGoToInbox,
             this._menuCaptureThought,
+            this._menuGoToInbox,
             this._menuDefineProject,
             this._filter});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
@@ -72,8 +72,8 @@
             // _menuCaptureThought
             // 
             this._menuCaptureThought.Name = "_menuCaptureThought";
-            this._menuCaptureThought.Size = new System.Drawing.Size(69, 23);
-            this._menuCaptureThought.Text = "Add Stuff";
+            this._menuCaptureThought.Size = new System.Drawing.Size(115, 23);
+            this._menuCaptureThought.Text = "Add Stuff to Inbox";
             // 
             // _menuDefineProject
             // 
