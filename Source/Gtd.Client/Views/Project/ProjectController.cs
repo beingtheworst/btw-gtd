@@ -4,7 +4,7 @@ namespace Gtd.Client.Views.Project
 {
     public sealed class ProjectController : 
         IHandle<UI.DisplayProject>,
-        IHandle<UI.FilterChanged>,
+        IHandle<UI.ActionFilterChanged>,
         IHandle<Dumb.ActionUpdated>,
         IHandle<Dumb.ActionAdded>
     {
@@ -34,7 +34,7 @@ namespace Gtd.Client.Views.Project
 
             mainRegion.RegisterDock(control, "project");
 
-            bus.Subscribe<UI.FilterChanged>(adapter);
+            bus.Subscribe<UI.ActionFilterChanged>(adapter);
             bus.Subscribe<UI.DisplayProject>(adapter);
             bus.Subscribe<Dumb.ActionUpdated>(adapter);
             bus.Subscribe<Dumb.ActionAdded>(adapter);
@@ -58,7 +58,7 @@ namespace Gtd.Client.Views.Project
             _bus.Publish(new UI.ProjectDisplayed(project.Info));
         }
         
-        public void Handle(UI.FilterChanged message)
+        public void Handle(UI.ActionFilterChanged message)
         {
             if (!_currentProject.IsEmpty)
             ReloadView(_currentProject);

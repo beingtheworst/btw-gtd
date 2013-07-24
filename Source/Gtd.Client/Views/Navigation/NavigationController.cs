@@ -1,18 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using Gtd.Client.Models;
+using System.Linq;
 
 namespace Gtd.Client.Views.Navigation
 {
+
+    public interface INavigationView
+    {
+        void UpdateInboxNode(int count);
+        void ReloadProjectList(IList<ImmutableProjectInfo> projects);
+
+
+        void WhenInboxSelected(Action action);
+        void WhenProjectSelected(Action<string> project);
+        void SelectProject(string uiKey);
+        void SelectInbox();
+    }
+
     public sealed class NavigationController : 
         IHandle<AppInit>, 
         IHandle<Dumb.ClientModelLoaded>,
         IHandle<Dumb.StuffAddedToInbox>, 
         IHandle<Dumb.StuffRemovedFromInbox>,
         IHandle<Dumb.ProjectAdded>, 
-        IHandle<Dumb.ActionAdded>, 
-        IHandle<Dumb.ActionUpdated>,
-        IHandle<UI.FilterChanged>,
         IHandle<UI.ProjectDisplayed>,
         IHandle<UI.InboxDisplayed>
 
@@ -27,11 +38,34 @@ namespace Gtd.Client.Views.Navigation
 
         NavigationController(Region region, IPublisher queue, ClientPerspective perspective)
         {
-            _tree = new NavigationView(this);
+            _tree = new NavigationView();
+
+            _tree.WhenInboxSelected(() =>
+                {
+                    if ("inbox" == _currentNode)
+                        return;
+                    _currentNode = "inbox";
+
+                    
+                    _queue.Publish(new UI.DisplayInbox());
+                });
+            _tree.WhenProjectSelected(id =>
+                {
+                    if (id == _currentNode)
+                        return;
+                    _currentNode = id;
+
+                    _queue.Publish(new UI.DisplayProject(_projectKeys[id]));
+                });
+
+            
+
             _region = region;
             _queue = queue;
             _perspective = perspective;
         }
+
+        IDictionary<string,ProjectId> _projectKeys = new Dictionary<string, ProjectId>(); 
 
         public static NavigationController Wire(Region control, IPublisher queue, ISubscriber bus, ClientPerspective view)
         {
@@ -41,13 +75,13 @@ namespace Gtd.Client.Views.Navigation
             bus.Subscribe<Dumb.StuffAddedToInbox>(adapter);
             bus.Subscribe<Dumb.StuffRemovedFromInbox>(adapter);
             bus.Subscribe<Dumb.ProjectAdded>(adapter);
-            bus.Subscribe<Dumb.ActionAdded>(adapter);
+            
             bus.Subscribe<Dumb.ClientModelLoaded>(adapter);
-            bus.Subscribe<UI.FilterChanged>(adapter);
-            bus.Subscribe<Dumb.ActionUpdated>(adapter);
-
+            
             bus.Subscribe<UI.InboxDisplayed>(adapter);
             bus.Subscribe<UI.ProjectDisplayed>(adapter);
+
+
 
             return adapter ;
         }
@@ -58,48 +92,32 @@ namespace Gtd.Client.Views.Navigation
             _region.SwitchTo("nav-tree");
         }
 
-        
-
-        void ReloadInboxNode(int count)
-        {
-            _tree.AddOrUpdateNode("inbox",string.Format("Inbox ({0})", count), NodeType.Inbox);
-        }
-
-        
 
         public void Handle(Dumb.StuffAddedToInbox message)
         {
-            
-            Sync(() => ReloadInboxNode(message.InboxCount));
+            if (!_loaded) return;
+
+            _tree.UpdateInboxNode(message.InboxCount);
         }
 
         public void Handle(Dumb.StuffRemovedFromInbox message)
         {
-            Sync(() => ReloadInboxNode(message.InboxCount));
-        }
+            if (!_loaded) return;
 
-        void Sync(Action act)
-        {
-            if (_tree.InvokeRequired)
-            {
-                _tree.Invoke(act);
-                return;
-            }
-            act();
+            _tree.UpdateInboxNode(message.InboxCount);
         }
-
+        
         public void Handle(Dumb.ClientModelLoaded message)
         {
             _loaded = true;
 
-            Sync(LoadNavigation);
+            _tree.UpdateInboxNode(message.Model.Inbox.Count);
+            _tree.ReloadProjectList(message.Model.Projects.Select(p => p.Info).ToList());
 
-        }
-
-        public void Handle(UI.FilterChanged message)
-        {
-            if (!_loaded) return;
-            Sync(LoadNavigation);
+            foreach (var key in message.Model.Projects)
+            {
+                _projectKeys[key.Info.UIKey] = key.Info.ProjectId;
+            }
         }
 
         public void Handle(Dumb.ProjectAdded message)
@@ -107,64 +125,12 @@ namespace Gtd.Client.Views.Navigation
             if (!_loaded)
                 return;
 
-            ReloadProjectNode(message.ProjectId);
+            _projectKeys[message.UniqueKey] = message.ProjectId;
+
+            _tree.ReloadProjectList(_perspective.Model.ListProjects().Select(p => p.Info).ToList());
         }
-
-        void ReloadProjectNode(ProjectId projectId)
-        {
-            AddOrUpdateProject(_perspective.Model.GetProjectOrNull(projectId));
-        }
-
-        public void Handle(Dumb.ActionAdded message)
-        {
-            ReloadProjectNode(message.Action.ProjectId);
-        }
-
-        public void Handle(Dumb.ActionUpdated message)
-        {
-            ReloadProjectNode(message.Action.ProjectId); 
-        }
-
-        void AddOrUpdateProject(ImmutableProject model)
-        {
-            _nodes[model.Info.UIKey] = model.Info.ProjectId;
-            Sync(() => _tree.AddOrUpdateNode(model.Info.UIKey, model.Info.Outcome, NodeType.Project));
-        }
-
-
-        void LoadNavigation()
-        {
-            _tree.Clear();
-            var format = string.Format("Inbox ({0})", _perspective.Model.GetTheNumberOfItemsOfStuffInInbox());
-            _tree.AddOrUpdateNode("inbox", format, NodeType.Inbox);
-            foreach (var project in _perspective.ListProjects())
-            {
-                AddOrUpdateProject(project);
-            }
-        }
-
-        readonly IDictionary<string,object> _nodes = new Dictionary<string, object>();
-
 
         string _currentNode;
-        public void WhenNodeSelected(string tag)
-        {
-            if (_currentNode == tag)
-                return;
-
-            _currentNode = tag;
-            if (tag == "inbox")
-            {
-                _queue.Publish(new UI.DisplayInbox());
-                return;
-            }
-            var node = _nodes[tag];
-
-            if (node is ProjectId)
-            {
-                _queue.Publish(new UI.DisplayProject((ProjectId) node));
-            }
-        }
 
         public void Handle(UI.ProjectDisplayed message)
         {
@@ -172,7 +138,7 @@ namespace Gtd.Client.Views.Navigation
                 return;
 
             _currentNode = message.Project.UIKey;
-            Sync(() => _tree.UpdateSelectionIfNeeded(message.Project.UIKey));
+            _tree.SelectProject(message.Project.UIKey);
         }
 
         public void Handle(UI.InboxDisplayed message)
@@ -181,14 +147,7 @@ namespace Gtd.Client.Views.Navigation
                 return;
 
             _currentNode = "inbox";
-            Sync(() => _tree.UpdateSelectionIfNeeded("inbox"));
+            _tree.SelectInbox();
         }
-    }
-
-
-
-    public interface IFormCommand
-    {
-        
     }
 }

@@ -43,7 +43,7 @@ namespace Gtd.Client
             _filter.SelectedIndexChanged += (sender, args) =>
                 {
                     var item = (FilterDisplay) _filter.SelectedItem;
-                    _controller.Publish(new UI.FilterChanged(item.Criteria));
+                    _controller.Publish(new UI.ActionFilterChanged(item.Criteria));
                 };
 
         }

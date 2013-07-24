@@ -165,11 +165,11 @@ namespace Gtd.Client
 
 
 
-        public sealed class FilterChanged : Message
+        public sealed class ActionFilterChanged : Message
         {
             public readonly IFilterCriteria Criteria;
 
-            public FilterChanged(IFilterCriteria criteria)
+            public ActionFilterChanged(IFilterCriteria criteria)
             {
                 Criteria = criteria;
             }

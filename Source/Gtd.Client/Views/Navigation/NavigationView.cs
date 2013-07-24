@@ -1,91 +1,108 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
+﻿using System;
+using System.Collections.Generic;
+
 using System.Windows.Forms;
+using Gtd.Client.Models;
 
 namespace Gtd.Client.Views.Navigation
 {
-    public partial class NavigationView : UserControl
+    public partial class NavigationView : UserControl, INavigationView
     {
-        public NavigationView(NavigationController navigationController)
+        public NavigationView()
         {
             InitializeComponent();
 
-            treeView1.AfterSelect += (sender, args) =>
+            _inboxNode = treeView1.Nodes.Add("inbox", "Inbox", "inbox");
+
+            treeView1.AfterSelect += (sender, args) => OnSelectNode(args.Node);
+        }
+
+        void OnSelectNode(TreeNode node)
+        {
+            if (null == node)
+                return;
+            if (node == _inboxNode)
+            {
+                _whenInboxSelected();
+            }
+            else
+            {
+                _whenProjectSelected(node.Name);
+            }
+        }
+
+        public void UpdateInboxNode(int count)
+        {
+            treeView1.Sync(() => _inboxNode.Text = string.Format("Inbox ({0})", count));
+        }
+
+        public void ReloadProjectList(IList<ImmutableProjectInfo> projects)
+        {
+            treeView1.Sync(() =>
                 {
-                    if (args.Node != null)
+                    treeView1.BeginUpdate();
+                    try
                     {
-                        navigationController.WhenNodeSelected((string)args.Node.Tag);
+                        while (treeView1.Nodes.Count>1)
+                        treeView1.Nodes.RemoveAt(1);
+                        
+                        foreach (var p in projects)
+                        {
+                            treeView1.Nodes.Add(p.UIKey, p.Outcome, "project", "project");
+                        }
                     }
-                };
+                    finally
+                    {
+                        treeView1.EndUpdate();
+                    }
+                    
+                });
         }
 
-        readonly IDictionary<string,TreeNode> _nodes = new Dictionary<string, TreeNode>(); 
-        public void Clear()
-        {
-            _nodes.Clear();
-            treeView1.Nodes.Clear();
-        }
-
-        public void AddOrUpdateNode(string key, string text, NodeType type)
-        {
-            TreeNode node;
-            if (!_nodes.TryGetValue(key, out node))
+        Action _whenInboxSelected = () =>
             {
-                var s = type.ToString().ToLowerInvariant();
-                node = new TreeNode(text) {Tag = key,
-                    ImageKey = s,
-                    SelectedImageKey = s
-                };
-                _nodes[key] = node;
-                treeView1.Nodes.Add(node);
-            }
-            else
+                throw new InvalidOperationException("WhenInboxSelected is not assigned");
+            };
+
+        Action<string> _whenProjectSelected = id =>
             {
-                node.Text = text;
-            }
-        }
+                throw new InvalidOperationException("WhenProjectSelected is not assigned");
+            };
+
+        readonly TreeNode _inboxNode;
 
 
-        public void UpdateSelectionIfNeeded(string uiKey)
+        public void WhenInboxSelected(Action action)
         {
-            var node = _nodes[uiKey];
-            if (!node.IsSelected)
-                this.treeView1.SelectedNode = node;
+            _whenInboxSelected = action;
         }
 
-        private void treeView1_ItemDrag(object sender, ItemDragEventArgs e)
+        public void WhenProjectSelected(Action<string> project)
         {
-        
+            _whenProjectSelected = project;
         }
 
-        private void treeView1_DragEnter(object sender, DragEventArgs e)
+        public void SelectProject(string uiKey)
         {
-            //e.Effect = DragDropEffects.Move;
+            this.Sync(() =>
+                {
+                    var node = treeView1.Nodes[uiKey];
+                    if (null != node && !node.IsSelected)
+                    {
+                        treeView1.SelectedNode = node;
+                    }
+                });
         }
 
-        private void treeView1_DragOver(object sender, DragEventArgs e)
+        public void SelectInbox()
         {
-
-            var client = treeView1.PointToClient(new Point(e.X, e.Y));
-            var node = treeView1.HitTest(client.X, client.Y);
-
-
-            
-
-            if (null == node.Node)
-            {
-                e.Effect = DragDropEffects.None;
-            }
-            else
-            {
-                e.Effect = DragDropEffects.Move;
-            }
+            this.Sync(() =>
+                {
+                    if (!_inboxNode.IsSelected)
+                    {
+                        treeView1.SelectedNode = _inboxNode;
+                    }
+                });
         }
-    }
-
-    public enum NodeType
-    {
-        Inbox,
-        Project
     }
 }

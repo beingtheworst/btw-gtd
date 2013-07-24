@@ -285,22 +285,9 @@ namespace Gtd.Client
             List<IMessageHandler> list;
             if (!_typeLookup.TryGetValue(type, out list)) return;
 
-            if (typeof(IFormCommand).IsAssignableFrom(type))
+            foreach (var handler in list)
             {
-                foreach (var handler in list)
-                {
-                    var copy = handler;
-
-                    Form.ActiveForm.Invoke(new Action(() => copy.TryHandle(message)));
-
-                }
-            }
-            else
-            {
-                foreach (var handler in list)
-                {
-                    handler.TryHandle(message);
-                }
+                handler.TryHandle(message);
             }
         }
     }
