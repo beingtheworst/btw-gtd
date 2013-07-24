@@ -87,7 +87,7 @@
     <Compile Include="Views\DefineProject\DefineProjectForm.Designer.cs">
       <DependentUpon>DefineProjectForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\Main\LogController.cs" />
+    <Compile Include="Controllers\LogController.cs" />
     <Compile Include="UI.cs" />
     <Compile Include="Views\AddStuffToInbox\AddStuffToInboxController.cs" />
     <Compile Include="Views\Project\ProjectController.cs" />

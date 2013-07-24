@@ -4,7 +4,7 @@ using Gtd.CoreDomain;
 using Gtd.CoreDomain.AppServices.ClientProfile;
 using Gtd.CoreDomain.AppServices.TrustedSystem;
 
-namespace Gtd.Client
+namespace Gtd.Client.Controllers
 {
     /// <summary>
     /// Part of the App's infrastructure that subscribes to all messages that go through

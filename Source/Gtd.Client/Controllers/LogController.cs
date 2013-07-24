@@ -1,20 +1,17 @@
-﻿using System;
-using Gtd.Shell;
-
-namespace Gtd.Client
+﻿namespace Gtd.Client.Controllers
 {
-    public interface ILogControl
+    public interface ILogView
     {
         void Log(string toString);
     }
 
     sealed class LogController : IHandle<Message>
     {
-        readonly ILogControl _control;
+        readonly ILogView _view;
 
-        public static void Wire(ILogControl control, ISubscriber bus)
+        public static void Wire(ILogView view, ISubscriber bus)
         {
-            var adapter = new LogController(control);
+            var adapter = new LogController(view);
 
             // have our logger subscribe to the "main event loop"
             // of the application so it can see all Messages (Actions/Events, etc.)
@@ -23,9 +20,9 @@ namespace Gtd.Client
         }
 
 
-        LogController(ILogControl control)
+        LogController(ILogView view)
         {
-            _control = control;
+            _view = view;
         }
 
         public void Handle(Message message)
@@ -36,7 +33,7 @@ namespace Gtd.Client
             {
                 s = type.FullName.Remove(0, type.Namespace.Length + 1);
             }
-            _control.Log(s);
+            _view.Log(s);
         }
     }
 
