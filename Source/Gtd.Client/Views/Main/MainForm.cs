@@ -32,9 +32,6 @@ namespace Gtd.Client
             // more meaningful "UI domain" events that we care about.
             // We then send/publish them to our own custom event handling system
             // (to our in-memory queue->to potentially the UI message bus, etc.).
-
-            Load += (sender, args) => _controller.Publish(new FormLoading());
-
             _menuCaptureThought.Click += (sender, args) => _controller.Publish(new UI.AddStuffClicked());
             _menuDefineProject.Click += (sender, args) => _controller.Publish(new UI.DefineProjectClicked());
             _menuGoToInbox.Click += (sender, args) => _controller.Publish(new UI.DisplayInbox());

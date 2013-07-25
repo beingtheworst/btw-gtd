@@ -216,9 +216,4 @@ namespace Gtd.Client
             SystemId = systemId;
         }
     }
-
-
-    public sealed class FormLoading : Message { }
-
-    
 }
