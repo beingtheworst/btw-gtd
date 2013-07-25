@@ -139,7 +139,7 @@ namespace Gtd.Client
             // and the target queue that they can use tell the rest of the world about events they generate.
             #endregion
 
-            MainFormController.Wire(form, mainQueue, uiBus);
+            MainMenuController.Wire(form, mainQueue, uiBus);
             AddStuffToInboxController.Wire(new AddStuffToInboxForm(form), uiBus, mainQueue);
             AddActionToProjectController.Wire(new AddActionToProjectForm(form),uiBus, mainQueue );
             DefineProjectController.Wire(new DefineProjectForm(form), uiBus, mainQueue);

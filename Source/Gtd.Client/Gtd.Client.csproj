@@ -115,7 +115,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\ClientModel.cs" />
-    <Compile Include="Views\Main\MainFormController.cs" />
+    <Compile Include="Views\Main\MainMenuController.cs" />
     <Compile Include="Views\Navigation\NavigationController.cs" />
     <Compile Include="Views\Navigation\NavigationView.cs">
       <SubType>UserControl</SubType>

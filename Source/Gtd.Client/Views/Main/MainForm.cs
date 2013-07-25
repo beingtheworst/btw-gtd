@@ -7,9 +7,9 @@ using Gtd.Shell.Filters;
 
 namespace Gtd.Client
 {
-    public partial class MainForm : Form, ILogView, INavigateBackView
+    public partial class MainForm : Form, ILogView, INavigateBackView, IMainMenu
     {
-        MainFormController _controller;
+        
         public readonly Region MainRegion;
         public readonly Region NavigationRegion;
 
@@ -21,28 +21,6 @@ namespace Gtd.Client
             NavigationRegion = new Region(splitContainer1.Panel1);
 
             DisplayFilters(FilterCriteria.LoadAllFilters().ToList());
-        }
-        public void SetAdapter(MainFormController controller)
-        {
-            _controller = controller;
-
-            // Classical .NET controls like a WinForm button 
-            // expose event delegates, like a ".Load or .Click event", that you can subscribe to.
-            // We subscribe to some of those low-level .NET events here and convert them into
-            // more meaningful "UI domain" events that we care about.
-            // We then send/publish them to our own custom event handling system
-            // (to our in-memory queue->to potentially the UI message bus, etc.).
-            _menuCaptureThought.Click += (sender, args) => _controller.Publish(new UI.AddStuffClicked());
-            _menuDefineProject.Click += (sender, args) => _controller.Publish(new UI.DefineProjectClicked());
-            _menuGoToInbox.Click += (sender, args) => _controller.Publish(new UI.DisplayInbox());
-            
-
-            _filter.SelectedIndexChanged += (sender, args) =>
-                {
-                    var item = (FilterDisplay) _filter.SelectedItem;
-                    _controller.Publish(new UI.ActionFilterChanged(item.Criteria));
-                };
-
         }
 
         public void ShowInboxMenu()
@@ -117,6 +95,27 @@ namespace Gtd.Client
         public void EnableNavigateBackButton(bool enabled)
         {
             this.Sync(() => _menuGoBack.Enabled = enabled);
+        }
+
+        public void SubscribeToAddStuffClicked(Action callback)
+        {
+            _menuCaptureThought.Click += (sender, args) => callback();
+        }
+
+        public void SubscribeToDefineProjectClicked(Action callback)
+        {
+            _menuDefineProject.Click += (sender, args) => callback();
+        }
+
+        public void SubscribeToGotoInboxClicked(Action callback)
+        {
+            _menuGoToInbox.Click += (sender, args) => callback();
+        }
+
+        public void SubscribeToSelectedFilterChanged(Action<IFilterCriteria> callback)
+        {
+            var item = (FilterDisplay)_filter.SelectedItem;
+            callback(item.Criteria);
         }
     }
 
