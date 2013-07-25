@@ -85,6 +85,9 @@ namespace Gtd.Client
 
             var projectView = new ProjectView();
             projectView.AttachTo(form.MainRegion);
+
+            var inboxView = new InboxView();
+            inboxView.AttachTo(form.MainRegion);
             
             LogController.Wire(form, uiBus);
 
@@ -140,7 +143,7 @@ namespace Gtd.Client
             AddStuffToInboxController.Wire(new AddStuffToInboxForm(form), uiBus, mainQueue);
             AddActionToProjectController.Wire(new AddActionToProjectForm(form),uiBus, mainQueue );
             DefineProjectController.Wire(new DefineProjectForm(form), uiBus, mainQueue);
-            InboxController.Wire(form.MainRegion, mainQueue, uiBus, provider);
+            InboxController.Wire(inboxView, mainQueue, uiBus, provider);
             NavigationController.Wire(navigation, mainQueue, uiBus, provider);
             ProjectController.Wire(projectView, mainQueue, uiBus, provider);
 

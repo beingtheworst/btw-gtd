@@ -65,7 +65,6 @@
             this.button1.TabIndex = 1;
             this.button1.Text = "Trash It";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // _toProject
             // 
@@ -78,8 +77,6 @@
             this._toProject.Size = new System.Drawing.Size(160, 24);
             this._toProject.TabIndex = 2;
             this._toProject.DropDown += new System.EventHandler(this._toProject_DropDown);
-            this._toProject.SelectedIndexChanged += new System.EventHandler(this._toProject_SelectedIndexChanged);
-            this._toProject.SelectionChangeCommitted += new System.EventHandler(this._toProject_SelectionChangeCommitted);
             // 
             // label1
             // 
@@ -103,7 +100,6 @@
             this._addStuff.TabIndex = 4;
             this._addStuff.Text = "Add Stuff";
             this._addStuff.UseVisualStyleBackColor = true;
-            this._addStuff.Click += new System.EventHandler(this._capture_Click);
             // 
             // label2
             // 

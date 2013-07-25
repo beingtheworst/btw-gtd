@@ -6,17 +6,19 @@ using Gtd.Client.Models;
 
 namespace Gtd.Client
 {
-    public partial class InboxView : UserControl
+    public partial class InboxView : UserControl, IInboxView
     {
-        readonly InboxController _controller;
+        //readonly InboxController _controller;
 
-        public InboxView(InboxController controller)
+        public InboxView()
         {
-            _controller = controller;
+            
             InitializeComponent();
 
             _toProject.Enabled = false;
         }
+
+
 
         sealed class StuffInfo
         {
@@ -38,22 +40,9 @@ namespace Gtd.Client
         readonly IDictionary<StuffId, StuffInfo> _stuffInInbox = new Dictionary<StuffId, StuffInfo>(); 
 
       
-        public void TrashStuff(StuffId stuffId)
-        {
-            StuffInfo stuffInfo;
-            if (_stuffInInbox.TryGetValue(stuffId, out stuffInfo))
-            {
-                listBox1.Items.Remove(stuffInfo);
-                _stuffInInbox.Remove(stuffInfo.Id);
-            }
-            listBox1.Visible = listBox1.Items.Count > 0;
-        }
+        
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            _controller.WhenRequestedToTrashStuff(GetSelectedStuffIds());
-        }
-
+        
         StuffId[] GetSelectedStuffIds()
         {
             return listBox1.SelectedItems.Cast<StuffInfo>().Select(stuffItem => stuffItem.Id).ToArray();
@@ -65,10 +54,7 @@ namespace Gtd.Client
             _toProject.Enabled = listBox1.SelectedIndices.Count > 0;
         }
 
-        private void _toProject_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
+    
         
         void _toProject_DropDown(object sender, EventArgs e)
         {
@@ -77,9 +63,10 @@ namespace Gtd.Client
             try
             {
                 _toProject.Items.Clear();
-                foreach (var info in _controller.ListProjects())
+                var projects = _whenListProjects();
+                foreach (var info in projects)
                 {
-                    _toProject.Items.Add(new Display(info.Info.ProjectId, info.Info.Outcome));
+                    _toProject.Items.Add(new Display(info.ProjectId, info.Outcome));
                 }
             }
             finally
@@ -88,32 +75,22 @@ namespace Gtd.Client
             }
         }
 
-        private void _toProject_SelectionChangeCommitted(object sender, EventArgs e)
-        {
-            var projectId = ((ProjectId)(((Display)_toProject.SelectedItem).Value));
-            _controller.WhenRequestedToMoveStuffToProject(projectId, GetSelectedStuffIds());
-        }
 
-        private void _capture_Click(object sender, EventArgs e)
-        {
-            _controller.WhenAddStuffClicked();
-        }
+       
 
         public void LoadInbox(ImmutableInbox inbox)
         {
             listBox1.BeginUpdate();
             try
             {
+                listBox1.Items.Clear();
                 foreach (var view in inbox.Stuff)
                 {
                     var stuffInfo = new StuffInfo(view);
-                    _stuffInInbox.Add(view.StuffId, stuffInfo);
+                    _stuffInInbox[view.StuffId] = stuffInfo;
                     listBox1.Items.Add(stuffInfo);
                 }
                 listBox1.Visible = listBox1.Items.Count > 0;
-
-                
-
             }
             finally
             {
@@ -123,11 +100,72 @@ namespace Gtd.Client
 
         public void AddStuff(ImmutableStuff stuff)
         {
-            
             var stuffInfo = new StuffInfo(stuff);
             _stuffInInbox.Add(stuff.StuffId, stuffInfo);
-            listBox1.Items.Add(stuffInfo);
-            listBox1.Visible = listBox1.Items.Count > 0;
+            this.Sync(() =>
+                {
+                    listBox1.Items.Add(stuffInfo);
+                    listBox1.Visible = listBox1.Items.Count > 0;
+                });
+        }
+
+        public void RemoveStuff(StuffId stuffId)
+        {
+            StuffInfo stuffInfo;
+
+            if (!_stuffInInbox.TryGetValue(stuffId, out stuffInfo)) return;
+
+
+            _stuffInInbox.Remove(stuffInfo.Id);
+            this.Sync(() =>
+                {
+                    listBox1.Items.Remove(stuffInfo);
+                    listBox1.Visible = listBox1.Items.Count > 0;
+                });
+        }
+
+        Region _region;
+
+        public void AttachTo(Region mainRegion)
+        {
+            _region = mainRegion;
+            mainRegion.RegisterDock(this, "inbox");
+        }
+
+        
+
+        public void SubscribeToTrashStuffClick(Action<StuffId[]> callback)
+        {
+            button1.Click += (sender, args) => callback(GetSelectedStuffIds());
+        }
+
+        public void SubscribeToAddStuffClick(Action callback)
+        {
+            _addStuff.Click += (sender, args) => callback();
+        }
+
+        Func<ICollection<ImmutableProjectInfo>> _whenListProjects = () => { throw new InvalidOperationException(); }; 
+
+        public void SubscribeToListProjects(Func<ICollection<ImmutableProjectInfo>> request)
+        {
+            _whenListProjects = request;
+        }
+
+        public void SubscribeToMoveStuffToProject(Action<ProjectId, StuffId[]> callback)
+        {
+            _toProject.SelectionChangeCommitted += (sender, args) =>
+                {
+                    var projectId = ((ProjectId) (((Display) _toProject.SelectedItem).Value));
+                    callback(projectId, GetSelectedStuffIds());
+                };
+
+        }
+
+        public void ShowInbox(ImmutableInbox inbox)
+        {
+            this.Sync(() => LoadInbox(inbox));
+            _region.SwitchTo("inbox");
+
         }
     }
 

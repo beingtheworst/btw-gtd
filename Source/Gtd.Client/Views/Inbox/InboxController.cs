@@ -1,74 +1,86 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Gtd.Client.Models;
+using System.Linq;
 
 namespace Gtd.Client
 {
+
+    public interface IInboxView
+    {
+        void SubscribeToTrashStuffClick(Action<StuffId[]> callback);
+        void SubscribeToAddStuffClick(Action callback);
+        void SubscribeToListProjects(Func<ICollection<ImmutableProjectInfo>> request);
+        void SubscribeToMoveStuffToProject(Action<ProjectId, StuffId[]> callback);
+
+        void ShowInbox(ImmutableInbox inbox);
+        void AddStuff(ImmutableStuff stuff);
+        void RemoveStuff(StuffId stuff);
+    }
+
     public class InboxController : 
-        IHandle<AppInit>,
+        
         IHandle<UI.DisplayInbox>,
         IHandle<Dumb.StuffAddedToInbox>,  
         IHandle<Dumb.StuffRemovedFromInbox>, 
         IHandle<FormLoaded>
     {
-        readonly Region _dock;
+        
         readonly IPublisher _queue;
         readonly ClientPerspective _perspective;
 
-        readonly InboxView _control;
+        readonly IInboxView _control;
 
-        InboxController(Region dock, IPublisher queue, ClientPerspective perspective)
+        InboxController(IInboxView view, IPublisher queue, ClientPerspective perspective)
         {
-            _dock = dock;
+            
             _queue = queue;
             _perspective = perspective;
-            _control = new InboxView(this);
+            _control = view;
         }
 
-        public static InboxController Wire(Region form, IPublisher queue, ISubscriber bus, ClientPerspective view)
+        public static InboxController Wire(IInboxView view, IPublisher queue, ISubscriber bus, ClientPerspective model)
         {
-            var adapter = new InboxController(form, queue, view);
+            var adapter = new InboxController(view, queue, model);
 
-            bus.Subscribe<AppInit>(adapter);
+            
             bus.Subscribe<UI.DisplayInbox>(adapter);
             bus.Subscribe<Dumb.StuffAddedToInbox>(adapter);
             bus.Subscribe<Dumb.StuffRemovedFromInbox>(adapter);
-            
             bus.Subscribe<FormLoaded>(adapter);
+
+
+            view.SubscribeToTrashStuffClick(adapter.TrashStuff);
+            view.SubscribeToAddStuffClick(adapter.AddStuff);
+            view.SubscribeToListProjects(adapter.ListProjects);
+            view.SubscribeToMoveStuffToProject(adapter.MoveStuffToProject);
 
             return adapter;
         }
 
-        public void Handle(AppInit message)
-        {
-            _dock.RegisterDock(_control, "inbox");
-        }
-
-        bool _shown; 
+        
 
         public void Handle(UI.DisplayInbox message)
         {
-            if (!_shown)
-            {
-                var inbox = _perspective.Model.GetInbox();
-                _control.Sync(() => _control.LoadInbox(inbox));
-                _shown = true;
-            }
+            var inbox = _perspective.Model.GetInbox();
 
-            _dock.SwitchTo("inbox");
+            _control.ShowInbox(inbox);
+
+            
             _queue.Publish(new UI.InboxDisplayed());
         }
 
         public void Handle(Dumb.StuffAddedToInbox message)
         {
-            _control.Sync(() => _control.AddStuff(message.Stuff));
+            _control.AddStuff(message.Stuff);
             
         }
         public void Handle(Dumb.StuffRemovedFromInbox message)
         {
-            _control.Sync(() => _control.TrashStuff(message.Stuff.StuffId));
+            _control.RemoveStuff(message.Stuff.StuffId);
         }
 
-        public void WhenRequestedToTrashStuff(IEnumerable<StuffId> stuffIds)
+        public void TrashStuff(IEnumerable<StuffId> stuffIds)
         {
             foreach (var id in stuffIds)
             {
@@ -76,19 +88,19 @@ namespace Gtd.Client
             }
         }
 
-        public void WhenRequestedToMoveStuffToProject(ProjectId projectId, StuffId[] stuffIdsToMove)
+        public void MoveStuffToProject(ProjectId projectId, StuffId[] stuffIdsToMove)
         {
             _queue.Publish(new UI.MoveStuffToProjectClicked(stuffIdsToMove, projectId));
         }
 
-        public void WhenAddStuffClicked()
+        public void AddStuff()
         {
             _queue.Publish(new UI.AddStuffClicked());
         }
 
-        public IList<ImmutableProject> ListProjects()
+        public ICollection<ImmutableProjectInfo> ListProjects()
         {
-            return _perspective.ListProjects();
+            return _perspective.ListProjects().Select(i => i.Info).ToList();
         }
 
         public void Handle(FormLoaded message)
