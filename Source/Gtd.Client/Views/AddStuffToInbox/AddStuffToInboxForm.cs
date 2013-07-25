@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace Gtd.Client.Views.AddStuffToInbox
 {
-    public partial class AddStuffToInboxForm : Form
+    public partial class AddStuffToInboxForm : Form, IAddStuffToInboxWizard
     {
         readonly MainForm _parent;
 

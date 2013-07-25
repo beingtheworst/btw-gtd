@@ -1,11 +1,18 @@
-﻿namespace Gtd.Client.Views.AddStuffToInbox
+﻿using System;
+
+namespace Gtd.Client.Views.AddStuffToInbox
 {
+
+    public interface IAddActionToProjectWizard
+    {
+        void TryGetUserInput(Action<string> future);
+    }
     public sealed class AddActionToProjectController : IHandle<UI.AddActionClicked>
     {
-        readonly AddActionToProjectForm _form;
+        readonly IAddActionToProjectWizard _form;
         readonly IMessageQueue _queue;
 
-        AddActionToProjectController(AddActionToProjectForm form, IMessageQueue queue)
+        AddActionToProjectController(IAddActionToProjectWizard form, IMessageQueue queue)
         {
             _form = form;
             _queue = queue;
@@ -19,7 +26,7 @@
         // "uiBus" to call its Hanlde method for specific events it cares about,
         // and its IMessageQueue, the target it notifies when its stuff/events happen, is "mainQueue".
         #endregion
-        public static void Wire(AddActionToProjectForm form, ISubscriber source, IMessageQueue target)
+        public static void Wire(IAddActionToProjectWizard form, ISubscriber source, IMessageQueue target)
         {
             // when setup code calls this static Wire method
             // we create a new instance of this controller

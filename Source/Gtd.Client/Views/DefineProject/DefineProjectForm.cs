@@ -6,10 +6,11 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Gtd.Client.Views.CaptureThought;
 
 namespace Gtd.Client
 {
-    public partial class DefineProjectForm : Form
+    public partial class DefineProjectForm : Form, IDefineProjectWizard
     {
         readonly Form _parent;
 

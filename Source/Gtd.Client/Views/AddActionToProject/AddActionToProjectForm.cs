@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace Gtd.Client.Views.AddStuffToInbox
 {
-    public partial class AddActionToProjectForm : Form
+    public partial class AddActionToProjectForm : Form, IAddActionToProjectWizard
     {
         readonly MainForm _parent;
 

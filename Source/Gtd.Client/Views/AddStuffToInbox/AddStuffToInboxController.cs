@@ -1,11 +1,18 @@
-﻿namespace Gtd.Client.Views.AddStuffToInbox
+﻿using System;
+
+namespace Gtd.Client.Views.AddStuffToInbox
 {
+
+    public interface IAddStuffToInboxWizard
+    {
+        void TryGetUserInput(Action<string> future);
+    }
     public sealed class AddStuffToInboxController : IHandle<UI.AddStuffClicked>
     {
-        readonly AddStuffToInboxForm _form;
+        readonly IAddStuffToInboxWizard _form;
         readonly IMessageQueue _queue;
 
-        AddStuffToInboxController(AddStuffToInboxForm form, IMessageQueue queue)
+        AddStuffToInboxController(IAddStuffToInboxWizard form, IMessageQueue queue)
         {
             _form = form;
             _queue = queue;
@@ -19,7 +26,7 @@
         // "uiBus" to call its Hanlde method for specific events it cares about,
         // and its IMessageQueue, the target it notifies when its stuff/events happen, is "mainQueue".
         #endregion
-        public static void Wire(AddStuffToInboxForm form, ISubscriber source, IMessageQueue target)
+        public static void Wire(IAddStuffToInboxWizard form, ISubscriber source, IMessageQueue target)
         {
             // when setup code calls this static Wire method
             // we create a new instance of this controller

@@ -1,17 +1,24 @@
+using System;
+
 namespace Gtd.Client.Views.CaptureThought
 {
+
+    public interface IDefineProjectWizard
+    {
+        void TryGetUserInput(Action<string> callbackWithOutcome);
+    }
     public sealed class DefineProjectController : IHandle<UI.DefineProjectClicked>
     {
-        readonly DefineProjectForm _form;
+        readonly IDefineProjectWizard _form;
         readonly IMessageQueue _queue;
 
-        DefineProjectController(DefineProjectForm form, IMessageQueue queue)
+        DefineProjectController(IDefineProjectWizard form, IMessageQueue queue)
         {
             _form = form;
             _queue = queue;
         }
 
-        public static void Wire(DefineProjectForm form, ISubscriber source, IMessageQueue target)
+        public static void Wire(IDefineProjectWizard form, ISubscriber source, IMessageQueue target)
         {
             var controller = new DefineProjectController(form, target);
             source.Subscribe<UI.DefineProjectClicked>(controller);
