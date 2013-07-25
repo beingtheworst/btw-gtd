@@ -67,6 +67,7 @@
     <Compile Include="Models\Filters\RemainingFilter.cs" />
     <Compile Include="Models\ClientModelController.cs" />
     <Compile Include="Models\ClientPerspective.cs" />
+    <Compile Include="UserInterface.cs" />
     <Compile Include="Views\AddActionToProject\AddActionToProjectForm.cs">
       <SubType>Form</SubType>
     </Compile>
