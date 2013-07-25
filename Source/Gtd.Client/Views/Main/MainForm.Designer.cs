@@ -88,7 +88,6 @@
             this._filter.IntegralHeight = false;
             this._filter.Name = "_filter";
             this._filter.Size = new System.Drawing.Size(121, 23);
-            this._filter.SelectedIndexChanged += new System.EventHandler(this._filter_SelectedIndexChanged);
             // 
             // _log
             // 

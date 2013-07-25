@@ -22,9 +22,6 @@ namespace Gtd.Client
 
             DisplayFilters(FilterCriteria.LoadAllFilters().ToList());
         }
-
-
-
         public void SetAdapter(MainFormController controller)
         {
             _controller = controller;
@@ -118,11 +115,6 @@ namespace Gtd.Client
                     _log.AppendText(format);
                     _log.ScrollToCaret();
                 });
-        }
-
-        private void _filter_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
         }
 
         public void EnableNavigateBackButton(bool enabled)
