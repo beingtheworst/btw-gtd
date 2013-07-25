@@ -1,43 +1,50 @@
-﻿using Gtd.Client.Models;
+﻿using System;
+using Gtd.Client.Models;
 
 namespace Gtd.Client.Views.Project
 {
+
+    public interface IProjectView
+    {
+
+        void ShowView(FilteredProject project);
+
+        void SubscribeOutcomeChanged(Action<ActionId,string> e);
+        void SubscribeActionCompleted(Action<ActionId> e);
+        void SubscribeAddActionClicked(Action<ProjectId> e);
+    }
+
     public sealed class ProjectController : 
         IHandle<UI.DisplayProject>,
         IHandle<UI.ActionFilterChanged>,
         IHandle<Dumb.ActionUpdated>,
         IHandle<Dumb.ActionAdded>
     {
-        readonly ProjectView _control;
+        readonly IProjectView _control;
         readonly ClientPerspective _perspective;
-        readonly Region _mainRegion;
+        
         readonly IPublisher _bus;
 
-        ProjectController(ProjectView control, ClientPerspective perspective, Region mainRegion, IPublisher bus)
+        ProjectController(IProjectView control, ClientPerspective perspective,  IPublisher bus)
         {
             _control = control;
             _perspective = perspective;
-            _mainRegion = mainRegion;
+            
             _bus = bus;
         }
 
-        public static void Wire(Region mainRegion, IPublisher queuedHandler, ISubscriber bus, ClientPerspective view)
+        public static void Wire(IProjectView view, IPublisher queuedHandler, ISubscriber bus, ClientPerspective model)
         {
-            // passed from external wire as interface implementor
-            var control = new ProjectView();
-            
-
-            var adapter = new ProjectController(control, view, mainRegion, queuedHandler);
-
-
-            control.AttachTo(adapter);
-
-            mainRegion.RegisterDock(control, "project");
+            var adapter = new ProjectController(view, model, queuedHandler);
 
             bus.Subscribe<UI.ActionFilterChanged>(adapter);
             bus.Subscribe<UI.DisplayProject>(adapter);
             bus.Subscribe<Dumb.ActionUpdated>(adapter);
             bus.Subscribe<Dumb.ActionAdded>(adapter);
+
+            view.SubscribeActionCompleted(adapter.CompleteAction);
+            view.SubscribeOutcomeChanged(adapter.ChangeOutcome);
+            view.SubscribeAddActionClicked(adapter.RequestAddAction);
         }
 
         ProjectId _currentProject = ProjectId.Empty;
@@ -53,8 +60,7 @@ namespace Gtd.Client.Views.Project
             // TODO: smart update
             var project = _perspective.GetProject(projectId);
 
-            _control.Sync(() => _control.DisplayProject(project));
-            _mainRegion.SwitchTo("project");
+            _control.ShowView(project);
             _bus.Publish(new UI.ProjectDisplayed(project.Info));
         }
         
@@ -77,7 +83,7 @@ namespace Gtd.Client.Views.Project
             ReloadView(_currentProject);
         }
 
-        public void RequestActionCheck(ActionId id)
+        public void CompleteAction(ActionId id)
         {
             _bus.Publish(new UI.CompleteActionClicked(id));
         }
@@ -92,7 +98,7 @@ namespace Gtd.Client.Views.Project
             _bus.Publish(new UI.AddActionClicked(id));
         }
 
-        public void RequestOutcomeChange(ActionId id, string outcome)
+        public void ChangeOutcome(ActionId id, string outcome)
         {
             _bus.Publish(new UI.ChangeActionOutcome(id, outcome));
         }

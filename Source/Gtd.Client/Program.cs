@@ -82,6 +82,9 @@ namespace Gtd.Client
             var navigation = new NavigationView();
             form.NavigationRegion.RegisterDock(navigation, "nav");
             form.NavigationRegion.SwitchTo("nav");
+
+            var projectView = new ProjectView();
+            projectView.AttachTo(form.MainRegion);
             
             LogController.Wire(form, uiBus);
 
@@ -139,7 +142,7 @@ namespace Gtd.Client
             DefineProjectController.Wire(new DefineProjectForm(form), uiBus, mainQueue);
             InboxController.Wire(form.MainRegion, mainQueue, uiBus, provider);
             NavigationController.Wire(navigation, mainQueue, uiBus, provider);
-            ProjectController.Wire(form.MainRegion, mainQueue, uiBus, provider);
+            ProjectController.Wire(projectView, mainQueue, uiBus, provider);
 
             NavigateBackController.Wire(uiBus, mainQueue, form);
 
@@ -171,17 +174,18 @@ namespace Gtd.Client
                     _container.Controls.Add(control);
 
                     _controls.Add(key, control);
-                    //_activeControl = control;
-                });
+             });
         }
 
         public void SwitchTo(string key)
         {
+            var requestedControl = _controls[key];
+            if (requestedControl == _activeControl)
+                return;
+
             _container.Sync(() =>
                 {
-                    var requestedControl = _controls[key];
-                    if (requestedControl == _activeControl)
-                        return;
+                    
 
                     if (_activeControl != null)
                     {
