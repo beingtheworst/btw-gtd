@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using Gtd.Client.Models;
 using Gtd.CoreDomain;
 using Gtd.CoreDomain.AppServices.ClientProfile;
 using Gtd.CoreDomain.AppServices.TrustedSystem;
@@ -59,17 +60,22 @@ namespace Gtd.Client.Controllers
                     .When<UI.MoveStuffToProjectClicked>().Do(MoveStuffToProject)
                     .When<UI.CompleteActionClicked>().Do(CompleteAction)
                     .When<UI.ChangeActionOutcome>().Do(ChangeOutcome)
-                    
+                    .When<Dumb.ClientModelLoaded>().Do(LoadInbox)
 
                 .InState(AppState.Loading)
-                    .When<UI.DisplayInbox>().Do(_uiBus.Publish)
-                    .When<FormLoaded>().Do(_uiBus.Publish)
-                    .When<FormLoading>().Do(Deal)
+                    
+                    
                     .When<AppInit>().Do(InitApplication)
                     .When<Event>().Do(PassThroughEvent)
                     
                 .WhenOther().Do(_uiBus.Publish)
                 .Build(() => (int) _appState);
+        }
+
+        void LoadInbox(Dumb.ClientModelLoaded e)
+        {
+            _uiBus.Publish(e);
+            _queue.Enqueue(new UI.DisplayInbox());
         }
 
         void AddActionToProject(UI.DefineActionWizardCompleted e)
@@ -138,14 +144,7 @@ namespace Gtd.Client.Controllers
             _uiBus.Publish(e);
         }
 
-        void Deal(FormLoading obj)
-        {
-            _uiBus.Publish(obj);
-
-            _queue.Enqueue(new FormLoaded());
-            _queue.Enqueue(new UI.DisplayInbox());
-        }
-
+        
         // lifetime change management
 
         // atomic consistency boundary of an Aggregate & its contents

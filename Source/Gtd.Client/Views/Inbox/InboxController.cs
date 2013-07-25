@@ -22,8 +22,7 @@ namespace Gtd.Client
         
         IHandle<UI.DisplayInbox>,
         IHandle<Dumb.StuffAddedToInbox>,  
-        IHandle<Dumb.StuffRemovedFromInbox>, 
-        IHandle<FormLoaded>
+        IHandle<Dumb.StuffRemovedFromInbox>
     {
         
         readonly IPublisher _queue;
@@ -47,8 +46,6 @@ namespace Gtd.Client
             bus.Subscribe<UI.DisplayInbox>(adapter);
             bus.Subscribe<Dumb.StuffAddedToInbox>(adapter);
             bus.Subscribe<Dumb.StuffRemovedFromInbox>(adapter);
-            bus.Subscribe<FormLoaded>(adapter);
-
 
             view.SubscribeToTrashStuffClick(adapter.TrashStuff);
             view.SubscribeToAddStuffClick(adapter.AddStuff);
@@ -101,11 +98,6 @@ namespace Gtd.Client
         public ICollection<ImmutableProjectInfo> ListProjects()
         {
             return _perspective.ListProjects().Select(i => i.Info).ToList();
-        }
-
-        public void Handle(FormLoaded message)
-        {
-            
         }
     }
 }

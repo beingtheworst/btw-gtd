@@ -220,5 +220,5 @@ namespace Gtd.Client
 
     public sealed class FormLoading : Message { }
 
-    public sealed class FormLoaded : Message{}
+    
 }
