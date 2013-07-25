@@ -7,20 +7,6 @@ using Gtd.Client.Views.Project;
 namespace Gtd.Client
 {
     public class UserInterface {
-        public UserInterface() {}
-
-        public UserInterface(MainForm form, IAddStuffToInboxWizard addStuffToInboxWizard, IAddActionToProjectWizard addActionToProjectWizard, IDefineProjectWizard defineProjectWizard, IInboxView inboxView, INavigationView navigation, IProjectView projectView)
-        {
-            Menu = form;
-            Log = form;
-            BackView = form;
-            AddStuffToInboxWizard = addStuffToInboxWizard;
-            AddActionToProjectWizard = addActionToProjectWizard;
-            DefineProjectWizard = defineProjectWizard;
-            InboxView = inboxView;
-            Navigation = navigation;
-            ProjectView = projectView;
-        }
 
         public IMainMenu Menu { get;  set; }
         public ILogView Log { get;  set; }

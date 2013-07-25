@@ -5,7 +5,7 @@
         void Log(string toString);
     }
 
-    sealed class LogController : IHandle<Message>
+    public sealed class LogController : IHandle<Message>
     {
         readonly ILogView _view;
 

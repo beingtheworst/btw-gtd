@@ -175,4 +175,16 @@ namespace Gtd.Client
             }
         }
     }
+
+    public sealed class AppInit : Message { }
+
+    public sealed class ProfileLoaded : Message
+    {
+        public readonly TrustedSystemId SystemId;
+
+        public ProfileLoaded(TrustedSystemId systemId)
+        {
+            SystemId = systemId;
+        }
+    }
 }

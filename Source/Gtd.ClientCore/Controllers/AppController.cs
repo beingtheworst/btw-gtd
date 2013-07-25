@@ -21,7 +21,13 @@ namespace Gtd.Client.Controllers
     // TODO: Hey Rinat, Terminolgy Concept count question...
     // This class is VERY similar to what "Projection(events)/ApplicationService(Cmd)" do for us in A+ES.
     // How are they the same? How are they different? Why do we need 3 different concepts/implementations?
-    
+
+    public enum AppState
+    {
+        Loading,
+
+    }
+
     public sealed class AppController : IHandle<Message>
     {
         readonly IPublisher _uiBus;

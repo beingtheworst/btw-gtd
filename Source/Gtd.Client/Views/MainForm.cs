@@ -137,9 +137,4 @@ namespace Gtd.Client
         }
     }
 
-    public enum AppState
-    {
-        Loading,
-        
-    }
 }

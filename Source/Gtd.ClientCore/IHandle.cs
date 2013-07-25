@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Threading;
-using System.Windows.Forms;
-using Gtd.Client.Views.Navigation;
 using Gtd.Shell;
 
 namespace Gtd.Client

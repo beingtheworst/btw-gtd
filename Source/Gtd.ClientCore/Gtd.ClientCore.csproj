@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3E44A3A1-4FF7-4B35-838D-012D844A0CA7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Gtd.ClientCore</RootNamespace>
+    <AssemblyName>Gtd.ClientCore</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="protobuf-net">
+      <HintPath>..\..\Library\ProtoBuf-net\protobuf-net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable">
+      <HintPath>..\..\Library\Bcl.Immutable\System.Collections.Immutable.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AppEventStore.cs" />
+    <Compile Include="Controllers\AddActionToProjectController.cs" />
+    <Compile Include="Controllers\AddStuffToInboxController.cs" />
+    <Compile Include="Controllers\AppController.cs" />
+    <Compile Include="Controllers\DefineProjectController.cs" />
+    <Compile Include="Controllers\InboxController.cs" />
+    <Compile Include="Controllers\LogController.cs" />
+    <Compile Include="Controllers\MainMenuController.cs" />
+    <Compile Include="Controllers\NavigateBackController.cs" />
+    <Compile Include="Controllers\NavigationController.cs" />
+    <Compile Include="Controllers\ProjectController.cs" />
+    <Compile Include="Fsm.cs" />
+    <Compile Include="IAppendOnlyStore.cs" />
+    <Compile Include="IHandle.cs" />
+    <Compile Include="Models\ClientModel.cs" />
+    <Compile Include="Models\ClientModelController.cs" />
+    <Compile Include="Models\ClientPerspective.cs" />
+    <Compile Include="Models\Filters\AllActionsFilter.cs" />
+    <Compile Include="Models\Filters\AvailableFilter.cs" />
+    <Compile Include="Models\Filters\FilterCriteria.cs" />
+    <Compile Include="Models\Filters\IFilterCriteria.cs" />
+    <Compile Include="Models\Filters\NextActionFilter.cs" />
+    <Compile Include="Models\Filters\RemainingFilter.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Ui.cs" />
+    <Compile Include="UserInterface.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Gtd.CoreDomain\Gtd.CoreDomain.csproj">
+      <Project>{BAB02576-30C8-4DE2-AC43-23766F9FD6A1}</Project>
+      <Name>Gtd.CoreDomain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Gtd.PublishedLanguage\Gtd.PublishedLanguage.csproj">
+      <Project>{0D96C7E4-0A2C-4808-B822-BCA137DCFBB6}</Project>
+      <Name>Gtd.PublishedLanguage</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
