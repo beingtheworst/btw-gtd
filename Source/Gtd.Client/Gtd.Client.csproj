@@ -68,78 +68,78 @@
     <Compile Include="Models\ClientModelController.cs" />
     <Compile Include="Models\ClientPerspective.cs" />
     <Compile Include="UserInterface.cs" />
-    <Compile Include="Views\AddActionToProject\AddActionToProjectForm.cs">
+    <Compile Include="Views\AddActionToProjectForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\AddActionToProject\AddActionToProjectForm.Designer.cs">
+    <Compile Include="Views\AddActionToProjectForm.Designer.cs">
       <DependentUpon>AddActionToProjectForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\AddActionToProject\AddActionToProjectController.cs" />
-    <Compile Include="Views\AddStuffToInbox\AddStuffToInboxForm.cs">
+    <Compile Include="Controllers\AddActionToProjectController.cs" />
+    <Compile Include="Views\AddStuffToInboxForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\AddStuffToInbox\AddStuffToInboxForm.Designer.cs">
+    <Compile Include="Views\AddStuffToInboxForm.Designer.cs">
       <DependentUpon>AddStuffToInboxForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\DefineProject\DefineProjectController.cs" />
-    <Compile Include="Views\DefineProject\DefineProjectForm.cs">
+    <Compile Include="Controllers\DefineProjectController.cs" />
+    <Compile Include="Views\DefineProjectForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\DefineProject\DefineProjectForm.Designer.cs">
+    <Compile Include="Views\DefineProjectForm.Designer.cs">
       <DependentUpon>DefineProjectForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Controllers\LogController.cs" />
     <Compile Include="UI.cs" />
-    <Compile Include="Views\AddStuffToInbox\AddStuffToInboxController.cs" />
-    <Compile Include="Views\Project\ProjectController.cs" />
-    <Compile Include="Views\Project\ProjectView.cs">
+    <Compile Include="Controllers\AddStuffToInboxController.cs" />
+    <Compile Include="Controllers\ProjectController.cs" />
+    <Compile Include="Views\ProjectView.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Views\Project\ProjectView.Designer.cs">
+    <Compile Include="Views\ProjectView.Designer.cs">
       <DependentUpon>ProjectView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\Main\MainForm.cs">
+    <Compile Include="Views\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Main\MainForm.Designer.cs">
+    <Compile Include="Views\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Fsm.cs" />
     <Compile Include="IHandle.cs" />
-    <Compile Include="Views\Inbox\InboxView.cs">
+    <Compile Include="Views\InboxView.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Views\Inbox\InboxView.Designer.cs">
+    <Compile Include="Views\InboxView.Designer.cs">
       <DependentUpon>InboxView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\Inbox\InboxController.cs" />
+    <Compile Include="Controllers\InboxController.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\ClientModel.cs" />
-    <Compile Include="Views\Main\MainMenuController.cs" />
-    <Compile Include="Views\Navigation\NavigationController.cs" />
-    <Compile Include="Views\Navigation\NavigationView.cs">
+    <Compile Include="Controllers\MainMenuController.cs" />
+    <Compile Include="Controllers\NavigationController.cs" />
+    <Compile Include="Views\NavigationView.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Views\Navigation\NavigationView.Designer.cs">
+    <Compile Include="Views\NavigationView.Designer.cs">
       <DependentUpon>NavigationView.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Views\AddActionToProject\AddActionToProjectForm.resx">
+    <EmbeddedResource Include="Views\AddActionToProjectForm.resx">
       <DependentUpon>AddActionToProjectForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\AddStuffToInbox\AddStuffToInboxForm.resx">
+    <EmbeddedResource Include="Views\AddStuffToInboxForm.resx">
       <DependentUpon>AddStuffToInboxForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\DefineProject\DefineProjectForm.resx">
+    <EmbeddedResource Include="Views\DefineProjectForm.resx">
       <DependentUpon>DefineProjectForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Project\ProjectView.resx">
+    <EmbeddedResource Include="Views\ProjectView.resx">
       <DependentUpon>ProjectView.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Main\MainForm.resx">
+    <EmbeddedResource Include="Views\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Inbox\InboxView.resx">
+    <EmbeddedResource Include="Views\InboxView.resx">
       <DependentUpon>InboxView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -152,7 +152,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="Views\Navigation\NavigationView.resx">
+    <EmbeddedResource Include="Views\NavigationView.resx">
       <DependentUpon>NavigationView.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
