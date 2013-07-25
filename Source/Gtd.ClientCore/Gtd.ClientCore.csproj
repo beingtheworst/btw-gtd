@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppEventStore.cs" />
+    <Compile Include="Bootstrap.cs" />
     <Compile Include="Controllers\AddActionToProjectController.cs" />
     <Compile Include="Controllers\AddStuffToInboxController.cs" />
     <Compile Include="Controllers\AppController.cs" />

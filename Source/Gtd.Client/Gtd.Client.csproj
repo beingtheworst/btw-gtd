@@ -45,6 +45,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Region.cs" />
     <Compile Include="Views\AddActionToProjectForm.cs">
       <SubType>Form</SubType>
     </Compile>
