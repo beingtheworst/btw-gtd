@@ -4,8 +4,6 @@ using System.Linq;
 namespace Gtd.Client
 {
     public sealed class MainFormController : 
-        IHandle<AppInit>,
-        
         IHandle<UI.InboxDisplayed>, IHandle<UI.ProjectDisplayed>
     {
         readonly MainForm _mainForm;
@@ -21,7 +19,6 @@ namespace Gtd.Client
         {
             var adapter = new MainFormController(form, queue);
 
-            bus.Subscribe<AppInit>(adapter);
             bus.Subscribe<UI.InboxDisplayed>(adapter);
             bus.Subscribe<UI.ProjectDisplayed>(adapter);
 
@@ -43,11 +40,7 @@ namespace Gtd.Client
         // that have occured.  If InBoxDisplayed, show this.
         // If ProjectDisplayed, show that.
 
-        public void Handle(AppInit message)
-        {
-            _mainForm.DisplayFilters(FilterCriteria.LoadAllFilters().ToList());
-        }
-
+        
         public void Handle(UI.InboxDisplayed message)
         {
             // replace with panel-specific menu maybe

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using Gtd.Client.Controllers;
 using Gtd.Shell.Filters;
@@ -18,6 +19,8 @@ namespace Gtd.Client
 
             MainRegion = new Region(splitContainer1.Panel2);
             NavigationRegion = new Region(splitContainer1.Panel1);
+
+            DisplayFilters(FilterCriteria.LoadAllFilters().ToList());
         }
 
 
