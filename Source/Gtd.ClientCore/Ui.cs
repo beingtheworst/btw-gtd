@@ -35,6 +35,18 @@ namespace Gtd.Client
             public DisplayInbox() {}
         }
 
+        public class DragStuff : Message
+        {
+            public readonly string Request;
+            public readonly StuffId Stuff;
+
+            public DragStuff(string dragOperation, StuffId stuff)
+            {
+                Request = dragOperation;
+                Stuff = stuff;
+            }
+        }
+
         public class InboxDisplayed : Message {}
 
         

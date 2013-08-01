@@ -124,6 +124,7 @@ namespace Gtd.Client
                 });
         }
 
+       
         Region _region;
 
         public void AttachTo(Region mainRegion)
@@ -161,20 +162,41 @@ namespace Gtd.Client
 
         }
 
+        public void SubscribeToStartDrag(Action<string,StuffId> callback)
+        {
+            listBox1.MouseDown += (sender, e) =>
+                {
+                    if (e.Button == MouseButtons.Left)
+                    {
+                        var index = listBox1.IndexFromPoint(e.X, e.Y);
+                        if (index >= 0)
+                        {
+                            var request = Guid.NewGuid().ToString();
+                            var item = (StuffInfo) listBox1.Items[index];
+                            DoDragDrop(request, DragDropEffects.Move);
+                            callback(request,item.Id);
+
+                        }
+                    }
+                };
+        }
+
         public void ShowInbox(ImmutableInbox inbox)
         {
             this.Sync(() => LoadInbox(inbox));
             _region.SwitchTo("inbox");
 
         }
+
+      
     }
 
     public sealed class Display
     {
-        public object Value;
+        public ProjectId Value;
         public string Text;
 
-        public Display(object value, string text)
+        public Display(ProjectId value, string text)
         {
             Value = value;
             Text = text;

@@ -12,6 +12,7 @@ namespace Gtd.Client
         void SubscribeToAddStuffClick(Action callback);
         void SubscribeToListProjects(Func<ICollection<ImmutableProjectInfo>> request);
         void SubscribeToMoveStuffToProject(Action<ProjectId, StuffId[]> callback);
+        void SubscribeToStartDrag(Action<string,StuffId> callback);
 
         void ShowInbox(ImmutableInbox inbox);
         void AddStuff(ImmutableStuff stuff);
@@ -51,11 +52,16 @@ namespace Gtd.Client
             view.SubscribeToAddStuffClick(adapter.AddStuff);
             view.SubscribeToListProjects(adapter.ListProjects);
             view.SubscribeToMoveStuffToProject(adapter.MoveStuffToProject);
+            view.SubscribeToStartDrag(adapter.StartDrag);
 
             return adapter;
         }
 
-        
+        void StartDrag(string request, StuffId obj)
+        {
+            _queue.Publish(new UI.DragStuff(request, obj));
+        }
+
 
         public void Handle(UI.DisplayInbox message)
         {
