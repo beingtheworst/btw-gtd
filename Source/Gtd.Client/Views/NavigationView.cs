@@ -151,15 +151,5 @@ namespace Gtd.Client.Views.Navigation
                     }
                 });
         }
-
-        private void treeView1_DragOver(object sender, DragEventArgs e)
-        {
-           
-        }
-    }
-
-    public abstract class UiElement
-    {
-        
     }
 }
