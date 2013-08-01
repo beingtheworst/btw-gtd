@@ -35,15 +35,25 @@ namespace Gtd.Client
             public DisplayInbox() {}
         }
 
-        public class DragStuff : Message
+        public class DragStarted<T> : Message
+            
         {
             public readonly string Request;
-            public readonly StuffId Stuff;
+            public readonly T Subject;
 
-            public DragStuff(string dragOperation, StuffId stuff)
+            public DragStarted(string dragOperation, T subject)
             {
                 Request = dragOperation;
-                Stuff = stuff;
+                Subject = subject;
+            }
+        }
+
+        public class DragCompleted : Message
+        {
+            public readonly string RequestId;
+            public DragCompleted(string requestId)
+            {
+                RequestId = requestId;
             }
         }
 
@@ -197,6 +207,18 @@ namespace Gtd.Client
         public ProfileLoaded(TrustedSystemId systemId)
         {
             SystemId = systemId;
+        }
+    }
+
+    public sealed class DragSubject<T>
+    {
+        public readonly string Request;
+        public readonly T Subject;
+
+        public DragSubject(string request, T subject)
+        {
+            Request = request;
+            Subject = subject;
         }
     }
 }

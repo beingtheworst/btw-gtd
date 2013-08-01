@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Drawing;
 using System.Windows.Forms;
 using Gtd.Client.Models;
 
@@ -48,7 +48,8 @@ namespace Gtd.Client.Views.Navigation
                         
                         foreach (var p in projects)
                         {
-                            treeView1.Nodes.Add(p.UIKey, p.Outcome, "project", "project");
+                            var node = treeView1.Nodes.Add(p.UIKey, p.Outcome, "project", "project");
+                            node.Tag = p.ProjectId;
                         }
                     }
                     finally
@@ -82,6 +83,52 @@ namespace Gtd.Client.Views.Navigation
             _whenProjectSelected = project;
         }
 
+        public void SubscribeDragOver(DragController controller)
+        {
+            treeView1.DragDrop += (sender, e) =>
+                {
+                    var point = treeView1.PointToClient(new Point(e.X, e.Y));
+                    var node = treeView1.GetNodeAt(point);
+                    if (null == node)
+                        return;
+
+                    if (node.Tag is ProjectId)
+                    {
+                        var data = (string)e.Data.GetData(DataFormats.StringFormat);
+                        controller.DropToProject(data, (ProjectId) node.Tag);
+                    }
+                    
+
+                };
+            treeView1.DragOver += (sender, e) =>
+                {
+                    var point = treeView1.PointToClient(new Point(e.X, e.Y));
+                    var node = treeView1.GetNodeAt(point);
+                    if (null == node)
+                        return;
+
+                    if (node.Tag is ProjectId)
+                    {
+                        var data = (string)e.Data.GetData(DataFormats.StringFormat);
+                        if (controller.CanAcceptDragOverProject(data))
+                        {
+                            e.Effect = DragDropEffects.Move;
+                        }
+                        else
+                        {
+                            e.Effect = DragDropEffects.None;
+                        }
+                    }
+                    else
+                    {
+                        e.Effect = DragDropEffects.None;
+                    }
+
+                    //
+                    
+                };
+        }
+
         public void SelectProject(string uiKey)
         {
             this.Sync(() =>
@@ -104,5 +151,15 @@ namespace Gtd.Client.Views.Navigation
                     }
                 });
         }
+
+        private void treeView1_DragOver(object sender, DragEventArgs e)
+        {
+           
+        }
+    }
+
+    public abstract class UiElement
+    {
+        
     }
 }

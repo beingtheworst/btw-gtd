@@ -10,12 +10,49 @@ namespace Gtd.Client.Views.Navigation
     {
         void UpdateInboxNode(int count);
         void ReloadProjectList(IList<ImmutableProjectInfo> projects);
-
+        
 
         void WhenInboxSelected(Action action);
         void WhenProjectSelected(Action<string> project);
+        void SubscribeDragOver(DragController controller);
+        //void SubscribeDragOver();
         void SelectProject(string uiKey);
         void SelectInbox();
+    }
+
+    public sealed class DragController
+    {
+
+        string _request;
+        object _subject;
+
+        IMessageQueue _queue;
+        public DragController(IMessageQueue queue)
+        {
+            _queue = queue;
+        }
+
+        public void WhenDraggingStuff(string request, StuffId id)
+        {
+            _subject = id;
+            
+            _request = request;
+        }
+        
+        public bool CanAcceptDragOverProject(string request)
+        {
+            if (request == null) throw new ArgumentNullException("request");
+            if (request != _request) throw new InvalidOperationException();
+
+            return _subject is StuffId;
+
+        }
+
+        public void DropToProject(string request, ProjectId id)
+        {
+            if (!CanAcceptDragOverProject(request)) throw new InvalidOperationException();
+            _queue.Enqueue(new UI.MoveStuffToProjectClicked(new StuffId[]{(StuffId) _subject}, id));
+        }
     }
 
     public sealed class NavigationController : 
@@ -23,27 +60,32 @@ namespace Gtd.Client.Views.Navigation
         IHandle<Dumb.StuffAddedToInbox>, 
         IHandle<Dumb.StuffRemovedFromInbox>,
         IHandle<Dumb.ProjectAdded>, 
+
         IHandle<UI.ProjectDisplayed>,
-        IHandle<UI.InboxDisplayed>
+        IHandle<UI.InboxDisplayed>,
+        IHandle<UI.DragStarted<StuffId>>
 
     {
         readonly INavigationView _tree;
         
         readonly IMessageQueue _queue;
         readonly ClientPerspective _perspective;
-        
+
+        DragController _drag;
 
         bool _loaded;
         string _currentNode;
 
 
-        NavigationController(INavigationView view, IMessageQueue queue, ClientPerspective perspective)
+        NavigationController(INavigationView view, IMessageQueue queue, ClientPerspective perspective, DragController controller)
         {
             _tree = view;
             _tree.WhenInboxSelected(HandleInboxSelected);
             _tree.WhenProjectSelected(HandleProjectSelected);
             _queue = queue;
             _perspective = perspective;
+
+            _drag = controller;
         }
 
         void HandleProjectSelected(string id)
@@ -69,7 +111,9 @@ namespace Gtd.Client.Views.Navigation
 
         public static NavigationController Wire(INavigationView view, IMessageQueue queue, ISubscriber bus, ClientPerspective model)
         {
-            var adapter  = new NavigationController(view, queue, model);
+            var drag = new DragController(queue);
+
+            var adapter  = new NavigationController(view, queue, model, drag);
             
             bus.Subscribe<Dumb.StuffAddedToInbox>(adapter);
             bus.Subscribe<Dumb.StuffRemovedFromInbox>(adapter);
@@ -79,6 +123,9 @@ namespace Gtd.Client.Views.Navigation
             
             bus.Subscribe<UI.InboxDisplayed>(adapter);
             bus.Subscribe<UI.ProjectDisplayed>(adapter);
+            bus.Subscribe<UI.DragStarted<StuffId>>(adapter);
+
+            view.SubscribeDragOver(drag);
 
             return adapter ;
         }
@@ -137,6 +184,12 @@ namespace Gtd.Client.Views.Navigation
 
             _currentNode = "inbox";
             _tree.SelectInbox();
+        }
+
+        public void Handle(UI.DragStarted<StuffId> message)
+        {
+            _drag.WhenDraggingStuff(message.Request, message.Subject);
+            
         }
     }
 }

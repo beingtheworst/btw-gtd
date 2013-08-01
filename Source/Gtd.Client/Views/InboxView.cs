@@ -162,7 +162,7 @@ namespace Gtd.Client
 
         }
 
-        public void SubscribeToStartDrag(Action<string,StuffId> callback)
+        public void SubscribeToStartDrag(Action<DragSubject<StuffId>> callback)
         {
             listBox1.MouseDown += (sender, e) =>
                 {
@@ -173,9 +173,9 @@ namespace Gtd.Client
                         {
                             var request = Guid.NewGuid().ToString();
                             var item = (StuffInfo) listBox1.Items[index];
+                            callback(new DragSubject<StuffId>(request, item.Id));
                             DoDragDrop(request, DragDropEffects.Move);
-                            callback(request,item.Id);
-
+                            
                         }
                     }
                 };
