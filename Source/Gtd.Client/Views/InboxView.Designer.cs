@@ -106,7 +106,7 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(435, 72);
             this.label2.TabIndex = 5;
-            this.label2.Text = "It appears that you have no thoughts in your Inbox. \r\n\r\nCapture one now!";
+            this.label2.Text = "It appears that there is no stuff in your Inbox. \r\n\r\nAdd some stuff now!";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label3
