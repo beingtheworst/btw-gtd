@@ -14,46 +14,14 @@ namespace Gtd.Client.Views.Navigation
 
         void WhenInboxSelected(Action action);
         void WhenProjectSelected(Action<string> project);
-        void SubscribeDragOver(DragController controller);
-        //void SubscribeDragOver();
+
+        void EnableDropSites(DragManager controller);
+        void DisableDropSites();
+        
         void SelectProject(string uiKey);
         void SelectInbox();
     }
 
-    public sealed class DragController
-    {
-
-        string _request;
-        object _subject;
-
-        IMessageQueue _queue;
-        public DragController(IMessageQueue queue)
-        {
-            _queue = queue;
-        }
-
-        public void WhenDraggingStuff(string request, StuffId id)
-        {
-            _subject = id;
-            
-            _request = request;
-        }
-        
-        public bool CanAcceptDragOverProject(string request)
-        {
-            if (request == null) throw new ArgumentNullException("request");
-            if (request != _request) throw new InvalidOperationException();
-
-            return _subject is StuffId;
-
-        }
-
-        public void DropToProject(string request, ProjectId id)
-        {
-            if (!CanAcceptDragOverProject(request)) throw new InvalidOperationException();
-            _queue.Enqueue(new UI.MoveStuffToProjectClicked(new StuffId[]{(StuffId) _subject}, id));
-        }
-    }
 
     public sealed class NavigationController : 
         IHandle<Dumb.ClientModelLoaded>,
@@ -63,29 +31,28 @@ namespace Gtd.Client.Views.Navigation
 
         IHandle<UI.ProjectDisplayed>,
         IHandle<UI.InboxDisplayed>,
-        IHandle<UI.DragStarted<StuffId>>
+        IHandle<UI.DragStarted>, 
+        IHandle<UI.DragCompleted>
 
     {
-        readonly INavigationView _tree;
+        readonly INavigationView _view;
         
         readonly IMessageQueue _queue;
         readonly ClientPerspective _perspective;
 
-        DragController _drag;
 
         bool _loaded;
         string _currentNode;
 
 
-        NavigationController(INavigationView view, IMessageQueue queue, ClientPerspective perspective, DragController controller)
+        NavigationController(INavigationView view, IMessageQueue queue, ClientPerspective perspective)
         {
-            _tree = view;
-            _tree.WhenInboxSelected(HandleInboxSelected);
-            _tree.WhenProjectSelected(HandleProjectSelected);
+            _view = view;
+            _view.WhenInboxSelected(HandleInboxSelected);
+            _view.WhenProjectSelected(HandleProjectSelected);
             _queue = queue;
             _perspective = perspective;
 
-            _drag = controller;
         }
 
         void HandleProjectSelected(string id)
@@ -111,9 +78,8 @@ namespace Gtd.Client.Views.Navigation
 
         public static NavigationController Wire(INavigationView view, IMessageQueue queue, ISubscriber bus, ClientPerspective model)
         {
-            var drag = new DragController(queue);
 
-            var adapter  = new NavigationController(view, queue, model, drag);
+            var adapter  = new NavigationController(view, queue, model);
             
             bus.Subscribe<Dumb.StuffAddedToInbox>(adapter);
             bus.Subscribe<Dumb.StuffRemovedFromInbox>(adapter);
@@ -123,10 +89,8 @@ namespace Gtd.Client.Views.Navigation
             
             bus.Subscribe<UI.InboxDisplayed>(adapter);
             bus.Subscribe<UI.ProjectDisplayed>(adapter);
-            bus.Subscribe<UI.DragStarted<StuffId>>(adapter);
-
-            view.SubscribeDragOver(drag);
-
+            bus.Subscribe<UI.DragStarted>(adapter);            
+            bus.Subscribe<UI.DragCompleted>(adapter);
             return adapter ;
         }
 
@@ -134,22 +98,22 @@ namespace Gtd.Client.Views.Navigation
         {
             if (!_loaded) return;
 
-            _tree.UpdateInboxNode(message.InboxCount);
+            _view.UpdateInboxNode(message.InboxCount);
         }
 
         public void Handle(Dumb.StuffRemovedFromInbox message)
         {
             if (!_loaded) return;
 
-            _tree.UpdateInboxNode(message.InboxCount);
+            _view.UpdateInboxNode(message.InboxCount);
         }
         
         public void Handle(Dumb.ClientModelLoaded message)
         {
             _loaded = true;
 
-            _tree.UpdateInboxNode(message.Model.Inbox.Count);
-            _tree.ReloadProjectList(message.Model.Projects.Select(p => p.Info).ToList());
+            _view.UpdateInboxNode(message.Model.Inbox.Count);
+            _view.ReloadProjectList(message.Model.Projects.Select(p => p.Info).ToList());
 
             foreach (var key in message.Model.Projects)
             {
@@ -164,7 +128,7 @@ namespace Gtd.Client.Views.Navigation
 
             _projectKeys[message.UniqueKey] = message.ProjectId;
 
-            _tree.ReloadProjectList(_perspective.Model.ListProjects().Select(p => p.Info).ToList());
+            _view.ReloadProjectList(_perspective.Model.ListProjects().Select(p => p.Info).ToList());
         }
 
 
@@ -174,7 +138,7 @@ namespace Gtd.Client.Views.Navigation
                 return;
 
             _currentNode = message.Project.UIKey;
-            _tree.SelectProject(message.Project.UIKey);
+            _view.SelectProject(message.Project.UIKey);
         }
 
         public void Handle(UI.InboxDisplayed message)
@@ -183,13 +147,16 @@ namespace Gtd.Client.Views.Navigation
                 return;
 
             _currentNode = "inbox";
-            _tree.SelectInbox();
+            _view.SelectInbox();
         }
 
-        public void Handle(UI.DragStarted<StuffId> message)
+        public void Handle(UI.DragStarted message)
         {
-            _drag.WhenDraggingStuff(message.Request, message.Subject);
-            
+            _view.EnableDropSites(message.Manager);
+        }
+        public void Handle(UI.DragCompleted e)
+        {
+            _view.DisableDropSites();
         }
     }
 }

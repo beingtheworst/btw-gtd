@@ -35,16 +35,13 @@ namespace Gtd.Client
             public DisplayInbox() {}
         }
 
-        public class DragStarted<T> : Message
-            
+        public class DragStarted : Message
         {
-            public readonly string Request;
-            public readonly T Subject;
-
-            public DragStarted(string dragOperation, T subject)
+            public readonly DragManager Manager;
+            public DragStarted(DragManager manager)
             {
-                Request = dragOperation;
-                Subject = subject;
+                
+                Manager = manager;
             }
         }
 

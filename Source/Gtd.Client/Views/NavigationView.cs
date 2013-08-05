@@ -15,6 +15,8 @@ namespace Gtd.Client.Views.Navigation
             _inboxNode = treeView1.Nodes.Add("inbox", "Inbox", "inbox");
 
             treeView1.AfterSelect += (sender, args) => OnSelectNode(args.Node);
+            treeView1.DragDrop += (sender, e) => WhenDragDrop(e);
+            treeView1.DragOver += (sender, e) => WhenDragOver(e);
         }
 
         void OnSelectNode(TreeNode node)
@@ -83,50 +85,64 @@ namespace Gtd.Client.Views.Navigation
             _whenProjectSelected = project;
         }
 
-        public void SubscribeDragOver(DragController controller)
+        DragManager _manager;
+
+        public void EnableDropSites(DragManager controller)
         {
-            treeView1.DragDrop += (sender, e) =>
+            _manager = controller;
+        }
+        public void DisableDropSites()
+        {
+            _manager = null;
+        }
+
+        
+
+        void WhenDragDrop(DragEventArgs e)
+        {
+            if (null == _manager)
+                return;
+
+            var point = treeView1.PointToClient(new Point(e.X, e.Y));
+            var node = treeView1.GetNodeAt(point);
+            if (null == node)
+                return;
+
+            if (node.Tag is ProjectId)
+            {
+                var data = (string) e.Data.GetData(DataFormats.StringFormat);
+                _manager.DropToProject(data, (ProjectId) node.Tag);
+            }
+        }
+
+        void WhenDragOver(DragEventArgs e)
+        {
+            if (_manager == null)
+                return;
+
+            var point = treeView1.PointToClient(new Point(e.X, e.Y));
+            var node = treeView1.GetNodeAt(point);
+            if (null == node)
+                return;
+
+            if (node.Tag is ProjectId)
+            {
+                var requestId = (string) e.Data.GetData(DataFormats.StringFormat);
+                if (_manager.CanDropToProject(requestId))
                 {
-                    var point = treeView1.PointToClient(new Point(e.X, e.Y));
-                    var node = treeView1.GetNodeAt(point);
-                    if (null == node)
-                        return;
-
-                    if (node.Tag is ProjectId)
-                    {
-                        var data = (string)e.Data.GetData(DataFormats.StringFormat);
-                        controller.DropToProject(data, (ProjectId) node.Tag);
-                    }
-                    
-
-                };
-            treeView1.DragOver += (sender, e) =>
+                    e.Effect = DragDropEffects.Move;
+                }
+                else
                 {
-                    var point = treeView1.PointToClient(new Point(e.X, e.Y));
-                    var node = treeView1.GetNodeAt(point);
-                    if (null == node)
-                        return;
+                    e.Effect = DragDropEffects.None;
+                }
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
 
-                    if (node.Tag is ProjectId)
-                    {
-                        var data = (string)e.Data.GetData(DataFormats.StringFormat);
-                        if (controller.CanAcceptDragOverProject(data))
-                        {
-                            e.Effect = DragDropEffects.Move;
-                        }
-                        else
-                        {
-                            e.Effect = DragDropEffects.None;
-                        }
-                    }
-                    else
-                    {
-                        e.Effect = DragDropEffects.None;
-                    }
-
-                    //
-                    
-                };
+            //
         }
 
         public void SelectProject(string uiKey)

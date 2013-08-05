@@ -27,12 +27,12 @@ namespace Gtd.Client
         IHandle<Dumb.StuffRemovedFromInbox>
     {
         
-        readonly IPublisher _queue;
+        readonly IMessageQueue _queue;
         readonly ClientPerspective _perspective;
 
         readonly IInboxView _control;
 
-        InboxController(IInboxView view, IPublisher queue, ClientPerspective perspective)
+        InboxController(IInboxView view, IMessageQueue queue, ClientPerspective perspective)
         {
             
             _queue = queue;
@@ -40,7 +40,7 @@ namespace Gtd.Client
             _control = view;
         }
 
-        public static InboxController Wire(IInboxView view, IPublisher queue, ISubscriber bus, ClientPerspective model)
+        public static InboxController Wire(IInboxView view, IMessageQueue queue, ISubscriber bus, ClientPerspective model)
         {
             var adapter = new InboxController(view, queue, model);
 
@@ -60,7 +60,7 @@ namespace Gtd.Client
 
         void StartDrag(DragSubject<StuffId> subject)
         {
-            _queue.Publish(new UI.DragStarted<StuffId>(subject.Request, subject.Subject));
+            _queue.Enqueue(new UI.DragStarted(new StuffDragManager(subject.Request, subject.Subject, _queue)));
         }
 
 
@@ -70,8 +70,8 @@ namespace Gtd.Client
 
             _control.ShowInbox(inbox);
 
-            
-            _queue.Publish(new UI.InboxDisplayed());
+
+            _queue.Enqueue(new UI.InboxDisplayed());
         }
 
         public void Handle(Dumb.StuffAddedToInbox message)
@@ -88,18 +88,18 @@ namespace Gtd.Client
         {
             foreach (var id in stuffIds)
             {
-                _queue.Publish(new UI.TrashStuffClicked(id));
+                _queue.Enqueue(new UI.TrashStuffClicked(id));
             }
         }
 
         public void MoveStuffToProject(ProjectId projectId, StuffId[] stuffIdsToMove)
         {
-            _queue.Publish(new UI.MoveStuffToProjectClicked(stuffIdsToMove, projectId));
+            _queue.Enqueue(new UI.MoveStuffToProjectClicked(stuffIdsToMove, projectId));
         }
 
         public void AddStuff()
         {
-            _queue.Publish(new UI.AddStuffClicked());
+            _queue.Enqueue(new UI.AddStuffClicked());
         }
 
         public ICollection<ImmutableProjectInfo> ListProjects()

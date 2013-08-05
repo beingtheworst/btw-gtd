@@ -51,6 +51,7 @@
     <Compile Include="Controllers\AddStuffToInboxController.cs" />
     <Compile Include="Controllers\AppController.cs" />
     <Compile Include="Controllers\DefineProjectController.cs" />
+    <Compile Include="Controllers\DragManager.cs" />
     <Compile Include="Controllers\InboxController.cs" />
     <Compile Include="Controllers\LogController.cs" />
     <Compile Include="Controllers\MainMenuController.cs" />
