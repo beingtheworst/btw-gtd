@@ -1,5 +1,11 @@
 ## TODO for GTD/BTW project
 
+* Add Aggregate method - Move ActionToProject
+* Add UI command to move actions
+* Wire command to dragManager (via callback)
+
+
+
 #### Add ability to add actions from within the project
 
 > Assigned: Rinat
