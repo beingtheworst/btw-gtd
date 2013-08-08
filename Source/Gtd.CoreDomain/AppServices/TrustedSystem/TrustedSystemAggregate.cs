@@ -224,6 +224,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
                 var action = GetActionOrThrow(id);
                 if (!action.Project.Equals(targetProject))
                 {
+
                     Apply(new ActionMovedToProject(_aggState.Id, id, action.Project, targetProject, timeUtc));
                 }
             }

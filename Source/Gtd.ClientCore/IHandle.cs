@@ -370,20 +370,21 @@ namespace Gtd.Client
 
                 if (_queue.TryDequeue(out result))
                 {
-                    try
-                    {
+                    //try
+                    //{
                         _consumer.Handle(result);
-                    }
-                    catch (Exception ex)
-                    {
+                    //}
+                    //catch (Exception ex)
+                    //{
+                        //throw;
                         // development setting
-                        throw new InvalidOperationException(string.Format("Error while processing {0}.Handle({1}) in queued handler '{2}'.",
+                        //throw new InvalidOperationException(string.Format("Error while processing {0}.Handle({1}) in queued handler '{2}'.",
                             
-                            _consumer.GetType().Name,
-                            result.GetType().Name,
-                            _name), ex);
-                        Log.ErrorException(ex, "Error while processing message {0} in queued handler '{1}'.", result, _name);
-                    }
+                        //    _consumer.GetType().Name,
+                        //    result.GetType().Name,
+                        //    _name), ex);
+                    //    Log.ErrorException(ex, "Error while processing message {0} in queued handler '{1}'.", result, _name);
+                    //}
                 }
                 else
                 {

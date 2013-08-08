@@ -12,6 +12,7 @@ namespace Gtd.Client.Views.Project
         void SubscribeOutcomeChanged(Action<ActionId,string> e);
         void SubscribeActionCompleted(Action<ActionId> e);
         void SubscribeAddActionClicked(Action<ProjectId> e);
+        void SubscribeToDragStart(Action<DragSubject<ImmutableAction>> callback);
     }
 
     public sealed class ProjectController : 
@@ -22,10 +23,10 @@ namespace Gtd.Client.Views.Project
     {
         readonly IProjectView _control;
         readonly ClientPerspective _perspective;
-        
-        readonly IPublisher _bus;
 
-        ProjectController(IProjectView control, ClientPerspective perspective,  IPublisher bus)
+        readonly IMessageQueue _bus;
+
+        ProjectController(IProjectView control, ClientPerspective perspective,  IMessageQueue bus)
         {
             _control = control;
             _perspective = perspective;
@@ -33,18 +34,25 @@ namespace Gtd.Client.Views.Project
             _bus = bus;
         }
 
-        public static void Wire(IProjectView view, IPublisher queuedHandler, ISubscriber bus, ClientPerspective model)
+        public static void Wire(IProjectView view, IMessageQueue queuedHandler, ISubscriber bus, ClientPerspective model)
         {
-            var adapter = new ProjectController(view, model, queuedHandler);
+            var controller = new ProjectController(view, model, queuedHandler);
 
-            bus.Subscribe<UI.ActionFilterChanged>(adapter);
-            bus.Subscribe<UI.DisplayProject>(adapter);
-            bus.Subscribe<Dumb.ActionUpdated>(adapter);
-            bus.Subscribe<Dumb.ActionAdded>(adapter);
+            bus.Subscribe<UI.ActionFilterChanged>(controller);
+            bus.Subscribe<UI.DisplayProject>(controller);
+            bus.Subscribe<Dumb.ActionUpdated>(controller);
+            bus.Subscribe<Dumb.ActionAdded>(controller);
 
-            view.SubscribeActionCompleted(adapter.CompleteAction);
-            view.SubscribeOutcomeChanged(adapter.ChangeOutcome);
-            view.SubscribeAddActionClicked(adapter.RequestAddAction);
+            view.SubscribeActionCompleted(controller.CompleteAction);
+            view.SubscribeOutcomeChanged(controller.ChangeOutcome);
+            view.SubscribeAddActionClicked(controller.RequestAddAction);
+            view.SubscribeToDragStart(controller.StartDrag);
+        }
+
+        void StartDrag(DragSubject<ImmutableAction> obj)
+        {
+            _bus.Enqueue(new UI.DragStarted(new ActionDragManager(obj.Request,obj.Subject,_bus)));
+
         }
 
         ProjectId _currentProject = ProjectId.Empty;
@@ -61,7 +69,7 @@ namespace Gtd.Client.Views.Project
             var project = _perspective.GetProject(projectId);
 
             _control.ShowView(project);
-            _bus.Publish(new UI.ProjectDisplayed(project.Info));
+            _bus.Enqueue(new UI.ProjectDisplayed(project.Info));
         }
         
         public void Handle(UI.ActionFilterChanged message)
@@ -85,22 +93,22 @@ namespace Gtd.Client.Views.Project
 
         public void CompleteAction(ActionId id)
         {
-            _bus.Publish(new UI.CompleteActionClicked(id));
+            _bus.Enqueue(new UI.CompleteActionClicked(id));
         }
 
         public void Publish(Message message)
         {
-            _bus.Publish(message);
+            _bus.Enqueue(message);
         }
 
         public void RequestAddAction(ProjectId id)
         {
-            _bus.Publish(new UI.AddActionClicked(id));
+            _bus.Enqueue(new UI.AddActionClicked(id));
         }
 
         public void ChangeOutcome(ActionId id, string outcome)
         {
-            _bus.Publish(new UI.ChangeActionOutcome(id, outcome));
+            _bus.Enqueue(new UI.ChangeActionOutcome(id, outcome));
         }
     }
 }

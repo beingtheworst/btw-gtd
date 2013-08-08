@@ -256,6 +256,7 @@ namespace Gtd
         ActionMovedToProject () {}
         public ActionMovedToProject (TrustedSystemId id, ActionId actionId, ProjectId oldProject, ProjectId newProject, DateTime timeUtc)
         {
+
             Id = id;
             ActionId = actionId;
             OldProject = oldProject;

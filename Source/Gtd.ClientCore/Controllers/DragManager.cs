@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Immutable;
+using Gtd.Client.Models;
 
 namespace Gtd.Client
 {
@@ -11,11 +13,38 @@ namespace Gtd.Client
             Request = request;
         }
 
-        public abstract bool CanDropToProject(string requestId);
+        public abstract bool CanDropToProject(string requestId, ProjectId id);
 
         public virtual void DropToProject(string requestId, ProjectId id)
         {
             
+        }
+    }
+
+    public sealed class ActionDragManager : DragManager
+    {
+        readonly ImmutableAction _action;
+        readonly IMessageQueue _queue;
+
+        public ActionDragManager(string request, ImmutableAction action, IMessageQueue queue) : base(request)
+        {
+            _action = action;
+            _queue = queue;
+        }
+
+        public override bool CanDropToProject(string requestId, ProjectId id)
+        {
+            if (Request != requestId)
+                return false;
+            if (_action.ProjectId.Id == id.Id)
+                return false;
+            return true;
+
+        }
+        public override void DropToProject(string requestId, ProjectId id)
+        {
+            var actions = ImmutableArray.Create(_action.ActionId);
+            _queue.Enqueue(new UI.MoveActionsToProject(actions,id));
         }
     }
 
@@ -31,7 +60,7 @@ namespace Gtd.Client
             _queue = queue;
         }
 
-        public override bool CanDropToProject(string requestId)
+        public override bool CanDropToProject(string requestId, ProjectId id)
         {
             if (Request != requestId) return false;
             return true;

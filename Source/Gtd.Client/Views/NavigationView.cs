@@ -128,7 +128,8 @@ namespace Gtd.Client.Views.Navigation
             if (node.Tag is ProjectId)
             {
                 var requestId = (string) e.Data.GetData(DataFormats.StringFormat);
-                if (_manager.CanDropToProject(requestId))
+                var projectId = (ProjectId) node.Tag;
+                if (_manager.CanDropToProject(requestId, projectId))
                 {
                     e.Effect = DragDropEffects.Move;
                 }

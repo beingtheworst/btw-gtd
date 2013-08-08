@@ -112,7 +112,8 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
 
         public void When(ActionDefined e)
         {
-            Actions.Add(e.ActionId, new ActionInfo(e.ActionId, e.Outcome));
+            
+            Actions.Add(e.ActionId, new ActionInfo(e.ActionId, e.Outcome, e.ProjectId));
         }
 
         // TODO: Nothing generates this Event yet
@@ -292,10 +293,11 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
         public bool Completed { get; private set; }
         public bool Archived { get; private set; }
 
-        public ActionInfo(ActionId id, string name)
+        public ActionInfo(ActionId id, string name, ProjectId owner)
         {
             Id = id;
             Outcome = name;
+            Project = owner;
         }
 
         public void MakeArchived()

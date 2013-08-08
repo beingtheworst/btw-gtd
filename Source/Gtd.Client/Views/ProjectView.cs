@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using Gtd.Client.Models;
+using System.Linq;
 
 namespace Gtd.Client.Views.Project
 {
@@ -14,9 +15,26 @@ namespace Gtd.Client.Views.Project
             _grid.DataSource = _source;
 
             _addAction.Click += (sender, args) => _whenAddActionClicked(_project);
+
         }
 
         Region _region;
+
+        public void SubscribeToDragStart(Action<DragSubject<ImmutableAction>> callback)
+        {
+            _grid.MouseMove += (sender, args) =>
+                {
+                    if (args.Button != MouseButtons.Left)
+                        return;
+                    var index = _grid.HitTest(args.X, args.Y);
+                    if (index.RowIndex == -1)
+                        return;
+                    var display = (ActionDisplay) _grid.Rows[index.RowIndex].DataBoundItem;
+                    var request = Guid.NewGuid().ToString();
+                    callback(new DragSubject<ImmutableAction>(request, display.Model));
+                    DoDragDrop(request, DragDropEffects.Move);
+                };
+        }
 
         public void AttachTo(Region region)
         {
