@@ -215,7 +215,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             return projectInfo;
         }
 
-        public void MoveActionsToProject(ActionId[] actions, ProjectId targetProject, DateTime timeUtc)
+        public void MoveActionsToProject(IEnumerable<ActionId> actions, ProjectId targetProject, DateTime timeUtc)
         {
             var project = GetProjectOrThrow(targetProject);
 

@@ -10,6 +10,7 @@
 #endregion
 
 using System;
+using System.Collections.Immutable;
 using Gtd.Client.Models;
 using Gtd.Shell.Filters;
 
@@ -110,6 +111,18 @@ namespace Gtd.Client
             {
                 ActionId = actionId;
                 Outcome = outcome;
+            }
+        }
+
+        public class MoveActionsToProject : Message
+        {
+            public readonly ImmutableArray<ActionId> Actions;
+            public readonly ProjectId ToProject;
+
+            public MoveActionsToProject(ImmutableArray<ActionId> actions, ProjectId toProject)
+            {
+                Actions = actions;
+                ToProject = toProject;
             }
         }
 

@@ -66,6 +66,7 @@ namespace Gtd.Client.Controllers
                     .When<UI.MoveStuffToProjectClicked>().Do(MoveStuffToProject)
                     .When<UI.CompleteActionClicked>().Do(CompleteAction)
                     .When<UI.ChangeActionOutcome>().Do(ChangeOutcome)
+                    .When<UI.MoveActionsToProject>().Do(MoveActionsToProject)
                     .When<Dumb.ClientModelLoaded>().Do(LoadInbox)
 
                 .InState(AppState.Loading)
@@ -78,11 +79,19 @@ namespace Gtd.Client.Controllers
                 .Build(() => (int) _appState);
         }
 
+        void MoveActionsToProject(UI.MoveActionsToProject e)
+        {
+            _uiBus.Publish(e);
+            UpdateDomain(agg => agg.MoveActionsToProject(e.Actions,e.ToProject,_time.GetUtcNow()));
+        }
+
         void LoadInbox(Dumb.ClientModelLoaded e)
         {
             _uiBus.Publish(e);
             _queue.Enqueue(new UI.DisplayInbox());
         }
+
+        ITimeProvider _time = new RealTimeProvider();
 
         void AddActionToProject(UI.DefineActionWizardCompleted e)
         {
