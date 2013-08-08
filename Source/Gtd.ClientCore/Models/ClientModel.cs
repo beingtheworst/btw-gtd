@@ -120,6 +120,18 @@ namespace Gtd.Client.Models
 
             Publish(new Dumb.ActionAdded(action.Freeze()));
         }
+        public void ActionMoved(ActionId actionId, ProjectId oldProjectId, ProjectId newProjectId)
+        {
+            var action = _actions[actionId];
+            Publish(new Dumb.ActionRemoved(action.Freeze()));
+
+            action.MoveToProject(newProjectId);
+
+            Publish(new Dumb.ActionAdded(action.Freeze()));
+
+            _projects[oldProjectId].Actions.Remove(action);
+            _projects[newProjectId].Actions.Add(action);
+        }
 
         public void ActionCompleted(ActionId actionId)
         {
@@ -273,6 +285,10 @@ namespace Gtd.Client.Models
             public void MarkAsCompleted()
             {
                 Completed = true;
+            }
+            public void MoveToProject(ProjectId newProject)
+            {
+                ProjectId = newProject;
             }
             public void OutcomeChanged(string outcome)
             {

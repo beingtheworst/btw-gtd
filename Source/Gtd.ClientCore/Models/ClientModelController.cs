@@ -13,6 +13,7 @@ namespace Gtd.Client.Models
         IHandle<ActionDefined>,
         IHandle<ActionCompleted>,
         IHandle<ProfileLoaded>, 
+        IHandle<ActionMovedToProject>,
         IHandle<ActionOutcomeChanged>,
         IHandle<UI.ActionFilterChanged>
     {
@@ -44,6 +45,9 @@ namespace Gtd.Client.Models
             bus.Subscribe<ActionCompleted>(this);
             bus.Subscribe<ProfileLoaded>(this);
             bus.Subscribe<ActionOutcomeChanged>(this);
+            bus.Subscribe<ActionMovedToProject>(this);
+
+
             bus.Subscribe<UI.ActionFilterChanged>(this);
         }
 
@@ -192,6 +196,12 @@ namespace Gtd.Client.Models
         {
             if (CanHandle(e.Id))
                 _model.StuffArchived(e.StuffId);
+        }
+
+        public void Handle(ActionMovedToProject e)
+        {
+            if (CanHandle(e.Id))
+                _model.ActionMoved(e.ActionId, e.OldProject, e.NewProject);
         }
     }
 
