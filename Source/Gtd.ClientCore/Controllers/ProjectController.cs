@@ -1,12 +1,11 @@
 ﻿using System;
+using Gtd.Client;
 using Gtd.Client.Models;
 
-namespace Gtd.Client.Views.Project
+namespace Gtd.ClientCore.Controllers
 {
-
     public interface IProjectView
     {
-
         void ShowView(FilteredProject project);
 
         void SubscribeOutcomeChanged(Action<ActionId,string> e);
@@ -22,7 +21,6 @@ namespace Gtd.Client.Views.Project
         IHandle<Dumb.ActionUpdated>,
         IHandle<Dumb.ActionAdded>,
         IHandle<Dumb.ActionRemoved>
-
     {
         readonly IProjectView _control;
         readonly ClientPerspective _perspective;
