@@ -131,8 +131,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             Actions[e.ActionId].RemoveFromProject(e.OldProject);
             Projects[e.OldProject].RemoveAction(e.ActionId);
         }
-
-        // TODO: Nothing generates this Event yet
+        
         public void When(ActionMovedToProject e)
         {
             var action = Actions[e.ActionId];

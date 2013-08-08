@@ -190,11 +190,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
 
         public void MoveStuffToProject(StuffId[] stuffToMove, ProjectId projectId, ITimeProvider provider)
         {
-            ProjectInfo projectInfo;
-            if (!_aggState.Projects.TryGetValue(projectId, out projectInfo))
-            {
-                throw DomainError.Named("unknown-project", "Unknown project {0}", projectId);
-            }
+            GetProjectOrThrow(projectId);
             var dateTime = provider.GetUtcNow();
             foreach (var stuffId in stuffToMove)
             {
@@ -209,13 +205,34 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
             }
         }
 
+        ProjectInfo GetProjectOrThrow(ProjectId projectId)
+        {
+            ProjectInfo projectInfo;
+            if (!_aggState.Projects.TryGetValue(projectId, out projectInfo))
+            {
+                throw DomainError.Named("unknown-project", "Unknown project {0}", projectId);
+            }
+            return projectInfo;
+        }
+
+        public void MoveActionsToProject(ActionId[] actions, ProjectId targetProject, DateTime timeUtc)
+        {
+            var project = GetProjectOrThrow(targetProject);
+
+            foreach (var id in actions)
+            {
+                var action = GetActionOrThrow(id);
+                if (!action.Project.Equals(targetProject))
+                {
+                    Apply(new ActionMovedToProject(_aggState.Id, id, action.Project, targetProject, timeUtc));
+                }
+            }
+        }
+
         public void CompleteAction(ActionId actionId, ITimeProvider provider)
         {
-            ActionInfo actionInfo;
-            if (!_aggState.Actions.TryGetValue(actionId, out actionInfo))
-            {
-                throw DomainError.Named("unknown action", "Unknown action {0}", actionId);
-            }
+            var actionInfo = GetActionOrThrow(actionId);
+            
             if (actionInfo.Completed)
                 return;// idempotency
 
