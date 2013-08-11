@@ -8,7 +8,7 @@ namespace Gtd.Client.Models
     public sealed class ClientModel
     {
         readonly IMessageQueue _queue;
-        IImmutableList<ImmutableStuff> _listOfGtdStuff = ImmutableList.Create<ImmutableStuff>();
+        
         ImmutableDictionary<StuffId, ImmutableStuff> _stuffInInbox = ImmutableDictionary.Create<StuffId, ImmutableStuff>();
 
         readonly List<MutableProject> _projectList = new List<MutableProject>();
@@ -31,12 +31,17 @@ namespace Gtd.Client.Models
 
         public ImmutableInbox GetInbox()
         {
-            return new ImmutableInbox(_listOfGtdStuff.ToImmutableList());
+            return new ImmutableInbox(GetOrderedInbox());
+        }
+
+        ImmutableList<ImmutableStuff> GetOrderedInbox()
+        {
+            return _stuffInInbox.OrderBy(p => p.Value.Order).Select(i => i.Value).ToImmutableList();
         }
 
         public int GetTheNumberOfItemsOfStuffInInbox()
         {
-            return _listOfGtdStuff.Count;
+            return _stuffInInbox.Count;
         }
 
         public readonly TrustedSystemId Id;
@@ -54,7 +59,7 @@ namespace Gtd.Client.Models
             _loadingCompleted = true;
 
             var model = new ImmutableClientModel(
-                _listOfGtdStuff,
+                GetOrderedInbox(),
                 ImmutableList.Create(_projectList.Select(m => m.Freeze()).ToArray()));
 
             Publish(new Dumb.ClientModelLoaded(model));
@@ -67,15 +72,17 @@ namespace Gtd.Client.Models
             _queue.Enqueue(e);
         }
 
+        uint _stuffOrderCounter = 0;
+
         public void StuffPutInInbox(StuffId stuffId, string descriptionOfStuff, DateTime date)
         {
             var key = "stuff-" + Id.Id;
-            var item = new ImmutableStuff(stuffId, descriptionOfStuff, key);
+            var item = new ImmutableStuff(stuffId, descriptionOfStuff, key, _stuffOrderCounter++);
 
-            _listOfGtdStuff = _listOfGtdStuff.Add(item);
+            
             _stuffInInbox = _stuffInInbox.Add(stuffId, item);
 
-            Publish(new Dumb.StuffAddedToInbox(item, _listOfGtdStuff.Count));
+            Publish(new Dumb.StuffAddedToInbox(item, _stuffInInbox.Count));
         }
 
         public void StuffTrashed(StuffId stuffId)
@@ -83,11 +90,10 @@ namespace Gtd.Client.Models
             ImmutableStuff value;
             if (!_stuffInInbox.TryGetValue(stuffId, out value))
                 return;
-
-            _listOfGtdStuff = _listOfGtdStuff.Remove(value);
+            
             _stuffInInbox = _stuffInInbox.Remove(stuffId);
 
-            Publish(new Dumb.StuffRemovedFromInbox(value, _listOfGtdStuff.Count));
+            Publish(new Dumb.StuffRemovedFromInbox(value, _stuffInInbox.Count));
         }
 
 
@@ -97,10 +103,10 @@ namespace Gtd.Client.Models
             if (!_stuffInInbox.TryGetValue(stuffId, out value))
                 return;
 
-            _listOfGtdStuff = _listOfGtdStuff.Remove(value);
+            
             _stuffInInbox = _stuffInInbox.Remove(stuffId);
 
-            Publish(new Dumb.StuffRemovedFromInbox(value, _listOfGtdStuff.Count));
+            Publish(new Dumb.StuffRemovedFromInbox(value, _stuffInInbox.Count));
         }
 
         public void ProjectDefined(ProjectId projectId, string projectOutcome, ProjectType type)
@@ -151,7 +157,7 @@ namespace Gtd.Client.Models
 
 
             var newValue = oldStuff.WithDescription(newDescriptionOfStuff);
-            _listOfGtdStuff =  _listOfGtdStuff.Replace(oldStuff, newValue);
+            
             _stuffInInbox = _stuffInInbox.SetItem(stuffId, newValue);
 
             Publish(new Dumb.StuffUpdated(newValue));

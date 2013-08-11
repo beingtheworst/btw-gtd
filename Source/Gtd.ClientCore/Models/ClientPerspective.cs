@@ -76,17 +76,19 @@ namespace Gtd.Client.Models
         public readonly StuffId StuffId;
         public readonly string Description;
         public readonly string UIKey;
+        public readonly uint Order;
 
         public ImmutableStuff WithDescription(string descriptionOfStuff)
         {
-            return new ImmutableStuff(StuffId, descriptionOfStuff, UIKey);
+            return new ImmutableStuff(StuffId, descriptionOfStuff, UIKey,Order);
         }
 
-        public ImmutableStuff(StuffId stuffId, string descriptionOfStuff, string uiKey)
+        public ImmutableStuff(StuffId stuffId, string descriptionOfStuff, string uiKey, uint order)
         {
             StuffId = stuffId;
             Description = descriptionOfStuff;
             UIKey = uiKey;
+            Order = order;
         }
     }
 
