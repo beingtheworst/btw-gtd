@@ -9,7 +9,7 @@ namespace Gtd.Client.Models
     {
         readonly IMessageQueue _queue;
         IImmutableList<ImmutableStuff> _listOfGtdStuff = ImmutableList.Create<ImmutableStuff>();
-        readonly Dictionary<StuffId, ImmutableStuff> _stuffInInbox = new Dictionary<StuffId, ImmutableStuff>();
+        ImmutableDictionary<StuffId, ImmutableStuff> _stuffInInbox = ImmutableDictionary.Create<StuffId, ImmutableStuff>();
 
         readonly List<MutableProject> _projectList = new List<MutableProject>();
         readonly Dictionary<ProjectId, MutableProject> _projects = new Dictionary<ProjectId, MutableProject>();
@@ -73,7 +73,8 @@ namespace Gtd.Client.Models
             var item = new ImmutableStuff(stuffId, descriptionOfStuff, key);
 
             _listOfGtdStuff = _listOfGtdStuff.Add(item);
-            _stuffInInbox.Add(stuffId, item);
+            _stuffInInbox = _stuffInInbox.Add(stuffId, item);
+
             Publish(new Dumb.StuffAddedToInbox(item, _listOfGtdStuff.Count));
         }
 
@@ -84,7 +85,7 @@ namespace Gtd.Client.Models
                 return;
 
             _listOfGtdStuff = _listOfGtdStuff.Remove(value);
-            _stuffInInbox.Remove(stuffId);
+            _stuffInInbox = _stuffInInbox.Remove(stuffId);
 
             Publish(new Dumb.StuffRemovedFromInbox(value, _listOfGtdStuff.Count));
         }
@@ -97,7 +98,7 @@ namespace Gtd.Client.Models
                 return;
 
             _listOfGtdStuff = _listOfGtdStuff.Remove(value);
-            _stuffInInbox.Remove(stuffId);
+            _stuffInInbox = _stuffInInbox.Remove(stuffId);
 
             Publish(new Dumb.StuffRemovedFromInbox(value, _listOfGtdStuff.Count));
         }
@@ -151,10 +152,7 @@ namespace Gtd.Client.Models
 
             var newValue = oldStuff.WithDescription(newDescriptionOfStuff);
             _listOfGtdStuff =  _listOfGtdStuff.Replace(oldStuff, newValue);
-
-            _stuffInInbox[stuffId] = newValue;
-
-            
+            _stuffInInbox = _stuffInInbox.SetItem(stuffId, newValue);
 
             Publish(new Dumb.StuffUpdated(newValue));
         }
@@ -207,30 +205,6 @@ namespace Gtd.Client.Models
             
         }
 
-        sealed class MutableStuff
-        {
-            public StuffId StuffId { get; private set; }
-            public string Description { get; private set; }
-            public  string UIKey { get; private set; }
-
-            public MutableStuff(StuffId stuffId, string description, string uiKey)
-            {
-                StuffId = stuffId;
-                Description = description;
-                UIKey = uiKey;
-            }
-
-
-            public void UpdateDescription(string newDescriptionOfStuff)
-            {
-                Description = newDescriptionOfStuff;
-            }
-
-            public ImmutableStuff Freeze()
-            {
-                return new ImmutableStuff(StuffId, Description, UIKey);
-            }
-        }
 
         sealed class MutableProject 
         {
