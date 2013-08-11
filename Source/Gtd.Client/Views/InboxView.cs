@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Windows.Forms;
 using Gtd.Client.Models;
+using Gtd.ClientCore;
 
 namespace Gtd.Client
 {
@@ -43,9 +45,9 @@ namespace Gtd.Client
         
 
         
-        StuffId[] GetSelectedStuffIds()
+        IImmutableList<StuffId> GetSelectedStuffIds()
         {
-            return listBox1.SelectedItems.Cast<StuffInfo>().Select(stuffItem => stuffItem.Id).ToArray();
+            return listBox1.SelectedItems.Cast<StuffInfo>().Select(stuffItem => stuffItem.Id).ToImmutableList();
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -84,7 +86,7 @@ namespace Gtd.Client
             try
             {
                 listBox1.Items.Clear();
-                foreach (var view in inbox.Stuff)
+                foreach (var view in inbox.GetStuffOrdered())
                 {
                     var stuffInfo = new StuffInfo(view);
                     _stuffInInbox[view.StuffId] = stuffInfo;
@@ -135,7 +137,7 @@ namespace Gtd.Client
 
         
 
-        public void SubscribeToTrashStuffClick(Action<StuffId[]> callback)
+        public void SubscribeToTrashStuffClick(Action<IImmutableList<StuffId>> callback)
         {
             button1.Click += (sender, args) => callback(GetSelectedStuffIds());
         }
@@ -152,11 +154,11 @@ namespace Gtd.Client
             _whenListProjects = request;
         }
 
-        public void SubscribeToMoveStuffToProject(Action<ProjectId, StuffId[]> callback)
+        public void SubscribeToMoveStuffToProject(Action<ProjectId, IImmutableList<StuffId>> callback)
         {
             _toProject.SelectionChangeCommitted += (sender, args) =>
                 {
-                    var projectId = ((ProjectId) (((Display) _toProject.SelectedItem).Value));
+                    var projectId = ((Display) _toProject.SelectedItem).Value;
                     callback(projectId, GetSelectedStuffIds());
                 };
 

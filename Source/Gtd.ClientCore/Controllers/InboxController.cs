@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using Gtd.Client.Models;
 using System.Linq;
+using Gtd.ClientCore;
 
 namespace Gtd.Client
 {
 
     public interface IInboxView
     {
-        void SubscribeToTrashStuffClick(Action<StuffId[]> callback);
+        void SubscribeToTrashStuffClick(Action<IImmutableList<StuffId>> callback);
         void SubscribeToAddStuffClick(Action callback);
         void SubscribeToListProjects(Func<ICollection<ImmutableProjectInfo>> request);
-        void SubscribeToMoveStuffToProject(Action<ProjectId, StuffId[]> callback);
+        void SubscribeToMoveStuffToProject(Action<ProjectId, IImmutableList<StuffId>> callback);
         
         void SubscribeToStartDrag(Action<DragSubject<StuffId>> callback);
 
@@ -60,7 +62,7 @@ namespace Gtd.Client
 
         void StartDrag(DragSubject<StuffId> subject)
         {
-            _queue.Enqueue(new UI.DragStarted(new StuffDragManager(subject.Request, subject.Subject, _queue)));
+            _queue.Enqueue(new UI.DragStarted(new StuffDragManager(subject.Request, ImmutableList.Create(subject.Subject), _queue)));
         }
 
 
@@ -92,7 +94,7 @@ namespace Gtd.Client
             }
         }
 
-        public void MoveStuffToProject(ProjectId projectId, StuffId[] stuffIdsToMove)
+        public void MoveStuffToProject(ProjectId projectId, IImmutableList<StuffId> stuffIdsToMove)
         {
             _queue.Enqueue(new UI.MoveStuffToProjectClicked(stuffIdsToMove, projectId));
         }

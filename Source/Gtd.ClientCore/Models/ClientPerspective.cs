@@ -51,20 +51,26 @@ namespace Gtd.Client.Models
 
     public sealed class ImmutableInbox
     {
-        public readonly IImmutableList<ImmutableStuff> Stuff;
-
-        public ImmutableInbox(IImmutableList<ImmutableStuff> stuff)
+        readonly IImmutableDictionary<StuffId, ImmutableStuff> _dict;
+        public ImmutableInbox(IImmutableDictionary<StuffId, ImmutableStuff> dict)
         {
-            Stuff = stuff;
+            _dict = dict;
         }
+
+        public int Count { get { return _dict.Count; } }
+        public IOrderedEnumerable<ImmutableStuff> GetStuffOrdered()
+        {
+            return _dict.Values.OrderBy(i => i.Order);
+        }
+        
     }
 
     public sealed class ImmutableClientModel
     {
-        public readonly IImmutableList<ImmutableStuff> Inbox;
+        public readonly ImmutableInbox Inbox;
         public readonly IImmutableList<ImmutableProject> Projects;
 
-        public ImmutableClientModel(IImmutableList<ImmutableStuff> inbox, IImmutableList<ImmutableProject> projects)
+        public ImmutableClientModel(ImmutableInbox inbox, IImmutableList<ImmutableProject> projects)
         {
             Inbox = inbox;
             Projects = projects;

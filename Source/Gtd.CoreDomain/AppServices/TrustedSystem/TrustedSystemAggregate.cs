@@ -188,7 +188,7 @@ namespace Gtd.CoreDomain.AppServices.TrustedSystem
 
         }
 
-        public void MoveStuffToProject(StuffId[] stuffToMove, ProjectId projectId, ITimeProvider provider)
+        public void MoveStuffToProject(IEnumerable<StuffId> stuffToMove, ProjectId projectId, ITimeProvider provider)
         {
             GetProjectOrThrow(projectId);
             var dateTime = provider.GetUtcNow();

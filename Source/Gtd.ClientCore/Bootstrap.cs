@@ -5,6 +5,7 @@ using Gtd.Client.Models;
 using Gtd.Client.Views.AddStuffToInbox;
 using Gtd.Client.Views.CaptureThought;
 using Gtd.Client.Views.Navigation;
+using Gtd.ClientCore;
 using Gtd.ClientCore.Controllers;
 
 namespace Gtd.Client

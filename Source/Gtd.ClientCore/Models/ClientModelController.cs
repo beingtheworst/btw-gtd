@@ -1,4 +1,5 @@
 ﻿using System;
+using Gtd.ClientCore;
 using Gtd.CoreDomain;
 using Microsoft.CSharp.RuntimeBinder;
 

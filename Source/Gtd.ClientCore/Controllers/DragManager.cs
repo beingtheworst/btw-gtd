@@ -2,6 +2,7 @@
 using System.Collections.Immutable;
 using Gtd.Client.Models;
 using System.Linq;
+using Gtd.ClientCore;
 
 namespace Gtd.Client
 {
@@ -52,11 +53,11 @@ namespace Gtd.Client
 
     public sealed class StuffDragManager : DragManager
     {
-        public readonly StuffId Stuff;
+        public readonly IImmutableList<StuffId> Stuff;
         // TODO: replace with envelope
         readonly IMessageQueue _queue;
 
-        public StuffDragManager(string request, StuffId stuff, IMessageQueue queue) : base(request)
+        public StuffDragManager(string request, IImmutableList<StuffId> stuff, IMessageQueue queue) : base(request)
         {
             Stuff = stuff;
             _queue = queue;
@@ -70,7 +71,7 @@ namespace Gtd.Client
 
         public override void DropToProject(string requestId, ProjectId id)
         {
-            _queue.Enqueue(new UI.MoveStuffToProjectClicked(new[]{Stuff, },id ));
+            _queue.Enqueue(new UI.MoveStuffToProjectClicked(Stuff, id ));
         }
     }
 

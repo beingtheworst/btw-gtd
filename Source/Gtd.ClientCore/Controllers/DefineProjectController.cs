@@ -1,4 +1,5 @@
 using System;
+using Gtd.ClientCore;
 
 namespace Gtd.Client.Views.CaptureThought
 {

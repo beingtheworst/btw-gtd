@@ -12,11 +12,11 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Collections.ObjectModel;
+using Gtd.Client;
 using Gtd.Client.Models;
 using Gtd.Shell.Filters;
 
-namespace Gtd.Client
+namespace Gtd.ClientCore
 {
     #region This is the language of the UI expressed as Command and Event Messages...
     // These are the "words" the "UI component services"/controllers use to communicate.
@@ -78,7 +78,7 @@ namespace Gtd.Client
 
             public ProjectDisplayed(ImmutableProjectInfo project)
             {
-                this.Project = project;
+                Project = project;
             }
         }
 
@@ -177,10 +177,10 @@ namespace Gtd.Client
 
         public sealed class MoveStuffToProjectClicked : Message
         {
-            public readonly StuffId[] StuffToMove;
+            public readonly IImmutableList<StuffId> StuffToMove;
             public readonly ProjectId Project;
 
-            public MoveStuffToProjectClicked(StuffId[] stuffToMove, ProjectId project)
+            public MoveStuffToProjectClicked(IImmutableList<StuffId> stuffToMove, ProjectId project)
             {
                 StuffToMove = stuffToMove;
                 Project = project;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using Gtd.Client.Models;
+using Gtd.ClientCore;
 using Gtd.CoreDomain;
 using Gtd.CoreDomain.AppServices.ClientProfile;
 using Gtd.CoreDomain.AppServices.TrustedSystem;

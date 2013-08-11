@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Gtd.Client.Models;
 using System.Linq;
+using Gtd.ClientCore;
 
 namespace Gtd.Client.Views.Navigation
 {

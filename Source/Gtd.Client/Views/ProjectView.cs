@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using Gtd.Client.Models;
 using System.Linq;
+using Gtd.ClientCore;
 using Gtd.ClientCore.Controllers;
 
 namespace Gtd.Client.Views.Project

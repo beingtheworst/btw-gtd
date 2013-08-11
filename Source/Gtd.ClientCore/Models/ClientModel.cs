@@ -31,13 +31,9 @@ namespace Gtd.Client.Models
 
         public ImmutableInbox GetInbox()
         {
-            return new ImmutableInbox(GetOrderedInbox());
+            return new ImmutableInbox(_stuffInInbox);
         }
 
-        ImmutableList<ImmutableStuff> GetOrderedInbox()
-        {
-            return _stuffInInbox.OrderBy(p => p.Value.Order).Select(i => i.Value).ToImmutableList();
-        }
 
         public int GetTheNumberOfItemsOfStuffInInbox()
         {
@@ -59,7 +55,7 @@ namespace Gtd.Client.Models
             _loadingCompleted = true;
 
             var model = new ImmutableClientModel(
-                GetOrderedInbox(),
+                GetInbox(), 
                 ImmutableList.Create(_projectList.Select(m => m.Freeze()).ToArray()));
 
             Publish(new Dumb.ClientModelLoaded(model));
