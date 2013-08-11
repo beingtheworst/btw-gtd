@@ -1,4 +1,10 @@
-﻿using System;
+﻿#region (c) 2012-2013 Copyright BeingTheWorst.com Podcast
+
+// See being the worst podcast for more details
+
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -8,8 +14,9 @@ namespace Gtd.Client.Models
     public sealed class ClientModel
     {
         readonly IMessageQueue _queue;
-        
-        ImmutableDictionary<StuffId, ImmutableStuff> _stuffInInbox = ImmutableDictionary.Create<StuffId, ImmutableStuff>();
+
+        ImmutableDictionary<StuffId, ImmutableStuff> _stuffInInbox =
+            ImmutableDictionary.Create<StuffId, ImmutableStuff>();
 
         readonly List<MutableProject> _projectList = new List<MutableProject>();
         readonly Dictionary<ProjectId, MutableProject> _projects = new Dictionary<ProjectId, MutableProject>();
@@ -19,7 +26,7 @@ namespace Gtd.Client.Models
         public IList<ImmutableProject> ListProjects()
         {
             return _projectList.Select(m => m.Freeze()).ToList().AsReadOnly();
-        } 
+        }
 
         public ImmutableProject GetProjectOrNull(ProjectId projectId)
         {
@@ -55,7 +62,7 @@ namespace Gtd.Client.Models
             _loadingCompleted = true;
 
             var model = new ImmutableClientModel(
-                GetInbox(), 
+                GetInbox(),
                 ImmutableList.Create(_projectList.Select(m => m.Freeze()).ToArray()));
 
             Publish(new Dumb.ClientModelLoaded(model));
@@ -68,14 +75,14 @@ namespace Gtd.Client.Models
             _queue.Enqueue(e);
         }
 
-        uint _stuffOrderCounter = 0;
+        uint _stuffOrderCounter;
 
         public void StuffPutInInbox(StuffId stuffId, string descriptionOfStuff, DateTime date)
         {
             var key = "stuff-" + Id.Id;
             var item = new ImmutableStuff(stuffId, descriptionOfStuff, key, _stuffOrderCounter++);
 
-            
+
             _stuffInInbox = _stuffInInbox.Add(stuffId, item);
 
             Publish(new Dumb.StuffAddedToInbox(item, _stuffInInbox.Count));
@@ -86,7 +93,7 @@ namespace Gtd.Client.Models
             ImmutableStuff value;
             if (!_stuffInInbox.TryGetValue(stuffId, out value))
                 return;
-            
+
             _stuffInInbox = _stuffInInbox.Remove(stuffId);
 
             Publish(new Dumb.StuffRemovedFromInbox(value, _stuffInInbox.Count));
@@ -99,7 +106,7 @@ namespace Gtd.Client.Models
             if (!_stuffInInbox.TryGetValue(stuffId, out value))
                 return;
 
-            
+
             _stuffInInbox = _stuffInInbox.Remove(stuffId);
 
             Publish(new Dumb.StuffRemovedFromInbox(value, _stuffInInbox.Count));
@@ -110,7 +117,7 @@ namespace Gtd.Client.Models
             var project = new MutableProject(projectId, projectOutcome, type);
             _projectList.Add(project);
             _projects.Add(projectId, project);
-            
+
 
             Publish(new Dumb.ProjectAdded(project.UIKey, projectOutcome, projectId));
         }
@@ -125,6 +132,7 @@ namespace Gtd.Client.Models
 
             Publish(new Dumb.ActionAdded(action.Freeze()));
         }
+
         public void ActionMoved(ActionId actionId, ProjectId oldProjectId, ProjectId newProjectId)
         {
             var action = _actions[actionId];
@@ -143,7 +151,7 @@ namespace Gtd.Client.Models
             var action = _actions[actionId];
             var project = _projects[action.ProjectId];
             action.MarkAsCompleted();
-            
+
             Publish(new Dumb.ActionUpdated(action.Freeze(), project.UIKey));
         }
 
@@ -153,7 +161,7 @@ namespace Gtd.Client.Models
 
 
             var newValue = oldStuff.WithDescription(newDescriptionOfStuff);
-            
+
             _stuffInInbox = _stuffInInbox.SetItem(stuffId, newValue);
 
             Publish(new Dumb.StuffUpdated(newValue));
@@ -197,22 +205,16 @@ namespace Gtd.Client.Models
             _actions[actionId].DueDateAssigned(newDueDate);
         }
 
-        public void Verify(TrustedSystemId id)
-        {
-            
-        }
+        public void Verify(TrustedSystemId id) {}
 
-        public void Create(TrustedSystemId id)
-        {
-            
-        }
+        public void Create(TrustedSystemId id) {}
 
 
-        sealed class MutableProject 
+        sealed class MutableProject
         {
-            public ProjectId ProjectId { get; private set; }
-            public string Outcome { get; private set; }
-            public ProjectType Type { get; private set; }
+            ProjectId ProjectId { get; set; }
+            string Outcome { get; set; }
+            ProjectType Type { get; set; }
             public readonly string UIKey;
 
             public MutableProject(ProjectId projectId, string outcome, ProjectType type)
@@ -229,7 +231,6 @@ namespace Gtd.Client.Models
                 var ma = Actions.Select(mutable => mutable.Freeze()).ToList().AsReadOnly();
                 var info = new ImmutableProjectInfo(ProjectId, Outcome, Type, UIKey);
                 return new ImmutableProject(info, ma);
-
             }
 
 
@@ -246,17 +247,20 @@ namespace Gtd.Client.Models
             }
         }
 
-        sealed class MutableAction 
+        sealed class MutableAction
         {
-            public ActionId Id { get; private set; }
-            public string Outcome { get; private set; }
-            public bool Completed { get; private set; }
-            public bool Archived { get; private set; }
+            ActionId Id { get; set; }
+            string Outcome { get; set; }
+            bool Completed { get; set; }
+            bool Archived { get; set; }
             public ProjectId ProjectId { get; private set; }
-            public DateTime DeferUntil { get; private set; }
-            public DateTime DueDate { get; private set; }
+            DateTime DeferUntil { get; set; }
+            DateTime DueDate { get; set; }
 
-            public string UIKey { get { return "action-" + Id.Id; } }
+            string UIKey
+            {
+                get { return "action-" + Id.Id; }
+            }
 
             public MutableAction(ActionId action, string outcome, ProjectId project)
             {
@@ -271,10 +275,12 @@ namespace Gtd.Client.Models
             {
                 Completed = true;
             }
+
             public void MoveToProject(ProjectId newProject)
             {
                 ProjectId = newProject;
             }
+
             public void OutcomeChanged(string outcome)
             {
                 Outcome = outcome;
@@ -301,6 +307,7 @@ namespace Gtd.Client.Models
             {
                 DeferUntil = newStartDate;
             }
+
             public void DueDateAssigned(DateTime newDueDate)
             {
                 DueDate = newDueDate;
