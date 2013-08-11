@@ -10,7 +10,9 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Collections.ObjectModel;
 using Gtd.Client.Models;
 using Gtd.Shell.Filters;
 
@@ -116,10 +118,10 @@ namespace Gtd.Client
 
         public class MoveActionsToProject : Message
         {
-            public readonly ImmutableArray<ActionId> Actions;
+            public readonly IImmutableList<ActionId> Actions;
             public readonly ProjectId ToProject;
 
-            public MoveActionsToProject(ImmutableArray<ActionId> actions, ProjectId toProject)
+            public MoveActionsToProject(IImmutableList<ActionId> actions, ProjectId toProject)
             {
                 Actions = actions;
                 ToProject = toProject;
@@ -217,6 +219,24 @@ namespace Gtd.Client
         public ProfileLoaded(TrustedSystemId systemId)
         {
             SystemId = systemId;
+        }
+    }
+
+    public sealed class DragActions
+    {
+        public readonly string Request;
+        public readonly ImmutableList<ImmutableAction> Actions;
+
+        public static DragActions CreateRequest(IEnumerable<ImmutableAction> actions)
+        {
+            var requestId = Guid.NewGuid().ToString();
+            return new DragActions(requestId, actions.ToImmutableList());
+        }
+
+        DragActions(string request, ImmutableList<ImmutableAction> actions)
+        {
+            Request = request;
+            Actions = actions;
         }
     }
 

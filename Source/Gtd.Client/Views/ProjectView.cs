@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Windows.Forms;
 using Gtd.Client.Models;
 using System.Linq;
@@ -21,19 +23,39 @@ namespace Gtd.Client.Views.Project
 
         Region _region;
 
-        public void SubscribeToDragStart(Action<DragSubject<ImmutableAction>> callback)
+        public void SubscribeToDragStart(Action<DragActions> callback)
         {
-            _grid.MouseMove += (sender, args) =>
+            _grid.MouseDown += (sender, args) =>
                 {
+                    
                     if (args.Button != MouseButtons.Left)
                         return;
                     var index = _grid.HitTest(args.X, args.Y);
-                    if (index.RowIndex == -1)
+                    var rowIndex = index.RowIndex;
+                    if (rowIndex == -1)
                         return;
-                    var display = (ActionDisplay) _grid.Rows[index.RowIndex].DataBoundItem;
-                    var request = Guid.NewGuid().ToString();
-                    callback(new DragSubject<ImmutableAction>(request, display.Model));
-                    DoDragDrop(request, DragDropEffects.Move);
+
+                    //var selectedRows = _grid.SelectedRows;
+                    DragActions subject;
+                    var selectedRows = _grid.SelectedRows.Cast<DataGridViewRow>().ToArray();
+                    if (selectedRows.Select(v => v.Index).Contains(rowIndex))
+                    {
+                        // our hit test includes selection.
+                        // drag entire selection
+                        subject = DragActions.CreateRequest(selectedRows
+                            .Select(r => r.DataBoundItem as ActionDisplay)
+                            .Select(a => a.Model));
+                    }
+                    else
+                    {
+                        var display = (ActionDisplay)_grid.Rows[index.RowIndex].DataBoundItem;
+                        subject = DragActions.CreateRequest(new[] { display.Model });
+                    }
+
+
+
+                    callback(subject);
+                    DoDragDrop(subject.Request, DragDropEffects.Move);
                 };
         }
 

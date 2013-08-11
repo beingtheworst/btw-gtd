@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Immutable;
 using Gtd.Client.Models;
+using System.Linq;
 
 namespace Gtd.Client
 {
@@ -23,12 +24,12 @@ namespace Gtd.Client
 
     public sealed class ActionDragManager : DragManager
     {
-        readonly ImmutableAction _action;
+        readonly IImmutableList<ImmutableAction> _actions;
         readonly IMessageQueue _queue;
 
-        public ActionDragManager(string request, ImmutableAction action, IMessageQueue queue) : base(request)
+        public ActionDragManager(string request, IImmutableList<ImmutableAction> action, IMessageQueue queue) : base(request)
         {
-            _action = action;
+            _actions = action;
             _queue = queue;
         }
 
@@ -36,15 +37,16 @@ namespace Gtd.Client
         {
             if (Request != requestId)
                 return false;
-            if (_action.ProjectId.Id == id.Id)
-                return false;
-            return true;
 
+
+            //if (_action.ProjectId.Id == id.Id)
+            //    return false;
+            //return true;
+            return true;
         }
         public override void DropToProject(string requestId, ProjectId id)
         {
-            var actions = ImmutableArray.Create(_action.ActionId);
-            _queue.Enqueue(new UI.MoveActionsToProject(actions,id));
+            _queue.Enqueue(new UI.MoveActionsToProject(_actions.Select(a => a.ActionId).ToImmutableList(), id));
         }
     }
 

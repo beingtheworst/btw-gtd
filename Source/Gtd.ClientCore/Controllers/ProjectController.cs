@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using Gtd.Client;
 using Gtd.Client.Models;
 
@@ -11,7 +12,7 @@ namespace Gtd.ClientCore.Controllers
         void SubscribeOutcomeChanged(Action<ActionId,string> e);
         void SubscribeActionCompleted(Action<ActionId> e);
         void SubscribeAddActionClicked(Action<ProjectId> e);
-        void SubscribeToDragStart(Action<DragSubject<ImmutableAction>> callback);
+        void SubscribeToDragStart(Action<DragActions> callback);
     }
 
     public sealed class ProjectController : 
@@ -51,9 +52,9 @@ namespace Gtd.ClientCore.Controllers
             view.SubscribeToDragStart(controller.StartDrag);
         }
 
-        void StartDrag(DragSubject<ImmutableAction> obj)
+        void StartDrag(DragActions obj)
         {
-            _bus.Enqueue(new UI.DragStarted(new ActionDragManager(obj.Request,obj.Subject,_bus)));
+            _bus.Enqueue(new UI.DragStarted(new ActionDragManager(obj.Request,obj.Actions,_bus)));
 
         }
 
