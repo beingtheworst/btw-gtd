@@ -8,8 +8,8 @@ namespace Gtd.Client.Models
     public sealed class ClientModel
     {
         readonly IMessageQueue _queue;
-        readonly List<MutableStuff> _listOfGtdStuff = new List<MutableStuff>();
-        readonly Dictionary<StuffId, MutableStuff> _stuffInInbox = new Dictionary<StuffId, MutableStuff>();
+        IImmutableList<ImmutableStuff> _listOfGtdStuff = ImmutableList.Create<ImmutableStuff>();
+        readonly Dictionary<StuffId, ImmutableStuff> _stuffInInbox = new Dictionary<StuffId, ImmutableStuff>();
 
         readonly List<MutableProject> _projectList = new List<MutableProject>();
         readonly Dictionary<ProjectId, MutableProject> _projects = new Dictionary<ProjectId, MutableProject>();
@@ -31,7 +31,7 @@ namespace Gtd.Client.Models
 
         public ImmutableInbox GetInbox()
         {
-            return new ImmutableInbox(ImmutableList.Create(_listOfGtdStuff.Select(f => f.Freeze()).ToArray()));
+            return new ImmutableInbox(_listOfGtdStuff.ToImmutableList());
         }
 
         public int GetTheNumberOfItemsOfStuffInInbox()
@@ -54,7 +54,7 @@ namespace Gtd.Client.Models
             _loadingCompleted = true;
 
             var model = new ImmutableClientModel(
-                ImmutableList.Create(_listOfGtdStuff.Select(f => f.Freeze()).ToArray()),
+                _listOfGtdStuff,
                 ImmutableList.Create(_projectList.Select(m => m.Freeze()).ToArray()));
 
             Publish(new Dumb.ClientModelLoaded(model));
@@ -70,34 +70,36 @@ namespace Gtd.Client.Models
         public void StuffPutInInbox(StuffId stuffId, string descriptionOfStuff, DateTime date)
         {
             var key = "stuff-" + Id.Id;
-            var item = new MutableStuff(stuffId, descriptionOfStuff, key);
+            var item = new ImmutableStuff(stuffId, descriptionOfStuff, key);
 
-            _listOfGtdStuff.Add(item);
+            _listOfGtdStuff = _listOfGtdStuff.Add(item);
             _stuffInInbox.Add(stuffId, item);
-            Publish(new Dumb.StuffAddedToInbox(item.Freeze(), _listOfGtdStuff.Count));
+            Publish(new Dumb.StuffAddedToInbox(item, _listOfGtdStuff.Count));
         }
 
         public void StuffTrashed(StuffId stuffId)
         {
-            MutableStuff value;
+            ImmutableStuff value;
             if (!_stuffInInbox.TryGetValue(stuffId, out value))
                 return;
 
-            _listOfGtdStuff.Remove(value);
+            _listOfGtdStuff = _listOfGtdStuff.Remove(value);
+            _stuffInInbox.Remove(stuffId);
 
-            Publish(new Dumb.StuffRemovedFromInbox(value.Freeze(), _listOfGtdStuff.Count));
+            Publish(new Dumb.StuffRemovedFromInbox(value, _listOfGtdStuff.Count));
         }
 
 
         public void StuffArchived(StuffId stuffId)
         {
-            MutableStuff value;
+            ImmutableStuff value;
             if (!_stuffInInbox.TryGetValue(stuffId, out value))
                 return;
 
-            _listOfGtdStuff.Remove(value);
+            _listOfGtdStuff = _listOfGtdStuff.Remove(value);
+            _stuffInInbox.Remove(stuffId);
 
-            Publish(new Dumb.StuffRemovedFromInbox(value.Freeze(), _listOfGtdStuff.Count));
+            Publish(new Dumb.StuffRemovedFromInbox(value, _listOfGtdStuff.Count));
         }
 
         public void ProjectDefined(ProjectId projectId, string projectOutcome, ProjectType type)
@@ -144,10 +146,17 @@ namespace Gtd.Client.Models
 
         public void DescriptionOfStuffChanged(StuffId stuffId, string newDescriptionOfStuff)
         {
-            var stuff = _stuffInInbox[stuffId];
-            stuff.UpdateDescription(newDescriptionOfStuff);
+            var oldStuff = _stuffInInbox[stuffId];
 
-            Publish(new Dumb.StuffUpdated(stuff.Freeze()));
+
+            var newValue = oldStuff.WithDescription(newDescriptionOfStuff);
+            _listOfGtdStuff =  _listOfGtdStuff.Replace(oldStuff, newValue);
+
+            _stuffInInbox[stuffId] = newValue;
+
+            
+
+            Publish(new Dumb.StuffUpdated(newValue));
         }
 
         public void ProjectOutcomeChanged(ProjectId projectId, string outcome)

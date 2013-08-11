@@ -51,9 +51,9 @@ namespace Gtd.Client.Models
 
     public sealed class ImmutableInbox
     {
-        public readonly ImmutableList<ImmutableStuff> Stuff;
+        public readonly IImmutableList<ImmutableStuff> Stuff;
 
-        public ImmutableInbox(ImmutableList<ImmutableStuff> stuff)
+        public ImmutableInbox(IImmutableList<ImmutableStuff> stuff)
         {
             Stuff = stuff;
         }
@@ -61,10 +61,10 @@ namespace Gtd.Client.Models
 
     public sealed class ImmutableClientModel
     {
-        public readonly ImmutableList<ImmutableStuff> Inbox;
-        public readonly ImmutableList<ImmutableProject> Projects;
+        public readonly IImmutableList<ImmutableStuff> Inbox;
+        public readonly IImmutableList<ImmutableProject> Projects;
 
-        public ImmutableClientModel(ImmutableList<ImmutableStuff> inbox, ImmutableList<ImmutableProject> projects)
+        public ImmutableClientModel(IImmutableList<ImmutableStuff> inbox, IImmutableList<ImmutableProject> projects)
         {
             Inbox = inbox;
             Projects = projects;
