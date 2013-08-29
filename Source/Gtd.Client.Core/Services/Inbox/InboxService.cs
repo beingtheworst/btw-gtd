@@ -29,6 +29,8 @@ namespace Gtd.Client.Core.Services.Inbox
             // send msg to tell others there was an Item added
             // this can help properties in ViewModels stay updated
 
+            
+
             // _messenger.Publish(new StuffAddedToInboxMessage(this));
         }
 
