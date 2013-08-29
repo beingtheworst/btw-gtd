@@ -62,6 +62,7 @@ namespace Gtd.Client.Core.ViewModels
             // the current ViewModel. // TODO more on that later, depends on how you design UI.
             // Close sends a msg to the UI Layer and asks,
             // "Can you close the View that Corresponds to this ViewModel?" and makes best effort to do it.
+            // On closure the previous ViewModel on nav stack should be displayed (likely InboxViewModel)
             Close(this);
 
         }
