@@ -15,6 +15,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gtd Mobile", "Gtd Mobile", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gtd.Client.Core", "Gtd.Client.Core\Gtd.Client.Core.csproj", "{53BE609D-5F5D-4E62-BD6C-67601A881D55}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gtd Core PCLs", "Gtd Core PCLs", "{4CF47115-7DA2-4964-B16C-11A305AAA9F4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gtd.Pcl.PublishedLanguage", "Gtd.Pcl.PublishedLanguage\Gtd.Pcl.PublishedLanguage.csproj", "{6F4F1B5C-235D-4CFC-BF56-184EA76A9BD0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,12 +49,17 @@ Global
 		{53BE609D-5F5D-4E62-BD6C-67601A881D55}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{53BE609D-5F5D-4E62-BD6C-67601A881D55}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{53BE609D-5F5D-4E62-BD6C-67601A881D55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F4F1B5C-235D-4CFC-BF56-184EA76A9BD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F4F1B5C-235D-4CFC-BF56-184EA76A9BD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F4F1B5C-235D-4CFC-BF56-184EA76A9BD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F4F1B5C-235D-4CFC-BF56-184EA76A9BD0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{53BE609D-5F5D-4E62-BD6C-67601A881D55} = {34193D81-DEBE-4D8D-AF25-D015072C0FF0}
+		{6F4F1B5C-235D-4CFC-BF56-184EA76A9BD0} = {4CF47115-7DA2-4964-B16C-11A305AAA9F4}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Gtd.Console\Gtd.Shell.csproj
