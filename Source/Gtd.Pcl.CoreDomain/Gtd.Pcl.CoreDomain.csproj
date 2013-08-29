@@ -5,11 +5,11 @@
     <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6F4F1B5C-235D-4CFC-BF56-184EA76A9BD0}</ProjectGuid>
+    <ProjectGuid>{A4E7BC6B-68D9-472C-865F-458E8E932181}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Gtd.Pcl.PublishedLanguage</RootNamespace>
-    <AssemblyName>Gtd.Pcl.PublishedLanguage</AssemblyName>
+    <RootNamespace>Gtd.Pcl.CoreDomain</RootNamespace>
+    <AssemblyName>Gtd.Pcl.CoreDomain</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Profile78</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -34,13 +34,22 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
+    <ProjectReference Include="..\Gtd.Pcl.PublishedLanguage\Gtd.Pcl.PublishedLanguage.csproj">
+      <Project>{6f4f1b5c-235d-4cfc-bf56-184ea76a9bd0}</Project>
+      <Name>Gtd.Pcl.PublishedLanguage</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AbstractIdentity.cs" />
-    <Compile Include="Message.cs" />
-    <Compile Include="Messages.cs" />
+    <Compile Include="AppServices\ClientProfile\ClientProfileAggregate.cs" />
+    <Compile Include="AppServices\ClientProfile\ClientProfileState.cs" />
+    <Compile Include="AppServices\TrustedSystem\TrustedSystemAggregate.cs" />
+    <Compile Include="AppServices\TrustedSystem\TrustedSystemAppService.cs" />
+    <Compile Include="AppServices\TrustedSystem\TrustedSystemState.cs" />
+    <Compile Include="DomainError.cs" />
+    <Compile Include="Enforce.cs" />
+    <Compile Include="ILogger.cs" />
+    <Compile Include="Interfaces.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ValueObjects.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
