@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gtd.Client", "Gtd.Client\Gt
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gtd.ClientCore", "Gtd.ClientCore\Gtd.ClientCore.csproj", "{3E44A3A1-4FF7-4B35-838D-012D844A0CA7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gtd Mobile", "Gtd Mobile", "{34193D81-DEBE-4D8D-AF25-D015072C0FF0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gtd.Client.Core", "Gtd.Client.Core\Gtd.Client.Core.csproj", "{53BE609D-5F5D-4E62-BD6C-67601A881D55}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,9 +41,16 @@ Global
 		{3E44A3A1-4FF7-4B35-838D-012D844A0CA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E44A3A1-4FF7-4B35-838D-012D844A0CA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E44A3A1-4FF7-4B35-838D-012D844A0CA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53BE609D-5F5D-4E62-BD6C-67601A881D55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53BE609D-5F5D-4E62-BD6C-67601A881D55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53BE609D-5F5D-4E62-BD6C-67601A881D55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53BE609D-5F5D-4E62-BD6C-67601A881D55}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{53BE609D-5F5D-4E62-BD6C-67601A881D55} = {34193D81-DEBE-4D8D-AF25-D015072C0FF0}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Gtd.Console\Gtd.Shell.csproj

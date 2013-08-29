@@ -10,8 +10,8 @@ namespace Gtd.Client.Core
                 .EndingWith("Service")
                 .AsInterfaces()
                 .RegisterAsLazySingleton();
-				
-            RegisterAppStart<ViewModels.FirstViewModel>();
+
+            RegisterAppStart<ViewModels.InboxViewModel>();
         }
     }
 }
