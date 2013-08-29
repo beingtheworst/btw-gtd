@@ -38,9 +38,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.cs" />
+    <Compile Include="DataStore\IInboxRepository.cs" />
+    <Compile Include="DataStore\InboxRepository.cs" />
     <Compile Include="Models\ItemOfStuff.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Inbox\IInboxService.cs" />
+    <Compile Include="Services\Inbox\InboxService.cs" />
     <Compile Include="ViewModels\AddStuffViewModel.cs" />
     <Compile Include="ViewModels\InboxViewModel.cs" />
   </ItemGroup>
@@ -53,6 +56,9 @@
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Localization">
       <HintPath>..\packages\MvvmCross.HotTuna.CrossCore.3.0.10\lib\portable-win+net45+MonoAndroid16+MonoTouch40+sl40+wp71\Cirrious.MvvmCross.Localization.dll</HintPath>
+    </Reference>
+    <Reference Include="Cirrious.MvvmCross.Plugins.Sqlite">
+      <HintPath>..\packages\MvvmCross.HotTuna.Plugin.Sqlite.3.0.10\lib\portable-win+net45+MonoAndroid16+MonoTouch40+sl40+wp71\Cirrious.MvvmCross.Plugins.Sqlite.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
