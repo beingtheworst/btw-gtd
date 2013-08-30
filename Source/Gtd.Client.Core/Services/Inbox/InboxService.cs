@@ -21,6 +21,7 @@ namespace Gtd.Client.Core.Services.Inbox
 
         }
 
+        // TODO: May want to do validation in here instead of ViewModel
         public void AddStuffToInbox(ItemOfStuff itemOfStuff)
         {
             _inboxRepository.AddStuffToInbox(itemOfStuff);
@@ -34,7 +35,6 @@ namespace Gtd.Client.Core.Services.Inbox
             // _messenger.Publish(new StuffAddedToInboxMessage(this));
         }
 
-        // TODO: May want to do validation in here instead of ViewModel
         public IList<ItemOfStuff> AllStuffInInbox()
         {
             // this will likely get cached down the road but use All for now
