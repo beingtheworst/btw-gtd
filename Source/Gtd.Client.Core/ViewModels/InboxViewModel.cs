@@ -35,14 +35,32 @@ namespace Gtd.Client.Core.ViewModels
         {
             get
             {
-                _addStuffCommand = _addStuffCommand ?? new MvxCommand(DoAdd);
+                _addStuffCommand = _addStuffCommand ?? new MvxCommand(DoAddStuff);
                 return _addStuffCommand;
             }
         }
 
-        private void DoAdd()
+        private void DoAddStuff()
         {
             ShowViewModel<AddStuffViewModel>();
+        }
+
+        private MvxCommand _moveStuffToProject;
+        public ICommand MoveStuffToProject
+        {
+            get
+            { 
+                _moveStuffToProject = _moveStuffToProject ?? new MvxCommand(DoMoveStuffToProjectCommand);
+                return _moveStuffToProject; 
+            }
+        }
+
+        private void DoMoveStuffToProjectCommand()
+        {
+            ShowViewModel<CreateNewProjectViewModel>
+                ( new CreateNewProjectViewModel
+                  .NewProjectParameters()
+                  { InitialProjectDescription = "TODO: Temp Selected Inbox Item Text" });
         }
     }
 }
