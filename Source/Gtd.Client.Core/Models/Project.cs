@@ -8,10 +8,12 @@ namespace Gtd.Client.Core.Models
         //public TrustedSystemId TrustedSystemId { get; set; }
         //public Project ProjectId { get; set; }
 
-        [PrimaryKey, AutoIncrement]
-        public int Id { get; set; }
-        public string TrustedSystemId { get; set; }
+        //[PrimaryKey, AutoIncrement]
+        //public int Id { get; set; }
+
+        [PrimaryKey]
         public string ProjectId { get; set; }
+        public string TrustedSystemId { get; set; }
         public string Outcome { get; set; }
     }
 }

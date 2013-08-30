@@ -59,6 +59,7 @@
     <Compile Include="ViewModels\AddStuffViewModel.cs" />
     <Compile Include="ViewModels\CreateNewProjectViewModel.cs" />
     <Compile Include="ViewModels\InboxViewModel.cs" />
+    <Compile Include="ViewModels\MakeStuffActionableViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Cirrious.CrossCore">

@@ -14,7 +14,7 @@ namespace Gtd.Client.WindowsPhone.Views
 
         private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // TODO: This is part of the Code-Behind temp hack as described in ListView.xaml
+            // TODO: This is part of the Code-Behind temp hack as described in InboxView.xaml
 
             // when the selection changes...
 
@@ -24,8 +24,10 @@ namespace Gtd.Client.WindowsPhone.Views
 
                 // nav to the selected item by just calling ViewModel method directly
                 // using the first things selected in the list we are passed in
-                //((InboxViewModel)ViewModel).MoveStuffToProject.Execute(e.AddedItems[0]);
-                ((InboxViewModel)ViewModel).MoveStuffToProject.Execute(null);
+                //((InboxViewModel)ViewModel).MakeStuffActionableCommand.Execute(e.AddedItems[0]);
+                //((InboxViewModel)ViewModel).MoveStuffToProject.Execute(null);
+
+                ((InboxViewModel)ViewModel).MakeStuffActionableCommand.Execute(e.AddedItems[0]);
 
 
                 // clear the ListBox selection (sender) that's been passed in

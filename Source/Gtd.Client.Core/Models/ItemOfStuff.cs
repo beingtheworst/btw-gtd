@@ -9,10 +9,11 @@ namespace Gtd.Client.Core.Models
         //public TrustedSystemId TrustedSystemId { get; set; }
         //public StuffId StuffId { get; set; }
 
-        [PrimaryKey, AutoIncrement]
-        public int Id { get; set; }
-        public string TrustedSystemId { get; set; }
+        //[PrimaryKey, AutoIncrement]
+        //public int Id { get; set; }
+        [PrimaryKey]
         public string StuffId { get; set; }
+        public string TrustedSystemId { get; set; }
         public string StuffDescription { get; set; }
         public DateTime TimeUtc { get; set; }
     }

@@ -6,7 +6,7 @@ namespace Gtd.Client.Core.Services.Inbox
     public interface IInboxService
     {
         IList<ItemOfStuff> AllStuffInInbox();
-        ItemOfStuff Get(string stuffId);
+        ItemOfStuff GetByStuffId(string stuffId);
         void AddStuffToInbox(ItemOfStuff itemOfStuff);
         void TrashStuff(ItemOfStuff itemOfStuff);
     }

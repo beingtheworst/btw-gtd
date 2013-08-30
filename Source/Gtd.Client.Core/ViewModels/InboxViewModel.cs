@@ -23,7 +23,7 @@ namespace Gtd.Client.Core.ViewModels
             // fill our Inbox up with Items of Stuff from IInboxService
             ReloadInbox();
 
-            // subscribe to Inbox Changed messages to react to when we add stuff to it
+            // subscribe to Inbox Changed messages to react to changess in inbox service
             _inboxChangedSubToken =
                 mvxMessenger.Subscribe<InboxChangedMessage>(OnInboxChanged);
         }
@@ -72,21 +72,32 @@ namespace Gtd.Client.Core.ViewModels
             ShowViewModel<AddStuffViewModel>();
         }
 
-        private MvxCommand _moveStuffToProject;
-        public ICommand MoveStuffToProject
+        //private MvxCommand _moveStuffToProject;
+        //public ICommand MoveStuffToProject
+        //{
+        //    get
+        //    {
+        //        _moveStuffToProject = _moveStuffToProject ?? new MvxCommand(DoMoveStuffToProjectCommand);
+        //        return _moveStuffToProject;
+        //    }
+        //}
+
+        //private void DoMoveStuffToProjectCommand()
+        //{
+        //    ShowViewModel<CreateNewProjectViewModel>
+        //        (new CreateNewProjectViewModel
+        //          .NewProjectParameters() { InitialProjectDescription = "TODO: Temp Selected Inbox Item Text" });
+        //}
+
+        public ICommand MakeStuffActionableCommand
         {
             get
-            {
-                _moveStuffToProject = _moveStuffToProject ?? new MvxCommand(DoMoveStuffToProjectCommand);
-                return _moveStuffToProject;
+            { 
+                return new MvxCommand<ItemOfStuff>(item =>
+                           ShowViewModel<MakeStuffActionableViewModel>
+                           (new MakeStuffActionableViewModel.NavParams() 
+                           { StuffId = item.StuffId }));
             }
-        }
-
-        private void DoMoveStuffToProjectCommand()
-        {
-            ShowViewModel<CreateNewProjectViewModel>
-                (new CreateNewProjectViewModel
-                  .NewProjectParameters() { InitialProjectDescription = "TODO: Temp Selected Inbox Item Text" });
         }
     }
 }

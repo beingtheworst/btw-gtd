@@ -14,10 +14,11 @@ namespace Gtd.Client.Core.Models
         //public ActionId ActionId { get; set; }
         //public ProjectId ProjectId { get; set; }
 
-        [PrimaryKey, AutoIncrement]
-        public int Id { get; set; }
-        public string TrustedSystemId { get; set; }
+        //[PrimaryKey, AutoIncrement]
+        //public int Id { get; set; }
+        [PrimaryKey]
         public string ActionId { get; set; }
+        public string TrustedSystemId { get; set; }
         public string ProjectId { get; set; }
         public string Outcome { get; set; }
     }

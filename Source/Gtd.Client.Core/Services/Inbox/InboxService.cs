@@ -41,7 +41,7 @@ namespace Gtd.Client.Core.Services.Inbox
             return _inboxRepository.AllStuffInInbox();
         }
 
-        public ItemOfStuff Get(string stuffId)
+        public ItemOfStuff GetByStuffId(string stuffId)
         {
             return _inboxRepository.GetByStuffId(stuffId);
         }
