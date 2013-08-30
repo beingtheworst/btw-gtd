@@ -1,4 +1,6 @@
-﻿using System.Windows.Input;
+﻿using System.Collections.Generic;
+using System.Windows.Input;
+using Cirrious.MvvmCross.Plugins.Messenger;
 using Cirrious.MvvmCross.ViewModels;
 using Gtd.Client.Core.Models;
 using Gtd.Client.Core.Services.Actions;
@@ -9,19 +11,35 @@ namespace Gtd.Client.Core.ViewModels
 {
     public class MakeStuffActionableViewModel : MvxViewModel
     {
+        private readonly IMvxMessenger _mvxMessenger;
         private readonly IInboxService _inboxService;
         private readonly IProjectService _projectService;
         private readonly IActionService _actionService;
 
+        private readonly MvxSubscriptionToken _projectsChangedSubToken;
+
         private ItemOfStuff _itemOfStuff;
 
-        public MakeStuffActionableViewModel(IInboxService inboxService,
+        public MakeStuffActionableViewModel(IMvxMessenger mvxMessenger,
+                                            IInboxService inboxService,
                                             IProjectService projectService,
                                             IActionService actionService)
         {
+            _mvxMessenger = mvxMessenger;
             _inboxService = inboxService;
             _projectService = projectService;
             _actionService = actionService;
+
+            ReloadProjects();
+
+            // subscribe to Projects Changed messages to react to changes in project service
+            _projectsChangedSubToken =
+                mvxMessenger.Subscribe<ProjectsChangedMessage>(OnProjectsChanged);
+        }
+
+        void OnProjectsChanged(ProjectsChangedMessage message)
+        {
+            ReloadProjects();
         }
 
         public class NavParams
@@ -65,6 +83,10 @@ namespace Gtd.Client.Core.ViewModels
         private void DoTrashStuffCommand()
         {
             _inboxService.TrashStuff(ItemOfStuff);
+            
+            // if you just trashed the stuff you started with then we are done
+            // go back to precious screen
+            Close(this);
         }
 
 
@@ -84,16 +106,82 @@ namespace Gtd.Client.Core.ViewModels
         //    // do action
         //}
 
+
+        // i need a list of the current projects
+
+        private IList<Project> _projectList;
+        public IList<Project> ProjectList
+        {
+            get { return _projectList; }
+            set { _projectList = value; RaisePropertyChanged(() => ProjectList); }
+        }
+     
+        void ReloadProjects()
+        {
+            if (_projectService.AllProjects().Count > 0)
+            {
+                ProjectList = _projectService.AllProjects();
+            }
+        }
+
         
         // I want to be able to add items to the store of projects and actions
-        // i need a list of the current projects
-        // need to be able to define a new project
+        
+
+        private MvxCommand _newProjectCommand;
+        public ICommand NewProjectCommand
+        {
+            get
+            { 
+                _newProjectCommand = _newProjectCommand ?? new MvxCommand(DoNewProjectCommand);
+                return _newProjectCommand; 
+            }
+        }
+
+        private void DoNewProjectCommand()
+        {
+            ShowViewModel<CreateNewProjectViewModel>
+                (new CreateNewProjectViewModel.NavParams() {StuffDescription = "hi"});
+        }
+
+
+
+
         // need to know if user says this is a single action project so I can just create
+        private bool _isSingleActionProject;
+        public bool IsSingleActionProject
+        {
+            get { return _isSingleActionProject; }
+            set { _isSingleActionProject = value; RaisePropertyChanged(() => IsSingleActionProject); }
+        }
+
+
         // an entry in the project and actions systems with same info??
 
         // need a place to enter this on screen
         // What’s the next physical/visible action to take on this project?
 
+        private string _nextActionIs;
+        public string NextActionIs
+        {
+            get { return _nextActionIs; }
+            set { _nextActionIs = value; RaisePropertyChanged(() => NextActionIs); }
+        }
+
         // need AddNextAction cmd
+        private MvxCommand _addNextAction;
+        public ICommand AddNextAction
+        {
+            get
+            { 
+                _addNextAction = _addNextAction ?? new MvxCommand(DoAddNextActionCommand);
+                return _addNextAction; 
+            }
+        }
+
+        private void DoAddNextActionCommand()
+        {
+            // do action
+        }
     }
 }

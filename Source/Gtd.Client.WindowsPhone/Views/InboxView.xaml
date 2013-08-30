@@ -60,7 +60,7 @@
     <!-- TODO: Bindable Application Bar using libraries out there? Cheat with Code-Behind for now-->
     <!-- TODO: In prod app may want a confirmation dialog presented prior to delete -->
     <views:MvxPhonePage.ApplicationBar>
-        <shell:ApplicationBar >
+        <shell:ApplicationBar>
             <shell:ApplicationBar.Buttons>
                 <shell:ApplicationBarIconButton IconUri="/Icons/appbar.add.light.png" Text="add stuff" Click="ApplicationBarIconButton_OnClick"></shell:ApplicationBarIconButton>
             </shell:ApplicationBar.Buttons>

@@ -42,7 +42,7 @@ namespace Gtd.Client.WindowsPhone.Views
 
             // when Add Stuff icon is tapped...
             // get a hold of the associated ViewModel again via the ViewModel property
-            // and call the DeleteCommand
+            // and call the AddStuffCommand
             ((InboxViewModel)ViewModel).AddStuffCommand.Execute(null);
         }
     }

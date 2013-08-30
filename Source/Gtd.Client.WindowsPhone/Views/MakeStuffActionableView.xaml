@@ -24,13 +24,34 @@
 
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock Text="PUSH AUDIO" Style="{StaticResource PhoneTextNormalStyle}"/>
+            <TextBlock Text="GTD-beingtheworst.com" Style="{StaticResource PhoneTextNormalStyle}" HorizontalAlignment="Right" />
             <TextBlock Text="{Binding ItemOfStuff.StuffDescription}" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
             <StackPanel>
+                <TextBlock Text="Project/Outcome you committed to for this item?" />
+                <TextBlock Text="" />
+                <CheckBox Content="New Single Action Project"/>
+                <phone:LongListSelector ItemsSource="{Binding ProjectList}" Height="124" IsGroupingEnabled="False">
+                    <phone:LongListSelector.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel VerticalAlignment="Top">
+                                <!--<TextBlock Text="{Binding ProjectId}" />-->
+                                <TextBlock FontWeight="Bold"  Text="{Binding Outcome}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </phone:LongListSelector.ItemTemplate>
+                </phone:LongListSelector>
+                <TextBlock Text="" />
+                <TextBlock Text="Next physical/visible action to take on this is?" />
+                <TextBlock Text="" />
+                <TextBox Height="118" TextWrapping="Wrap"/>
+                <!--<toolkit:ListPicker Margin="5,35,0,0" Width="450" FontSize="21" Grid.Row="1" Grid.Column="0"
+                                            ItemsSource="{Binding MyList}" 
+                                            DisplayMemberPath="Value"
+                                            SelectedItem="{Binding MySelected, ItemMode=TwoWay}"/>-->
                 <!--<TextBlock Text="{Binding Item.WhenUtc, Converter={StaticResource TimeAgo}}" TextWrapping="Wrap"></TextBlock>
                 <TextBlock Text="{Binding Item, Converter={StaticResource ItemLocation}}" TextWrapping="Wrap"></TextBlock>
                 <Image Height="250" Width="250" Source="{Binding Item.ImagePath, Converter={StaticResource FilePathToImage}}"></Image>
@@ -41,11 +62,12 @@
 
     <!-- TODO: Bindable Application Bar using libraries out there? Cheat with Code-Behind for now-->
     <!-- TODO: In prod app may want a confirmation dialog presented prior to delete -->
-    <!--<Views:MvxPhonePage.ApplicationBar>
+    <Views:MvxPhonePage.ApplicationBar>
         <shell:ApplicationBar >
             <shell:ApplicationBar.Buttons>
-                <shell:ApplicationBarIconButton IconUri="/Icons/appbar.delete.light.png" Text="trash it" Click="ApplicationBarIconButton_OnClick"></shell:ApplicationBarIconButton>
+                <shell:ApplicationBarIconButton IconUri="/Icons/appbar.folder.light.png" Text="new project" Click="AppBarNewProjectButton_OnClick"></shell:ApplicationBarIconButton>
+                <shell:ApplicationBarIconButton IconUri="/Icons/appbar.delete.light.png" Text="trash it" Click="AppBarTrashItButton_OnClick"></shell:ApplicationBarIconButton>
             </shell:ApplicationBar.Buttons>
         </shell:ApplicationBar>
-    </Views:MvxPhonePage.ApplicationBar>-->
+    </Views:MvxPhonePage.ApplicationBar>
 </Views:MvxPhonePage>

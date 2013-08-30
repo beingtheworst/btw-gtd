@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 using Cirrious.MvvmCross.WindowsPhone.Views;
+using Gtd.Client.Core.ViewModels;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 
@@ -16,6 +17,20 @@ namespace Gtd.Client.WindowsPhone.Views
         public MakeStuffActionableView()
         {
             InitializeComponent();
+        }
+
+        // TODO: Code-Behind Hacks for now to wire up app bar on page
+        private void AppBarTrashItButton_OnClick(object sender, EventArgs e)
+        {
+            // when Trash It icon is tapped...
+            // get a hold of the associated ViewModel again via the ViewModel property
+            // and call the TrashStuffCommand
+            ((MakeStuffActionableViewModel)ViewModel).TrashStuffCommand.Execute(null);
+        }
+
+        private void AppBarNewProjectButton_OnClick(object sender, EventArgs e)
+        {
+            ((MakeStuffActionableViewModel)ViewModel).NewProjectCommand.Execute(null);
         }
     }
 }

@@ -23,7 +23,7 @@ namespace Gtd.Client.Core.ViewModels
             // fill our Inbox up with Items of Stuff from IInboxService
             ReloadInbox();
 
-            // subscribe to Inbox Changed messages to react to changess in inbox service
+            // subscribe to Inbox Changed messages to react to changes in inbox service
             _inboxChangedSubToken =
                 mvxMessenger.Subscribe<InboxChangedMessage>(OnInboxChanged);
         }

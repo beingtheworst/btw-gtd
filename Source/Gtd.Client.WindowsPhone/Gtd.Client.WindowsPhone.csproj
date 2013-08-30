@@ -107,6 +107,9 @@
     <Compile Include="Views\AddStuffView.xaml.cs">
       <DependentUpon>AddStuffView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\CreateNewProjectView.xaml.cs">
+      <DependentUpon>CreateNewProjectView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\InboxView.xaml.cs">
       <DependentUpon>InboxView.xaml</DependentUpon>
     </Compile>
@@ -120,6 +123,10 @@
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
     <Page Include="Views\AddStuffView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CreateNewProjectView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

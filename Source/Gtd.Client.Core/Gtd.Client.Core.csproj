@@ -54,6 +54,7 @@
     <Compile Include="Services\Inbox\InboxChangedMessage.cs" />
     <Compile Include="Services\Inbox\InboxService.cs" />
     <Compile Include="Services\Projects\IProjectService.cs" />
+    <Compile Include="Services\Projects\ProjectsChangedMessage.cs" />
     <Compile Include="Services\Projects\ProjectService.cs" />
     <Compile Include="ViewModels\CreateNewActionViewModel.cs" />
     <Compile Include="ViewModels\AddStuffViewModel.cs" />

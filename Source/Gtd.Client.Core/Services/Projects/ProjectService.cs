@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Cirrious.MvvmCross.Plugins.Messenger;
 using Gtd.Client.Core.DataStore;
 using Gtd.Client.Core.Models;
 
@@ -13,12 +14,15 @@ namespace Gtd.Client.Core.Services.Projects
     public class ProjectService : IProjectService
     {
         private readonly IProjectRepository _projectRepository;
+        private readonly IMvxMessenger _mvxMessenger;
 
-        public ProjectService(IProjectRepository projectRepository)
+        public ProjectService(IProjectRepository projectRepository,
+                              IMvxMessenger mvxMessenger)
         {
             // this wont get initialized from the Mvx IoC
             // so we do it here
             _projectRepository = projectRepository;
+            _mvxMessenger = mvxMessenger;
 
         }
 
@@ -26,6 +30,11 @@ namespace Gtd.Client.Core.Services.Projects
         public void DefineProject(Project project)
         {
             _projectRepository.DefineProject(project);
+
+            // send msg to tell others about new project
+            // this can help properties in ViewModels stay updated
+
+            _mvxMessenger.Publish(new ProjectsChangedMessage(this));
         }
 
         public IList<Project> AllProjects()
@@ -38,6 +47,11 @@ namespace Gtd.Client.Core.Services.Projects
         {
             return _projectRepository.GetByProjectId(projectId);
         }
+
+        // TODO: Add Delete functionality
+        // send msg to tell others about removed project
+        // this can help properties in ViewModels stay updated
+        // _mvxMessenger.Publish(new ProjectsChangedMessage(this));
     }
 }
 
