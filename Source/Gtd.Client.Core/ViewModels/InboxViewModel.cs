@@ -35,7 +35,19 @@ namespace Gtd.Client.Core.ViewModels
 
         void ReloadInbox()
         {
-            StuffInInbox = _inboxService.AllStuffInInbox();
+            if (_inboxService.AllStuffInInbox().Count > 0)
+            {
+                StuffInInbox = _inboxService.AllStuffInInbox();
+            }
+            else
+            {
+                var noStuff = new ItemOfStuff 
+                    {StuffDescription = "no stuff in your inbox. \n  + add some stuff now!"};
+
+                var noStuffList = new List<ItemOfStuff> {noStuff};
+
+                StuffInInbox = noStuffList;
+            }
         }
 
         private IList<ItemOfStuff> _stuffInInbox;
