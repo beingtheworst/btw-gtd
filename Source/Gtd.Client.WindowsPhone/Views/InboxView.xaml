@@ -22,18 +22,49 @@
         </Grid.RowDefinitions>
 
         <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock x:Name="ApplicationTitle" Text="MY APPLICATION" Style="{StaticResource PhoneTextNormalStyle}"/>
-            <TextBlock x:Name="PageTitle" Text="page name" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+        <StackPanel Grid.Row="0" Margin="12,17,0,28">
+            <TextBlock Text="GTD - beingtheworst.com" Style="{StaticResource PhoneTextNormalStyle}"/>
+            <TextBlock Text="inbox" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-		   <StackPanel>
-			<TextBox Text="{Binding Hello, Mode=TwoWay}" />
-			<TextBlock Text="{Binding Hello}" />
-		   </StackPanel>
+            <ListBox
+                ItemsSource="{Binding StuffInInbox}"
+                SelectionChanged="Selector_OnSelectionChanged"
+                >
+                <!-- TODO: Blend Behaviors with Mvx EventToCommand Trigger -->
+                <!-- TODO: tried to use interactivity: from System.Windows.Interactivity N=15 ~ 11:30-->
+                <!-- but it wasn't working used hacky code-behind for now -->
+                <!-- So use Code-Behind Hack for now and bind to SelectionChanged event above -->
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <!-- Path to image we get back will be isolated storage path and-->
+                            <!-- Image tag knows nothing about that so we need a WP Value Converter-->
+                            <!--<Image Grid.Column="0" Margin="12" Height="100" Width="100" 
+                                        Source="{Binding ImagePath, 
+                                        Converter={StaticResource FilePathToImage}}">
+                            </Image>-->
+                            <TextBlock Grid.Column="1" FontSize="36" Text="{Binding StuffDescription}" TextWrapping="Wrap"></TextBlock>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </Grid>
     </Grid>
+    <!-- TODO: Bindable Application Bar using libraries out there? Cheat with Code-Behind for now-->
+    <!-- TODO: In prod app may want a confirmation dialog presented prior to delete -->
+    <views:MvxPhonePage.ApplicationBar>
+        <shell:ApplicationBar >
+            <shell:ApplicationBar.Buttons>
+                <shell:ApplicationBarIconButton IconUri="/Icons/appbar.add.light.png" Text="add stuff" Click="ApplicationBarIconButton_OnClick"></shell:ApplicationBarIconButton>
+            </shell:ApplicationBar.Buttons>
+        </shell:ApplicationBar>
+    </views:MvxPhonePage.ApplicationBar>
 
 </views:MvxPhonePage>
