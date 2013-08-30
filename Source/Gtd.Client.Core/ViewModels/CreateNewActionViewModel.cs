@@ -60,9 +60,9 @@ namespace Gtd.Client.Core.ViewModels
         public ICommand NewProjectCommand
         {
             get
-            { 
+            {
                 _newProjectCommand = _newProjectCommand ?? new MvxCommand(DoNewProjectCommand);
-                return _newProjectCommand; 
+                return _newProjectCommand;
             }
         }
 
@@ -70,8 +70,7 @@ namespace Gtd.Client.Core.ViewModels
         {
             ShowViewModel<CreateNewProjectViewModel>
                 (new CreateNewProjectViewModel
-                     .NewProjectParameters()
-                     { InitialProjectDescription = _actionDescription });
+                     .NewProjectParameters() { InitialProjectDescription = _actionDescription });
         }
 
 
@@ -92,9 +91,9 @@ namespace Gtd.Client.Core.ViewModels
         public ICommand AddStuffCommand
         {
             get
-            { 
+            {
                 _addStuffCommand = _addStuffCommand ?? new MvxCommand(DoAddStuff);
-                return _addStuffCommand; 
+                return _addStuffCommand;
             }
         }
 
@@ -106,9 +105,11 @@ namespace Gtd.Client.Core.ViewModels
             // if Validate is happy, create an ItemOfStuff to be added to the inbox
             // TODO: Hard coded to Trusted System 1 for now.
             var itemOfStuff = new ItemOfStuff()
-                {  TrustedSystemId = new TrustedSystemId(1), StuffId = new StuffId(Guid.NewGuid()),
-                   StuffDescription = StuffDescription,
-                   TimeUtc = DateTime.UtcNow
+                {
+                    TrustedSystemId = "1",
+                    StuffId = Guid.NewGuid().ToString(),
+                    StuffDescription = StuffDescription,
+                    TimeUtc = DateTime.UtcNow
                 };
 
             // time to store it

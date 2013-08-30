@@ -11,9 +11,9 @@ namespace Gtd.Client.Core.Services.Inbox
     // probably going to be a Lazy Singleton per config convention in App.cs "Service"
     public class InboxService : IInboxService
     {
-        private readonly InboxRepository _inboxRepository;
+        private readonly IInboxRepository _inboxRepository;
 
-        public InboxService(InboxRepository inboxRepository)
+        public InboxService(IInboxRepository inboxRepository)
         {
             // this wont get initialized from the Mvx IoC
             // so we do it here
@@ -41,7 +41,7 @@ namespace Gtd.Client.Core.Services.Inbox
             return _inboxRepository.AllStuffInInbox();
         }
 
-        public ItemOfStuff Get(StuffId stuffId)
+        public ItemOfStuff Get(string stuffId)
         {
             return _inboxRepository.GetByStuffId(stuffId);
         }

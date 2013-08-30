@@ -7,8 +7,8 @@ namespace Gtd.Client.Core.Services.Actions
     {
         IList<Action> AllActions();
         void DefineAction(Action action);
-        Action GetByActionId(ActionId actionId);
-        Action GetByProjectId(ProjectId projectId);
+        Action GetByActionId(string actionId);
+        Action GetByProjectId(string projectId);
     }
 }
 

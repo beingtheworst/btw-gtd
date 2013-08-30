@@ -33,13 +33,13 @@ namespace Gtd.Client.Core.DataStore
                 .ToList();
         }
 
-        public Action GetByActionId(ActionId actionId)
+        public Action GetByActionId(string actionId)
         {
             // TODO: Prod app would need some error handling like for bad/deleted Id's etc.
             return _sqlConnection.Get<Action>(actionId);
         }
 
-        public Action GetByProjectId(ProjectId projectId)
+        public Action GetByProjectId(string projectId)
         {
             // TODO: Prod app would need some error handling like for bad/deleted Id's etc.
             return _sqlConnection.Get<Action>(projectId);

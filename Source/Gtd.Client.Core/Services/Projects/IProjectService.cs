@@ -6,7 +6,7 @@ namespace Gtd.Client.Core.Services.Projects
     public interface IProjectService
     {
         IList<Project> AllProjects();
-        Project GetByProjectId(ProjectId projectId);
+        Project GetByProjectId(string projectId);
         void DefineProject(Project project);
     }
 }

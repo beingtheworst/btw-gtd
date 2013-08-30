@@ -12,9 +12,9 @@ namespace Gtd.Client.Core.Services.Projects
     // probably going to be a Lazy Singleton per config convention in App.cs "Service"
     public class ProjectService : IProjectService
     {
-        private readonly ProjectRepository _projectRepository;
+        private readonly IProjectRepository _projectRepository;
 
-        public ProjectService(ProjectRepository projectRepository)
+        public ProjectService(IProjectRepository projectRepository)
         {
             // this wont get initialized from the Mvx IoC
             // so we do it here
@@ -34,7 +34,7 @@ namespace Gtd.Client.Core.Services.Projects
             return _projectRepository.AllProjects();
         }
 
-        public Project GetByProjectId(ProjectId projectId)
+        public Project GetByProjectId(string projectId)
         {
             return _projectRepository.GetByProjectId(projectId);
         }

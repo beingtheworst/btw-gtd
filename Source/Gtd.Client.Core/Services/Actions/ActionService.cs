@@ -11,9 +11,9 @@ namespace Gtd.Client.Core.Services.Actions
     // probably going to be a Lazy Singleton per config convention in App.cs "Service"
     public class ActionService : IActionService
     {
-        readonly ActionRepository _actionRepository;
+        readonly IActionRepository _actionRepository;
 
-        public ActionService(ActionRepository actionRepository)
+        public ActionService(IActionRepository actionRepository)
         {
             // this wont get initialized from the Mvx IoC
             // so we do it here
@@ -33,12 +33,12 @@ namespace Gtd.Client.Core.Services.Actions
             return _actionRepository.AllActions();
         }
 
-        public Action GetByActionId(ActionId actionId)
+        public Action GetByActionId(string actionId)
         {
             return _actionRepository.GetByActionId(actionId);
         }
 
-        public Action GetByProjectId(ProjectId projectId)
+        public Action GetByProjectId(string projectId)
         {
             return _actionRepository.GetByProjectId(projectId);
         }

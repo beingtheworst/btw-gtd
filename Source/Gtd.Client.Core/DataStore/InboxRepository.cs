@@ -33,7 +33,7 @@ namespace Gtd.Client.Core.DataStore
                 .ToList();
         }
 
-        public ItemOfStuff GetByStuffId(StuffId stuffId)
+        public ItemOfStuff GetByStuffId(string stuffId)
         {
             // TODO: Prod app would need some error handling like for bad/deleted Id's etc.
             return _sqlConnection.Get<ItemOfStuff>(stuffId);

@@ -46,8 +46,9 @@ namespace Gtd.Client.Core.ViewModels
 
             // if Validate is happy, create an ItemOfStuff to be added to the inbox
             // TODO: Hard coded to Trusted System 1 for now.
+
             var itemOfStuff = new ItemOfStuff()
-                {  TrustedSystemId = new TrustedSystemId(1), StuffId = new StuffId(Guid.NewGuid()),
+                {  TrustedSystemId = "1", StuffId = Guid.NewGuid().ToString(),
                    StuffDescription = StuffDescription,
                    TimeUtc = DateTime.UtcNow
                 };
