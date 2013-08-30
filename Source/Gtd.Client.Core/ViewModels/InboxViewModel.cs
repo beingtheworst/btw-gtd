@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Input;
+using Cirrious.MvvmCross.Plugins.Messenger;
 using Cirrious.MvvmCross.ViewModels;
 using Gtd.Client.Core.Models;
 using Gtd.Client.Core.Services.Inbox;
@@ -8,13 +9,27 @@ namespace Gtd.Client.Core.ViewModels
 {
     public class InboxViewModel : MvxViewModel
     {
-        readonly IInboxService _inboxService;
+        private readonly IInboxService _inboxService;
+        private readonly IMvxMessenger _mvxMessenger;
 
-        public InboxViewModel(IInboxService inboxService)
+        private readonly MvxSubscriptionToken _inboxChangedSubToken;
+
+        public InboxViewModel(IInboxService inboxService,
+                              IMvxMessenger mvxMessenger)
         {
             _inboxService = inboxService;
+            _mvxMessenger = mvxMessenger;
 
             // fill our Inbox up with Items of Stuff from IInboxService
+            ReloadInbox();
+
+            // subscribe to Inbox Changed messages to react to when we add stuff to it
+            _inboxChangedSubToken =
+                mvxMessenger.Subscribe<InboxChangedMessage>(OnInboxChanged);
+        }
+
+        void OnInboxChanged(InboxChangedMessage message)
+        {
             ReloadInbox();
         }
 

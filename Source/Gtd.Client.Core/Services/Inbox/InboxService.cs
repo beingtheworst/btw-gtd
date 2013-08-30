@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Cirrious.MvvmCross.Plugins.Messenger;
 using Gtd.Client.Core.DataStore;
 using Gtd.Client.Core.Models;
 
@@ -12,13 +13,15 @@ namespace Gtd.Client.Core.Services.Inbox
     public class InboxService : IInboxService
     {
         private readonly IInboxRepository _inboxRepository;
+        private readonly IMvxMessenger _mvxMessenger;
 
-        public InboxService(IInboxRepository inboxRepository)
+        public InboxService(IInboxRepository inboxRepository, 
+                            IMvxMessenger mvxMessenger)
         {
             // this wont get initialized from the Mvx IoC
             // so we do it here
             _inboxRepository = inboxRepository;
-
+            _mvxMessenger = mvxMessenger;
         }
 
         // TODO: May want to do validation in here instead of ViewModel
@@ -26,13 +29,10 @@ namespace Gtd.Client.Core.Services.Inbox
         {
             _inboxRepository.AddStuffToInbox(itemOfStuff);
 
-            // TODO: TBD if we need/want this
-            // send msg to tell others there was an Item added
+            // send msg to tell others there was stuff added
             // this can help properties in ViewModels stay updated
 
-            
-
-            // _messenger.Publish(new StuffAddedToInboxMessage(this));
+            _mvxMessenger.Publish(new InboxChangedMessage(this));
         }
 
         public IList<ItemOfStuff> AllStuffInInbox()
@@ -52,7 +52,7 @@ namespace Gtd.Client.Core.Services.Inbox
 
             // just like we publish a message when we add things (see above), we
             // may also want to do that when we delete things
-            // _messenger.Publish(new TbdMessage(this));
+            _mvxMessenger.Publish(new InboxChangedMessage(this));
         }
     }
 }

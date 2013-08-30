@@ -23,7 +23,7 @@
 
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock Text="GTD - beingtheworst.com" Style="{StaticResource PhoneTextNormalStyle}"/>
+            <TextBlock Text="GTD - beingtheworst.com" Style="{StaticResource PhoneTextNormalStyle}" HorizontalAlignment="Right"/>
             <TextBlock Text="inbox" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
         </StackPanel>
 

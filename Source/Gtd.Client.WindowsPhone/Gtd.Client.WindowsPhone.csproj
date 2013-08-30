@@ -93,6 +93,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Bootstrap\MessengerPluginBootstrap.cs" />
     <Compile Include="Bootstrap\SqlitePluginBootstrap.cs" />
     <Compile Include="DebugTrace.cs" />
     <Compile Include="LocalizedStrings.cs" />
@@ -152,7 +153,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Icons\appbar.add.light.png" />
-    <Content Include="ToDo-MvvmCross\_ Windows Phone UI.txt" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\AppResources.resx">
@@ -173,6 +173,9 @@
     <Reference Include="Cirrious.MvvmCross.Localization">
       <HintPath>..\packages\MvvmCross.HotTuna.CrossCore.3.0.10\lib\sl4-wp71\Cirrious.MvvmCross.Localization.dll</HintPath>
     </Reference>
+    <Reference Include="Cirrious.MvvmCross.Plugins.Messenger">
+      <HintPath>..\packages\MvvmCross.HotTuna.Plugin.Messenger.3.0.10\lib\sl4-wp71\Cirrious.MvvmCross.Plugins.Messenger.dll</HintPath>
+    </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.Sqlite">
       <HintPath>..\packages\MvvmCross.HotTuna.Plugin.Sqlite.3.0.10\lib\sl4-wp71\Cirrious.MvvmCross.Plugins.Sqlite.dll</HintPath>
     </Reference>
@@ -190,14 +193,6 @@
     <ProjectReference Include="..\Gtd.Client.Core\Gtd.Client.Core.csproj">
       <Project>{53BE609D-5F5D-4E62-BD6C-67601A881D55}</Project>
       <Name>Gtd.Client.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Gtd.Pcl.CoreDomain\Gtd.Pcl.CoreDomain.csproj">
-      <Project>{A4E7BC6B-68D9-472C-865F-458E8E932181}</Project>
-      <Name>Gtd.Pcl.CoreDomain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Gtd.Pcl.PublishedLanguage\Gtd.Pcl.PublishedLanguage.csproj">
-      <Project>{6F4F1B5C-235D-4CFC-BF56-184EA76A9BD0}</Project>
-      <Name>Gtd.Pcl.PublishedLanguage</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />

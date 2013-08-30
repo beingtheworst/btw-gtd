@@ -51,6 +51,7 @@
     <Compile Include="Services\Actions\ActionService.cs" />
     <Compile Include="Services\Actions\IActionService.cs" />
     <Compile Include="Services\Inbox\IInboxService.cs" />
+    <Compile Include="Services\Inbox\InboxChangedMessage.cs" />
     <Compile Include="Services\Inbox\InboxService.cs" />
     <Compile Include="Services\Projects\IProjectService.cs" />
     <Compile Include="Services\Projects\ProjectService.cs" />
@@ -69,19 +70,12 @@
     <Reference Include="Cirrious.MvvmCross.Localization">
       <HintPath>..\packages\MvvmCross.HotTuna.CrossCore.3.0.10\lib\portable-win+net45+MonoAndroid16+MonoTouch40+sl40+wp71\Cirrious.MvvmCross.Localization.dll</HintPath>
     </Reference>
+    <Reference Include="Cirrious.MvvmCross.Plugins.Messenger">
+      <HintPath>..\packages\MvvmCross.HotTuna.Plugin.Messenger.3.0.10\lib\portable-win+net45+MonoAndroid16+MonoTouch40+sl40+wp71\Cirrious.MvvmCross.Plugins.Messenger.dll</HintPath>
+    </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.Sqlite">
       <HintPath>..\packages\MvvmCross.HotTuna.Plugin.Sqlite.3.0.10\lib\portable-win+net45+MonoAndroid16+MonoTouch40+sl40+wp71\Cirrious.MvvmCross.Plugins.Sqlite.dll</HintPath>
     </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Gtd.Pcl.CoreDomain\Gtd.Pcl.CoreDomain.csproj">
-      <Project>{a4e7bc6b-68d9-472c-865f-458e8e932181}</Project>
-      <Name>Gtd.Pcl.CoreDomain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Gtd.Pcl.PublishedLanguage\Gtd.Pcl.PublishedLanguage.csproj">
-      <Project>{6f4f1b5c-235d-4cfc-bf56-184ea76a9bd0}</Project>
-      <Name>Gtd.Pcl.PublishedLanguage</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
