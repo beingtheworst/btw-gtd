@@ -32,7 +32,7 @@
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel Grid.Row="0" Margin="12,17,0,28">
             <TextBlock Text="GTD-beingtheworst.com" Style="{StaticResource PhoneTextNormalStyle}" HorizontalAlignment="Right" />
-            <TextBlock Text="{Binding ActionOutcome}" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+            <TextBlock Text="{Binding ProjectName}" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
@@ -40,14 +40,17 @@
             <StackPanel>
                 <TextBlock FontSize="24" Text="Project you committed to for this item?" />
                 <CheckBox   Content="New Single-Action Project" IsChecked="{Binding IsSingleActionProject, Mode=TwoWay}"/>
-                <phone:LongListSelector 
+                <phone:LongListSelector
+                    x:Name="LLS_projectList"
                     ItemsSource="{Binding ProjectList}"
                     IsEnabled="{Binding IsSingleActionProject, Converter={StaticResource InverseBool}}"
                     Visibility="{Binding IsSingleActionProject, Converter={StaticResource InvertedVisibility}}"
                     Background="White"
                     Foreground="Black"
                     Height="124"
-                    IsGroupingEnabled="False">
+                    IsGroupingEnabled="False"
+                    SelectedItem="{Binding Project}"
+                    SelectionChanged="LongListSelector_OnSelectionChanged">
                     <phone:LongListSelector.ItemTemplate>
                         <DataTemplate>
                             <StackPanel VerticalAlignment="Top">
@@ -57,7 +60,7 @@
                         </DataTemplate>
                     </phone:LongListSelector.ItemTemplate>
                 </phone:LongListSelector>
-                <TextBlock Text="" />
+                <TextBlock Text="{Binding Project.Outcome}" />
                 <TextBlock Text="" />
                 <TextBlock Text="" />
                 <TextBlock FontSize="24" Text="Next physical/visible action to take on this?" />
@@ -66,14 +69,6 @@
                          Height="170" 
                          TextWrapping="Wrap" 
                          Background="White"/>
-                <!--<toolkit:ListPicker Margin="5,35,0,0" Width="450" FontSize="21" Grid.Row="1" Grid.Column="0"
-                                            ItemsSource="{Binding MyList}" 
-                                            DisplayMemberPath="Value"
-                                            SelectedItem="{Binding MySelected, ItemMode=TwoWay}"/>-->
-                <!--<TextBlock Text="{Binding Item.WhenUtc, Converter={StaticResource TimeAgo}}" TextWrapping="Wrap"></TextBlock>
-                <TextBlock Text="{Binding Item, Converter={StaticResource ItemLocation}}" TextWrapping="Wrap"></TextBlock>
-                <Image Height="250" Width="250" Source="{Binding Item.ImagePath, Converter={StaticResource FilePathToImage}}"></Image>
-                <TextBlock Text="{Binding Item.Notes}" TextWrapping="Wrap"></TextBlock>-->
             </StackPanel>
         </Grid>
     </Grid>

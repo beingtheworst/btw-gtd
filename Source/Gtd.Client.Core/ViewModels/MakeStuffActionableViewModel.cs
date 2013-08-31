@@ -39,11 +39,6 @@ namespace Gtd.Client.Core.ViewModels
             _isSingleActionProject = true;
         }
 
-        void OnProjectsChanged(ProjectsChangedMessage message)
-        {
-            ReloadProjects();
-        }
-
         public class NavParams
         {
             public string StuffId { get; set; }
@@ -61,8 +56,10 @@ namespace Gtd.Client.Core.ViewModels
             ItemOfStuff = _inboxService.GetByStuffId(navigationParams.StuffId);
 
             ActionOutcome = _itemOfStuff.StuffDescription;
-        }
 
+            // Set the initial Project Name to whatever the StuffDescription was
+            ProjectName = _itemOfStuff.StuffDescription;
+        }
 
         // in this ViewModel we want access to the ItemOfStuff that was 
         // passed in from view via a property
@@ -73,61 +70,63 @@ namespace Gtd.Client.Core.ViewModels
             set { _itemOfStuff = value; RaisePropertyChanged(() => ItemOfStuff); }
         }
 
-        // I want to be able to delete or archive stuff out of inbox if it becomes actionable
-        private MvxCommand _trashStuffCommand;
-        public ICommand TrashStuffCommand
-        {
-            get
-            { 
-                _trashStuffCommand = _trashStuffCommand ?? new MvxCommand(DoTrashStuffCommand);
-                return _trashStuffCommand; 
-            }
-        }
 
-        private void DoTrashStuffCommand()
-        {
-            _inboxService.TrashStuff(ItemOfStuff);
-            
-            // if you just trashed the stuff you started with then we are done
-            // go back to precious screen
-            Close(this);
-        }
+        // GTD Project Related
 
-
-        private string _actionOutcome;
-        public string ActionOutcome
-        {
-            get { return _actionOutcome; }
-            set { _actionOutcome = value; RaisePropertyChanged(() => ActionOutcome); }
-        }
-
-
-        // TODO: This feature is supported in the domain, but not on the client rigth now
-        //private MvxCommand _archiveStuffFromInbox;
-        //public ICommand ArchiveStuffFromInbox
-        //{
-        //    get
-        //    {
-        //        _archiveStuffFromInbox = _archiveStuffFromInbox ?? new MvxCommand(DoArchiveStuffCommand);
-        //        return _archiveStuffFromInbox; 
-        //    }
-        //}
-
-        //private void DoArchiveStuffCommand()
-        //{
-        //    // do action
-        //}
-
-
-        // i need a list of the current projects
-
+        // list of all Projects in this Trusted System
         private IList<Project> _projectList;
         public IList<Project> ProjectList
         {
             get { return _projectList; }
             set { _projectList = value; RaisePropertyChanged(() => ProjectList); }
         }
-     
+
+        // The GTD Project currently associated with this GTD Action
+        private Project _project;
+        public Project Project
+        {
+
+            get { return _project; }
+
+            set 
+            {   _project = value;
+
+                // update the Project Name Property
+                // It will raise its own event because we call its public name
+                ProjectName = _project.Outcome;
+
+                RaisePropertyChanged(() => Project);
+            }
+        }
+
+        private string _projectName;
+        public string ProjectName
+        {
+            get { return _projectName; }
+            set { _projectName = value; RaisePropertyChanged(() => ProjectName); }
+        }
+
+        private MvxCommand _newProjectCommand;
+        public ICommand NewProjectCommand
+        {
+            get
+            {
+                _newProjectCommand = _newProjectCommand ?? new MvxCommand(DoNewProjectCommand);
+                return _newProjectCommand;
+            }
+        }
+
+        private void DoNewProjectCommand()
+        {
+            ShowViewModel<CreateNewProjectViewModel>
+                (new CreateNewProjectViewModel.NavParams() { StuffDescription = "hi" });
+        }
+
+        void OnProjectsChanged(ProjectsChangedMessage message)
+        {
+            ReloadProjects();
+        }
+
         void ReloadProjects()
         {
             if (_projectService.AllProjects().Count > 0)
@@ -136,30 +135,6 @@ namespace Gtd.Client.Core.ViewModels
             }
         }
 
-        
-        // I want to be able to add items to the store of projects and actions
-        
-
-        private MvxCommand _newProjectCommand;
-        public ICommand NewProjectCommand
-        {
-            get
-            { 
-                _newProjectCommand = _newProjectCommand ?? new MvxCommand(DoNewProjectCommand);
-                return _newProjectCommand; 
-            }
-        }
-
-        private void DoNewProjectCommand()
-        {
-            ShowViewModel<CreateNewProjectViewModel>
-                (new CreateNewProjectViewModel.NavParams() {StuffDescription = "hi"});
-        }
-
-
-
-
-        // need to know if user says this is a single action project so I can just create
         private bool _isSingleActionProject;
         public bool IsSingleActionProject
         {
@@ -167,24 +142,15 @@ namespace Gtd.Client.Core.ViewModels
             set { _isSingleActionProject = value; RaisePropertyChanged(() => IsSingleActionProject); }
         }
 
-        private Project _project;
-        public Project Project
-        {
-            get { return _project; }
-            set { _project = value; RaisePropertyChanged(() => Project); }
-        }
 
+        // GTD Action Related
 
-        // an entry in the project and actions systems with same info??
-
-        // need a place to enter this on screen
         // What’s the next physical/visible action to take on this project?
-
-        private string _nextActionIs;
-        public string NextActionIs
+        private string _actionOutcome;
+        public string ActionOutcome
         {
-            get { return _nextActionIs; }
-            set { _nextActionIs = value; RaisePropertyChanged(() => NextActionIs); }
+            get { return _actionOutcome; }
+            set { _actionOutcome = value; RaisePropertyChanged(() => ActionOutcome); }
         }
 
         private MvxCommand _saveNewAction;
@@ -216,9 +182,45 @@ namespace Gtd.Client.Core.ViewModels
             // I will use the ActionOutcome
 
             // first, go figure out how to get the ID from the box
-
-
         }
+
+
+        // I want to be able to delete or archive stuff out of inbox if it becomes actionable
+        private MvxCommand _trashStuffCommand;
+        public ICommand TrashStuffCommand
+        {
+            get
+            {
+                _trashStuffCommand = _trashStuffCommand ?? new MvxCommand(DoTrashStuffCommand);
+                return _trashStuffCommand;
+            }
+        }
+
+        private void DoTrashStuffCommand()
+        {
+            _inboxService.TrashStuff(ItemOfStuff);
+
+            // if you just trashed the stuff you started with then we are done
+            // go back to precious screen
+            Close(this);
+        }
+
+
+        // TODO: This feature is supported in the domain, but not on the client rigth now
+        //private MvxCommand _archiveStuffFromInbox;
+        //public ICommand ArchiveStuffFromInbox
+        //{
+        //    get
+        //    {
+        //        _archiveStuffFromInbox = _archiveStuffFromInbox ?? new MvxCommand(DoArchiveStuffCommand);
+        //        return _archiveStuffFromInbox; 
+        //    }
+        //}
+
+        //private void DoArchiveStuffCommand()
+        //{
+        //    // do action
+        //}
 
     }
 }
