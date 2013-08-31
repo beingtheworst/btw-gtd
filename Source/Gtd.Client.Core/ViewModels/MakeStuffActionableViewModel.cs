@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows.Input;
 using Cirrious.MvvmCross.Plugins.Messenger;
 using Cirrious.MvvmCross.ViewModels;
@@ -6,6 +7,7 @@ using Gtd.Client.Core.Models;
 using Gtd.Client.Core.Services.Actions;
 using Gtd.Client.Core.Services.Inbox;
 using Gtd.Client.Core.Services.Projects;
+using Action = Gtd.Client.Core.Models.Action;
 
 namespace Gtd.Client.Core.ViewModels
 {
@@ -139,7 +141,15 @@ namespace Gtd.Client.Core.ViewModels
         public bool IsSingleActionProject
         {
             get { return _isSingleActionProject; }
-            set { _isSingleActionProject = value; RaisePropertyChanged(() => IsSingleActionProject); }
+            set
+            {
+                _isSingleActionProject = value;
+
+                if (_isSingleActionProject)
+                    ProjectName = ActionOutcome;
+
+                RaisePropertyChanged(() => IsSingleActionProject);
+            }
         }
 
 
@@ -150,7 +160,15 @@ namespace Gtd.Client.Core.ViewModels
         public string ActionOutcome
         {
             get { return _actionOutcome; }
-            set { _actionOutcome = value; RaisePropertyChanged(() => ActionOutcome); }
+            set
+            {
+                _actionOutcome = value;
+
+                if (_isSingleActionProject)
+                    ProjectName = _actionOutcome;
+
+                RaisePropertyChanged(() => ActionOutcome);
+            }
         }
 
         private MvxCommand _saveNewAction;
@@ -165,23 +183,83 @@ namespace Gtd.Client.Core.ViewModels
 
         private void DoSaveNewActionCommand()
         {
-            // do action
             // TODO: Need all the properties required for a new action.
-            // TODO: Assumes you have already selected a valif projectId
+            // TODO: Assumes you have already selected a valid projectId
             // TODO: OR you have single action project selected which means
             // TODO: I will create a NEW project/id for you and assign it to this action
 
-            //public string ActionId { get; set; }
-            //public string TrustedSystemId { get; set; }
-            //public string ProjectId { get; set; }
-            //public string Outcome { get; set; }
+            // TODO: Need better validation/error checking, etc.
+            // TODO: Check, if record alreay exist with primary key guid
+            // TODO: will it just save over the top of it or error?
+            // TODO: For now, I am making this ViewModel go AWAY after you save it once
 
-            // i will generate guid action id
-            // i will hard code TSystem for now
-            // I will either use the the project id that was selected, or generate
-            // I will use the ActionOutcome
+            // create a GTD Action to be added
 
-            // first, go figure out how to get the ID from the box
+            // Make sure we have an associated Project available
+            string projectId;
+
+            if (_isSingleActionProject)
+            {
+                var singleActionProject = new Project
+                    {
+                        TrustedSystemId = "1",
+                        ProjectId = Guid.NewGuid().ToString(),
+                        Outcome = _actionOutcome
+                    };
+
+                if (ValidateProject(singleActionProject))
+                {
+                    // Single-Action Project seems valid
+                    // so can save it and use it
+                    _projectService.DefineProject(singleActionProject);
+
+                    projectId = singleActionProject.ProjectId;
+
+                }
+                else
+                {
+                    // TODO:  what exception? how to handle?
+                    // return from Save method without saving for now.
+                    return;
+                }
+            }
+            else
+            {
+                // user picked/created their own Project so use it
+                projectId = _project.ProjectId;
+            }
+
+            // TODO: Hard coded to Trusted System 1 for now.
+            var nextAction = new Action()
+            {
+                TrustedSystemId = "1",
+                ActionId = Guid.NewGuid().ToString(),
+                ProjectId = projectId,
+                Outcome = _actionOutcome
+            };
+
+            // if Validate is happy, save it
+            if (!ValidateAction())
+                return;
+
+            // validation of the Action was good
+            _actionService.DefineAction(nextAction);
+
+            // probably want to close our own ViewModel after
+            // the "Add Screen" has finished with its purpose, adding the new Action
+            // uses the Close method on the MvxNavigatingObject base class to close our MvxViewModel.
+            // Close TRIES (can't guarantee it) within the platform-specific UI View layer to close
+            // the current ViewModel. // TODO more on that later, depends on how you design UI.
+            // Close sends a msg to the UI Layer and asks,
+            // "Can you close the View that Corresponds to this ViewModel?" and makes best effort to do it.
+            // On closure the previous ViewModel on nav stack should be displayed (likely InboxViewModel)
+
+            // for now we will just delete stuff from the inbox if it
+            // was successfully converted to an Action
+
+            _inboxService.TrashStuff(ItemOfStuff);
+
+            Close(this);
         }
 
 
@@ -222,5 +300,33 @@ namespace Gtd.Client.Core.ViewModels
         //    // do action
         //}
 
+
+        // TODO: would be nice if the editor auto-validated e.g. enable/disable save button
+        // call recursively?
+        private bool ValidateAction()
+        {
+            // make sure some valid Project Id is being used
+            if (!_isSingleActionProject && string.IsNullOrEmpty(_project.ProjectId))
+                return false;
+
+            if (string.IsNullOrEmpty(_actionOutcome))
+                return false;
+
+            return true;
+        }
+
+        private bool ValidateProject(Project projectToValidate)
+        {
+            if (string.IsNullOrEmpty(projectToValidate.ProjectId))
+                return false;
+
+            if (string.IsNullOrEmpty(projectToValidate.Outcome))
+                return false;
+
+            if (string.IsNullOrEmpty(projectToValidate.TrustedSystemId))
+                return false;
+
+            return true;
+        }
     }
 }

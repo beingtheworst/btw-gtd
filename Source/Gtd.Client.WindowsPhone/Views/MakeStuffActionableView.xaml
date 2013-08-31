@@ -31,7 +31,7 @@
 
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock Text="GTD-beingtheworst.com" Style="{StaticResource PhoneTextNormalStyle}" HorizontalAlignment="Right" />
+            <TextBlock Text="Currently Selected Project:" Style="{StaticResource PhoneTextNormalStyle}" />
             <TextBlock Text="{Binding ProjectName}" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
         </StackPanel>
 
@@ -60,13 +60,13 @@
                         </DataTemplate>
                     </phone:LongListSelector.ItemTemplate>
                 </phone:LongListSelector>
-                <TextBlock Text="{Binding Project.Outcome}" />
+                <!--<TextBlock Text="{Binding Project.Outcome}" />-->
                 <TextBlock Text="" />
                 <TextBlock Text="" />
                 <TextBlock FontSize="24" Text="Next physical/visible action to take on this?" />
                 <TextBlock Text="" />
                 <TextBox Text="{Binding ActionOutcome, Mode=TwoWay}" 
-                         Height="170" 
+                         Height="118" 
                          TextWrapping="Wrap" 
                          Background="White"/>
             </StackPanel>

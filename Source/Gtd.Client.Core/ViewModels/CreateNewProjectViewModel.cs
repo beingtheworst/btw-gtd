@@ -65,7 +65,7 @@ namespace Gtd.Client.Core.ViewModels
             {
                 TrustedSystemId = "1",
                 ProjectId = Guid.NewGuid().ToString(),
-                Outcome = ProjectDescription,
+                Outcome = _projectDescription
             };
 
             // time to store it

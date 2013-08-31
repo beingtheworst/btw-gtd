@@ -37,7 +37,7 @@ namespace Gtd.Client.WindowsPhone.Views
         // TODO: More code-behind app bar hacks
         private void AppBarSaveActionButton_OnClick(object sender, EventArgs e)
         {
-            //((MakeStuffActionableViewModel)ViewModel).NewProjectCommand.Execute(null);
+            ((MakeStuffActionableViewModel)ViewModel).SaveNewAction.Execute(null);
         }
 
         void LongListSelector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
