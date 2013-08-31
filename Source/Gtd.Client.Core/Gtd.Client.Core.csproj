@@ -38,6 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.cs" />
+    <Compile Include="Converters\InverseBoolValueConverter.cs" />
     <Compile Include="DataStore\ActionRepository.cs" />
     <Compile Include="DataStore\IActionRepository.cs" />
     <Compile Include="DataStore\IInboxRepository.cs" />

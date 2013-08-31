@@ -35,6 +35,8 @@ namespace Gtd.Client.Core.ViewModels
             // subscribe to Projects Changed messages to react to changes in project service
             _projectsChangedSubToken =
                 mvxMessenger.Subscribe<ProjectsChangedMessage>(OnProjectsChanged);
+
+            _isSingleActionProject = true;
         }
 
         void OnProjectsChanged(ProjectsChangedMessage message)
@@ -57,6 +59,8 @@ namespace Gtd.Client.Core.ViewModels
             // needs to work across application restarts,
             // and you can't do that with a real object, have to do it with a key (like this Id) instead.
             ItemOfStuff = _inboxService.GetByStuffId(navigationParams.StuffId);
+
+            ActionOutcome = _itemOfStuff.StuffDescription;
         }
 
 
@@ -87,6 +91,14 @@ namespace Gtd.Client.Core.ViewModels
             // if you just trashed the stuff you started with then we are done
             // go back to precious screen
             Close(this);
+        }
+
+
+        private string _actionOutcome;
+        public string ActionOutcome
+        {
+            get { return _actionOutcome; }
+            set { _actionOutcome = value; RaisePropertyChanged(() => ActionOutcome); }
         }
 
 

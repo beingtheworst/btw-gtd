@@ -95,6 +95,7 @@
     </Compile>
     <Compile Include="Bootstrap\MessengerPluginBootstrap.cs" />
     <Compile Include="Bootstrap\SqlitePluginBootstrap.cs" />
+    <Compile Include="Bootstrap\VisibilityPluginBootstrap.cs" />
     <Compile Include="DebugTrace.cs" />
     <Compile Include="LocalizedStrings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -104,6 +105,9 @@
       <DependentUpon>AppResources.resx</DependentUpon>
     </Compile>
     <Compile Include="Setup.cs" />
+    <Compile Include="ValueConverters\NativeInverseBoolConverter.cs" />
+    <Compile Include="ValueConverters\NativeInvertedVisibilityConverter.cs" />
+    <Compile Include="ValueConverters\NativeVisibilityConverter.cs" />
     <Compile Include="Views\AddStuffView.xaml.cs">
       <DependentUpon>AddStuffView.xaml</DependentUpon>
     </Compile>
@@ -198,6 +202,12 @@
     <Reference Include="Cirrious.MvvmCross.Plugins.Sqlite.WindowsPhone">
       <HintPath>..\packages\MvvmCross.HotTuna.Plugin.Sqlite.3.0.10\lib\sl4-wp71\Cirrious.MvvmCross.Plugins.Sqlite.WindowsPhone.dll</HintPath>
     </Reference>
+    <Reference Include="Cirrious.MvvmCross.Plugins.Visibility">
+      <HintPath>..\packages\MvvmCross.HotTuna.Plugin.Visibility.3.0.10\lib\sl4-wp71\Cirrious.MvvmCross.Plugins.Visibility.dll</HintPath>
+    </Reference>
+    <Reference Include="Cirrious.MvvmCross.Plugins.Visibility.WindowsPhone">
+      <HintPath>..\packages\MvvmCross.HotTuna.Plugin.Visibility.3.0.10\lib\sl4-wp71\Cirrious.MvvmCross.Plugins.Visibility.WindowsPhone.dll</HintPath>
+    </Reference>
     <Reference Include="Cirrious.MvvmCross.WindowsPhone">
       <HintPath>..\packages\MvvmCross.HotTuna.MvvmCrossLibraries.3.0.10\lib\sl4-wp71\Cirrious.MvvmCross.WindowsPhone.dll</HintPath>
     </Reference>
@@ -211,6 +221,7 @@
       <Name>Gtd.Client.Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

@@ -7,12 +7,19 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Views="clr-namespace:Cirrious.MvvmCross.WindowsPhone.Views;assembly=Cirrious.MvvmCross.WindowsPhone"
+    xmlns:valueConverters="clr-namespace:Gtd.Client.WindowsPhone.ValueConverters"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d"
     shell:SystemTray.IsVisible="True">
+
+    <Views:MvxPhonePage.Resources>
+        <valueConverters:NativeInverseBoolConverter x:Key="InverseBool"></valueConverters:NativeInverseBoolConverter>
+        <valueConverters:NativeVisibilityConverter x:Key="Visibility"></valueConverters:NativeVisibilityConverter>
+        <valueConverters:NativeInvertedVisibilityConverter x:Key="InvertedVisibility"></valueConverters:NativeInvertedVisibilityConverter>
+    </Views:MvxPhonePage.Resources>
 
 
     <!--LayoutRoot is the root grid where all page content is placed-->
@@ -25,21 +32,25 @@
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel Grid.Row="0" Margin="12,17,0,28">
             <TextBlock Text="GTD-beingtheworst.com" Style="{StaticResource PhoneTextNormalStyle}" HorizontalAlignment="Right" />
-            <TextBlock Text="{Binding ItemOfStuff.StuffDescription}" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+            <TextBlock Text="{Binding ActionOutcome}" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
             <StackPanel>
                 <TextBlock Text="Project/Outcome you committed to for this item?" />
-                <TextBlock Text="" />
-                <CheckBox Content="New Single Action Project"/>
-                <phone:LongListSelector ItemsSource="{Binding ProjectList}" Height="124" IsGroupingEnabled="False">
+                <CheckBox   Content="New Single-Action Project" IsChecked="{Binding IsSingleActionProject, Mode=TwoWay}"/>
+                <phone:LongListSelector 
+                    ItemsSource="{Binding ProjectList}"
+                    IsEnabled="{Binding IsSingleActionProject, Converter={StaticResource InverseBool}}"
+                    Visibility="{Binding IsSingleActionProject, Converter={StaticResource InvertedVisibility}}"
+                    Height="124"
+                    IsGroupingEnabled="False">
                     <phone:LongListSelector.ItemTemplate>
                         <DataTemplate>
                             <StackPanel VerticalAlignment="Top">
                                 <!--<TextBlock Text="{Binding ProjectId}" />-->
-                                <TextBlock FontWeight="Bold"  Text="{Binding Outcome}" />
+                                <TextBlock Margin="10" FontSize="24" FontWeight="Bold"  Text="{Binding Outcome}" />
                             </StackPanel>
                         </DataTemplate>
                     </phone:LongListSelector.ItemTemplate>
@@ -47,7 +58,7 @@
                 <TextBlock Text="" />
                 <TextBlock Text="Next physical/visible action to take on this is?" />
                 <TextBlock Text="" />
-                <TextBox Height="118" TextWrapping="Wrap"/>
+                <TextBox Text="{Binding ActionOutcome, Mode=TwoWay}" Height="118" TextWrapping="Wrap"/>
                 <!--<toolkit:ListPicker Margin="5,35,0,0" Width="450" FontSize="21" Grid.Row="1" Grid.Column="0"
                                             ItemsSource="{Binding MyList}" 
                                             DisplayMemberPath="Value"
