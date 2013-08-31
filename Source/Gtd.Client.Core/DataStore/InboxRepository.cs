@@ -39,6 +39,13 @@ namespace Gtd.Client.Core.DataStore
             return _sqlConnection.Get<ItemOfStuff>(stuffId);
         }
 
+        // TODO: Reminder about all current storage/repositories in here
+        // TODO: Use SQLite as xplat file format to store "Event Stream blobs" maybe?
+        // TODO: Do we want things that NEVER get deleted like events stored on a phone?
+        // TODO: How would/could you be a good mobile-client citizen using ES on a client without infinite storage?
+        // TODO: If I use SQLite "relational" approach, remember when I "Delete" an Action/Project, etc.
+        // TODO: I have to manually deal with the ref integrity/cascading deletes, etc.
+
         public void TrashStuff(ItemOfStuff itemOfStuff)
         {
             _sqlConnection.Delete(itemOfStuff);
