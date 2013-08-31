@@ -38,12 +38,14 @@
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
             <StackPanel>
-                <TextBlock Text="Project/Outcome you committed to for this item?" />
+                <TextBlock FontSize="24" Text="Project you committed to for this item?" />
                 <CheckBox   Content="New Single-Action Project" IsChecked="{Binding IsSingleActionProject, Mode=TwoWay}"/>
                 <phone:LongListSelector 
                     ItemsSource="{Binding ProjectList}"
                     IsEnabled="{Binding IsSingleActionProject, Converter={StaticResource InverseBool}}"
                     Visibility="{Binding IsSingleActionProject, Converter={StaticResource InvertedVisibility}}"
+                    Background="White"
+                    Foreground="Black"
                     Height="124"
                     IsGroupingEnabled="False">
                     <phone:LongListSelector.ItemTemplate>
@@ -56,9 +58,15 @@
                     </phone:LongListSelector.ItemTemplate>
                 </phone:LongListSelector>
                 <TextBlock Text="" />
-                <TextBlock Text="Next physical/visible action to take on this is?" />
                 <TextBlock Text="" />
-                <TextBox Text="{Binding ActionOutcome, Mode=TwoWay}" Height="118" TextWrapping="Wrap"/>
+                <TextBlock Text="" />
+                <TextBlock FontSize="24" Text="Next physical/visible action to take on this?" />
+                <TextBlock Text="" />
+                <TextBox Text="{Binding ActionOutcome, Mode=TwoWay}" 
+                         Height="170" 
+                         TextWrapping="Wrap" 
+                         Background="White"
+                         AcceptsReturn="True"/>
                 <!--<toolkit:ListPicker Margin="5,35,0,0" Width="450" FontSize="21" Grid.Row="1" Grid.Column="0"
                                             ItemsSource="{Binding MyList}" 
                                             DisplayMemberPath="Value"
