@@ -167,6 +167,13 @@ namespace Gtd.Client.Core.ViewModels
             set { _isSingleActionProject = value; RaisePropertyChanged(() => IsSingleActionProject); }
         }
 
+        private Project _project;
+        public Project Project
+        {
+            get { return _project; }
+            set { _project = value; RaisePropertyChanged(() => Project); }
+        }
+
 
         // an entry in the project and actions systems with same info??
 
@@ -180,20 +187,38 @@ namespace Gtd.Client.Core.ViewModels
             set { _nextActionIs = value; RaisePropertyChanged(() => NextActionIs); }
         }
 
-        // need AddNextAction cmd
-        private MvxCommand _addNextAction;
-        public ICommand AddNextAction
+        private MvxCommand _saveNewAction;
+        public ICommand SaveNewAction
         {
             get
             { 
-                _addNextAction = _addNextAction ?? new MvxCommand(DoAddNextActionCommand);
-                return _addNextAction; 
+                _saveNewAction = _saveNewAction ?? new MvxCommand(DoSaveNewActionCommand);
+                return _saveNewAction; 
             }
         }
 
-        private void DoAddNextActionCommand()
+        private void DoSaveNewActionCommand()
         {
             // do action
+            // TODO: Need all the properties required for a new action.
+            // TODO: Assumes you have already selected a valif projectId
+            // TODO: OR you have single action project selected which means
+            // TODO: I will create a NEW project/id for you and assign it to this action
+
+            //public string ActionId { get; set; }
+            //public string TrustedSystemId { get; set; }
+            //public string ProjectId { get; set; }
+            //public string Outcome { get; set; }
+
+            // i will generate guid action id
+            // i will hard code TSystem for now
+            // I will either use the the project id that was selected, or generate
+            // I will use the ActionOutcome
+
+            // first, go figure out how to get the ID from the box
+
+
         }
+
     }
 }

@@ -32,5 +32,11 @@ namespace Gtd.Client.WindowsPhone.Views
         {
             ((MakeStuffActionableViewModel)ViewModel).NewProjectCommand.Execute(null);
         }
+
+        // TODO: More code-behind app bar hacks
+        private void AppBarSaveActionButton_OnClick(object sender, EventArgs e)
+        {
+            //((MakeStuffActionableViewModel)ViewModel).NewProjectCommand.Execute(null);
+        }
     }
 }

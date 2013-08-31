@@ -65,8 +65,7 @@
                 <TextBox Text="{Binding ActionOutcome, Mode=TwoWay}" 
                          Height="170" 
                          TextWrapping="Wrap" 
-                         Background="White"
-                         AcceptsReturn="True"/>
+                         Background="White"/>
                 <!--<toolkit:ListPicker Margin="5,35,0,0" Width="450" FontSize="21" Grid.Row="1" Grid.Column="0"
                                             ItemsSource="{Binding MyList}" 
                                             DisplayMemberPath="Value"
@@ -84,6 +83,7 @@
     <Views:MvxPhonePage.ApplicationBar>
         <shell:ApplicationBar >
             <shell:ApplicationBar.Buttons>
+                <shell:ApplicationBarIconButton IconUri="/Icons/appbar.save.light.png" Text="save it" Click="AppBarSaveActionButton_OnClick"></shell:ApplicationBarIconButton>
                 <shell:ApplicationBarIconButton IconUri="/Icons/appbar.folder.light.png" Text="new project" Click="AppBarNewProjectButton_OnClick"></shell:ApplicationBarIconButton>
                 <shell:ApplicationBarIconButton IconUri="/Icons/appbar.delete.light.png" Text="trash it" Click="AppBarTrashItButton_OnClick"></shell:ApplicationBarIconButton>
             </shell:ApplicationBar.Buttons>
