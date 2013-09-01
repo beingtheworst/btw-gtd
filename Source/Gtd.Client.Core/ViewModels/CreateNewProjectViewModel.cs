@@ -20,7 +20,7 @@ namespace Gtd.Client.Core.ViewModels
 
         public class NavParams
         {
-            public string StuffDescription { get; set; }
+            public string InitialDescription { get; set; }
         }
 
         // when we navigate to the a ViewModel, we have a reserved method named called 
@@ -32,7 +32,7 @@ namespace Gtd.Client.Core.ViewModels
             // is because this navigation itself needs to be serializable,
             // needs to work across application restarts,
             // and you can't do that with a real object, have to do it with a key (like this Id) instead.
-            ProjectDescription = navigationParams.StuffDescription;
+            ProjectDescription = navigationParams.InitialDescription;
         }
 
         public string ProjectDescription

@@ -120,8 +120,16 @@ namespace Gtd.Client.Core.ViewModels
 
         private void DoNewProjectCommand()
         {
+            // TODO: It would be nice if the newly created Project
+            // TODO: was already selected in the List post new project creation
+
+            // for how, assume that if you are about to manually define a new Project
+            // from this screen, you are not creating a simple Single-Action, so uncheck that
+            IsSingleActionProject = false;
+
+            // Now show the screen to define a new project
             ShowViewModel<CreateNewProjectViewModel>
-                (new CreateNewProjectViewModel.NavParams() { StuffDescription = "hi" });
+                (new CreateNewProjectViewModel.NavParams() { InitialDescription = _projectName });
         }
 
         void OnProjectsChanged(ProjectsChangedMessage message)
