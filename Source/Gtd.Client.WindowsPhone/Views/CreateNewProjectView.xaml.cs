@@ -17,5 +17,13 @@ namespace Gtd.Client.WindowsPhone.Views
         {
             InitializeComponent();
         }
+
+        // TODO: Code-behind hack to set focus to text box on Page Load
+        void CreateNewProjectView_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            tbProjectName.Focus();
+            // should could be some initial text in there , so move cursor to end of it
+            tbProjectName.Select(tbProjectName.Text.Length, 0);
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿<Views:MvxPhonePage
+﻿<Views:MvxPhonePage Loaded="CreateNewProjectView_OnLoaded"
     x:Class="Gtd.Client.WindowsPhone.Views.CreateNewProjectView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -33,7 +33,7 @@
             <StackPanel>
                 <TextBlock Text="Name of the New Project:
 :"></TextBlock>
-                <TextBox Text="{Binding ProjectDescription, Mode=TwoWay}"></TextBox>
+                <TextBox x:Name="tbProjectName"  Text="{Binding ProjectDescription, Mode=TwoWay}"></TextBox>
                 <Button Content="Define Project" Command="{Binding CreateProjectCommand}"></Button>
             </StackPanel>
         </ScrollViewer>

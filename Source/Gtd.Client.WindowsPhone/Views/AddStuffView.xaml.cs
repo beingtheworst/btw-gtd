@@ -17,5 +17,11 @@ namespace Gtd.Client.WindowsPhone.Views
         {
             InitializeComponent();
         }
+
+        // TODO: COde behind Hack to set the focus on the textbox initially when page loads
+        void AddStuffView_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            tbDesc.Focus();
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿<Views:MvxPhonePage
+﻿<Views:MvxPhonePage Loaded="AddStuffView_OnLoaded"
     x:Class="Gtd.Client.WindowsPhone.Views.AddStuffView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -31,7 +31,7 @@
         <ScrollViewer x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
             <StackPanel>
                 <TextBlock Text="Description:"></TextBlock>
-                <TextBox Text="{Binding StuffDescription, Mode=TwoWay}"></TextBox>
+                <TextBox x:Name="tbDesc" Text="{Binding StuffDescription, Mode=TwoWay}"></TextBox>
                 <Button Content="Add" Command="{Binding AddStuffCommand}"></Button>
             </StackPanel>
         </ScrollViewer>
