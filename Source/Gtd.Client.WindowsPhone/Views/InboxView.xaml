@@ -44,12 +44,6 @@
                                 <ColumnDefinition Width="Auto"></ColumnDefinition>
                                 <ColumnDefinition Width="*"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
-                            <!-- Path to image we get back will be isolated storage path and-->
-                            <!-- Image tag knows nothing about that so we need a WP Value Converter-->
-                            <!--<Image Grid.Column="0" Margin="12" Height="100" Width="100" 
-                                        Source="{Binding ImagePath, 
-                                        Converter={StaticResource FilePathToImage}}">
-                            </Image>-->
                             <TextBlock Grid.Column="1" FontSize="36" Text="{Binding StuffDescription}" TextWrapping="Wrap"></TextBlock>
                         </Grid>
                     </DataTemplate>

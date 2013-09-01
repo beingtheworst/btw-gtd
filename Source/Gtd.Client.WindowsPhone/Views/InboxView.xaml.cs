@@ -24,17 +24,12 @@ namespace Gtd.Client.WindowsPhone.Views
 
                 // nav to the selected item by just calling ViewModel method directly
                 // using the first things selected in the list we are passed in
-                //((InboxViewModel)ViewModel).MakeStuffActionableCommand.Execute(e.AddedItems[0]);
-                //((InboxViewModel)ViewModel).MoveStuffToProject.Execute(null);
-
                 ((InboxViewModel)ViewModel).MakeStuffActionableCommand.Execute(e.AddedItems[0]);
-
 
                 // clear the ListBox selection (sender) that's been passed in
                 ((ListBox)sender).SelectedIndex = -1;
             }
         }
-
 
         private void ApplicationBarIconButton_OnClick(object sender, EventArgs e)
         {
