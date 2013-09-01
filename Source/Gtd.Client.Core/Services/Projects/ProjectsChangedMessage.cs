@@ -12,4 +12,3 @@ namespace Gtd.Client.Core.Services.Projects
         }
     }
 }
-

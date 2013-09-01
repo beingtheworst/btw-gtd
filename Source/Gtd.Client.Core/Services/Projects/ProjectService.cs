@@ -54,4 +54,3 @@ namespace Gtd.Client.Core.Services.Projects
         // _mvxMessenger.Publish(new ProjectsChangedMessage(this));
     }
 }
-
