@@ -7,7 +7,7 @@ using Gtd.Client.Core.Models;
 namespace Gtd.Client.Core.Services.Projects
 {
     // We use this service so we can have singletons holding all
-    // the stuff in the inbox in memory so that the ViewModels are not
+    // the stuff in memory so that the ViewModels are not
     // constantly hitting the database layer to get it
 
     // probably going to be a Lazy Singleton per config convention in App.cs "Service"
