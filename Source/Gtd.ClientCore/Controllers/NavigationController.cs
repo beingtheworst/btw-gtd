@@ -6,7 +6,8 @@ using Gtd.ClientCore;
 
 namespace Gtd.Client.Views.Navigation
 {
-
+    // in the WinForms sample client, this interface is implemented
+    // with a "Tree View" WinForms control that is similar to the Windows File Explorer
     public interface INavigationView
     {
         void UpdateInboxNode(int count);

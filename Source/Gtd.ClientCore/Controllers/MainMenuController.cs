@@ -47,7 +47,8 @@ namespace Gtd.Client
 
 
         
-        
+        // here is an example of how we handle UI events that we subscribed to above
+        // in order to display the appropriate menu items
         public void Handle(UI.InboxDisplayed message)
         {
             // replace with panel-specific menu maybe
