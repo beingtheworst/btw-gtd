@@ -5,6 +5,9 @@ using Microsoft.CSharp.RuntimeBinder;
 
 namespace Gtd.Client.Models
 {
+    // this ClientModelController sits between the Messaging subsystem
+    // of this client application, and different components that handle the messages
+
     public sealed class ClientModelController :
         IHandle<TrustedSystemCreated>,
         IHandle<StuffPutInInbox>,
@@ -35,6 +38,8 @@ namespace Gtd.Client.Models
             controller.SubscribeTo(subscriber);
         }
 
+        // subscribe to the events on the in-memory message bus of the system
+        // so that this class can wire those events to the Client Model
         public void SubscribeTo(ISubscriber bus)
         {
             bus.Subscribe<TrustedSystemCreated>(this);
@@ -156,18 +161,23 @@ namespace Gtd.Client.Models
 
         ClientModel _model;
 
+
+        // handle the ProfileLoaded event that the AppController
+        // will publish from its InitApplication method
         public void Handle(ProfileLoaded evt)
         {
             if (_model != null && _model.Id == evt.SystemId)
             {
-                // we already have this model all loaded up
+                // we already have this client model all loaded up
                 return;
             }
 
-            // ok, create new model
+            // ok, create new client model
             _model = new ClientModel(_queue, evt.SystemId);
             
-            // replay all events, since we don't have a snapshot for now
+            // replay all events for the relevant TrustedSystemId and load
+            // it into this Client Model to represent its current state,
+            // (since we don't have a snapshot for now)
             var stream = _eventStore.LoadEventStream(evt.SystemId.ToStreamId());
             foreach (var e in stream.Events)
             {
