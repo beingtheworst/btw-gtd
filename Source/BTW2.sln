@@ -16,6 +16,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gtd.Client.Core", "Gtd.Client.Core\Gtd.Client.Core.csproj", "{53BE609D-5F5D-4E62-BD6C-67601A881D55}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gtd Core PCLs", "Gtd Core PCLs", "{4CF47115-7DA2-4964-B16C-11A305AAA9F4}"
+	ProjectSection(SolutionItems) = preProject
+		..\GtdCorePCLReadme.md = ..\GtdCorePCLReadme.md
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gtd.Pcl.PublishedLanguage", "Gtd.Pcl.PublishedLanguage\Gtd.Pcl.PublishedLanguage.csproj", "{6F4F1B5C-235D-4CFC-BF56-184EA76A9BD0}"
 EndProject
