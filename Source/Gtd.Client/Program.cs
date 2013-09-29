@@ -21,6 +21,7 @@ namespace Gtd.Client
         static void Main()
         {
             // this Client App uses a standard "Windows Forms" application as its host
+            // this "Application" code is standard Windows Forms stuff
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
