@@ -11,6 +11,27 @@ using System.Linq;
 
 namespace Gtd.Client.Models
 {
+
+    /// <summary> This is part of the "Client Model" or "UI" Context
+    /// This context is similar to a read model but it also has certain behaviors.
+    /// You can perceive this "client model context" as an Aggregate that reacts to 
+    /// Events that are published by the to Domain Model.
+    /// This "aggregate" maintains its own internal state that represents the state
+    /// of a UI like a desktop application.  When this state changes, this ClientModel
+    /// publishes high-level UI-specific events like: StuffAddedToInbox, ProjectAdded, etc.
+    /// These UI events are not "event sourced" (persisted events which are then replayed to get state),
+    /// they are in-memory "dumb" UI events that do not need the level of detail that 
+    /// our persisted Event-Sourced Domain Model Events need. 
+    /// Our Domain Events are still the same granular ones that matter for when we are
+    /// persisting the Domain Model state changes and using them to resolve the 
+    /// sync issues that come along with multi-user/device collaboration scenarios, but these
+    /// in-memory "dumb" UI events do not need that level of detail to keep the UI up to date. 
+    /// Basically, we are modeling the things that will eventually be represented
+    /// on a client's screen.  Client Model is an underlying read model and notification sub-system 
+    /// for implementing a client application.  Technically this Client Model context is reusable 
+    /// across various client/device types (desktop, tablet, web, phone, etc.),
+    /// but the practicality of reusing it remains to be seen.  
+    /// </summary>
     public sealed class ClientModel
     {
         readonly IMessageQueue _queue;
@@ -85,6 +106,8 @@ namespace Gtd.Client.Models
 
             _stuffInInbox = _stuffInInbox.Add(stuffId, item);
 
+            // the Client Model state has changed, so publish a "Dumb" UI event
+            // to keep the contents of the UI current with the actual state of this model
             Publish(new Dumb.StuffAddedToInbox(item, _stuffInInbox.Count));
         }
 
