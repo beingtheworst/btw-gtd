@@ -175,20 +175,21 @@ namespace Gtd.Client.Models
         // will publish from its InitApplication method when the App starts up
         public void Handle(ProfileLoaded evt)
         {
-            if (_model != null && _model.Id == evt.SystemId)
+            if (_model != null && _model.Id == evt.TrustedSystemId)
             {
                 // we already have this client model with the event history
-                // for the correct TrustedSystemId all loaded up
+                // for the correct TrustedSystemId all loaded up so just:
                 return;
             }
 
-            // ok, create new client model
-            _model = new ClientModel(_queue, evt.SystemId);
+            // ok, need to create a new client model
+            // and load the event history for the selected TrustedSystemId 
+            _model = new ClientModel(_queue, evt.TrustedSystemId);
             
             // replay all events for the relevant TrustedSystemId and load
             // it into this Client Model to represent its current state,
             // (since we don't have a snapshot for now)
-            var stream = _eventStore.LoadEventStream(evt.SystemId.ToStreamId());
+            var stream = _eventStore.LoadEventStream(evt.TrustedSystemId.ToStreamId());
             foreach (var e in stream.Events)
             {
                 try

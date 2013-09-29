@@ -214,11 +214,11 @@ namespace Gtd.ClientCore
 
     public sealed class ProfileLoaded : Message
     {
-        public readonly TrustedSystemId SystemId;
+        public readonly TrustedSystemId TrustedSystemId;
 
-        public ProfileLoaded(TrustedSystemId systemId)
+        public ProfileLoaded(TrustedSystemId trustedSystemId)
         {
-            SystemId = systemId;
+            TrustedSystemId = trustedSystemId;
         }
     }
 
