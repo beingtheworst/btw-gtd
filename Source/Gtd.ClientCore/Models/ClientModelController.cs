@@ -5,9 +5,15 @@ using Microsoft.CSharp.RuntimeBinder;
 
 namespace Gtd.Client.Models
 {
-    // this ClientModelController sits between the Messaging subsystem
-    // of this client application, and different components that handle the messages
-
+    /// <summary>
+    /// This ClientModelController sits between the Messaging sub-system
+    /// of this client application, and different components that handle the messages.
+    /// Client Controllers basically compartmentalize a messaging unit of functionality
+    /// (they are responsible for managing functionality).  Controllers are not
+    /// linked directly to UI-specific code (like WinForms, WPF, etc.) so they are
+    /// theoretically reusable across various UI-implementation technologies.
+    /// (That is theoretically true for the entire Gtd.ClientCore project.)
+    /// </summary>
     public sealed class ClientModelController :
         IHandle<TrustedSystemCreated>,
         IHandle<StuffPutInInbox>,
@@ -39,7 +45,8 @@ namespace Gtd.Client.Models
         }
 
         // subscribe to the events on the in-memory message bus of the system
-        // so that this class can wire those events to the Client Model
+        // so that this class can wire the events below to the Client Model
+        // so that the Client Model can react/handle those events and change its state
         public void SubscribeTo(ISubscriber bus)
         {
             bus.Subscribe<TrustedSystemCreated>(this);
@@ -68,7 +75,9 @@ namespace Gtd.Client.Models
             return true;
         }
 
-
+        // When this Client Application starts via the AppController, 
+        // it picks the TrustedSystem that is associated with the current
+        // installation.  If one does not exist, it creates one.
         public void Handle(TrustedSystemCreated e)
         {
             if (CanHandle(e.Id))
@@ -163,12 +172,13 @@ namespace Gtd.Client.Models
 
 
         // handle the ProfileLoaded event that the AppController
-        // will publish from its InitApplication method
+        // will publish from its InitApplication method when the App starts up
         public void Handle(ProfileLoaded evt)
         {
             if (_model != null && _model.Id == evt.SystemId)
             {
-                // we already have this client model all loaded up
+                // we already have this client model with the event history
+                // for the correct TrustedSystemId all loaded up
                 return;
             }
 

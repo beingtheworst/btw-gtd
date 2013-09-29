@@ -101,6 +101,9 @@ namespace Gtd.Client.Controllers
             UpdateDomain(agg => agg.DefineAction(new RequestId(newGuid), e.ProjectId, e.Outcome, new RealTimeProvider()));
         }
 
+        // When this AppController calls InitApplication below, 
+        // it picks the TrustedSystem that is associated with the current
+        // installation.  If one does not exist, it creates one.
         TrustedSystemId _currentSystem;
 
         void InitApplication(AppInit obj)
@@ -113,6 +116,9 @@ namespace Gtd.Client.Controllers
                     _currentSystem = profile.GetCurrentSystemId();
                 });
             UpdateDomain(system => system.InitIfNeeded(_currentSystem));
+
+            // Publish the event that "ProfileLoaded" which
+            // ClientModelController is one of the subsribers to.
 
             _queue.Enqueue(new ProfileLoaded(_currentSystem));
             
