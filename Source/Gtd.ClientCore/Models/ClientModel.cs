@@ -36,6 +36,18 @@ namespace Gtd.Client.Models
     {
         readonly IMessageQueue _queue;
 
+        /// <summary> What's up with these "Immutable" things? 
+        /// Notice the Immutable* things below.  The Immutability here means two things:
+        /// 1) We could structure or model in such a way that it would be extremely "cheap"
+        /// to publish events/copies that reference parts of this model.  These events can
+        /// include as much information as needed.  They can be safely passed around because
+        /// they are immutable and thus other code can't concurrently change them, so no
+        /// nasty side effects that result from that.
+        /// 2) It allows us to relax our mind when we think about this model because
+        /// we can just publish the entire client state and know it contains whatever we
+        /// may need to use from this model when the UI receives the event that contains it all.
+        /// </summary>
+
         ImmutableDictionary<StuffId, ImmutableStuff> _stuffInInbox =
             ImmutableDictionary.Create<StuffId, ImmutableStuff>();
 
@@ -78,13 +90,36 @@ namespace Gtd.Client.Models
 
         bool _loadingCompleted;
 
+        // LoadingCompleted is called by newly created instances of the ClientModel class
+        // so that it can tell itself that all the Domain Event history has
+        // been replayed and loaded into itself.  It now knows that it is
+        // up to date with the state of the associated TrustedSystemId 
         public void LoadingCompleted()
         {
             _loadingCompleted = true;
 
+            // take the TrustedSystem state that was loaded into this class and 
+            // call my own methods to get a copy of it so I can put the current state
+            // into an ImmutableClientModel read model that I can pass along to the UI,
+            // in its entirety, as an argument to the Dumb.ClientModelLoaded UI event.
             var model = new ImmutableClientModel(
                 GetInbox(),
                 ImmutableList.Create(_projectList.Select(m => m.Freeze()).ToArray()));
+
+            // give UI a way to get its hands on current state of the TrustedSystem
+            // via a copy of the ENTIRE ImmutableClientModel
+            // (i.e. The UI/world gets a copy of the the Inbox and ALL the Projects
+            // and other relevant content it needs from the TrustedSystem do to its job.
+            // The UI no longer needs to try to reach the ClientModel, to populate a view 
+            // of the Inbox for example, because it is receiving an ENTIRE COPY 
+            // of the ClientModel inside of the event that it subscribes to, and binds the UI to that!
+            // In the event that comes to it, it has all the information it needs to display anything!
+            // this means all the other UI components only need to subscribe to the same ClientModelLoaded
+            // event to get the data they need to bind to. This same immutable data will be shared by
+            // all consumers of the event so we wont waste memory just to give them each a "copy" to work with.
+            // So this makes it really cheap and really reliable to have the UI use this, especially
+            // if you have multiple processing threads.)
+            // This is similar to how the Roslyn C# compiler handles its Abstract Syntaxt Tree.
 
             Publish(new Dumb.ClientModelLoaded(model));
         }
@@ -249,6 +284,8 @@ namespace Gtd.Client.Models
                 UIKey = "project-" + projectId.Id;
             }
 
+            // we use "Freeze" to kind of fake immutability for now but makes it pretty
+            // easy to replace with "real" immutability later
             public ImmutableProject Freeze()
             {
                 var ma = Actions.Select(mutable => mutable.Freeze()).ToList().AsReadOnly();

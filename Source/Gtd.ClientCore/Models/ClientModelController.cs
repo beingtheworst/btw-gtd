@@ -187,10 +187,11 @@ namespace Gtd.Client.Models
             _model = new ClientModel(_queue, evt.TrustedSystemId);
             
             // replay all events for the relevant TrustedSystemId and load
-            // it into this Client Model to represent its current state,
+            // it into this Client Model to represent its current state
             // (since we don't have a snapshot for now)
-            var stream = _eventStore.LoadEventStream(evt.TrustedSystemId.ToStreamId());
-            foreach (var e in stream.Events)
+            // then this read model will be up to date
+            var eventStream = _eventStore.LoadEventStream(evt.TrustedSystemId.ToStreamId());
+            foreach (var e in eventStream.Events)
             {
                 try
                 {
@@ -201,7 +202,19 @@ namespace Gtd.Client.Models
                     throw new InvalidOperationException("Failed to exec " + e.GetType().Name, ex);
                 }
             }
+
+            // ok, our state is up to date from latest history,
             // now enable sending new events when we update
+
+            // now let's tell the Client read Model that the Loading and replay of history
+            // is completed. LoadingCompleted means two things:
+            // (see more details inside of ClientModel.LoadingCompleted)
+            // 1) whenever a new change event comes in from the Domain Model
+            // then the ClientModel instance will not only Handle the Domain Event to change
+            // its own internal state, itself to stay current,
+            // but it will ALSO publish UI change event messages like "StuffAddedToInbox", etc.
+            // 2) ClientModel publishes the ClientModelLoaded event
+
 
             _model.LoadingCompleted();
 
