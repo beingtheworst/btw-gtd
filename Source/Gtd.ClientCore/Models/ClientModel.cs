@@ -90,37 +90,38 @@ namespace Gtd.Client.Models
 
         bool _loadingCompleted;
 
-        // LoadingCompleted is called by newly created instances of the ClientModel class
-        // so that it can tell itself that all the Domain Event history has
-        // been replayed and loaded into itself.  It now knows that it is
-        // up to date with the state of the associated TrustedSystemId 
+        // LoadingCompleted is called by newly created instances of the 
+        // ClientModelController class so that it can tell this ClientModel instance 
+        // that all the Domain Event history has been replayed and loaded into itself.
+        // It now knows that it is up to date with the state of the associated TrustedSystemId 
         public void LoadingCompleted()
         {
             _loadingCompleted = true;
 
-            // take the TrustedSystem state that was loaded into this class and 
-            // call my own methods to get a copy of it so I can put the current state
-            // into an ImmutableClientModel read model that I can pass along to the UI,
-            // in its entirety, as an argument to the Dumb.ClientModelLoaded UI event.
+            // take the TrustedSystem state that was loaded into this class (via ClientModelController)
+            // and call my own methods to get a copy of it so I can put the current state
+            // into an ImmutableClientModel read model that I can pass along to the UI
+            // (in its entirety) as an argument to the Dumb.ClientModelLoaded UI event
             var model = new ImmutableClientModel(
                 GetInbox(),
                 ImmutableList.Create(_projectList.Select(m => m.Freeze()).ToArray()));
 
-            // give UI a way to get its hands on current state of the TrustedSystem
+            #region This event sends copy the ENTIRE immutable state to the UI! Cool...
+            // give the UI a way to get its hands on current state of the TrustedSystem
             // via a copy of the ENTIRE ImmutableClientModel
             // (i.e. The UI/world gets a copy of the the Inbox and ALL the Projects
-            // and other relevant content it needs from the TrustedSystem do to its job.
-            // The UI no longer needs to try to reach the ClientModel, to populate a view 
-            // of the Inbox for example, because it is receiving an ENTIRE COPY 
-            // of the ClientModel inside of the event that it subscribes to, and binds the UI to that!
+            // and other relevant content it needs from the TrustedSystem do to its job.)
+            // The UI no longer needs to try to reach the ClientModel (to populate a view 
+            // of the Inbox for example), because it is receiving an ENTIRE COPY 
+            // of the ClientModel inside of the event that it subscribes to and it binds the UI to that!
             // In the event that comes to it, it has all the information it needs to display anything!
-            // this means all the other UI components only need to subscribe to the same ClientModelLoaded
+            // This means all the other UI components only need to subscribe to the same ClientModelLoaded
             // event to get the data they need to bind to. This same immutable data will be shared by
             // all consumers of the event so we wont waste memory just to give them each a "copy" to work with.
-            // So this makes it really cheap and really reliable to have the UI use this, especially
-            // if you have multiple processing threads.)
+            // This makes it really "cheap" (in memory) and really reliable to have the UI use this,
+            // especially if you have multiple processing threads.
             // This is similar to how the Roslyn C# compiler handles its Abstract Syntaxt Tree.
-
+            #endregion
             Publish(new Dumb.ClientModelLoaded(model));
         }
 
@@ -142,7 +143,7 @@ namespace Gtd.Client.Models
             _stuffInInbox = _stuffInInbox.Add(stuffId, item);
 
             // the Client Model state has changed, so publish a "Dumb" UI event
-            // to keep the contents of the UI current with the actual state of this model
+            // to keep the contents of the UI current with the actual state of this client model
             Publish(new Dumb.StuffAddedToInbox(item, _stuffInInbox.Count));
         }
 

@@ -7,7 +7,8 @@ namespace Gtd.Client.Models
 {
     /// <summary>
     /// This ClientModelController sits between the Messaging sub-system
-    /// of this client application, and different components that handle the messages.
+    /// of this client application and different components that handle the messages.
+    /// ClientModelController wires the ClientModel to the messaging sub-system.
     /// Client Controllers basically compartmentalize a messaging unit of functionality
     /// (they are responsible for managing functionality).  Controllers are not
     /// linked directly to UI-specific code (like WinForms, WPF, etc.) so they are
@@ -46,7 +47,7 @@ namespace Gtd.Client.Models
 
         // subscribe to the events on the in-memory message bus of the system
         // so that this class can wire the events below to the Client Model
-        // so that the Client Model can react/handle those events and change its state
+        // this allows the Client Model to react/handle those events and change its state
         public void SubscribeTo(ISubscriber bus)
         {
             bus.Subscribe<TrustedSystemCreated>(this);
@@ -206,12 +207,12 @@ namespace Gtd.Client.Models
             // ok, our state is up to date from latest history,
             // now enable sending new events when we update
 
-            // now let's tell the Client read Model that the Loading and replay of history
+            // let's tell the ClientModel read Model that the Loading and replay of history
             // is completed. LoadingCompleted means two things:
-            // (see more details inside of ClientModel.LoadingCompleted)
+            // (see more details inside of the ClientModel.LoadingCompleted method)
             // 1) whenever a new change event comes in from the Domain Model
             // then the ClientModel instance will not only Handle the Domain Event to change
-            // its own internal state, itself to stay current,
+            // its own internal state to stay current,
             // but it will ALSO publish UI change event messages like "StuffAddedToInbox", etc.
             // 2) ClientModel publishes the ClientModelLoaded event
 
