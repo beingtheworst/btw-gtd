@@ -25,7 +25,7 @@ namespace Gtd.Client.Core.ViewModels
 
             // subscribe to Inbox Changed messages to react to changes in inbox service
             _inboxChangedSubToken =
-                mvxMessenger.Subscribe<InboxChangedMessage>(OnInboxChanged);
+                _mvxMessenger.Subscribe<InboxChangedMessage>(OnInboxChanged);
         }
 
         void OnInboxChanged(InboxChangedMessage message)

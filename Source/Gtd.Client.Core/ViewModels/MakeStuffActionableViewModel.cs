@@ -36,7 +36,7 @@ namespace Gtd.Client.Core.ViewModels
 
             // subscribe to Projects Changed messages to react to changes in project service
             _projectsChangedSubToken =
-                mvxMessenger.Subscribe<ProjectsChangedMessage>(OnProjectsChanged);
+                _mvxMessenger.Subscribe<ProjectsChangedMessage>(OnProjectsChanged);
 
             _isSingleActionProject = true;
         }
