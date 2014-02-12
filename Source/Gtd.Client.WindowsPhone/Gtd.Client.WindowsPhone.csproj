@@ -114,6 +114,9 @@
     <Compile Include="Views\CreateNewProjectView.xaml.cs">
       <DependentUpon>CreateNewProjectView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\FirstView.xaml.cs">
+      <DependentUpon>FirstView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\InboxView.xaml.cs">
       <DependentUpon>InboxView.xaml</DependentUpon>
     </Compile>
@@ -133,6 +136,10 @@
     <Page Include="Views\CreateNewProjectView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\FirstView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\InboxView.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -174,6 +181,7 @@
     <Content Include="Icons\appbar.delete.light.png" />
     <Content Include="Icons\appbar.folder.light.png" />
     <Content Include="Icons\appbar.save.light.png" />
+    <Content Include="ToDo-MvvmCross\_ Windows Phone UI.txt" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\AppResources.resx">
@@ -190,47 +198,47 @@
   <ItemGroup>
     <Reference Include="Cirrious.CrossCore, Version=1.0.0.0, Culture=neutral, PublicKeyToken=e16445fd9b451819, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\MvvmCross.HotTuna.CrossCore.3.1.1-beta2\lib\wp8\Cirrious.CrossCore.dll</HintPath>
+      <HintPath>..\packages\MvvmCross.HotTuna.CrossCore.3.1.1\lib\wp8\Cirrious.CrossCore.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.CrossCore.WindowsPhone, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\MvvmCross.HotTuna.CrossCore.3.1.1-beta2\lib\wp8\Cirrious.CrossCore.WindowsPhone.dll</HintPath>
+      <HintPath>..\packages\MvvmCross.HotTuna.CrossCore.3.1.1\lib\wp8\Cirrious.CrossCore.WindowsPhone.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross, Version=1.0.0.0, Culture=neutral, PublicKeyToken=e16445fd9b451819, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\MvvmCross.HotTuna.MvvmCrossLibraries.3.1.1-beta2\lib\wp8\Cirrious.MvvmCross.dll</HintPath>
+      <HintPath>..\packages\MvvmCross.HotTuna.MvvmCrossLibraries.3.1.1\lib\wp8\Cirrious.MvvmCross.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Localization, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\MvvmCross.HotTuna.CrossCore.3.1.1-beta2\lib\wp8\Cirrious.MvvmCross.Localization.dll</HintPath>
+      <HintPath>..\packages\MvvmCross.HotTuna.CrossCore.3.1.1\lib\wp8\Cirrious.MvvmCross.Localization.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.Messenger, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\MvvmCross.HotTuna.Plugin.Messenger.3.1.1-beta2\lib\wp8\Cirrious.MvvmCross.Plugins.Messenger.dll</HintPath>
+      <HintPath>..\packages\MvvmCross.HotTuna.Plugin.Messenger.3.1.1\lib\wp8\Cirrious.MvvmCross.Plugins.Messenger.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.Sqlite, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\MvvmCross.HotTuna.Plugin.Sqlite.3.1.1-beta2\lib\wp8\Cirrious.MvvmCross.Plugins.Sqlite.dll</HintPath>
+      <HintPath>..\packages\MvvmCross.HotTuna.Plugin.Sqlite.3.1.1\lib\wp8\Cirrious.MvvmCross.Plugins.Sqlite.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.Sqlite.WindowsPhone, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\MvvmCross.HotTuna.Plugin.Sqlite.3.1.1-beta2\lib\wp8\Cirrious.MvvmCross.Plugins.Sqlite.WindowsPhone.dll</HintPath>
+      <HintPath>..\packages\MvvmCross.HotTuna.Plugin.Sqlite.3.1.1\lib\wp8\Cirrious.MvvmCross.Plugins.Sqlite.WindowsPhone.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.Visibility, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\MvvmCross.HotTuna.Plugin.Visibility.3.1.1-beta2\lib\wp8\Cirrious.MvvmCross.Plugins.Visibility.dll</HintPath>
+      <HintPath>..\packages\MvvmCross.HotTuna.Plugin.Visibility.3.1.1\lib\wp8\Cirrious.MvvmCross.Plugins.Visibility.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.Visibility.WindowsPhone, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\MvvmCross.HotTuna.Plugin.Visibility.3.1.1-beta2\lib\wp8\Cirrious.MvvmCross.Plugins.Visibility.WindowsPhone.dll</HintPath>
+      <HintPath>..\packages\MvvmCross.HotTuna.Plugin.Visibility.3.1.1\lib\wp8\Cirrious.MvvmCross.Plugins.Visibility.WindowsPhone.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.WindowsPhone, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\MvvmCross.HotTuna.MvvmCrossLibraries.3.1.1-beta2\lib\wp8\Cirrious.MvvmCross.WindowsPhone.dll</HintPath>
+      <HintPath>..\packages\MvvmCross.HotTuna.MvvmCrossLibraries.3.1.1\lib\wp8\Cirrious.MvvmCross.WindowsPhone.dll</HintPath>
     </Reference>
     <Reference Include="Community.CsharpSqlite.WP7, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\MvvmCross.HotTuna.Plugin.Sqlite.3.1.1-beta2\lib\wp8\Community.CsharpSqlite.WP7.dll</HintPath>
+      <HintPath>..\packages\MvvmCross.HotTuna.Plugin.Sqlite.3.1.1\lib\wp8\Community.CsharpSqlite.WP7.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
